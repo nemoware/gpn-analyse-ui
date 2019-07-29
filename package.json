@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open",
-    "start:prod": "npm run build:prod && npm run server",
+    "start:dev": "ng serve --open",
+    "start": "npm run build:prod && npm run server",
     "build": "ng build",
     "build:prod": "ng build --prod",
     "lint": "ng lint",
@@ -17,7 +17,12 @@
     "format:test": "prettier projects/**/*.{ts,json,md,scss} --list-different",
     "release": "standard-version && git push --follow-tags origin master",
     "analyze": "npm run build:prod -- --stats-json && webpack-bundle-analyzer ./dist/gpn-ui/stats-es2015.json",
-    "server": "node ./projects/server/server.js"
+    "server": "node ./projects/server/server.js",
+    "heroku-postbuild": "ng build --prod"
+  },
+  "engines": {
+    "node": "10.16.0",
+    "npm": "6.9.0"
   },
   "husky": {
     "hooks": {
@@ -32,6 +37,8 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cli": "~8.0.0",
+    "@angular/compiler-cli": "~8.0.0",
     "@angular-extensions/model": "^8.0.0",
     "@angular/animations": "~8.0.0",
     "@angular/cdk": "~8.1.1",
