@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12"><h1>Настройки</h1></div>
+  </div>
+  <br>
+  <ng-container *ngIf="settings$ | async as settings">
+    <div class="row">
+      <div class="col-md-6 group">
+        <h2>{{ 'gpn.settings.general.title'   }}</h2>
+         
+        <div class="icon-form-field">
+           <mat-icon color="accent"><fa-icon icon="bars" color="accent"></fa-icon></mat-icon>
+           <mat-placeholder>{{ 'gpn.settings.themes.sticky-header'   }}
+           </mat-placeholder>
+           <mat-slide-toggle
+             [checked]="settings.stickyHeader"
+             (change)="onStickyHeaderToggle($event)">
+           </mat-slide-toggle>
+         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 group">
+        <h2>{{ 'gpn.settings.themes.title'   }}</h2>
+        <div class="icon-form-field">
+          <mat-icon color="accent"><fa-icon icon="paint-brush" color="accent"></fa-icon></mat-icon>
+          <mat-form-field>
+            <mat-select [placeholder]="'gpn.settings.themes.placeholder'  "
+                        [ngModel]="settings.theme"
+                        (selectionChange)="onThemeSelect($event)"
+                        name="themes">
+              <mat-option *ngFor="let t of themes" [value]="t.value">
+                {{ 'gpn.settings.themes.' + t.label   }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+         
+      </div>
+     
+    </div>
+  </ng-container>
+</div>

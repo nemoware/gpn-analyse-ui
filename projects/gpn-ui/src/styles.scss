@@ -1,0 +1,49 @@
+@import 'styles-variables';
+
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/bootstrap-grid';
+@import 'styles-reset';
+
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+@import './themes/default-theme';
+@import './themes/light-theme';
+@import './themes/black-theme';
+@import './themes/nature-theme';
+
+@import 'styles-reset.scss-theme';
+@import './app/app/app.component.scss-theme';
+@import './app/features/analyse/analyse/analyse.component.scss-theme';
+
+@mixin custom-components-theme($theme) {
+  @include gpn-styles-reset-theme($theme);
+  @include gpn-app-component-theme($theme);  
+  
+   
+   
+  // @include gpn-parent-component-theme($theme);
+  // @include gpn-child-component-theme($theme);
+  @include gpn-analyse-component-theme($theme);
+}
+
+.default-theme {
+  @include angular-material-theme($gpn-theme);
+  @include custom-components-theme($gpn-theme);
+}
+
+.light-theme {
+  @include angular-material-theme($gpn-light-theme);
+  @include custom-components-theme($gpn-light-theme);
+}
+
+.black-theme {
+  @include angular-material-theme($gpn-black-theme);
+  @include custom-components-theme($gpn-black-theme);
+}
+
+.nature-theme {
+  @include angular-material-theme($gpn-nature-theme);
+  @include custom-components-theme($gpn-nature-theme);
+}

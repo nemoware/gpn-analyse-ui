@@ -1,0 +1,9 @@
+$gpn-black-primary: mat-palette($mat-grey, 700, 300, 900);
+$gpn-black-accent: mat-palette($mat-blue-grey, 400);
+$gpn-black-warn: mat-palette($mat-red, 500);
+
+$gpn-black-theme: mat-dark-theme(
+  $gpn-black-primary,
+  $gpn-black-accent,
+  $gpn-black-warn
+);

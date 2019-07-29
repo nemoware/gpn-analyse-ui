@@ -1,0 +1,75 @@
+@import '../../../../styles-variables';
+@import '../../../../themes/default-theme';
+
+ 
+
+tr.detail-row {
+  height: 0;
+}
+
+tr.element-row:not(.expanded-row):hover {
+  background:mat-color($gpn-primary, 100);
+}
+
+tr.element-row:not(.expanded-row):active {
+  background:mat-color($gpn-primary, 200);
+}
+
+.element-row td {
+  border-bottom-width: 0; 
+}
+
+.element-detail {  
+  overflow: hidden;
+  display: flex;
+}
+
+ 
+ 
+
+/* Structure */
+
+.mat-cell{
+  font-size: 12px;
+}
+
+.container {
+  position: relative;
+  min-height: 200px;
+  padding: 0;
+}
+
+.table-container {
+  position: relative;
+  max-height: 400px;
+  overflow: auto;
+  padding: 0;
+}
+
+table {
+  width: 100%;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ 
+/* Column Widths */
+.mat-column-number,
+.mat-column-state {
+  max-width: 64px;
+}
+
+.mat-column-filemtime {
+  max-width: 250px;
+}

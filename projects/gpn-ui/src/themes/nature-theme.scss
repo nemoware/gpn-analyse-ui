@@ -1,0 +1,9 @@
+$gpn-nature-primary: mat-palette($mat-brown, 700, 300, 900);
+$gpn-nature-accent: mat-palette($mat-deep-purple, 300);
+$gpn-nature-warn: mat-palette($mat-red, 600);
+
+$gpn-nature-theme: mat-light-theme(
+  $gpn-nature-primary,
+  $gpn-nature-accent,
+  $gpn-nature-warn
+);

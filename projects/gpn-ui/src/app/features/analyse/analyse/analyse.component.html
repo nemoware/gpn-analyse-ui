@@ -1,0 +1,19 @@
+<nav mat-tab-nav-bar class="d-none d-sm-flex" [backgroundColor]="primary"  color="accent">
+  <a mat-tab-link *ngFor="let e of analyse" [routerLink]="e.link" routerLinkActive #rla="routerLinkActive" 
+    [active]="rla.isActive" [disabled]="e.auth && !(isAuthenticated$ | async)">
+    {{ e.label  | uppercase}}
+  </a>
+</nav>
+
+<nav class="nav-responsive d-sm-none d-flex justify-content-center">
+  <mat-select [placeholder]="'gpn.analyse.title'  " [value]="'todos'">
+    <mat-option *ngFor="let e of analyse" [value]="e" [routerLink]="e.link"
+      [disabled]="e.auth && !(isAuthenticated$ | async)">
+      {{ e.label  }}
+    </mat-option>
+  </mat-select>
+</nav>
+
+<div>
+  <router-outlet #o="outlet"></router-outlet>
+</div>

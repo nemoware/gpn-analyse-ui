@@ -1,0 +1,11 @@
+// $gpn-primary: mat-palette($mat-blue, 800, 300, 900);
+// $gpn-accent: mat-palette($mat-blue, 200);
+// $gpn-warn: mat-palette($mat-pink, 600);
+
+
+$gpn-primary: mat-palette($mat-gray, 100, 300, 900);
+$gpn-accent: mat-palette($mat-blue, 500);
+$gpn-warn: mat-palette($mat-pink, 600);
+
+
+$gpn-theme: mat-light-theme($gpn-primary, $gpn-accent, $gpn-warn);

@@ -1,0 +1,153 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "gpn-ui": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "changeDetection": "OnPush",
+          "style": "scss"
+        }
+      },
+      "root": "projects/gpn-ui",
+      "sourceRoot": "projects/gpn-ui/src",
+      "prefix": "gpn",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/gpn-ui",
+            "index": "projects/gpn-ui/src/index.html",
+            "main": "projects/gpn-ui/src/main.ts",
+            "polyfills": "projects/gpn-ui/src/polyfills.ts",
+            "tsConfig": "projects/gpn-ui/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "projects/gpn-ui/src/favicon.ico",
+              "projects/gpn-ui/src/assets",
+              "projects/gpn-ui/src/assets/*.json"
+            ],
+            "styles": [
+              "projects/gpn-ui/src/styles-app-loading.scss",
+              "projects/gpn-ui/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/gpn-ui/src/environments/environment.ts",
+                  "with": "projects/gpn-ui/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "bundle",
+                  "name": "polyfills",
+                  "baseline": "150kb",
+                  "maximumWarning": "50kb",
+                  "maximumError": "100kb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "styles",
+                  "baseline": "280kb",
+                  "maximumWarning": "50kb",
+                  "maximumError": "100kb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "main",
+                  "baseline": "1024kb",
+                  "maximumWarning": "100kb",
+                  "maximumError": "200kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "gpn-ui:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "gpn-ui:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "gpn-ui:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/gpn-ui/src/test.ts",
+            "polyfills": "projects/gpn-ui/src/polyfills.ts",
+            "tsConfig": "projects/gpn-ui/tsconfig.spec.json",
+            "karmaConfig": "projects/gpn-ui/karma.conf.js",
+            "assets": [
+              "projects/gpn-ui/src/favicon.ico",
+              "projects/gpn-ui/src/assets"
+            ],
+            "styles": [
+              "projects/gpn-ui/src/styles-app-loading.scss",
+              "projects/gpn-ui/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "test": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/gpn-ui/src/environments/environment.ts",
+                  "with": "projects/gpn-ui/src/environments/environment.test.ts"
+                }
+              ]
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/gpn-ui/tsconfig.app.json",
+              "projects/gpn-ui/tsconfig.spec.json",
+              "projects/gpn-ui/e2e/tsconfig.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/gpn-ui/e2e/protractor.conf.js",
+            "devServerTarget": "gpn-ui:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "gpn-ui:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "gpn-ui"
+}
