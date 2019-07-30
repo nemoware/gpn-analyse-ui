@@ -28,7 +28,7 @@ export class TextMarkupComponent {
     let i = 0
     for (let span of _map) {
       let token = _text.slice(span[0], span[1]);
-      let clazz = (token == '\n') ? 'tag_br' : 'udnef';
+      let clazz = (token == '\n') ? 'tag_br ' : '';
       tokens[i] = [];
       tokens[i][0] = token;
       tokens[i][1] = clazz;
@@ -42,7 +42,7 @@ export class TextMarkupComponent {
 
       for (let k = _start_i; k < _stop_i; k++) {
         if (tokens[k])
-          tokens[k][1] = 'tag_default tag_' + tag.kind.split('.').join('_'); //TODO:
+          tokens[k][1] += 'tag_default tag_' + tag.kind.split('.').join('_'); //TODO:
         else
           console.error('no token for ' + k)
       }
