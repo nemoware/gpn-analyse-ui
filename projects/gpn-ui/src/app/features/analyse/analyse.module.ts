@@ -14,7 +14,9 @@ import { AuthenticatedComponent } from './authenticated/authenticated.component'
 import { AnalyseEffects } from './analyse.effects';
 import { DocumentsListComponent } from './search/search.component';
 import { DocInfoComponent } from './search/doc-info/doc-info.component';
-  
+import { TextMarkupComponent } from './contract/components/text-markup.component';
+// import { TextMarkup } from './text-markup.component';
+
 @NgModule({
   imports: [
     SharedModule,
@@ -25,6 +27,7 @@ import { DocInfoComponent } from './search/doc-info/doc-info.component';
     ])
   ], 
   declarations: [
+    TextMarkupComponent,
     AnalyseComponent,     
     AuthenticatedComponent,
     ContractComponent, 

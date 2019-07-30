@@ -1,0 +1,29 @@
+@import '../../../../../styles-variables';
+@import '../../../../../themes/default-theme';
+
+
+.tag_default{
+  background: #e8eaf6;
+  border-radius	:3px;
+  padding:2px
+}
+
+.tag_org_2_name{
+  background: #e91e63
+}
+.tag_org_1_name{
+  background: #ff6090
+}
+
+.tag_org_1_type{
+  background: #4db6ac
+}
+
+.tag_org_2_type{
+  background: #82e9de
+}
+
+.tag_headline{
+  font-weight: 400;
+  font-size: 120%;
+}
