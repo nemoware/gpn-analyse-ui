@@ -23,8 +23,7 @@ export class ContractComponent implements AfterViewInit {
     
     console.warn('on init')
     this.contract$ = this.searchService!.getContract('contract id') 
-    // this.contract$ 
-    //   .subscribe(doc => this.onContractLoaded(doc)  );
+     
     
   }
   ngAfterViewInit() {  

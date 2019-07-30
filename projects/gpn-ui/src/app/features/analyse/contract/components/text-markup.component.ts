@@ -28,7 +28,7 @@ export class TextMarkupComponent {
     let i = 0
     for (let span of _map) {
       let token = _text.slice(span[0], span[1]);
-      let clazz = 'udnef';
+      let clazz = (token == '\n') ? 'tag_br' : 'udnef';
       tokens[i] = [];
       tokens[i][0] = token;
       tokens[i][1] = clazz;

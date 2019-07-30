@@ -8,6 +8,16 @@
   padding:2px
 }
 
+
+
+.tag_org_2_alias{
+  background: #1e63e9
+}
+.tag_org_1_alias{
+  background: #6090ff
+}
+
+
 .tag_org_2_name{
   background: #e91e63
 }
@@ -26,4 +36,12 @@
 .tag_headline{
   font-weight: 400;
   font-size: 120%;
+}
+
+
+
+.tag_br{
+  display: block;
+  height: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15)
 }
