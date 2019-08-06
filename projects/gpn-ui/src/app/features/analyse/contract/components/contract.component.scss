@@ -1,10 +1,26 @@
 @import '../../../../../styles-variables';
 @import '../../../../../themes/default-theme';
-
-
-
 .container {
   position: relative;
   min-height: 200px;
   padding: 0;
+}
+.left_group {
+  height: 75vh;
+  width: 20%;
+  float: left;
+  border: 1px solid #c1c1c1;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.right_group {
+  height: 75vh;
+  width: 80%;
+  float: right;
+}
+.link_tag {
+  text-decoration: underline;
+  cursor: pointer;
 }

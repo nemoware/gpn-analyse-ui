@@ -1,0 +1,5 @@
+<button [disabled]="this.loadedDoc" (click)="loadDoc()">Загрузить документ</button>
+<button [disabled]="!this.loadedDoc" (click)="goToColorText('top')">В начало документа</button>
+<button [disabled]="!this.loadedDoc" (click)="goToColorText('foot')">В конец документа</button>
+<button [disabled]="!this.loadedDoc" (click)="getSelectedText()"  id="btn_sel">Выделить текст</button>
+<pre class="view_doc" id="view_doc" #userNameId></pre>

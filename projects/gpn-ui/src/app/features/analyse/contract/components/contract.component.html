@@ -1,13 +1,14 @@
-<div class="row" >
-  <div class="col-12" >
-    <div class="container" *ngIf="contract$ | async as contract">
-      Conntract
-      <h4>Файл: {{ contract.filename  }}</h4>
+<div *ngIf="contract$ | async as contract">
+  <h4>Файл: {{ contract.filename  }}</h4>
+  <div class="left_group">
+    <b>Tags</b>
+    <ol>
+      <li *ngFor="let key of contract.tags" (click)="goToColorText(key)"><span class='link_tag'>{{key.value}}</span>
+    </ol>
+  </div>
+  <div class="right_group">
+    <!--<gpn-view-doc [contract]="contract"></gpn-view-doc>-->
+    <gpn-view-doc [contract]="contract"></gpn-view-doc>
 
-      <div mat-list-item *ngFor="let key of contract.tags">
-        <b>{{key.kind}}: </b><span>{{key.value}}</span><br>
-      </div>
-
-    </div>
   </div>
 </div>
