@@ -3,11 +3,10 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
-  ViewEncapsulation,
-  ViewChild,
-  ElementRef
+  ViewEncapsulation
 } from '@angular/core';
 import { LegalDocument, Tag } from '@app/models/legal-document';
+import { KindTag } from '@app/models/document-info';
 
 @Component({
   selector: 'gpn-view-doc',
@@ -17,10 +16,13 @@ import { LegalDocument, Tag } from '@app/models/legal-document';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewDocComponent implements OnInit {
-  loadedDoc = false;
-  @Input() contract: LegalDocument;
 
   constructor() {}
+  loadedDoc = false;
+  @Input() contract: LegalDocument;
+  @Input() kindTags: KindTag[];
+
+  selectedClass = 'headline';
 
   ngOnInit() {
     if (this.contract != null) this.loadDoc();
@@ -89,15 +91,17 @@ export class ViewDocComponent implements OnInit {
     const wordS = words[elemS.id.split('_')[1]];
     const wordE = words[elemE.id.split('_')[1]];
     const value = this.contract.normal_text.slice(wordS[0], wordE[1]);
-    console.log(this.contract.normal_text);
     for (const elem of this.getArrayNodes(elemS, elemE)) {
-      elem.classList.remove('span');
-      elem.classList.add('headline');
+      elem.classList.forEach(c => {
+        elem.classList.remove(c)
+      });
+      elem.classList.add(this.selectedClass);
     }
-    this.addNewTag('headline', value, [
+    this.addNewTag(this.selectedClass, value, [
       Number(elemS.id.split('_')[1]),
       Number(elemE.id.split('_')[1])
     ]);
+
   }
 
   getArrayNodes(elemS: Element, elemE: Element): Array<Element> {

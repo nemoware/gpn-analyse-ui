@@ -1,14 +1,12 @@
-<div *ngIf="contract$ | async as contract">
-  <h4>Файл: {{ contract.filename  }}</h4>
+<div *ngIf="documentInfo$ | async as doc">
+  <h4>Файл: {{ contract.filename }}</h4>
   <div class="left_group">
     <b>Tags</b>
     <ol>
-      <li *ngFor="let key of contract.tags" (click)="goToColorText(key)"><span class='link_tag'>{{key.value}}</span>
+     <li *ngFor="let key of contract.tags" (click)="goToColorText(key)"><span class='link_tag'>{{key.value}}</span>
     </ol>
   </div>
   <div class="right_group">
-    <!--<gpn-view-doc [contract]="contract"></gpn-view-doc>-->
-    <gpn-view-doc [contract]="contract"></gpn-view-doc>
-
+    <gpn-view-doc [contract]="contract" [kindTags]="tags"></gpn-view-doc>
   </div>
 </div>
