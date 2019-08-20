@@ -1,12 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controller/contract.controller.js');
-// get tags
-router.get('/tags', controller.getTags);
-// get contracts
+
+router.get('/tag_types', controller.getTagTypes);
+router.get('/docum_types', controller.getDocumTypes);
 router.get('/contracts', controller.getContracts);
-// get contract by id
 router.get('/contracts/:id', controller.getContractById);
+
+router.get('/permissions', controller.getPermissions);
+router.get('/permissionsuser', controller.getPermissionsByUser);
+router.get('/permissionsuserid', controller.getPermissionsByUserID);
+
+router.get('/users', controller.gerUsers);
+router.post('/users', controller.createUser);
+router.put('/users', controller.updateUser);
+router.delete('/users', controller.deleteUser);
 
 module.exports = router;
 

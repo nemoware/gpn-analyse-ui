@@ -1,44 +1,14 @@
 [
   {
     "ip":"192.168.47.108",
-    "groups" : [
-      {
-        "dn":"CN=AnalyseContract,OU=comp,DC=comp,DC=loc",
-        "cn":"AnalyseContract"
-      },
-      {
-        "dn":"CN=Департамент систем управления и электроэнергии,OU=comp,DC=comp,DC=loc",
-        "cn":"Департамент систем управления и электроэнергии",
-        "description":"Департамент систем управления и электроэнергии"
-      }
-    ]
+    "login" : "ikrivoshej"
   },
   {
     "ip":"192.168.47.45",
-    "groups" : [
-      {
-        "dn":"CN=AnalyseContract,OU=comp,DC=comp,DC=loc",
-        "cn":"AnalyseContract"
-      },
-      {
-        "dn":"CN=Департамент системной разработки и биллинга,OU=comp,DC=comp,DC=loc",
-        "cn":"Департамент системной разработки и биллинга",
-        "description":"Департамент системной разработки и биллинга"
-      }
-    ]
+    "login" : "ikress"
   },
   {
     "ip":"192.168.47.25",
-    "groups" : [
-      {
-        "dn":"CN=Developers,OU=comp,DC=comp,DC=loc",
-        "cn":"Developers"
-      },
-      {
-        "dn":"CN=Департамент системной разработки и биллинга,OU=comp,DC=comp,DC=loc",
-        "cn":"Департамент системной разработки и биллинга",
-        "description":"Департамент системной разработки и биллинга"
-      }
-    ]
+    "login" : "aboruc"
   }
 ]

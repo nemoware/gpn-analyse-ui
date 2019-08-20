@@ -12,7 +12,7 @@ import {
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
- 
+
 
 import { environment } from '@environments/environment';
 
@@ -27,36 +27,35 @@ import { selectIsAuthenticated, selectAuth } from './auth/auth.selectors';
 import { authLogin, authLogout } from './auth/auth.actions';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { TitleService } from './title/title.service';
- 
+
 import { AppErrorHandler } from './error-handler/app-error-handler.service';
 import { CustomSerializer } from './router/custom-serializer';
 import { LocalStorageService } from './local-storage/local-storage.service';
 import { HttpErrorInterceptor } from './http-interceptors/http-error.interceptor';
 import { NotificationService } from './notifications/notification.service';
 import { SettingsEffects } from './settings/settings.effects';
-import {  
+import {
   selectEffectiveTheme,
   selectSettingsStickyHeader
 } from './settings/settings.selectors';
+
 
 export {
   TitleService,
   selectAuth,
   authLogin,
   authLogout,
-  
+
   AppState,
   LocalStorageService,
   selectIsAuthenticated,
-   
+
   AuthGuardService,
   selectRouterState,
   NotificationService,
-  selectEffectiveTheme,  
+  selectEffectiveTheme,
   selectSettingsStickyHeader
 };
-
- 
 
 @NgModule({
   imports: [
@@ -69,7 +68,7 @@ export {
     StoreRouterConnectingModule.forRoot(),
     EffectsModule.forRoot([
       AuthEffects,
-      SettingsEffects 
+      SettingsEffects
     ]),
     environment.production
       ? []
@@ -77,7 +76,7 @@ export {
           name: 'Слава ГПН!'
         }),
 
- 
+
   ],
   declarations: [],
   providers: [

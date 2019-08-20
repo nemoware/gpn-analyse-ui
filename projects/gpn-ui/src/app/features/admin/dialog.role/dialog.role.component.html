@@ -1,0 +1,13 @@
+<h4 mat-dialog-title>Список прав доступа</h4>
+<div mat-dialog-content>
+    <ul>
+      <li matInput *ngFor="let role of data.permissions">
+        <label>
+            <input type="checkbox" id="chk_{{ role.name }}" [checked]="data.user_role.includes(role.id.toString())">{{ role.name + ' - ' + role.description }}
+        </label>
+    </ul>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="Apply()">Ok</button>
+</div>

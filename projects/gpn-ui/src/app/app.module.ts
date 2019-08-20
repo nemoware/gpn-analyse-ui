@@ -7,6 +7,7 @@ import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app/app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthorizationGuard } from '@core/authorization/authorization.guard';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule
   ],
   declarations: [AppComponent],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [AuthorizationGuard]
 })
 export class AppModule { }

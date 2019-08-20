@@ -21,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'contract/',
+        redirectTo: 'search',
         pathMatch: 'full'
       },
       {
@@ -34,8 +34,6 @@ const routes: Routes = [
         component: ContractComponent,
         data: { title: 'gpn.analyse.menu.contract' }
       },
-
-
       {
         path: 'authenticated',
         component: AuthenticatedComponent,

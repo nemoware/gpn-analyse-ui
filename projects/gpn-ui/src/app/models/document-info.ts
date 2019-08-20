@@ -7,6 +7,10 @@
    id_type: number;
    createdAt: Date;
    updatedAt: Date;
+   filename: string;
+   short_filename: string;
+   checksum: number;
+   filemtime: number;
  }
 
  export interface KindTag {

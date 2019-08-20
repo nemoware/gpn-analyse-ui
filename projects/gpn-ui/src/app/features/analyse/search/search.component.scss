@@ -1,8 +1,6 @@
 @import '../../../../styles-variables';
 @import '../../../../themes/default-theme';
 
- 
-
 tr.detail-row {
   height: 0;
 }
@@ -16,21 +14,27 @@ tr.element-row:not(.expanded-row):active {
 }
 
 .element-row td {
-  border-bottom-width: 0; 
+  border-bottom-width: 0;
 }
 
-.element-detail {  
+.element-detail {
   overflow: hidden;
   display: flex;
 }
 
- 
- 
+.customWidthClass{
+  flex: 0 0 120px !important;
+  width: 120px !important;
+}
+
 
 /* Structure */
 
-.mat-cell{
+.mat-cell {
   font-size: 12px;
+  min-height: 48px;
+  text-align: left;
+  border-right: 1px solid gainsboro;
 }
 
 .container {
@@ -50,20 +54,7 @@ table {
   width: 100%;
 }
 
-.loading-shade {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 56px;
-  right: 0;
-  background: rgba(0, 0, 0, 0.15);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
- 
 /* Column Widths */
 .mat-column-number,
 .mat-column-state {
@@ -72,4 +63,53 @@ table {
 
 .mat-column-filemtime {
   max-width: 250px;
+}
+
+.left_group {
+  margin-left: 10px;
+  height: 80vh;
+  width: 20%;
+  float: left;
+  //border: 1px solid #c1c1c1;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.right_group {
+  margin-right: 10px;
+  height: 75vh;
+  width: 78%;
+  float: right;
+}
+
+.tp-section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 60px;
+}
+.tp-margin {
+  margin: 0 10px;
+}
+
+.spinner {
+  height: 200px;
+  width: 200px;
+  animation: rotate 2s linear infinite;
+  transform-origin: center center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  animation: dash 1s ease-in-out infinite;
+  stroke-linecap: round;
+  stroke: #ddd;
 }

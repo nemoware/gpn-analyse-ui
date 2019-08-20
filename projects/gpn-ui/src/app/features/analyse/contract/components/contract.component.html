@@ -1,12 +1,20 @@
+<div class="loading-shade" *ngIf="isLoading">
+  <svg class="spinner" viewBox="25 25 50 50">
+    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+  </svg>
+</div>
 <div *ngIf="documentInfo$ | async as doc">
   <h4>Файл: {{ contract.filename }}</h4>
-  <div class="left_group">
+  <div class="left_group mat-elevation-z10">
     <b>Tags</b>
     <ol>
      <li *ngFor="let key of contract.tags" (click)="goToColorText(key)"><span class='link_tag'>{{key.value}}</span>
     </ol>
   </div>
-  <div class="right_group">
+  <div class="central_group mat-elevation-z10">
     <gpn-view-doc [contract]="contract" [kindTags]="tags"></gpn-view-doc>
+  </div>
+  <div class="right_group mat-elevation-z10">
+    <h4 style="margin-left: 10px;">Список связных документов</h4>
   </div>
 </div>

@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
+import { AuthorizationGuard } from '@core/authorization/authorization.guard';
 
 const routes: Routes = [
-      
   {
     path: 'dash',
     loadChildren: () =>
-      import('./features/dash/dash.module').then(
-        m => m.FeatureListModule
-      )
+      import('./features/dash/dash.module').then(m => m.FeatureListModule)
   },
   {
     path: 'settings',
@@ -19,6 +17,12 @@ const routes: Routes = [
     path: 'analyse',
     loadChildren: () =>
       import('./features/analyse/analyse.module').then(m => m.AnalyseModule)
+  },
+  {
+    path: 'admin',
+    canActivate: [AuthorizationGuard],
+    loadChildren: () =>
+      import('./features/admin/admin.module').then(m => m.AdminModule)
   },
   {
     path: '**',

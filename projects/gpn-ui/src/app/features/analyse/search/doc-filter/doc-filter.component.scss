@@ -1,0 +1,31 @@
+.container {
+  height: 75vh;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.inputText {
+  width: 100%;
+  font-size: 13px;
+  padding: 5px 5px 5px 5px;
+  border: 1px solid #dddddd;
+}
+
+.form-popup {
+  display: none;
+  position: fixed;
+  top: 190px;
+  left: 30px;
+  width: 250px;
+  background-color: white;
+}
+
+.btn {
+  background-color: lightblue;
+  color: white;
+  border: none;
+  float: bottom;
+  width: 100%;
+}

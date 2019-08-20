@@ -3,7 +3,6 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const routes = require('./app/route/contract.route');
-const addRequestId = require('express-request-id')();
 const moment = require('moment-timezone');
 const db = require('./app/config/db.config.js');
 const fs = require('fs');
@@ -27,7 +26,6 @@ app.use(morgan('myformat', { stream: accessLogStream }));
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(addRequestId);
 
 
 app.use(function(req, res, next) {

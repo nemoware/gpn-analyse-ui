@@ -1,10 +1,9 @@
 <div>
-
     <div class="example-element-diagram">
-
-        <div class="filename"> {{doc.filename}} </div>
-        <div class="len"> {{doc.len}} </div>
-        <div class="checksum"> {{doc.checksum}} </div>
+      <button (click)="openDoc()">Просмотр</button>
+        <div class="filename"> {{doc.json_name_new}} </div>
+        <div class="len"> {{doc.json_path}} </div>
+        <div class="checksum"> {{doc.dtc}} </div>
         <div class="results"> Результаты анализа: <div>тут нечто</div>
         </div>
     </div>

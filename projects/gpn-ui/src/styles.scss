@@ -19,10 +19,10 @@
 
 @mixin custom-components-theme($theme) {
   @include gpn-styles-reset-theme($theme);
-  @include gpn-app-component-theme($theme);  
-  
-   
-   
+  @include gpn-app-component-theme($theme);
+
+
+
   // @include gpn-parent-component-theme($theme);
   // @include gpn-child-component-theme($theme);
   @include gpn-analyse-component-theme($theme);

@@ -1,0 +1,33 @@
+<div class="mat-elevation-z10 container">
+  <label style="margin-top: 5px; font-size:16px; font-weight: bold;">Панель фильтров</label>
+  <hr>
+  <input [ngModel]="this.strDocumTypes"  style="cursor: pointer;" type="text" class="inputText" placeholder="Тип документа" readonly (click)="openPopup()">
+  <input [(ngModel)]="strNameOrg" style="margin-top: 5px;" type="text" class="inputText" placeholder="Наименование организации" id="strNameOrg">
+  <mat-form-field style="width: 50%">
+    <input matInput [matDatepicker]="dateFrom" placeholder="Дата документа c" readonly [(ngModel)]="_dateFrom">
+    <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle >
+    <mat-datepicker #dateFrom></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field style="width: 50%">
+    <input matInput [matDatepicker]="dateTo" placeholder="Дата документа по" readonly [(ngModel)]="_dateTo">
+    <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+    <mat-datepicker #dateTo></mat-datepicker>
+  </mat-form-field>
+  <button class="mat-elevation-z4" type="button" style="margin-right: 5px; width: 48%; float: left;" (click)="applyFilter()">Применить фильтр</button>
+  <button class="mat-elevation-z4" type="button" style="margin-left: 5px; width: 48%; float: right;" (click)="clearFilter()">Сбросить фильтры</button>
+</div>
+
+<div class="form-popup" id="formPopup">
+  <form class="mat-elevation-z10">
+    <div>
+      <style type="text/css">
+        select, ul {  float: left; height: auto; overflow: auto; width: 150px;}
+        ul { list-style-type: none; margin: 5px; padding: 0; }
+      </style>
+      <ul>
+        <li *ngFor="let doc of documTypes"><label><input name="docum_types[]" type="checkbox" id="chk_{{ doc.str_id }}"> {{ doc.name }}</label>
+      </ul>
+    </div>
+    <button type="button" class="btn" (click)="closePopup()">Ок</button>
+  </form>
+</div>

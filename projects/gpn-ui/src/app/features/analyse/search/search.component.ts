@@ -1,13 +1,12 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, NgZone, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { DocumentsSearchService } from '../documents.service';
-
-import { merge, Observable, of as observableOf } from 'rxjs';
+import { merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { DocumentInfo } from '@app/models/document-info';
 
+import { DocumentsSearchService } from '../documents.service';
+import { DocumentInfo } from '@app/models/document-info';
 
 @Component({
   selector: 'gpn-search',
@@ -22,56 +21,65 @@ import { DocumentInfo } from '@app/models/document-info';
     ]),
   ],
 })
-export class DocumentsListComponent implements AfterViewInit {
+export class DocumentsListComponent implements AfterViewInit, OnInit {
 
-  constructor(private searchService: DocumentsSearchService) { }
-
+  constructor(private searchService: DocumentsSearchService, private changeDetectorRefs: ChangeDetectorRef) { }
   displayedColumns: string[] = ['filemtime', 'short_filename'];
-
+  documTypes: Array<{str_id: string, name: string}>;
   data: DocumentInfo[] = [];
   expandedElement: DocumentInfo | null;
-
+  _filterVlaue : Array<{name: string, value: any}>
   resultsLength = 0;
   isLoadingResults = true;
-
 
   @ViewChild(MatPaginator, { static: false })
   paginator: MatPaginator;
 
-
   @ViewChild(MatSort, { static: false })
   sort: MatSort;
 
-
-  
+  ngOnInit(): void {
+  }
 
   ngAfterViewInit() {
-
-    // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.searchService!.getSearchResults('fake query',
+          return this.searchService.getSearchContracts(this._filterVlaue,
             this.sort.active, this.sort.direction, this.paginator.pageIndex);
         }),
         map(data => {
           // Flip flag to show that loading has finished.
           this.isLoadingResults = false;
-          this.resultsLength = 10; //TODO: data.total_count;
-
+          this.resultsLength = 10;
           return data;
         }),
-
         catchError(() => {
           this.isLoadingResults = false;
           return observableOf([]);
         })
-      ).subscribe(data => this.data = data);
+      ).subscribe(data => {
+      this.data = data;
+      this.changeDetectorRefs.detectChanges();
+    });
+
+    this.searchService.getDocumTypes().subscribe(value => this.documTypes = value);
   }
+
+  onApplyFilter(filterVlaue : Array<{name: string, value: any}>) {
+    this.isLoadingResults = true;
+    this._filterVlaue = filterVlaue;
+    this.searchService!.getSearchContracts(this._filterVlaue, this.sort.active, this.sort.direction, this.paginator.pageIndex).
+    subscribe(data => {
+      this.data = data;
+      this.isLoadingResults = false;
+      this.changeDetectorRefs.detectChanges();
+    });
+  }
+
 }
 
 export interface DocumentInfoSearchResults {
