@@ -3,14 +3,13 @@ import { UserService } from '@app/features/admin/user.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@root/node_modules/@angular/material';
 
 @Component({
-  selector: 'gpn-administration',
+  selector: 'gpn-diaog-role',
   providers: [UserService],
   templateUrl: './dialog.role.component.html',
   styleUrls: ['./dialog.role.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogRoleComponent implements OnInit {
-
 
   constructor(
     public dialogRef: MatDialogRef<DialogRoleComponent>,
@@ -23,11 +22,17 @@ export class DialogRoleComponent implements OnInit {
   }
 
   Apply()  {
-    const list : Array<string> = [];
+    const list : Array<{id: string, status: string}> = [];
     for (const s of this.data.permissions) {
       const elem = document.getElementById('chk_' + s.name);
-      if (elem && (elem as HTMLInputElement).checked) {
-        list.push(s.id.toString());
+      if (elem && (elem as HTMLInputElement).checked && this.data.user_role.includes(s.id.toString())) {
+        list.push({ id: s.id.toString(), status: 'save' });
+      }
+        else if (elem && (elem as HTMLInputElement).checked && !this.data.user_role.includes(s.id.toString())) {
+          list.push({ id: s.id.toString(), status: 'insert'});
+      }
+      else if (elem && !(elem as HTMLInputElement).checked && this.data.user_role.includes(s.id.toString())) {
+        list.push({ id: s.id.toString(), status: 'delete'});
       }
     }
     this.dialogRef.close(list);

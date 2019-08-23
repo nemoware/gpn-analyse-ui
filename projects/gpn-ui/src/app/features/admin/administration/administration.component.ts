@@ -4,6 +4,7 @@ import { UserService } from '@app/features/admin/user.service';
 import { MatDialog } from '@root/node_modules/@angular/material';
 import { DialogRoleComponent } from '@app/features/admin/dialog.role/dialog.role.component';
 import { strict } from 'assert';
+import { DialogUserComponent } from '@app/features/admin/dialog.user/dialog.user.component';
 
 @Component({
   selector: 'gpn-administration',
@@ -14,10 +15,6 @@ import { strict } from 'assert';
 })
 export class AdministrationComponent implements OnInit {
 
-  @ViewChild('readOnlyTemplate', {static: false}) readOnlyTemplate: TemplateRef<any>;
-  @ViewChild('editTemplate', {static: false}) editTemplate: TemplateRef<any>;
-
-  editedUser: User;
   users: Array<User>;
   isNewRecord: boolean;
   statusMessage: string;
@@ -27,20 +24,28 @@ export class AdministrationComponent implements OnInit {
     this.users = new Array<User>();
   }
 
-  openDialog(): void {
+  openDialog(user: User): void {
+
+    this.statusMessage = '';
 
     const dialogRef = this.dialog.open(DialogRoleComponent, {
       width: '550px',
       data: {
         permissions: this.permissions,
-        user_role: this.editedUser.roles
+        user_role: user.roles
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.editedUser.roles = result;
-        this.changeDetectorRefs.detectChanges();
+    dialogRef.afterClosed().subscribe( result => {
+      if (result && result.length > 0) {
+        this.serv.saveRoles(user.id, result).subscribe( value => {
+          const roles = [];
+          for (const r of result)
+            if (r.status === 'save' || r.status === 'insert')
+              roles.push(r.id);
+          user.roles = roles;
+          this.changeDetector('Прва доступа пользователя ' + user.login + ' успешно обновлены');
+        });
       }
     });
   }
@@ -78,57 +83,42 @@ export class AdministrationComponent implements OnInit {
 
   addUser() {
     this.statusMessage = '';
-    this.editedUser = new User( 0, '', '', '', []);
-    this.users.push(this.editedUser);
-    this.isNewRecord = true;
-    this.changeDetectorRefs.detectChanges();
-  }
-
-  editUser(user: User) {
-    this.statusMessage = '';
-    this.editedUser = new User(user.id, user.login, user.name, user.description, user.roles);
-  }
-
-  loadTemplate(user: User) {
-    if (this.editedUser && this.editedUser.id === user.id) {
-      return this.editTemplate;
-    } else {
-      return this.readOnlyTemplate;
-    }
-  }
-
-  saveUser() {
-    if (this.isNewRecord) {
-      this.serv.createUser(this.editedUser).subscribe(data => {
-        this.statusMessage = 'Данные успешно добавлены';
-          this.getUsers();
-      });
-      this.isNewRecord = false;
-      this.editedUser = null;
-    } else {
-      this.serv.updateUser(this.editedUser.id, this.editedUser).subscribe(data => {
-        this.statusMessage = 'Данные успешно обновлены';
-          this.getUsers();
-      });
-      this.editedUser = null;
-    }
-  }
-
-  cancel() {
-    if (this.isNewRecord) {
-      this.users.pop();
-      this.isNewRecord = false;
-    }
-    this.editedUser = null;
+    const dialogRef = this.dialog.open(DialogUserComponent, {
+      width: '550px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (result) {
+          this.statusMessage = '';
+            const newUser = new User( 0, result.sAMAccountName, result.displayName, '', []);
+            this.serv.createUser(newUser).subscribe(user => {
+              newUser.id = user.id;
+              this.users.push(newUser);
+              this.changeDetector('Пользователь ' + newUser.login + ' успешно добавлен');
+          });
+        }
+      }
+    });
   }
 
   deleteUser(user: User) {
     if (confirm('Вы действительно хотите удалить данного пользователя?')) {
       this.serv.deleteUser(user.id.toString()).subscribe(data => {
-        this.statusMessage = 'Данные успешно удалены';
-        this.getUsers();
+        this.users = this.arrayRemove(this.users, user);
+        this.changeDetector('Пользователь ' + user.login + ' успешно удален');
       });
     }
+  }
+
+  changeDetector(message: string) {
+    this.statusMessage = message;
+    this.changeDetectorRefs.detectChanges();
+  }
+
+  arrayRemove(arr, value) {
+    return arr.filter(function(ele) {
+      return ele !== value;
+    });
   }
 
 }

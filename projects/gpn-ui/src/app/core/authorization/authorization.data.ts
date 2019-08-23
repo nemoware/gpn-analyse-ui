@@ -8,12 +8,12 @@ const api = '/api';
   providedIn: 'root'
 })
 export class AuthorizationData {
-  permissions: Array<{name: string}>;
+  permissions: [{name: string, roles: Array<string>}];
   constructor(private http: HttpClient) {}
 
   hasPermission(authGroup: AuthGroup) {
-    if (this.permissions && this.permissions.find(permission => {
-      return permission.name === authGroup;
+    if (this.permissions && this.permissions[0].roles.find(permission => {
+      return permission === authGroup;
     })) {
       return true;
     }
@@ -21,7 +21,7 @@ export class AuthorizationData {
   }
 
   getPermissions(){
-    this.http.get<Array<{name: string}>>(`${api}/permissionsuser`).subscribe(
+    this.http.get<[{name: string, roles: Array<string>}]>(`${api}/permissionsuser`).subscribe(
       value =>  {
         this.permissions = value;
       }

@@ -32,8 +32,12 @@ export class UserService {
       }));
   }
 
-  createUser(user: User) {
-    return this.http.post(`${api}/users`, user);
+  getUsersGroup() : Observable<any> {
+    return this.http.get<any>(`${api}/get_users`);
+  }
+
+  createUser(user: User) : Observable<User> {
+    return this.http.post<User>(`${api}/users`, user);
   }
 
   updateUser(id: number, user: User) {
@@ -44,5 +48,11 @@ export class UserService {
   deleteUser(id: string){
     const urlParams = new HttpParams().set('id', id.toString());
     return this.http.delete(`${api}/users`, { params: urlParams });
+  }
+
+  saveRoles( id_user: number, roles: Array<{id: string, status: string}>) : any {
+    let urlParams = new HttpParams().set('roles', JSON.stringify(roles));
+    urlParams = urlParams.set('id_user', id_user.toString());
+    return this.http.get(`${api}/save_roles`, { params: urlParams });
   }
 }

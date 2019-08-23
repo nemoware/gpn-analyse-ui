@@ -68,5 +68,10 @@ export class AppComponent implements OnInit {
     this.store.dispatch(authLogout());
   }
 
+  getNameUser() {
+    if (this.authorizationData.permissions)
+      return this.authorizationData.permissions[0].name;
+    else return '';
+  }
 
 }

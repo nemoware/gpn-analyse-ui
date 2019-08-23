@@ -3,13 +3,12 @@
   <div class="row">
 
     <div class="col">
-      <button type="button" class="btn btn-success" (click)="addUser()" [disabled]="editedUser" gpnDisable [DisableComponent]="'AuthGroup'">Добавить</button>
+      <button type="button" class="btn btn-success" (click)="addUser()" [disabled]="editedUser">Добавить</button>
       <table class="table table-striped">
         <thead>
         <tr>
           <td width="150">Логин</td>
           <td width="250">ФИО</td>
-          <td width="500">Описание</td>
           <td width="500">Роли</td>
           <td></td>
           <td></td>
@@ -17,7 +16,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let user of users">
-          <ng-template [ngTemplateOutlet]="loadTemplate(user)"
+          <ng-template [ngTemplateOutlet]="readOnlyTemplate"
                        [ngTemplateOutletContext]="{ $implicit: user}">
           </ng-template>
         </tr>
@@ -34,37 +33,11 @@
 <ng-template #readOnlyTemplate let-user>
   <td>{{user.login}}</td>
   <td>{{user.name}}</td>
-  <td>{{user.description}}</td>
   <td>{{ getStrRole(user.roles) }}</td>
   <td>
-    <input type="button" value="Изменить" class="btn btn-default" (click)="editUser(user)" />
+    <input type="button" value="Изменить" class="btn btn-default" (click)="openDialog(user)" />
   </td>
   <td>
     <input type="button" value="Удалить" (click)="deleteUser(user)" class="btn btn-danger" />
-  </td>
-</ng-template>
-
-<!--шаблон для редактирования-->
-<ng-template #editTemplate>
-  <td>
-    <input type="text" [(ngModel)]="editedUser.login" class="form-control" />
-  </td>
-  <td>
-    <input type="text" [(ngModel)]="editedUser.name" class="form-control" />
-  </td>
-  <td>
-    <input type="text" [(ngModel)]="editedUser.description" class="form-control" />
-  </td>
-  <td>
-    <div class="row">
-      <input style="width: 85%" type="text" [ngModel]="getStrRole(editedUser.roles)" class="form-control" readonly/>
-      <input style="width: 15%" type="button" value="..." (click)="openDialog()" class="btn btn-success" [disabled]="editedUser.id === 0"/>
-    </div>
-  </td>
-  <td>
-    <input type="button" value="Сохранить" (click)="saveUser()" class="btn btn-success" />
-  </td>
-  <td>
-    <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
   </td>
 </ng-template>
