@@ -7,10 +7,13 @@ const moment = require('moment-timezone');
 const db = require('./app/config/db.config.js');
 const fs = require('fs');
 const morgan = require('morgan');
-const auth = require('./app/authorization/authorization');
+const auth_bd = require('./app/authorization/authorization');
+const auth_ad = require('./app/authorization/auth.ad');
+const uuid = require('uuid/v4');
+const session = require('express-session');
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 db.sequelize.sync({force: false}).then(() => {
@@ -27,14 +30,54 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(session({
+  genid: (req) => {
+    return uuid();
+  },
+  secret: 'there_is_need_secret_word',
+  key: 'express.sid',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: 60000
+  }
+}));
 
-app.use(function(req, res, next) {
-  const authorized = auth.authorization(req);
-  if(!authorized)
-  res.sendFile('index.html', {
-    root: path.join(__dirname, './')
-  });
-  else next();
+app.use(async function(req, res, next) {
+
+  let login = '';
+  let checked = false;
+
+  if(!req.session.message) {
+
+    await auth_ad.get_login(req, res).then(
+      result => {
+        login = result.sAMAccountName;
+      },
+      error => {
+        console.log("Rejected: " + error);
+      }
+    );
+
+    await auth_bd.check_login(login).then(
+      result => {
+        checked = result;
+        if(checked) req.session.message = login;
+      },
+      error => {
+        console.log("Rejected: " + error);
+      }
+    );
+  }
+  else
+    checked = true;
+
+  if(checked) next();
+  else
+    res.sendFile('index.html', {
+      root: path.join(__dirname, './')
+    });
+
 });
 
 app.use(
