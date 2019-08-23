@@ -1,0 +1,44 @@
+<h3>Список пользователей</h3>
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <div class="container" *ngIf="Users$ | async as users">
+      <div class="row">
+        <div class="col">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <td width="50"></td>
+                <td width="150">Логин</td>
+                <td width="250">ФИО</td>
+                <td></td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let user of users">
+              <ng-template [ngTemplateOutlet]="readOnlyTemplate"
+                       [ngTemplateOutletContext]="{ $implicit: user}">
+              </ng-template>
+            </tr>
+            </tbody>
+          </table>
+          <hr>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button class="btn" mat-button (click)="Close()">Ok</button>
+</div>
+
+<!--шаблон для чтения-->
+<ng-template #readOnlyTemplate let-user>
+  <td>
+    <input type="button" value="+" (click)="Apply(  user )" class="btn btn-outline-success" />
+  </td>
+  <td>{{user.sAMAccountName}}</td>
+  <td>{{user.displayName}}</td>
+</ng-template>

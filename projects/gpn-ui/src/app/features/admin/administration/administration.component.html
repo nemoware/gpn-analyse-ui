@@ -1,15 +1,18 @@
-<h3>Список пользователей</h3>
 <div class="container">
+  <h3>Список зарегестрированных пользователей</h3>
+  <hr>
   <div class="row">
-
     <div class="col">
-      <button type="button" class="btn btn-success" (click)="addUser()" [disabled]="editedUser">Добавить</button>
+      <button type="button" class="btn btn-outline-success" (click)="addUser()">Добавить</button>
+      <span style="font-size: 18px; font-style: oblique; margin-left: 10px;"><b>{{statusMessage}}</b></span>
+      <div id="table-wrapper">
+        <div id="table-scroll">
       <table class="table table-striped">
         <thead>
         <tr>
-          <td width="150">Логин</td>
-          <td width="250">ФИО</td>
-          <td width="500">Роли</td>
+          <td width="150"><b>Логин</b></td>
+          <td width="250"><b>ФИО</b></td>
+          <td width="500"><b>Роли</b></td>
           <td></td>
           <td></td>
         </tr>
@@ -22,10 +25,9 @@
         </tr>
         </tbody>
       </table>
-      <hr>
-      <span style="font-size: 18px; font-style: oblique;"><b>{{statusMessage}}</b></span>
+      </div>
+      </div>
     </div>
-
   </div>
 </div>
 
@@ -35,9 +37,9 @@
   <td>{{user.name}}</td>
   <td>{{ getStrRole(user.roles) }}</td>
   <td>
-    <input type="button" value="Изменить" class="btn btn-default" (click)="openDialog(user)" />
+    <input type="button" value="Изменить" class="btn btn-outline-secondary" (click)="openDialog(user)" />
   </td>
   <td>
-    <input type="button" value="Удалить" (click)="deleteUser(user)" class="btn btn-danger" />
+    <input type="button" value=" Удалить " (click)="deleteUser(user)" class="btn btn-outline-danger" />
   </td>
 </ng-template>
