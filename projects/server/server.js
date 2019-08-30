@@ -1,5 +1,7 @@
 const path = require('path');
 const express = require('express');
+const https = require('https');
+
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const routes = require('./app/route/contract.route');
@@ -52,13 +54,15 @@ app.use(async function(req, res, next) {
 
     await auth_ad.get_login(req, res).then(
       result => {
-        login = result.sAMAccountName;
+        if(result)
+          login = result.sAMAccountName;
       },
       error => {
         console.log("Rejected: " + error);
       }
     );
 
+    if(login)
     await auth_bd.check_login(login).then(
       result => {
         checked = result;
@@ -96,6 +100,13 @@ app.use(
 
 app.use('/api', routes);
 
-app.listen(PORT, () =>
-  console.log(`App running on http://localhost:${PORT}${CONTEXT}`)
-);
+var options = {
+  key: fs.readFileSync('./app/https/device.key'),
+  cert: fs.readFileSync('./app/https/ngp.analyse.crt')
+};
+
+var server = https.createServer(options, app);
+
+server.listen(PORT, function () {
+  console.log(`App running on http://localhost:${PORT}${CONTEXT}`);
+});

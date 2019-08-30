@@ -23,5 +23,6 @@ db.permissions = require('../model/permission.model')(sequelize, Sequelize);
 db.users = require('../model/user.model')(sequelize, Sequelize);
 db.roles = require('../model/role.model')(sequelize, Sequelize);
 db.logs = require('../model/log.model')(sequelize, Sequelize);
+db.events = require('../model/event.model')(sequelize, Sequelize);
 
 module.exports = db;

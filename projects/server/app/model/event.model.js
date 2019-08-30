@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('permission', {
-    app_page : {type: DataTypes.STRING},
+  const Events = sequelize.define('event', {
     description: {type: DataTypes.STRING}
   });
+  return Events;
 };
