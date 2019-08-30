@@ -3,7 +3,7 @@
     <ul>
       <li matInput *ngFor="let role of data.permissions">
         <label>
-            <input type="checkbox" id="chk_{{ role.name }}" [checked]="data.user_role.includes(role.id.toString())">{{ role.name + ' - ' + role.description }}
+            <input type="checkbox" id="chk_{{ role.id }}" [checked]="data.user_role.includes(role.id.toString())">{{ role.id + ' - ' + role.description }}
         </label>
     </ul>
 </div>

@@ -13,6 +13,10 @@ import { DialogUserComponent } from '@app/features/admin/dialog.user/dialog.user
 @NgModule({
   declarations: [AdministrationComponent, DialogRoleComponent, DisableDirective, HideDirective, DialogUserComponent],
   entryComponents: [DialogRoleComponent, DialogUserComponent],
+  exports: [
+    DisableDirective,
+    HideDirective
+  ],
   imports: [CommonModule, SharedModule, AdminRoutingModule, MatDialogModule]
 })
 export class AdminModule {}

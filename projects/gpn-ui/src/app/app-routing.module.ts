@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { AuthorizationGuard } from '@core/authorization/authorization.guard';
+import { EventViewerGuard } from '@core/authorization/event.viewer.guard';
+import { AnalyseGuard } from '@core/authorization/analyse.guard';
 
 const routes: Routes = [
   {
@@ -15,6 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'analyse',
+    canActivate: [AnalyseGuard],
     loadChildren: () =>
       import('./features/analyse/analyse.module').then(m => m.AnalyseModule)
   },
@@ -23,6 +26,12 @@ const routes: Routes = [
     canActivate: [AuthorizationGuard],
     loadChildren: () =>
       import('./features/admin/admin.module').then(m => m.AdminModule)
+  },
+  {
+    path: 'event',
+    canActivate: [EventViewerGuard],
+    loadChildren: () =>
+      import('./features/events/event.viewer.module').then(m => m.EventViewerModule)
   },
   {
     path: '**',

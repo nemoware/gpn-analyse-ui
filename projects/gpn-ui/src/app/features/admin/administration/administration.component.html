@@ -35,7 +35,7 @@
 <ng-template #readOnlyTemplate let-user>
   <td>{{user.login}}</td>
   <td>{{user.name}}</td>
-  <td>{{ getStrRole(user.roles) }}</td>
+  <td>{{ user.roles }}</td>
   <td>
     <input type="button" value="Изменить" class="btn btn-outline-secondary" (click)="openDialog(user)" />
   </td>

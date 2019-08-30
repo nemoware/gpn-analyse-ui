@@ -1,0 +1,32 @@
+<div class="left_group">
+  <gpn-event-filter [eventsType]="eventsType" (onApplyFilter)="onApplyFilter($event)"></gpn-event-filter>
+</div>
+<div class="right_group">
+<div class="table-container">
+
+  <table mat-table [dataSource]="eventsApp" class="mat-elevation-z8" matSort matSortActive="createdAt" matSortDisableClear multiTemplateDataRows matSortDirection="desc">
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell  *matHeaderCellDef mat-sort-header disableClear style="width: 15%; font-size: 20px;"> Дата </th>
+      <td mat-cell *matCellDef="let event"> {{event.createdAt | date:'HH:mm dd.MM.yyyy'}} </td>
+    </ng-container>
+
+  <ng-container matColumnDef="login">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear style="width: 15%; font-size: 20px;"> Логин </th>
+    <td mat-cell *matCellDef="let event"> {{event.login}} </td>
+  </ng-container>
+
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear style="width: 75%; font-size: 20px;"> Событие </th>
+      <td mat-cell *matCellDef="let event"> {{event.value}} </td>
+    </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+</div>
+  <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+</div>
+
+

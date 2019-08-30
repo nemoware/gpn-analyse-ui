@@ -33,7 +33,7 @@ export class UserService {
   }
 
   getUsersGroup() : Observable<any> {
-    return this.http.get<any>(`${api}/get_users`);
+    return this.http.get<any>(`${api}/get_users`).pipe(map(value => { return value; }), catchError( err => { return throwError(err); }));
   }
 
   createUser(user: User) : Observable<User> {

@@ -72,7 +72,7 @@ export class DocumentsListComponent implements AfterViewInit, OnInit {
   onApplyFilter(filterVlaue : Array<{name: string, value: any}>) {
     this.isLoadingResults = true;
     this._filterVlaue = filterVlaue;
-    this.searchService!.getSearchContracts(this._filterVlaue, this.sort.active, this.sort.direction, this.paginator.pageIndex).
+    this.searchService.getSearchContracts(this._filterVlaue, this.sort.active, this.sort.direction, this.paginator.pageIndex).
     subscribe(data => {
       this.data = data;
       this.isLoadingResults = false;

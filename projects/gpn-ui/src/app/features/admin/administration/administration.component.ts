@@ -15,6 +15,7 @@ import { DialogUserComponent } from '@app/features/admin/dialog.user/dialog.user
 })
 export class AdministrationComponent implements OnInit {
 
+  str_error = 'При сохранении данных возникли ошибки! Для просмотра перейдите в журнал ошибок!';
   users: Array<User>;
   isNewRecord: boolean;
   statusMessage: string;
@@ -45,20 +46,12 @@ export class AdministrationComponent implements OnInit {
               roles.push(r.id);
           user.roles = roles;
           this.changeDetector('Прва доступа пользователя ' + user.login + ' успешно обновлены');
+        }, error => {
+          alert(this.str_error);
+          this.changeDetector(this.str_error);
         });
       }
     });
-  }
-
-  getStrRole(roles: Array<number>) {
-    if (!roles) return '';
-    let str_role = '';
-    if (this.permissions)
-      for (const r of roles) {
-        const role = this.permissions.find(s => s.id === Number(r));
-      if (role) str_role = str_role ? str_role + ', ' + role.name : role.name;
-    }
-    return str_role;
   }
 
   ngOnInit() {
@@ -95,7 +88,10 @@ export class AdministrationComponent implements OnInit {
               newUser.id = user.id;
               this.users.push(newUser);
               this.changeDetector('Пользователь ' + newUser.login + ' успешно добавлен');
-          });
+          }, error => {
+              alert(this.str_error);
+              this.changeDetector(this.str_error);
+            });
         }
       }
     });
@@ -106,6 +102,9 @@ export class AdministrationComponent implements OnInit {
       this.serv.deleteUser(user.id.toString()).subscribe(data => {
         this.users = this.arrayRemove(this.users, user);
         this.changeDetector('Пользователь ' + user.login + ' успешно удален');
+      }, error => {
+        alert(this.str_error);
+        this.changeDetector(this.str_error);
       });
     }
   }

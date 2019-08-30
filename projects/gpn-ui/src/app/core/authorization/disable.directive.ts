@@ -12,7 +12,7 @@ export class DisableDirective implements OnInit {
 
   constructor(private el: ElementRef, private authorizationService: AuthorizationData) { }
   ngOnInit() {
-    if (!this.authorizationService.hasPermission(this.permission)) {
+    if (!this.authorizationService.hasAccess(this.permission)) {
       this.el.nativeElement.disabled = true;
     }
   }

@@ -27,11 +27,8 @@ export class AppComponent implements OnInit {
   version = env.versions.app;
   year = new Date().getFullYear();
   logo = require('@assets/new_logo_text_ru.svg');
-  navigation = [
-    { link: 'dash', label: 'Дэшборд' },
-    { link: 'analyse', label: 'Анализ' },
-    { link: 'admin', label: 'Администрирование' }
-  ];
+  navigation : Array<{ link: string, label: string }> =
+    [{ link: 'dash', label: 'Дэшборд' }];
 
   navigationSideMenu = [
     ...this.navigation,
@@ -57,7 +54,11 @@ export class AppComponent implements OnInit {
     this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));
     this.theme$ = this.store.pipe(select(selectEffectiveTheme));
-    this.authorizationData.getPermissions();
+    this.authorizationData.getPermissions().subscribe( value => {
+      this.navigation.push({ link: 'analyse', label: 'Анализ' });
+      this.navigation.push({ link: 'admin', label: 'Администрирование' });
+      this.navigation.push({ link: 'event', label: 'Журнал событий' });
+    });
   }
 
   onLoginClick() {
@@ -70,8 +71,14 @@ export class AppComponent implements OnInit {
 
   getNameUser() {
     if (this.authorizationData.permissions)
-      return this.authorizationData.permissions[0].name;
+      return this.authorizationData.permissions.name;
     else return '';
+  }
+
+  getRolesUser() {
+    if (this.authorizationData.permissions)
+      return this.authorizationData.permissions.roles;
+    else return [];
   }
 
 }

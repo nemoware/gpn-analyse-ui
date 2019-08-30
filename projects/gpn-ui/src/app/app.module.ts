@@ -8,6 +8,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app/app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthorizationGuard } from '@core/authorization/authorization.guard';
+import { EventViewerGuard } from '@core/authorization/event.viewer.guard';
+import { AnalyseGuard } from '@core/authorization/analyse.guard';
+import { AdminModule } from '@app/features/admin/admin.module';
+import { AuthorizationData } from '@core/authorization/authorization.data';
 
 @NgModule({
   imports: [
@@ -20,10 +24,11 @@ import { AuthorizationGuard } from '@core/authorization/authorization.guard';
     SharedModule,
 
     // app
-    AppRoutingModule
+    AppRoutingModule,
+    AdminModule
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent],
-  providers: [AuthorizationGuard]
+  providers: [AuthorizationGuard, EventViewerGuard, AnalyseGuard, AuthorizationData]
 })
 export class AppModule { }

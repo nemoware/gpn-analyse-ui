@@ -15,7 +15,7 @@ export class DialogRoleComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogRoleComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       id: number,
-      permissions: Array<{id: number, name: string; description: string}>,
+      permissions: Array<{id: string, description: string}>,
       user_role: Array<string>
     }) {}
   ngOnInit() {
@@ -24,7 +24,7 @@ export class DialogRoleComponent implements OnInit {
   Apply()  {
     const list : Array<{id: string, status: string}> = [];
     for (const s of this.data.permissions) {
-      const elem = document.getElementById('chk_' + s.name);
+      const elem = document.getElementById('chk_' + s.id);
       if (elem && (elem as HTMLInputElement).checked && this.data.user_role.includes(s.id.toString())) {
         list.push({ id: s.id.toString(), status: 'save' });
       }
