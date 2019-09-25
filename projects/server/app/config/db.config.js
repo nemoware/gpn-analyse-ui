@@ -1,14 +1,14 @@
 const app_conf = require('./app.config.js');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(app_conf.env.database, app_conf.env.username, app_conf.env.password, {
-  host: app_conf.env.host,
-  dialect: app_conf.env.dialect,
+const sequelize = new Sequelize(app_conf.db.database, app_conf.db.username, app_conf.db.password, {
+  host: app_conf.db.host,
+  dialect: app_conf.db.dialect,
   operatorsAliases: false,
   pool: {
-    max: app_conf.env.max,
-    min: app_conf.env.pool.min,
-    acquire: app_conf.env.pool.acquire,
-    idle: app_conf.env.pool.idle
+    max: app_conf.db.max,
+    min: app_conf.db.pool.min,
+    acquire: app_conf.db.pool.acquire,
+    idle: app_conf.db.pool.idle
   }
 });
 const db = {};
