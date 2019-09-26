@@ -1,0 +1,41 @@
+<div class="container">
+  <h4>Новое задание на аудит</h4>
+    <mat-form-field>
+      <mat-select [formControl]="departmentCtrl" placeholder="Выбрать Дочернее Предприятие" #selectDepartment>
+        <mat-option>
+          <ngx-mat-select-search [formControl]="departmentFilterCtrl">
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let department of filteredDepartments | async" [value]="department">
+          {{department.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Путь к файлам (FTP URL)">
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <input matInput [matDatepicker]="auditStart" placeholder="Дата начала с">
+    <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
+    <mat-datepicker #auditStart></mat-datepicker>
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <input matInput [matDatepicker]="auditEnd" placeholder="Дата окончания по">
+    <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
+    <mat-datepicker #auditEnd></mat-datepicker>
+  </mat-form-field>
+
+  <br>
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button color="warn" (click)="CloseForm()" style="float: right">Отменить</button>
+    </div>
+    <div class="col">
+      <button mat-raised-button color="accent" (click)="CreateAudir()">Сохранить</button>
+    </div>
+  </div>
+
+</div>
