@@ -18,7 +18,9 @@ module.exports = (mongoose, Schema) => {
         text: String,
         author: { _id: ObjectId, login: String, name: String }
       }
-    ]
+    ],
+    createDate: Date,
+    author: { _id: ObjectId, login: String, name: String }
   });
 
   return mongoose.model('Audit', auditSchema);

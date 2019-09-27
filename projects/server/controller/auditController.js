@@ -1,6 +1,7 @@
 const Audit = require('../config/db.config').Audit;
 const AuditStatus = require('../config/db.config').AuditStatus;
 const Company = require('../config/db.config').Company;
+const ObjectId = require('../config/db.config').Schema.Types.ObjectId;
 
 exports.postAudit = async (req, res) => {
   let status = {
@@ -11,6 +12,13 @@ exports.postAudit = async (req, res) => {
 
   let audit = new Audit(req.body);
   audit.statuses.push(status);
+  audit.createDate = new Date();
+
+  //todo
+  audit.author = {
+    login: 'user',
+    name: 'user'
+  };
 
   audit.save(err => {
     if (err) {
