@@ -31,7 +31,7 @@ exports.postAudit = async (req, res) => {
 };
 
 exports.getSubsidiaries = async (req, res) => {
-  Subsidiary.find({}, function(err, subsidiaries) {
+  Subsidiary.find({}, (err, subsidiaries) => {
     if (err) {
       console.log(err);
       res.status(500).json({ msg: 'error', details: err });
@@ -43,7 +43,7 @@ exports.getSubsidiaries = async (req, res) => {
 };
 
 exports.getAuditStatuses = async (req, res) => {
-  AuditStatus.find({}, function(err, statuses) {
+  AuditStatus.find({}, (err, statuses) => {
     if (err) {
       console.log(err);
       res.status(500).json({ msg: 'error', details: err });
@@ -61,7 +61,7 @@ exports.getAudits = async (req, res) => {
     where['subsidiary.name'] = { $regex: `.*${req.query.name}.*` };
   }
 
-  Audit.find(where, function(err, audits) {
+  Audit.find(where, (err, audits) => {
     if (err) {
       console.log(err);
       res.status(500).json({ msg: 'error', details: err });
@@ -110,6 +110,6 @@ exports.deleteAudit = async (req, res) => {
       res.status(500).json({ msg: 'error', details: err });
       return;
     }
-    res.status(200);
+    res.status(200).send();
   });
 };
