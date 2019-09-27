@@ -25,6 +25,8 @@ module.exports = (mongoose, Schema) => {
     },
     { toJSON: { virtuals: true } }
   );
-
+  auditSchema.virtual('subsidiaryName').get(function() {
+    return this.subsidiary.name;
+  });
   return mongoose.model('Audit', auditSchema);
 };

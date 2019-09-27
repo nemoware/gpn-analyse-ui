@@ -1,14 +1,14 @@
 export interface Audit {
-  _id: string;
-  name: string;
-  company: {
+  id: string;
+  subsidiaryName: string;
+  subsidiary: {
+    _id: string;
     name: string;
   };
   ftpUrl: string;
   auditStart: Date;
   auditEnd: Date;
-  documentCount: number;
-  endAudit: string;
+  checkedDocumentCount: number;
   statuses: [
     { date: Date; status: { _id: string; name: string }; comment: string }
   ];
@@ -19,4 +19,6 @@ export interface Audit {
       author: { _id: string; login: string; name: string };
     }
   ];
+  createDate: Date;
+  author: { _id: string; login: string; name: string };
 }

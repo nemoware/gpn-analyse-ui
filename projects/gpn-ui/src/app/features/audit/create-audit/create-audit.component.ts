@@ -9,16 +9,34 @@ import {
 } from '@angular/core';
 import { AuditService } from '@app/features/audit/audit.service';
 import {
+  ErrorStateMatcher,
   MAT_DIALOG_DATA,
   MatDialogRef,
   MatIconRegistry,
   MatSelect
 } from '@root/node_modules/@angular/material';
-import { FormControl } from '@root/node_modules/@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  NgForm
+} from '@root/node_modules/@angular/forms';
 import { ReplaySubject, Subject } from '@root/node_modules/rxjs';
+// tslint:disable-next-line:import-blacklist
 import { take, takeUntil } from '@root/node_modules/rxjs/internal/operators';
-import { Department } from '@app/models/department.model';
+import { Subsidiary } from '@app/models/subsidiary.model';
 import { DomSanitizer } from '@root/node_modules/@angular/platform-browser';
+import { Audit } from '@app/models/audit.model';
+
+class CrossFieldErrorMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    return control.dirty && form.invalid;
+  }
+}
 
 @Component({
   selector: 'gpn-create-audit',
@@ -28,48 +46,78 @@ import { DomSanitizer } from '@root/node_modules/@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
-  public departmentCtrl: FormControl = new FormControl();
-  public departmentFilterCtrl: FormControl = new FormControl();
-  public filteredDepartments: ReplaySubject<Department[]> = new ReplaySubject<
-    Department[]
+  public subsidiaryCtrl: FormControl = new FormControl();
+  public subsidiaryFilterCtrl: FormControl = new FormControl();
+  public filteredSubsidiaries: ReplaySubject<Subsidiary[]> = new ReplaySubject<
+    Subsidiary[]
   >(1);
-  @ViewChild('selectDepartment', { static: false }) selectDepartment: MatSelect;
+  @ViewChild('selectSubsidiary', { static: false }) selectSubsidiary: MatSelect;
 
-  private departments: Department[] = [
-    { name: 'ГПН №1', _id: '1' },
-    { name: 'ГПН №2', _id: '2' },
-    { name: 'ГПН №3', _id: '3' }
-  ];
-
+  auditForm: FormGroup;
+  errorMatcher = new CrossFieldErrorMatcher();
+  private subsidiaries: Subsidiary[];
   private _onDestroy = new Subject<void>();
-
+  _auditStart: Date = null;
+  _auditEnd: Date = null;
+  _ftpUrl: string = null;
   constructor(
+    iconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer,
     private auditservice: AuditService,
     public dialogRef: MatDialogRef<CreateAuditComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {}
-  ) {}
-
-  ngOnInit() {
-    this.filteredDepartments.next(this.departments.slice());
-    this.departmentFilterCtrl.valueChanges
-      .pipe(takeUntil(this._onDestroy))
-      .subscribe(() => {
-        this.filterDepartments();
-      });
+    @Inject(MAT_DIALOG_DATA) public data: {},
+    private fb: FormBuilder
+  ) {
+    iconRegistry.addSvgIcon(
+      'close.icon',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icon/close.svg')
+    );
+    this.initForm();
   }
 
+  initForm() {
+    this.auditForm = this.fb.group(
+      {
+        auditStart: Date,
+        auditEnd: Date
+      },
+      {
+        validator: this.dateValidator
+      }
+    );
+  }
+
+  dateValidator(form: FormGroup) {
+    const condition =
+      form.get('auditStart').value != null &&
+      form.get('auditEnd').value != null &&
+      form.get('auditStart').value > form.get('auditEnd').value;
+    return condition ? { invalidDate: true } : null;
+  }
+
+  ngOnInit() {}
+
   ngAfterViewInit(): void {
-    this.setInitialValue();
+    this.auditservice.getSubsidiaries().subscribe(data => {
+      this.subsidiaries = data;
+      this.filteredSubsidiaries.next(this.subsidiaries.slice());
+      this.subsidiaryFilterCtrl.valueChanges
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(() => {
+          this.filterSubsidiaries();
+        });
+      this.setInitialValue();
+    });
   }
 
   private setInitialValue() {
-    this.filteredDepartments
+    this.filteredSubsidiaries
       .pipe(
         take(1),
         takeUntil(this._onDestroy)
       )
       .subscribe(() => {
-        this.selectDepartment.compareWith = (a: Department, b: Department) =>
+        this.selectSubsidiary.compareWith = (a: Subsidiary, b: Subsidiary) =>
           a._id === b._id;
       });
   }
@@ -79,20 +127,20 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     this._onDestroy.complete();
   }
 
-  private filterDepartments() {
-    if (!this.departments) {
+  private filterSubsidiaries() {
+    if (!this.subsidiaries) {
       return;
     }
-    let search = this.departmentFilterCtrl.value;
+    let search = this.subsidiaryFilterCtrl.value;
     if (!search) {
-      this.filteredDepartments.next(this.departments.slice());
+      this.filteredSubsidiaries.next(this.subsidiaries.slice());
       return;
     } else {
       search = search.toLowerCase();
     }
-    this.filteredDepartments.next(
-      this.departments.filter(
-        department => department.name.toLowerCase().indexOf(search) > -1
+    this.filteredSubsidiaries.next(
+      this.subsidiaries.filter(
+        subsidiary => subsidiary.name.toLowerCase().indexOf(search) > -1
       )
     );
   }
@@ -101,5 +149,39 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dialogRef.close();
   }
 
-  CreateAudir() {}
+  CreateAudit() {
+    const newAudit: Audit = {
+      id: null,
+      subsidiaryName: this.subsidiaryCtrl.value.name,
+      subsidiary: this.subsidiaryCtrl.value,
+      ftpUrl: this._ftpUrl,
+      auditStart: this._auditStart,
+      auditEnd: this._auditEnd,
+      checkedDocumentCount: null,
+      // @ts-ignore
+      statuses: [],
+      // @ts-ignore
+      comments: [],
+      createDate: new Date(),
+      author: null
+    };
+
+    this.auditservice.postAudit(newAudit).subscribe(
+      data => {
+        this.dialogRef.close(data);
+      },
+      error => {}
+    );
+  }
+
+  valid(): boolean {
+    return (
+      this._ftpUrl != null &&
+      this._ftpUrl.toString().length > 0 &&
+      this._auditEnd != null &&
+      this._auditStart != null &&
+      this.subsidiaryCtrl.value != null &&
+      this._auditStart <= this._auditEnd
+    );
+  }
 }

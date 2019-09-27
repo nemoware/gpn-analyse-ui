@@ -1,32 +1,48 @@
 <div class="container">
+
   <h4>Новое задание на аудит</h4>
     <mat-form-field>
-      <mat-select [formControl]="departmentCtrl" placeholder="Выбрать Дочернее Предприятие" #selectDepartment>
+      <mat-select [formControl]="subsidiaryCtrl" placeholder="Выбрать Дочернее Предприятие" #selectSubsidiary>
         <mat-option>
-          <ngx-mat-select-search [formControl]="departmentFilterCtrl">
+          <ngx-mat-select-search [formControl]="subsidiaryFilterCtrl"
+                                 [placeholderLabel]="'Поиск дочернего предприятия...'"
+                                 [noEntriesFoundLabel]="'Дочернее предприятие не найдено'"
+          >
+            <mat-icon ngxMatSelectSearchClear svgIcon="close.icon" aria-hidden="false" style="float: right" matTooltip="Очистить поиск"></mat-icon>
           </ngx-mat-select-search>
         </mat-option>
-        <mat-option *ngFor="let department of filteredDepartments | async" [value]="department">
-          {{department.name}}
+        <mat-option *ngFor="let subsidiary of filteredSubsidiaries | async" [value]="subsidiary">
+          {{subsidiary.name}}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
   <mat-form-field>
-    <input matInput placeholder="Путь к файлам (FTP URL)">
+    <input matInput placeholder="Путь к файлам (FTP URL)" [(ngModel)]="_ftpUrl">
   </mat-form-field>
   <br>
-  <mat-form-field>
-    <input matInput [matDatepicker]="auditStart" placeholder="Дата начала с">
-    <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
-    <mat-datepicker #auditStart></mat-datepicker>
-  </mat-form-field>
-  <br>
-  <mat-form-field>
-    <input matInput [matDatepicker]="auditEnd" placeholder="Дата окончания по">
-    <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
-    <mat-datepicker #auditEnd></mat-datepicker>
-  </mat-form-field>
+
+  <form [formGroup]="auditForm">
+    <mat-form-field>
+      <input matInput [matDatepicker]="auditStart" placeholder="Дата начала с" [(ngModel)]="_auditStart"
+           formControlName='auditStart' [errorStateMatcher]="errorMatcher" readonly = "true"
+      >
+      <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
+      <mat-datepicker #auditStart></mat-datepicker>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field>
+      <input matInput [matDatepicker]="auditEnd" placeholder="Дата окончания по" [(ngModel)]="_auditEnd"
+           formControlName='auditEnd' [errorStateMatcher]="errorMatcher" readonly = "true"
+      >
+      <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
+      <mat-datepicker #auditEnd></mat-datepicker>
+      <mat-error *ngIf="auditForm.hasError('invalidDate')">
+        Дата окончания не может быть меньше даты начала!
+      </mat-error>
+    </mat-form-field>
+  </form>
 
   <br>
   <div class="row">
@@ -34,8 +50,9 @@
       <button mat-raised-button color="warn" (click)="CloseForm()" style="float: right">Отменить</button>
     </div>
     <div class="col">
-      <button mat-raised-button color="accent" (click)="CreateAudir()">Сохранить</button>
+      <button mat-raised-button color="accent" (click)="CreateAudit()" [disabled]="!valid()">Сохранить</button>
     </div>
   </div>
 
 </div>
+

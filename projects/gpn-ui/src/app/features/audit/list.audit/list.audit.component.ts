@@ -3,7 +3,8 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ViewChild,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectorRef
 } from '@angular/core';
 import { DomSanitizer } from '@root/node_modules/@angular/platform-browser';
 import {
@@ -16,26 +17,29 @@ import {
 import { Audit } from '@app/models/audit.model';
 import { AuditService } from '@app/features/audit/audit.service';
 import { CreateAuditComponent } from '@app/features/audit/create-audit/create-audit.component';
+import { DatePipe } from '@root/node_modules/@angular/common';
 
 @Component({
   selector: 'gpn-list.audit',
   templateUrl: './list.audit.component.html',
   styleUrls: ['./list.audit.component.scss'],
-  providers: [AuditService],
+  providers: [AuditService, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListAuditComponent implements OnInit, AfterViewInit {
   columns: string[] = [
+    'id',
     'name',
-    'nameDepartment',
+    'subsidiaryName',
     'auditStart',
     'auditEnd',
-    'documentCount',
+    'checkedDocumentCount',
     'endAudit',
     'statusAudit',
     'businessProcess',
     'comments'
   ];
+  selectedAudit: Audit;
   dataSource = new MatTableDataSource();
   activePageDataChunk = [];
   audits: Audit[];
@@ -52,7 +56,9 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
     private auditservice: AuditService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private changeDetectorRefs: ChangeDetectorRef,
+    public datepipe: DatePipe
   ) {
     iconRegistry.addSvgIcon(
       'search.icon',
@@ -63,60 +69,75 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
       sanitizer.bypassSecurityTrustResourceUrl('assets/icon/comment.svg')
     );
   }
-  ngOnInit() {}
+  ngOnInit() {
+    this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
+  }
 
   ngAfterViewInit(): void {
-    /*
-    const filterVlaue = new Array<{name: string, value: string}>();
-    this.auditservice.getAudits(filterVlaue).subscribe(data => {
+    this.refreshData();
+  }
+
+  refreshData(filter: Array<{ name: string; value: string }> = null) {
+    this.auditservice.getAudits(filter).subscribe(data => {
       this.audits = data;
-      this.count = this.audits.length;
-      this.activePageDataChunk = this.audits.slice(0, this.pageSize);
-      this.dataSource = new MatTableDataSource(this.activePageDataChunk);
-      this.dataSource.sort = this.sort;
-    });*/
-    this.audits = [
-      {
-        _id: '1',
-        name: 'Аудит ДО от 21.06.2019',
-        company: {
-          name: 'ООО "Меретояхнефтегаз"'
-        },
-        ftpUrl: '----',
-        auditStart: new Date(),
-        auditEnd: new Date(),
-        documentCount: 150,
-        endAudit: 'Заключение аудита от 21.06.2019',
-        statuses: [
-          {
-            date: new Date(),
-            status: { _id: '1', name: 'В работе' },
-            comment: '123321'
-          }
-        ],
-        comments: [
-          {
-            date: new Date(),
-            text: 'Комментарий',
-            author: { _id: '1', login: 'login', name: 'Иванов И.И.' }
-          }
-        ]
-      }
-    ];
+      this.selectedAudit = this.audits[0];
+      this.refreshViewTable();
+    });
+  }
+
+  refreshViewTable(audit: any = null) {
     this.count = this.audits.length;
     this.activePageDataChunk = this.audits.slice(0, this.pageSize);
     this.dataSource = new MatTableDataSource(this.activePageDataChunk);
     this.dataSource.sort = this.sort;
+    if (audit != null) {
+      this.selectedAudit = audit as Audit;
+    }
+    this.changeDetectorRefs.detectChanges();
   }
 
-  CreateAudit() {
+  createAudit() {
     const dialogRef = this.dialog.open(CreateAuditComponent, {
       width: '400px',
       data: {}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.audits.push(result);
+        this.refreshViewTable(result);
+        this.changeDetectorRefs.detectChanges();
       }
+    });
+  }
+
+  deleteAudit() {
+    if (this.selectedAudit != null) {
+      if (
+        confirm(
+          `Вы действительно хотите удалить "Аудит ДО от ${this.datepipe.transform(
+            this.selectedAudit.createDate,
+            'dd.MM.yyyy'
+          )}"?`
+        )
+      ) {
+        this.auditservice.deleteAudit(this.selectedAudit.id).subscribe(
+          data => {
+            this.audits = this.arrayRemove(this.audits, this.selectedAudit);
+            this.refreshViewTable(
+              this.audits.length > 0 ? this.audits[0] : null
+            );
+          },
+          error => {
+            alert(error.message());
+          }
+        );
+      }
+    }
+  }
+
+  arrayRemove(arr, value) {
+    return arr.filter(item => {
+      return item !== value;
     });
   }
 
@@ -138,5 +159,19 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
     this.activePageDataChunk = this.audits.slice(firstCut, secondCut);
     this.dataSource = new MatTableDataSource(this.activePageDataChunk);
     this.dataSource.sort = this.sort;
+  }
+
+  selectRow(row) {
+    if (this.selectedAudit.id !== row.id) {
+      this.selectedAudit = row;
+    }
+  }
+
+  valueSearch(value: string) {
+    const filterVlaue = new Array<{ name: string; value: string }>();
+    if (value.length > 0) {
+      filterVlaue.push({ name: 'name', value: value });
+    }
+    this.refreshData(filterVlaue);
   }
 }
