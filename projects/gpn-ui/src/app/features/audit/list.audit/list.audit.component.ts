@@ -6,10 +6,8 @@ import {
   AfterViewInit,
   ChangeDetectorRef
 } from '@angular/core';
-import { DomSanitizer } from '@root/node_modules/@angular/platform-browser';
 import {
   MatDialog,
-  MatIconRegistry,
   MatPaginator,
   MatSort,
   MatTableDataSource
@@ -18,6 +16,12 @@ import { Audit } from '@app/models/audit.model';
 import { AuditService } from '@app/features/audit/audit.service';
 import { CreateAuditComponent } from '@app/features/audit/create-audit/create-audit.component';
 import { DatePipe } from '@root/node_modules/@angular/common';
+import {
+  faSearch,
+  faAngleDown,
+  faWindowClose,
+  faCommentDots
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'gpn-list.audit',
@@ -27,6 +31,10 @@ import { DatePipe } from '@root/node_modules/@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListAuditComponent implements OnInit, AfterViewInit {
+  faSearch = faSearch;
+  faAngleDown = faAngleDown;
+  faWindowClose = faWindowClose;
+  faCommentDots = faCommentDots;
   columns: string[] = [
     'id',
     'name',
@@ -53,22 +61,11 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
-    iconRegistry: MatIconRegistry,
-    sanitizer: DomSanitizer,
     private auditservice: AuditService,
     public dialog: MatDialog,
     private changeDetectorRefs: ChangeDetectorRef,
     public datepipe: DatePipe
-  ) {
-    iconRegistry.addSvgIcon(
-      'search.icon',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/icon/search.svg')
-    );
-    iconRegistry.addSvgIcon(
-      'comment.icon',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/icon/comment.svg')
-    );
-  }
+  ) {}
   ngOnInit() {
     this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
   }

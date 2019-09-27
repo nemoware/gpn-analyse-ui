@@ -14,6 +14,7 @@ import {
   MatSelectModule
 } from '@root/node_modules/@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
+import { FontAwesomeModule } from '@root/node_modules/@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [ListAuditComponent, CreateAuditComponent],
@@ -24,7 +25,8 @@ import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
     ReactiveFormsModule,
     MatSelectModule,
     MatFormFieldModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    FontAwesomeModule
   ],
   entryComponents: [CreateAuditComponent],
   providers: [

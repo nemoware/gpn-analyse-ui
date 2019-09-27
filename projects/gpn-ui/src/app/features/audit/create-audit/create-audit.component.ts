@@ -12,7 +12,6 @@ import {
   ErrorStateMatcher,
   MAT_DIALOG_DATA,
   MatDialogRef,
-  MatIconRegistry,
   MatSelect
 } from '@root/node_modules/@angular/material';
 import {
@@ -23,11 +22,11 @@ import {
   NgForm
 } from '@root/node_modules/@angular/forms';
 import { ReplaySubject, Subject } from '@root/node_modules/rxjs';
-// tslint:disable-next-line:import-blacklist
+
 import { take, takeUntil } from '@root/node_modules/rxjs/internal/operators';
 import { Subsidiary } from '@app/models/subsidiary.model';
-import { DomSanitizer } from '@root/node_modules/@angular/platform-browser';
 import { Audit } from '@app/models/audit.model';
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
 class CrossFieldErrorMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -46,6 +45,7 @@ class CrossFieldErrorMatcher implements ErrorStateMatcher {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
+  faWindowClose = faWindowClose;
   public subsidiaryCtrl: FormControl = new FormControl();
   public subsidiaryFilterCtrl: FormControl = new FormControl();
   public filteredSubsidiaries: ReplaySubject<Subsidiary[]> = new ReplaySubject<
@@ -61,17 +61,11 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   _auditEnd: Date = null;
   _ftpUrl: string = null;
   constructor(
-    iconRegistry: MatIconRegistry,
-    sanitizer: DomSanitizer,
     private auditservice: AuditService,
     public dialogRef: MatDialogRef<CreateAuditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {},
     private fb: FormBuilder
   ) {
-    iconRegistry.addSvgIcon(
-      'close.icon',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/icon/close.svg')
-    );
     this.initForm();
   }
 
