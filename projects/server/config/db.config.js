@@ -15,7 +15,7 @@ let db = {};
 db.mongoose = mongoose;
 db.Schema = Schema;
 
-db.Company = require('../model/company')(mongoose, Schema);
+db.Subsidiary = require('../model/subsidiary')(mongoose, Schema);
 db.Audit = require('../model/audit')(mongoose, Schema);
 db.AuditStatus = require('../model/auditStatus')(mongoose, Schema);
 

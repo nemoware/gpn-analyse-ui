@@ -1,6 +1,6 @@
 const Audit = require('../config/db.config').Audit;
 const AuditStatus = require('../config/db.config').AuditStatus;
-const Company = require('../config/db.config').Company;
+const Subsidiary = require('../config/db.config').Subsidiary;
 const ObjectId = require('../config/db.config').Schema.Types.ObjectId;
 
 exports.postAudit = async (req, res) => {
@@ -31,15 +31,15 @@ exports.postAudit = async (req, res) => {
   });
 };
 
-exports.getCompanies = async (req, res) => {
-  Company.find({}, function(err, companies) {
+exports.getSubsidiaries = async (req, res) => {
+  Subsidiary.find({}, function(err, subsidiaries) {
     if (err) {
       console.log(err);
       res.status(500).json({ msg: 'error', details: err });
       return;
     }
 
-    res.status(200).json(companies);
+    res.status(200).json(subsidiaries);
   });
 };
 
@@ -80,15 +80,15 @@ exports.postAuditStatus = async (req, res) => {
   });
 };
 
-exports.postCompany = async (req, res) => {
-  let company = new Company(req.body);
-  company.save(err => {
+exports.postSubsidiary = async (req, res) => {
+  let subsidiary = new Subsidiary(req.body);
+  subsidiary.save(err => {
     if (err) {
       console.log(err);
       res.status(500).json({ msg: 'error', details: err });
       return;
     }
 
-    res.status(201).json(company);
+    res.status(201).json(subsidiary);
   });
 };

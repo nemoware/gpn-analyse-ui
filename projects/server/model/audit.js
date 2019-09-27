@@ -1,7 +1,7 @@
 module.exports = (mongoose, Schema) => {
   const ObjectId = Schema.Types.ObjectId;
   let auditSchema = new Schema({
-    company: {
+    subsidiary: {
       _id: ObjectId,
       name: String
     },

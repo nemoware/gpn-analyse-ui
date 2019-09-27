@@ -1,16 +1,7 @@
 const db = {
   database: process.env.GPN_DB_NAME,
   username: process.env.GPN_DB_USER,
-  password: process.env.GPN_DB_PASS,
-  host: process.env.GPN_DB_HOST,
-  port: '5432',
-  dialect: 'postgres',
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
+  host: process.env.GPN_DB_HOST
 };
 
 const ad = {
