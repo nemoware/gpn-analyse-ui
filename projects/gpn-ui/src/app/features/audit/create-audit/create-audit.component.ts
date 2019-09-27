@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { AuditService } from '@app/features/audit/audit.service';
 import {
+  DateAdapter,
   ErrorStateMatcher,
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -61,6 +62,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   _auditEnd: Date = null;
   _ftpUrl: string = null;
   constructor(
+    private dateAdapter: DateAdapter<Date>,
     private auditservice: AuditService,
     public dialogRef: MatDialogRef<CreateAuditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {},
@@ -89,7 +91,11 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     return condition ? { invalidDate: true } : null;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.dateAdapter.getFirstDayOfWeek = () => {
+      return 1;
+    };
+  }
 
   ngAfterViewInit(): void {
     this.auditservice.getSubsidiaries().subscribe(data => {

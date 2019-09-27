@@ -11,7 +11,8 @@ import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MatFormFieldModule,
-  MatSelectModule
+  MatSelectModule,
+  MAT_DATE_LOCALE
 } from '@root/node_modules/@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
 import { FontAwesomeModule } from '@root/node_modules/@fortawesome/angular-fontawesome';
@@ -37,7 +38,8 @@ import { FontAwesomeModule } from '@root/node_modules/@fortawesome/angular-fonta
     {
       provide: MAT_DATE_FORMATS,
       useValue: APP_DATE_FORMATS
-    }
+    },
+    { provide: MAT_DATE_LOCALE, useValue: 'ru-RU' }
   ]
 })
 export class AuditModule {}
