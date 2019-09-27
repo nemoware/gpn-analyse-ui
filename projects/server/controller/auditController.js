@@ -56,7 +56,13 @@ exports.getAuditStatuses = async (req, res) => {
 };
 
 exports.getAudits = async (req, res) => {
-  Audit.find({}, function(err, audits) {
+  let where = {};
+
+  if (req.query.name != null) {
+    where['subsidiary.name'] = req.query.name;
+  }
+
+  Audit.find(where, function(err, audits) {
     if (err) {
       console.log(err);
       res.status(500).json({ msg: 'error', details: err });
