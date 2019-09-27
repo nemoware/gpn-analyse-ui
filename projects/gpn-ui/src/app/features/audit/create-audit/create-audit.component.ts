@@ -26,7 +26,7 @@ import { ReplaySubject, Subject } from '@root/node_modules/rxjs';
 import { take, takeUntil } from '@root/node_modules/rxjs/internal/operators';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { Audit } from '@app/models/audit.model';
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 class CrossFieldErrorMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -45,7 +45,7 @@ class CrossFieldErrorMatcher implements ErrorStateMatcher {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
-  faWindowClose = faWindowClose;
+  faTimes = faTimes;
   public subsidiaryCtrl: FormControl = new FormControl();
   public subsidiaryFilterCtrl: FormControl = new FormControl();
   public filteredSubsidiaries: ReplaySubject<Subsidiary[]> = new ReplaySubject<

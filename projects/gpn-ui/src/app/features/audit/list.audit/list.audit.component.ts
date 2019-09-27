@@ -19,8 +19,8 @@ import { DatePipe } from '@root/node_modules/@angular/common';
 import {
   faSearch,
   faAngleDown,
-  faWindowClose,
-  faCommentDots
+  faCommentDots,
+  faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -33,7 +33,7 @@ import {
 export class ListAuditComponent implements OnInit, AfterViewInit {
   faSearch = faSearch;
   faAngleDown = faAngleDown;
-  faWindowClose = faWindowClose;
+  faTrashAlt = faTrashAlt;
   faCommentDots = faCommentDots;
   columns: string[] = [
     'id',

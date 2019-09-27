@@ -8,7 +8,7 @@
                                  [placeholderLabel]="'Поиск дочернего предприятия...'"
                                  [noEntriesFoundLabel]="'Дочернее предприятие не найдено'"
           >
-            <fa-icon ngxMatSelectSearchClear [icon]="faWindowClose" matTooltip="Очистить поиск"></fa-icon>
+            <fa-icon ngxMatSelectSearchClear [icon]="faTimes" matTooltip="Очистить поиск"></fa-icon>
           </ngx-mat-select-search>
         </mat-option>
         <mat-option *ngFor="let subsidiary of filteredSubsidiaries | async" [value]="subsidiary">
