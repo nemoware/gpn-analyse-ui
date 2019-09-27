@@ -12,7 +12,6 @@ exports.postAudit = async (req, res) => {
 
   let audit = new Audit(req.body);
   audit.statuses.push(status);
-  audit.createDate = new Date();
 
   //todo
   audit.author = {
@@ -96,5 +95,21 @@ exports.postSubsidiary = async (req, res) => {
     }
 
     res.status(201).json(subsidiary);
+  });
+};
+
+exports.deleteAudit = async (req, res) => {
+  if (req.query.id == null) {
+    console.log('Cannot delete audit because id is null');
+    res.status(400).json({ msg: 'error', details: 'id is null' });
+    return;
+  }
+  Audit.deleteOne({ _id: req.query.id }, err => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ msg: 'error', details: err });
+      return;
+    }
+    res.status(200);
   });
 };
