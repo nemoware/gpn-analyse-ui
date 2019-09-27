@@ -58,7 +58,7 @@ exports.getAudits = async (req, res) => {
   let where = {};
 
   if (req.query.name != null) {
-    where['subsidiary.name'] = req.query.name;
+    where['subsidiary.name'] = { $regex: `.*${req.query.name}.*` };
   }
 
   Audit.find(where, function(err, audits) {
