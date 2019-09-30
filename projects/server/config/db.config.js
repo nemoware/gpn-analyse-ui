@@ -20,7 +20,6 @@ db.Schema = Schema;
 db.Subsidiary = require('../model/subsidiary')(mongoose, Schema);
 db.Audit = require('../model/audit')(mongoose, Schema);
 db.AuditStatus = require('../model/auditStatus')(mongoose, Schema);
-db.Log = require('../model/log')(mongoose, Schema);
 db.Error = require('../model/error')(mongoose, Schema);
 
 module.exports = db;
