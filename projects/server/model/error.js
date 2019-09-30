@@ -7,7 +7,8 @@ module.exports = (mongoose, Schema) => {
       statusCode: Number,
       statusMessage: String,
       login: String,
-      text: String
+      text: String,
+      body: Object
     },
     { toJSON: { virtuals: true } }
   );

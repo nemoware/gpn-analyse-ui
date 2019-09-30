@@ -1,7 +1,7 @@
 const Audit = require('../config/db.config').Audit;
 const AuditStatus = require('../config/db.config').AuditStatus;
 const Subsidiary = require('../config/db.config').Subsidiary;
-const logger = require('../logger/logger');
+const logger = require('../core/logger');
 
 exports.postAudit = async (req, res) => {
   let status = {
@@ -23,7 +23,7 @@ exports.postAudit = async (req, res) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
-      logger.error(req, res, err);
+      logger.logError(req, res, err);
       return;
     }
 
@@ -36,7 +36,7 @@ exports.getSubsidiaries = async (req, res) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
-      logger.error(req, res, err);
+      logger.logError(req, res, err);
       return;
     }
 
@@ -49,7 +49,7 @@ exports.getAuditStatuses = async (req, res) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
-      logger.error(req, res, err);
+      logger.logError(req, res, err);
       return;
     }
 
@@ -71,7 +71,7 @@ exports.getAudits = async (req, res) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
-      logger.error(req, res, err);
+      logger.logError(req, res, err);
       return;
     }
 
@@ -85,7 +85,7 @@ exports.postAuditStatus = async (req, res) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
-      logger.error(req, res, err);
+      logger.logError(req, res, err);
       return;
     }
 
@@ -99,7 +99,7 @@ exports.postSubsidiary = async (req, res) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
-      logger.error(req, res, err);
+      logger.logError(req, res, err);
       return;
     }
 
@@ -112,14 +112,14 @@ exports.deleteAudit = async (req, res) => {
     let msg = 'Cannot delete audit because id is null';
     res.status(400).json({ msg: 'error', details: 'id is null' });
     console.log(msg);
-    logger.error(req, res, msg);
+    logger.logError(req, res, msg);
     return;
   }
   Audit.deleteOne({ _id: req.query.id }, err => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
-      logger.error(req, res, err);
+      logger.logError(req, res, err);
       return;
     }
     res.status(200).send();
