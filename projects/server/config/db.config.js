@@ -6,6 +6,8 @@ const host = dbConfig.host;
 const port = dbConfig.port;
 const name = dbConfig.name;
 
+const initialize = require('../core/initialize');
+
 // подключение
 mongoose.connect(`mongodb://${host}:${port}/${name}`, {
   useNewUrlParser: true,
@@ -21,5 +23,7 @@ db.Subsidiary = require('../model/subsidiary')(mongoose, Schema);
 db.Audit = require('../model/audit')(mongoose, Schema);
 db.AuditStatus = require('../model/auditStatus')(mongoose, Schema);
 db.Error = require('../model/error')(mongoose, Schema);
+
+initialize.initializeData(db);
 
 module.exports = db;

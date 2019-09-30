@@ -1,7 +1,7 @@
 const Audit = require('../config/db.config').Audit;
 const AuditStatus = require('../config/db.config').AuditStatus;
 const Subsidiary = require('../config/db.config').Subsidiary;
-const logger = require('../logger/logger');
+const logger = require('../core/logger');
 
 exports.postAudit = async (req, res) => {
   let status = {
@@ -68,12 +68,12 @@ exports.getAudits = async (req, res) => {
   }
 
   Audit.find(where, (err, audits) => {
-    //if (err) {
-    res.status(500).json({ msg: 'error', details: err });
-    console.log(err);
-    logger.logError(req, res, err);
-    return;
-    //}
+    if (err) {
+      res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.logError(req, res, err);
+      return;
+    }
 
     res.status(200).json(audits);
   });
