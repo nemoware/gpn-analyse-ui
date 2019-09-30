@@ -2,11 +2,11 @@
 
   <h4>Новое задание на аудит</h4>
     <mat-form-field>
-      <mat-select [formControl]="subsidiaryCtrl" placeholder="Выбрать Дочернее Предприятие" #selectSubsidiary>
+      <mat-select [formControl]="subsidiaryCtrl" placeholder="Выбрать Дочернее Общество" #selectSubsidiary>
         <mat-option>
           <ngx-mat-select-search [formControl]="subsidiaryFilterCtrl"
-                                 [placeholderLabel]="'Поиск дочернего предприятия...'"
-                                 [noEntriesFoundLabel]="'Дочернее предприятие не найдено'"
+                                 [placeholderLabel]="'Поиск дочернего общества...'"
+                                 [noEntriesFoundLabel]="'Дочернее общество не найдено'"
           >
             <fa-icon ngxMatSelectSearchClear [icon]="faTimes" matTooltip="Очистить поиск"></fa-icon>
           </ngx-mat-select-search>
