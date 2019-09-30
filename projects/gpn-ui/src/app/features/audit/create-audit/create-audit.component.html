@@ -24,7 +24,7 @@
 
   <form [formGroup]="auditForm">
     <mat-form-field>
-      <input matInput [matDatepicker]="auditStart" placeholder="Дата начала с" [(ngModel)]="_auditStart"
+      <input matInput [matDatepicker]="auditStart" placeholder="Дата начала" [(ngModel)]="_auditStart"
            formControlName='auditStart' [errorStateMatcher]="errorMatcher" readonly = "true"
       >
       <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
@@ -33,7 +33,7 @@
     <br>
 
     <mat-form-field>
-      <input matInput [matDatepicker]="auditEnd" placeholder="Дата окончания по" [(ngModel)]="_auditEnd"
+      <input matInput [matDatepicker]="auditEnd" placeholder="Дата окончания По" [(ngModel)]="_auditEnd"
            formControlName='auditEnd' [errorStateMatcher]="errorMatcher" readonly = "true"
       >
       <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
