@@ -1,6 +1,6 @@
 const db = {
-  database: process.env.GPN_DB_NAME,
-  username: process.env.GPN_DB_USER,
+  name: process.env.GPN_DB_NAME,
+  port: process.env.GPN_DB_PORT,
   host: process.env.GPN_DB_HOST
 };
 

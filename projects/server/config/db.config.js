@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const host = process.env.GPN_DB_HOST;
-const port = process.env.GPN_DB_PORT;
-const database = process.env.GPN_DB_NAME;
+
+const dbConfig = require('./app.config').db;
+const host = dbConfig.host;
+const port = dbConfig.port;
+const name = dbConfig.name;
 
 // подключение
-mongoose.connect(`mongodb://${host}:${port}/${database}`, {
+mongoose.connect(`mongodb://${host}:${port}/${name}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -18,5 +20,7 @@ db.Schema = Schema;
 db.Subsidiary = require('../model/subsidiary')(mongoose, Schema);
 db.Audit = require('../model/audit')(mongoose, Schema);
 db.AuditStatus = require('../model/auditStatus')(mongoose, Schema);
+db.Log = require('../model/log')(mongoose, Schema);
+db.Error = require('../model/error')(mongoose, Schema);
 
 module.exports = db;

@@ -3,8 +3,8 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const routes = require('./route/routes');
-const db = require('./config/db.config');
 const path = require('path');
+const logger = require('./logger/logger');
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
 
@@ -14,6 +14,11 @@ const app = express();
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use((req, res, next) => {
+  logger.log(req, res);
+  next();
+});
 
 app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
 

@@ -1,7 +1,7 @@
 const Audit = require('../config/db.config').Audit;
 const AuditStatus = require('../config/db.config').AuditStatus;
 const Subsidiary = require('../config/db.config').Subsidiary;
-const ObjectId = require('../config/db.config').Schema.Types.ObjectId;
+const logger = require('../logger/logger');
 
 exports.postAudit = async (req, res) => {
   let status = {
@@ -21,8 +21,9 @@ exports.postAudit = async (req, res) => {
 
   audit.save(err => {
     if (err) {
-      console.log(err);
       res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.error(req, res, err);
       return;
     }
 
@@ -33,8 +34,9 @@ exports.postAudit = async (req, res) => {
 exports.getSubsidiaries = async (req, res) => {
   Subsidiary.find({}, (err, subsidiaries) => {
     if (err) {
-      console.log(err);
       res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.error(req, res, err);
       return;
     }
 
@@ -45,8 +47,9 @@ exports.getSubsidiaries = async (req, res) => {
 exports.getAuditStatuses = async (req, res) => {
   AuditStatus.find({}, (err, statuses) => {
     if (err) {
-      console.log(err);
       res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.error(req, res, err);
       return;
     }
 
@@ -66,8 +69,9 @@ exports.getAudits = async (req, res) => {
 
   Audit.find(where, (err, audits) => {
     if (err) {
-      console.log(err);
       res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.error(req, res, err);
       return;
     }
 
@@ -79,8 +83,9 @@ exports.postAuditStatus = async (req, res) => {
   let status = new AuditStatus(req.body);
   status.save(err => {
     if (err) {
-      console.log(err);
       res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.error(req, res, err);
       return;
     }
 
@@ -92,8 +97,9 @@ exports.postSubsidiary = async (req, res) => {
   let subsidiary = new Subsidiary(req.body);
   subsidiary.save(err => {
     if (err) {
-      console.log(err);
       res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.error(req, res, err);
       return;
     }
 
@@ -103,14 +109,17 @@ exports.postSubsidiary = async (req, res) => {
 
 exports.deleteAudit = async (req, res) => {
   if (req.query.id == null) {
-    console.log('Cannot delete audit because id is null');
+    let msg = 'Cannot delete audit because id is null';
     res.status(400).json({ msg: 'error', details: 'id is null' });
+    console.log(msg);
+    logger.error(req, res, msg);
     return;
   }
   Audit.deleteOne({ _id: req.query.id }, err => {
     if (err) {
-      console.log(err);
       res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.error(req, res, err);
       return;
     }
     res.status(200).send();
