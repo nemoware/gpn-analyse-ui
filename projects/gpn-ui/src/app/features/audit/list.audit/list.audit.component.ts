@@ -114,7 +114,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
           )}"?`
         )
       ) {
-        this.auditservice.deleteAudit(this.selectedAudit.id).subscribe(
+        this.auditservice.deleteAudit(this.selectedAudit._id).subscribe(
           data => {
             this.audits = this.arrayRemove(this.audits, this.selectedAudit);
             this.refreshViewTable(
@@ -156,7 +156,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   }
 
   selectRow(row) {
-    if (this.selectedAudit.id !== row.id) {
+    if (this.selectedAudit._id !== row._id) {
       this.selectedAudit = row;
     }
   }
