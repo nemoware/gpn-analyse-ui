@@ -12,10 +12,10 @@ describe('App', () => {
     expect(page.getCurrentYear()).toEqual(new Date().getFullYear().toString());
   });
 
-  it('should have  "Features", "Analyse" menus', () => {
+  it('should have "Audit", "Features", "Analyse" menus', () => {
     page.navigateTo();
     page
       .getAllMenus()
-      .then(menus => expect(menus).toEqual(['Features', 'Analyse']));
+      .then(menus => expect(menus).toEqual(['Аудит', 'Дэшборд', 'Анализ']));
   });
 });
