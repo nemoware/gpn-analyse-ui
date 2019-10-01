@@ -47,3 +47,11 @@
   @include custom-components-theme($gpn-nature-theme);
 }
 */
+
+.mat-focused .mat-form-field-label {
+  color: rgb(0, 64, 119) !important;
+}
+
+.mat-form-field-ripple {
+  background-color: rgb(0, 64, 119) !important;
+}

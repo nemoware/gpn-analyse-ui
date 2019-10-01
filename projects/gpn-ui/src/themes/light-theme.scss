@@ -7,9 +7,9 @@ $gpn-theme: mat-light-theme($gpn-primary, $gpn-accent, $gpn-warn);
 
 */
 
-$gpn-light-primary: mat-palette($mat-blue, 300, 200, 500);
+$gpn-light-primary: mat-palette($mat-gray, 200, 200, 500);
 $gpn-light-accent: mat-palette($mat-blue, 500, 100, 100);
-$gpn-light-warn: mat-palette($mat-pink, 200);
+$gpn-light-warn: mat-palette($mat-red, 500);
 
 $gpn-light-theme: mat-light-theme(
   $gpn-light-primary,
