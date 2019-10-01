@@ -5,11 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { merge } from 'rxjs';
 import { tap, distinctUntilChanged, filter } from 'rxjs/operators';
 
-import {
-  TitleService,
-  AppState  
-} from '@core/core.module';
- 
+import { TitleService, AppState } from '@core/core.module';
 
 @Injectable()
 export class AnalyseEffects {
@@ -22,13 +18,11 @@ export class AnalyseEffects {
 
   setTitle = createEffect(
     () =>
-      merge( 
+      merge(
         this.router.events.pipe(filter(event => event instanceof ActivationEnd))
       ).pipe(
         tap(() => {
-          this.titleService.setTitle(
-            this.router.routerState.snapshot.root 
-          );
+          this.titleService.setTitle(this.router.routerState.snapshot.root);
         })
       ),
     { dispatch: false }

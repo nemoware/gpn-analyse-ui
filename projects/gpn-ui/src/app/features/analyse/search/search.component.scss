@@ -1,32 +1,30 @@
 @import '../../../../styles-variables';
 @import '../../../../themes/default-theme';
 
-
 tr.detail-row {
   height: 0;
 }
 
 tr.element-row:not(.expanded-row):hover {
-  background:mat-color($gpn-primary, 100);
+  background: mat-color($gpn-primary, 100);
 }
 
 tr.element-row:not(.expanded-row):active {
-  background:mat-color($gpn-primary, 200);
+  background: mat-color($gpn-primary, 200);
 }
 
 .element-row td {
-  border-bottom-width: 0; 
+  border-bottom-width: 0;
 }
 
-.element-detail {  
+.element-detail {
   overflow: hidden;
   display: flex;
 }
 
- 
 /* Structure */
 
-.mat-cell{
+.mat-cell {
   font-size: 12px;
 }
 
@@ -60,7 +58,6 @@ table {
   justify-content: center;
 }
 
- 
 /* Column Widths */
 .mat-column-number,
 .mat-column-state {

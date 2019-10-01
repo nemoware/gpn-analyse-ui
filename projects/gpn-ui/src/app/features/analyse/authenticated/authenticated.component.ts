@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
- 
 
 @Component({
   selector: 'gpn-authenticated',
@@ -8,8 +7,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthenticatedComponent implements OnInit {
-   
-
   constructor() {}
 
   ngOnInit() {}

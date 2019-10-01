@@ -1,4 +1,3 @@
-
 import {
   actionSettingsChangeStickyHeader,
   actionSettingsChangeTheme
@@ -9,7 +8,6 @@ import { SettingsState } from './settings.model';
 export const initialState: SettingsState = {
   theme: 'DEFAULT-THEME',
   stickyHeader: true
-
 };
 
 const reducer = createReducer(
@@ -19,8 +17,7 @@ const reducer = createReducer(
     actionSettingsChangeStickyHeader,
 
     (state, action) => ({ ...state, ...action })
-  ),
-
+  )
 );
 
 export function settingsReducer(

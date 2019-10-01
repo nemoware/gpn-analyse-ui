@@ -7,11 +7,9 @@ export const selectAnalyse = createFeatureSelector<State, AnalyseState>(
   FEATURE_NAME
 );
 
-export const reducers: ActionReducerMap<AnalyseState> = {
-};
+export const reducers: ActionReducerMap<AnalyseState> = {};
 
-export interface AnalyseState {
-}
+export interface AnalyseState {}
 
 export interface State extends AppState {
   analyse: AnalyseState;

@@ -7,8 +7,6 @@ describe('App', () => {
 
   beforeEach(() => (page = new AppPage()));
 
- 
-
   it('should display current year in the footer', () => {
     page.navigateTo();
     expect(page.getCurrentYear()).toEqual(new Date().getFullYear().toString());
@@ -18,6 +16,6 @@ describe('App', () => {
     page.navigateTo();
     page
       .getAllMenus()
-      .then(menus => expect(menus).toEqual([ 'Features', 'Analyse']));
+      .then(menus => expect(menus).toEqual(['Features', 'Analyse']));
   });
 });

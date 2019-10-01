@@ -13,17 +13,12 @@ export const selectSettingsStickyHeader = createSelector(
   (state: SettingsState) => state.stickyHeader
 );
 
- 
-
 export const selectTheme = createSelector(
   selectSettings,
   settings => settings.theme
 );
 
- 
-
 export const selectEffectiveTheme = createSelector(
   selectTheme,
-  (theme) =>
-    (theme).toLowerCase()
+  theme => theme.toLowerCase()
 );
