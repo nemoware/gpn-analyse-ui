@@ -7,7 +7,7 @@ import { DocumentInfo } from '@app/models/document-info';
   styleUrls: ['./doc-info.component.scss']
 })
 export class DocInfoComponent implements OnInit {
-  @Input('doc')
+  @Input()
   doc: DocumentInfo;
 
   constructor() {}

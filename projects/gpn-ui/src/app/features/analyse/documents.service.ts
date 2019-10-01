@@ -21,7 +21,7 @@ export class DocumentsSearchService {
     sort_dir,
     page
   ): Observable<DocumentInfo[]> {
-    //TODO: replace with API call
+    // TODO: replace with API call
     const _url = '/assets/list_documents.json';
 
     const params = new HttpParams({ fromObject: { q: query } });
@@ -31,7 +31,7 @@ export class DocumentsSearchService {
   }
 
   getContract(contractId: string): Observable<LegalDocument> {
-    //TODO: replace with API call
+    // TODO: replace with API call
     const _url = '/assets/contract.json';
     const params = new HttpParams({ fromObject: { q: contractId } });
     const options = { httpOptions, params };

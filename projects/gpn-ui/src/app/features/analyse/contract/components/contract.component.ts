@@ -21,9 +21,9 @@ export class ContractComponent implements AfterViewInit {
   contract$: Observable<LegalDocument>;
 
   getDoc() {
-    //TODO: use redux
+    // TODO: use redux
     console.warn('on init');
-    this.contract$ = this.searchService!.getContract('contract id');
+    this.contract$ = this.searchService.getContract('contract id');
   }
 
   ngAfterViewInit() {

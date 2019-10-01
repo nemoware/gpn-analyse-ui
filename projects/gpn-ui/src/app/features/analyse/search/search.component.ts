@@ -56,7 +56,7 @@ export class DocumentsListComponent implements AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.searchService!.getSearchResults(
+          return this.searchService.getSearchResults(
             'fake query',
             this.sort.active,
             this.sort.direction,
@@ -66,7 +66,7 @@ export class DocumentsListComponent implements AfterViewInit {
         map(data => {
           // Flip flag to show that loading has finished.
           this.isLoadingResults = false;
-          this.resultsLength = 10; //TODO: data.total_count;
+          this.resultsLength = 10; // TODO: data.total_count;
 
           return data;
         }),
