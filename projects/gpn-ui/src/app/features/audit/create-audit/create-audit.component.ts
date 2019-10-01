@@ -151,7 +151,6 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   CreateAudit() {
     const newAudit: Audit = {
-      id: null,
       subsidiaryName: this.subsidiaryCtrl.value.name,
       subsidiary: this.subsidiaryCtrl.value,
       ftpUrl: this._ftpUrl,

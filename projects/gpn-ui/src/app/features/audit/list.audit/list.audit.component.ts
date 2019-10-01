@@ -37,15 +37,12 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   faCommentDots = faCommentDots;
   columns: string[] = [
     'id',
-    'name',
     'subsidiaryName',
     'auditStart',
     'auditEnd',
     'checkedDocumentCount',
     'endAudit',
-    'statusAudit',
-    'businessProcess',
-    'comments'
+    'statusAudit'
   ];
   selectedAudit: Audit;
   dataSource = new MatTableDataSource();

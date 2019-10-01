@@ -10,16 +10,7 @@ module.exports = (mongoose, Schema) => {
       auditStart: Date,
       auditEnd: Date,
       checkedDocumentCount: Number,
-      statuses: [
-        { date: Date, status: { _id: ObjectId, name: String }, comment: String }
-      ],
-      comments: [
-        {
-          date: Date,
-          text: String,
-          author: { _id: ObjectId, login: String, name: String }
-        }
-      ],
+      status: { _id: ObjectId, name: String },
       createDate: Date,
       author: { _id: ObjectId, login: String, name: String }
     },

@@ -4,14 +4,8 @@ const Subsidiary = require('../config/db.config').Subsidiary;
 const logger = require('../core/logger');
 
 exports.postAudit = async (req, res) => {
-  let status = {
-    date: new Date(),
-    status: await AuditStatus.findOne({ name: 'Новый' }).lean(),
-    comment: null
-  };
-
   let audit = new Audit(req.body);
-  audit.statuses.push(status);
+  audit.status = await AuditStatus.findOne({ name: 'Новый' }).lean();
 
   //todo
   audit.author = {

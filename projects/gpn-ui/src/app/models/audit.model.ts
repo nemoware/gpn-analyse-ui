@@ -1,5 +1,5 @@
 export interface Audit {
-  id: string;
+  _id: string;
   subsidiaryName: string;
   subsidiary: {
     _id: string;
@@ -9,16 +9,7 @@ export interface Audit {
   auditStart: Date;
   auditEnd: Date;
   checkedDocumentCount: number;
-  statuses: [
-    { date: Date; status: { _id: string; name: string }; comment: string }
-  ];
-  comments: [
-    {
-      date: Date;
-      text: string;
-      author: { _id: string; login: string; name: string };
-    }
-  ];
+  status: { _id: string; name: string };
   createDate: Date;
   author: { _id: string; login: string; name: string };
 }

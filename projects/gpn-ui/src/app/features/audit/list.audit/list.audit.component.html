@@ -32,14 +32,7 @@
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
       <td mat-cell *matCellDef="let row">
-        <mat-checkbox [checked]="row._id === selectedAudit.id" disabled="true"></mat-checkbox>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Наименование </th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-button (click)="OpenAudit(element)"> Аудит ДО от {{element.createDate | date:'dd.MM.yyyy'}} </button>
+        <mat-checkbox [checked]="row._id === selectedAudit._id" disabled="true"></mat-checkbox>
       </td>
     </ng-container>
 
@@ -70,20 +63,7 @@
 
     <ng-container matColumnDef="statusAudit">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Статус </th>
-      <td mat-cell *matCellDef="let element"> {{element.statuses[0].status.name}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="businessProcess">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> БИЗНЕС-ПРОЦЕСС </th>
-      <td mat-cell *matCellDef="let element"> Ход исполнения процесса </td>
-    </ng-container>
-
-    <ng-container matColumnDef="comments">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> КОММЕНТАРИИ </th>
-      <td mat-cell *matCellDef="let element">
-        <fa-icon [icon]="faCommentDots" matTooltip="Комментарии"></fa-icon>
-        {{element.comments.length}}
-      </td>
+      <td mat-cell *matCellDef="let element"> {{element.status.name}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
