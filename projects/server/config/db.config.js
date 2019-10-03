@@ -23,6 +23,8 @@ db.Subsidiary = require('../model/subsidiary')(mongoose, Schema);
 db.Audit = require('../model/audit')(mongoose, Schema);
 db.AuditStatus = require('../model/auditStatus')(mongoose, Schema);
 db.Error = require('../model/error')(mongoose, Schema);
+db.User = require('../model/user')(mongoose, Schema);
+db.Role = require('../model/role')(mongoose, Schema);
 
 initialize.initializeData(db);
 

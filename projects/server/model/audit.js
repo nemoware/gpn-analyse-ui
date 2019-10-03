@@ -21,5 +21,5 @@ module.exports = (mongoose, Schema) => {
     return this.subsidiary.name;
   });
 
-  return mongoose.model('Audit', auditSchema);
+  return mongoose.model('audit', auditSchema);
 };

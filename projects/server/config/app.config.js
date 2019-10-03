@@ -8,7 +8,9 @@ const ad = {
   url: process.env.GPN_AD_URL,
   baseDN: process.env.GPN_AD_BASEDN,
   username: process.env.GPN_AD_USERNAME,
-  password: process.env.GPN_AD_PASS
+  password: process.env.GPN_AD_PASS,
+  on: true,
+  login: 'admin'
 };
 
 const group_name = process.env.GPN_NAME_GROUP_AD;

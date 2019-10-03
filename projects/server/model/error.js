@@ -13,5 +13,5 @@ module.exports = (mongoose, Schema) => {
     { toJSON: { virtuals: true } }
   );
 
-  return mongoose.model('Error', errorSchema);
+  return mongoose.model('error', errorSchema);
 };

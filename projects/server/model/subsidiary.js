@@ -3,5 +3,5 @@ module.exports = (mongoose, Schema) => {
     name: String
   });
 
-  return mongoose.model('Subsidiary', subsidiarySchema);
+  return mongoose.model('subsidiary', subsidiarySchema);
 };
