@@ -16,5 +16,8 @@ router.get('/roles', adminController.getRoles);
 router.get('/appUsers', adminController.getApplicationUsers);
 router.get('/groupUsers', adminController.getGroupUsers);
 router.post('/user', adminController.postUser);
+router.get('/userInfo', adminController.getUserInfo);
+router.put('/user', adminController.updateUser);
+router.delete('/user', adminController.deleteUser);
 
 module.exports = router;

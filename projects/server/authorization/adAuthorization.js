@@ -47,3 +47,13 @@ exports.getGroupUsers = async () => {
     });
   });
 };
+
+exports.getUserName = async login => {
+  ad.findUser(login, function(err, user) {
+    if (err) {
+      console.log(err);
+    } else {
+      return user.displayName;
+    }
+  });
+};
