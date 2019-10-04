@@ -14,5 +14,6 @@ router.delete('/audit', auditController.deleteAudit);
 
 router.get('/roles', adminController.getRoles);
 router.get('/users', adminController.getUsers);
+router.post('/user', adminController.postUser);
 
 module.exports = router;

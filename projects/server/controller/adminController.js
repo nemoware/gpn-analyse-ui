@@ -37,3 +37,17 @@ exports.getRoles = async (req, res) => {
     res.status(200).json(roles);
   });
 };
+
+exports.postUser = async (req, res) => {
+  let user = new User(req.body);
+  user.save(err => {
+    if (err) {
+      res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.logError(req, res, err);
+      return;
+    }
+
+    res.status(201).json(user);
+  });
+};

@@ -1,5 +1,3 @@
-const adAuth = require('../authorization/adAuthorization');
-
 module.exports = (mongoose, Schema) => {
   let userSchema = new Schema(
     {
@@ -12,6 +10,13 @@ module.exports = (mongoose, Schema) => {
   );
 
   userSchema.virtual('name').get(() => null);
+  userSchema.virtual('roleString').get(function() {
+    let roles = [];
+    for (let role of this.roles) {
+      roles.push(role.name);
+    }
+    return roles.join(', ');
+  });
 
   return mongoose.model('user', userSchema);
 };
