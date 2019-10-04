@@ -48,9 +48,9 @@ app.use(async function(req, res, next) {
 
   if (!req.session.message) {
     try {
-      let result = await adAuth.getLogin(req, res);
-      if (result) {
-        login = result.sAMAccountName;
+      let user = await adAuth.getUser(req, res);
+      if (user) {
+        login = user.sAMAccountName;
       }
     } catch (err) {
       console.log('Rejected: ' + err);

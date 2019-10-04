@@ -9,10 +9,9 @@ const ad = {
   baseDN: process.env.GPN_AD_BASEDN,
   username: process.env.GPN_AD_USERNAME,
   password: process.env.GPN_AD_PASS,
+  groupName: process.env.GPN_AD_GROUP_NAME,
   on: true,
   login: 'admin'
 };
 
-const group_name = process.env.GPN_NAME_GROUP_AD;
-
-module.exports = { db, ad, group_name };
+module.exports = { db, ad };

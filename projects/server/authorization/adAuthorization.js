@@ -1,11 +1,13 @@
 const kerberos = require('kerberos');
 const ActiveDirectory = require('activedirectory');
 const fs = require('fs');
+const util = require('util');
 const appConfig = require('../config/app.config');
 
 const ad = new ActiveDirectory(appConfig.ad);
+const readFile = util.promisify(fs.readFile);
 
-exports.getLogin = async (req, res) => {
+exports.getUser = async (req, res) => {
   return new Promise((resolve, reject) => {
     if (appConfig.ad.on) {
       if (!req.headers.authorization) {
@@ -46,4 +48,24 @@ exports.getLogin = async (req, res) => {
       });
     }
   });
+};
+
+exports.getUserName = async login => {
+  if (appConfig.ad.on) {
+    ad.findUser(login, function(err, user) {
+      if (err) {
+        console.log(err);
+      } else {
+        return user.displayName;
+      }
+    });
+  } else {
+    let data = await readFile('./json/fakeUser.json', 'utf8');
+    let users = JSON.parse(data);
+    for (let user of users) {
+      if (user.sAMAccountName === login) {
+        return user.displayName;
+      }
+    }
+  }
 };
