@@ -10,7 +10,7 @@
 
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-    <ng-container matColumnDef="login">
+    <ng-container matColumnDef="sAMAccountName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Логин </th>
       <td mat-cell *matCellDef="let element">
         <fa-icon [icon]="faPlusSquare" matTooltip="Добавить пользователя" style="float: left" (click)="Apply(element)"></fa-icon>
@@ -18,7 +18,7 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="name">
+    <ng-container matColumnDef="displayName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ФИО </th>
       <td mat-cell *matCellDef="let element"> {{ element.displayName}} </td>
     </ng-container>

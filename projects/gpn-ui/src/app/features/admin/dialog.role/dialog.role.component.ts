@@ -29,6 +29,7 @@ export class DialogRoleComponent implements OnInit {
       user_role: Array<string>;
     }
   ) {}
+
   ngOnInit() {}
 
   Apply() {
@@ -38,9 +39,9 @@ export class DialogRoleComponent implements OnInit {
       if (elem && (elem as HTMLInputElement).checked) {
         listRoles.push({
           _id: s._id,
-          name: s._id,
+          name: s.name,
           description: s.description,
-          app_page: s.app_page
+          appPage: s.appPage
         });
       }
     }

@@ -19,7 +19,7 @@ export class AuthorizationData {
     if (
       this.userInfo &&
       this.userInfo.roles.find(role => {
-        return role.app_page === authPage;
+        return role.appPage === authPage;
       })
     ) {
       return true;
@@ -28,8 +28,7 @@ export class AuthorizationData {
   }
 
   getUserInfo(): Observable<UserInfo> {
-    const _url = '/assets/test.json';
-    return this.http.get<UserInfo>(_url).pipe(
+    return this.http.get<UserInfo>(`${api}/userInfo`).pipe(
       map(value => {
         this.userInfo = value;
         return value;

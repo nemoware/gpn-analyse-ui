@@ -30,7 +30,7 @@ export class DialogUserComponent implements OnInit {
   faSearch = faSearch;
   faPlusSquare = faPlusSquare;
   users: Array<{ sAMAccountName: string; displayName: string }>;
-  columns: string[] = ['login', 'name'];
+  columns: string[] = ['sAMAccountName', 'displayName'];
 
   dataSource = new MatTableDataSource();
   activePageDataChunk = [];

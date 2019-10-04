@@ -9,3 +9,22 @@
 .mat-table {
   width: 100%;
 }
+
+.mat-column-id {
+  max-width: 20px;
+}
+
+.mat-column-login {
+  max-width: 30px;
+  min-width: 30px;
+}
+
+.mat-column-name {
+  max-width: 40px;
+  min-width: 40px;
+}
+
+.mat-column-roleString {
+  max-width: 250px;
+  min-width: 250px;
+}

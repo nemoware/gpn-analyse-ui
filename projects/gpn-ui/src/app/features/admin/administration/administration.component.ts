@@ -40,7 +40,7 @@ export class AdministrationComponent implements OnInit {
   users: Array<UserInfo>;
   roles: Array<RoleInfo>;
 
-  columns: string[] = ['id', 'login', 'name', 'strRoles'];
+  columns: string[] = ['id', 'login', 'name', 'roleString'];
   selectedUser: UserInfo;
   dataSource = new MatTableDataSource();
   activePageDataChunk = [];
@@ -89,14 +89,29 @@ export class AdministrationComponent implements OnInit {
 
   openDialogRoles(user: UserInfo): void {
     this.statusMessage = '';
+    const A: string[] = [];
+    for (const role of user.roles) A.push(role._id.toString());
     const dialogRef = this.dialog.open(DialogRoleComponent, {
       width: '400px',
       data: {
         roles: this.roles,
-        user_role: user.roles
+        user_role: A
       }
     });
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(roles => {
+      if (roles) {
+        const B: string[] = [];
+        for (const role of roles) B.push(role._id.toString());
+        if (!(JSON.stringify(A) === JSON.stringify(B))) {
+          user.roles = roles;
+          this.userservice.updateUser(user._id, user).subscribe(data => {
+            const u = this.users.find(x => x._id === user._id);
+            u.roleString = (data as UserInfo).roleString;
+            this.refreshViewTable(u);
+          });
+        }
+      }
+    });
   }
 
   private getRoles() {
@@ -114,18 +129,14 @@ export class AdministrationComponent implements OnInit {
       if (result) {
         if (result) {
           this.statusMessage = '';
-          const newUser = {
-            _id: null,
-            login: 'login',
-            name: 'name',
-            rolesName: null,
-            roles: []
-          };
-          this.userservice.createUser(newUser).subscribe(
+
+          this.userservice.createUser(result.sAMAccountName).subscribe(
             user => {
+              user.name = result.displayName;
               this.users.push(user);
+              this.refreshViewTable(user);
               this.changeDetector(
-                'Пользователь ' + newUser.name + ' успешно добавлен!'
+                'Пользователь ' + user.name + ' успешно добавлен!'
               );
             },
             error => {
@@ -138,12 +149,20 @@ export class AdministrationComponent implements OnInit {
     });
   }
 
-  deleteUser(user: UserInfo) {
-    if (confirm('Вы действительно хотите удалить данного пользователя?')) {
-      this.userservice.deleteUser(user._id.toString()).subscribe(
+  deleteUser() {
+    if (
+      this.selectedUser &&
+      confirm(
+        `Вы действительно хотите удалить сотрудника ${this.selectedUser.name} из списка пользователей?`
+      )
+    ) {
+      this.userservice.deleteUser(this.selectedUser._id.toString()).subscribe(
         data => {
-          this.users = this.arrayRemove(this.users, user);
-          this.changeDetector('Пользователь ' + user.login + ' успешно удален');
+          this.users = this.arrayRemove(this.users, this.selectedUser);
+          this.refreshViewTable();
+          this.changeDetector(
+            'Пользователь ' + this.selectedUser.login + ' успешно удален'
+          );
         },
         error => {
           alert(this.str_error);

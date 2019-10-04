@@ -2,11 +2,11 @@ export interface UserInfo {
   _id: string;
   login: string;
   name: string;
-  rolesName: string;
+  roleString: string;
   roles: Array<{
     _id: string;
     name: string;
     description: string;
-    app_page: string;
+    appPage: string;
   }>;
 }
