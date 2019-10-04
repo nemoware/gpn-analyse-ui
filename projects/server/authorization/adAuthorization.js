@@ -50,22 +50,22 @@ exports.getUser = async (req, res) => {
   });
 };
 
-exports.getUserName = async login => {
-  if (appConfig.ad.on) {
-    ad.findUser(login, function(err, user) {
-      if (err) {
-        console.log(err);
-      } else {
-        return user.displayName;
-      }
-    });
-  } else {
-    let data = await readFile('./json/fakeUser.json', 'utf8');
-    let users = JSON.parse(data);
-    for (let user of users) {
-      if (user.sAMAccountName === login) {
-        return user.displayName;
-      }
+exports.getUserGroup = async () => {
+  return new Promise((resolve, reject) => {
+    if (appConfig.ad.on) {
+      ad.findUser(login, function(err, user) {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(contents);
+          return user.displayName;
+        }
+      });
+    } else {
+      readFile('./json/fakeUser.json', 'utf8', function(err, contents) {
+        resolve(JSON.parse(contents));
+      });
     }
-  }
+  });
 };

@@ -11,9 +11,7 @@ module.exports = (mongoose, Schema) => {
     { toJSON: { virtuals: true } }
   );
 
-  /*userSchema.virtual('name').get(async function() {
-    return await adAuth.getUserName(this.login);
-  });*/
+  userSchema.virtual('name').get(() => null);
 
   return mongoose.model('user', userSchema);
 };

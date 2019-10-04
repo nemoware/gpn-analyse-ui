@@ -1,9 +1,10 @@
 const User = require('../config/db.config').User;
 const Role = require('../config/db.config').Role;
 const logger = require('../core/logger');
+const adminController = require('../authorization/adAuthorization');
 
 exports.getUsers = async (req, res) => {
-  User.find({}, (err, users) => {
+  User.find({}, async (err, users) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
@@ -11,7 +12,16 @@ exports.getUsers = async (req, res) => {
       return;
     }
 
-    res.status(200).json(users);
+    let usersGroup = await adminController.getUserGroup();
+    var _users = JSON.parse(JSON.stringify(users));
+    for (let user of _users) {
+      for (let u of usersGroup) {
+        if (user.login === u.sAMAccountName) {
+          user.name = u.displayName;
+        }
+      }
+    }
+    res.status(200).json(_users);
   });
 };
 
