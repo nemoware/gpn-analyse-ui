@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UserInfo } from '@app/models/user.model';
 import { Observable, throwError } from '@root/node_modules/rxjs';
-import { catchError, map } from '@root/node_modules/rxjs/internal/operators';
+import { catchError, map } from 'rxjs/operators';
 import { RoleInfo } from '@app/models/role.model';
 import { Audit } from '@app/models/audit.model';
 
@@ -15,7 +15,7 @@ export class UserService {
   getRoles(): Observable<Array<RoleInfo>> {
     const _url = '/assets/roles.json';
     return this.http.get<RoleInfo[]>(_url);
-    //return this.http.get<Array<RoleInfo>>(`${api}/permissions`);
+    // return this.http.get<Array<RoleInfo>>(`${api}/permissions`);
   }
 
   getPermissionsUser(id: number): Observable<Array<number>> {
@@ -37,7 +37,7 @@ export class UserService {
     }
     return this.http.get<Array<Audit>>(`${api}/users`, { params: httpParams });*/
 
-    //return this.http.get<UserInfo[]>(`${api}/users`);
+    // return this.http.get<UserInfo[]>(`${api}/users`);
     const _url = '/assets/users.json';
     return this.http.get<UserInfo[]>(_url);
   }
@@ -47,7 +47,7 @@ export class UserService {
   ): Observable<any> {
     const _url = '/assets/users_group.json';
     return this.http.get<UserInfo[]>(_url);
-    //return this.http.get<any>(`${api}/get_users`).pipe(map(value => { return value; }), catchError( err => { return throwError(err); }));
+    // return this.http.get<any>(`${api}/get_users`).pipe(map(value => { return value; }), catchError( err => { return throwError(err); }));
   }
 
   createUser(user: UserInfo): Observable<UserInfo> {
