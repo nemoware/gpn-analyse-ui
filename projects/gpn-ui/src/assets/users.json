@@ -1,0 +1,53 @@
+[
+  {
+    "_id": "123123",
+    "login": "login",
+    "name": "Name of User",
+    "roles": [
+      {
+        "_id": "123",
+        "name": "role_1",
+        "description": "Role #1",
+        "app_page": ""
+      },
+      {
+        "_id": "124",
+        "name": "role_2",
+        "description": "Role #2",
+        "app_page": "admin"
+      }
+    ]
+  },
+  {
+    "_id": "123123123",
+    "login": "login 2",
+    "name": "Name of User 2",
+    "roles": [
+      {
+        "_id": "123",
+        "name": "role_1",
+        "description": "Role #1",
+        "app_page": ""
+      },
+      {
+        "_id": "124",
+        "name": "role_2",
+        "description": "Role #2",
+        "app_page": "admin"
+      }
+    ]
+  },
+  {
+    "_id": "123123431231",
+    "login": "login 3",
+    "name": "Name of User 3",
+    "roles": [
+      {
+        "_id": "123",
+        "name": "role_1",
+        "description": "Role #1",
+        "app_page": ""
+      }
+    ]
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "_id": "123123",
+  "login": "login",
+  "name": "Name of User",
+  "roles": [
+    {
+      "_id": "123",
+      "name": "role_1",
+      "description": "Role #1",
+      "app_page": "audit"
+    },
+    {
+      "_id": "124",
+      "name": "role_2",
+      "description": "Role #2",
+      "app_page": "admin"
+    }
+  ]
+}

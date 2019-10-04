@@ -1,0 +1,39 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@root/node_modules/@angular/common/http';
+import { Observable } from '@root/node_modules/rxjs';
+import { map } from '@root/node_modules/rxjs/internal/operators';
+import { AppPages } from '@app/models/app.pages';
+import { UserInfo } from '@app/models/user.model';
+
+const api = '/api';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthorizationData {
+  userInfo: UserInfo;
+  constructor(private http: HttpClient) {}
+
+  hasAccess(authPage: string) {
+    if (!(authPage in AppPages)) return true;
+    if (
+      this.userInfo &&
+      this.userInfo.roles.find(role => {
+        return role.app_page === authPage;
+      })
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  getUserInfo(): Observable<UserInfo> {
+    const _url = '/assets/test.json';
+    return this.http.get<UserInfo>(_url).pipe(
+      map(value => {
+        this.userInfo = value;
+        return value;
+      })
+    );
+  }
+}
