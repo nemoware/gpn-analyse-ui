@@ -2,7 +2,6 @@ const kerberos = require('kerberos');
 const ActiveDirectory = require('activedirectory');
 const appConfig = require('../config/app.config');
 const ad = new ActiveDirectory(appConfig.ad);
-const fs = require('fs');
 
 exports.getUser = async (req, res) => {
   return new Promise((resolve, reject) => {

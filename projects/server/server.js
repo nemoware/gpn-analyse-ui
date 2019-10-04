@@ -5,17 +5,25 @@ const path = require('path');
 const uuid = require('uuid');
 const session = require('express-session');
 
-let adOn, login;
+const appConfig = require('./config/app.config');
+
 if (process.argv[2]) {
-  adOn = process.argv[2] === 'true';
+  appConfig.ad.on = process.argv[2] === 'true';
 }
 if (process.argv[3]) {
-  login = process.argv[3];
+  appConfig.ad.login = process.argv[3];
 }
 
-const appConfig = require('./config/app.config');
-appConfig.useAd(adOn, login);
-let adAuth = appConfig.ad.auth;
+const adAuthorization = require('./authorization/adAuthorization');
+const fakeAuthorization = require('./authorization/fakeAuthorization');
+
+if (appConfig.ad.on) {
+  appConfig.ad.auth = adAuthorization;
+} else {
+  appConfig.ad.auth = fakeAuthorization;
+}
+
+const adAuth = appConfig.ad.auth;
 
 const dbAuth = require('./authorization/dbAuthorization');
 const routes = require('./route/routes');

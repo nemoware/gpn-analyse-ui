@@ -1,8 +1,7 @@
 const User = require('../config/db.config').User;
 const Role = require('../config/db.config').Role;
 const logger = require('../core/logger');
-const appConfig = require('../config/app.config');
-const adAuth = appConfig.ad.auth;
+const adAuth = require('../config/app.config').ad.auth;
 
 exports.getApplicationUsers = async (req, res) => {
   User.find({}, async (err, users) => {
@@ -76,6 +75,8 @@ exports.postUser = async (req, res) => {
     }
     user = user.toJSON();
     user.name = await getUserName(user.login);
+
+    logger.log(req, res, 'Добавление пользователя');
     res.status(201).json(user);
   });
 };
@@ -95,6 +96,8 @@ exports.deleteUser = (req, res) => {
       logger.logError(req, res, err);
       return;
     }
+
+    logger.log(req, res, 'Удаление пользователя');
     res.status(200).send();
   });
 };
@@ -119,6 +122,8 @@ exports.updateUser = async (req, res) => {
 
     user = user.toJSON();
     user.name = await getUserName(user.login);
+
+    logger.log(req, res, 'Изменение прав пользователя');
     res.status(200).json(user);
   });
 };
