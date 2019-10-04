@@ -13,7 +13,8 @@ router.post('/subsidiary', auditController.postSubsidiary);
 router.delete('/audit', auditController.deleteAudit);
 
 router.get('/roles', adminController.getRoles);
-router.get('/users', adminController.getUsers);
+router.get('/appUsers', adminController.getApplicationUsers);
+router.get('/groupUsers', adminController.getGroupUsers);
 router.post('/user', adminController.postUser);
 
 module.exports = router;

@@ -29,3 +29,11 @@ exports.getUserName = login => {
     });
   });
 };
+
+exports.getGroupUsers = async () => {
+  return new Promise((resolve, reject) => {
+    fs.readFile('./json/fakeUser.json', 'utf8', function(err, contents) {
+      resolve(JSON.parse(contents));
+    });
+  });
+};

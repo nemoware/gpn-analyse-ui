@@ -34,22 +34,16 @@ exports.getUser = async (req, res) => {
   });
 };
 
-exports.getUserGroup = async () => {
+exports.getGroupUsers = async () => {
   return new Promise((resolve, reject) => {
-    if (appConfig.ad.on) {
-      ad.findUser(login, function(err, user) {
-        if (err) {
-          console.log(err);
-          reject(err);
-        } else {
-          resolve(contents);
-          return user.displayName;
-        }
-      });
-    } else {
-      fs.readFile('./json/fakeUser.json', 'utf8', function(err, contents) {
-        resolve(JSON.parse(contents));
-      });
-    }
+    ad.findUser(login, function(err, user) {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(contents);
+        return user.displayName;
+      }
+    });
   });
 };
