@@ -7,6 +7,8 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { SharedModule } from '@shared/shared.module';
 
 import { AppComponent } from './app.component';
+import { HideDirective } from '@core/authorization/hide.directive';
+import { HttpClientTestingModule } from '@root/node_modules/@angular/common/http/testing';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -15,7 +17,8 @@ describe('AppComponent', () => {
         SharedModule,
         RouterTestingModule,
         NoopAnimationsModule,
-        TranslateModule.forRoot()
+        TranslateModule.forRoot(),
+        HttpClientTestingModule
       ],
       providers: [
         provideMockStore({
@@ -25,7 +28,7 @@ describe('AppComponent', () => {
           }
         })
       ],
-      declarations: [AppComponent]
+      declarations: [AppComponent, HideDirective]
     }).compileComponents();
   }));
 
