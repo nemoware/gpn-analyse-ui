@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
     { link: 'dash', label: 'Дэшборд' },
     { link: 'analyse', label: 'Анализ' },
     { link: 'admin', label: 'Администрирование' },
-    { link: 'event', label: 'Журнал событий' }
+    { link: 'events', label: 'Журнал событий' }
   ];
 
   navigationSideMenu = [

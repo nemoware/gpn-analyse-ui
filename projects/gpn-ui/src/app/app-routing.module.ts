@@ -35,6 +35,15 @@ const routes: Routes = [
     data: { appPage: 'admin' }
   },
   {
+    path: 'events',
+    loadChildren: () =>
+      import('./features/events/event.viewer.module').then(
+        m => m.EventViewerModule
+      ),
+    canActivate: [AppPageGuard],
+    data: { appPage: 'events' }
+  },
+  {
     path: '**',
     redirectTo: 'audit'
   }

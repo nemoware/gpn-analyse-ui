@@ -3,6 +3,7 @@ const router = express.Router();
 
 const auditController = require('../controller/auditController');
 const adminController = require('../controller/adminController');
+const eventController = require('../controller/eventController');
 
 router.post('/audit', auditController.postAudit);
 router.get('/subsidiaries', auditController.getSubsidiaries);
@@ -19,5 +20,8 @@ router.post('/user', adminController.postUser);
 router.get('/userInfo', adminController.getUserInfo);
 router.put('/user', adminController.updateUser);
 router.delete('/user', adminController.deleteUser);
+
+router.get('/eventType', eventController.getEventType);
+router.get('/eventApp', eventController.getEventApp);
 
 module.exports = router;
