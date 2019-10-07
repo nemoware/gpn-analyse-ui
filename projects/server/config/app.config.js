@@ -11,6 +11,5 @@ exports.ad = {
   password: process.env.GPN_AD_PASS,
   groupName: process.env.GPN_AD_GROUP_NAME,
   on: true,
-  login: 'admin',
-  auth: null
+  login: 'admin'
 };

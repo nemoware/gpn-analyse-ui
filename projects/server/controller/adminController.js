@@ -1,9 +1,10 @@
-const User = require('../config/db.config').User;
-const Role = require('../config/db.config').Role;
 const logger = require('../core/logger');
 const adAuth = require('../config/app.config').ad.auth;
+const db = require('../config/db.config');
+const User = db.User;
+const Role = db.Role;
 
-exports.getApplicationUsers = async (req, res) => {
+exports.getApplicationUsers = (req, res) => {
   User.find({}, async (err, users) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
@@ -12,11 +13,12 @@ exports.getApplicationUsers = async (req, res) => {
       return;
     }
 
-    let _users = JSON.parse(JSON.stringify(users));
-    for (let user of _users) {
+    users = JSON.parse(JSON.stringify(users));
+    for (let user of users) {
       user.name = await getUserName(user.login);
     }
-    res.status(200).json(_users);
+
+    res.status(200).json(users);
   });
 };
 
@@ -47,6 +49,8 @@ exports.getUserInfo = (req, res) => {
         user.name = u.displayName;
       }
     }
+
+    logger.log(req, res, 'Вход в приложение');
     res.status(200).json(user);
   });
 };

@@ -9,7 +9,6 @@ module.exports = (mongoose, Schema) => {
     { toJSON: { virtuals: true } }
   );
 
-  userSchema.virtual('name').get(() => null);
   userSchema.virtual('roleString').get(function() {
     let roles = [];
     for (let role of this.roles) {
