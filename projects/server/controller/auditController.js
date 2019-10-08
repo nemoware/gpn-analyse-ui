@@ -4,7 +4,6 @@ const Audit = db.Audit;
 const AuditStatus = db.AuditStatus;
 const Subsidiary = db.Subsidiary;
 const User = db.User;
-const parser = require('../audit/auditDocsParser');
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
@@ -20,7 +19,6 @@ exports.postAudit = async (req, res) => {
     }
     logger.log(req, res, 'Создание аудита');
     res.status(201).json(audit);
-    parser.auditParser(audit._id);
   });
 };
 
