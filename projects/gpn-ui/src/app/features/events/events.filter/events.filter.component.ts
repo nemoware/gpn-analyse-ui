@@ -27,7 +27,7 @@ export class EventFilterComponent implements OnInit {
   ];
 
   @Input() eventsType: Array<{ _id: string; name: string }>;
-  @Output() onApplyFilter = new EventEmitter<
+  @Output() ApplyFilter = new EventEmitter<
     Array<{ name: string; value: any }>
   >();
   selectedValue = '';
@@ -71,6 +71,6 @@ export class EventFilterComponent implements OnInit {
         name: 'dateTo',
         value: this._dateTo.getTime() / 1000
       });
-    this.onApplyFilter.emit(filterVlaue);
+    this.ApplyFilter.emit(filterVlaue);
   }
 }

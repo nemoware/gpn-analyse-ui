@@ -12,10 +12,8 @@ describe('App', () => {
     expect(page.getCurrentYear()).toEqual(new Date().getFullYear().toString());
   });
 
-  it('should have "Audit", "Features", "Analyse" menus', () => {
+  it('empty menu', () => {
     page.navigateTo();
-    page
-      .getAllMenus()
-      .then(menus => expect(menus).toEqual(['Аудит', 'Дэшборд', 'Анализ']));
+    page.getAllMenus().then(menus => expect(menus).length === 0);
   });
 });
