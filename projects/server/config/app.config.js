@@ -13,3 +13,8 @@ exports.ad = {
   on: true,
   login: 'admin'
 };
+
+exports.parser = {
+  pathFolder: 'C:\\WORK\\gpn_docs\\test\\',
+  url: 'http://localhost:8888/document-parser'
+};
