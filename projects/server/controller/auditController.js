@@ -20,7 +20,7 @@ exports.postAudit = async (req, res) => {
     }
     logger.log(req, res, 'Создание аудита');
     res.status(201).json(audit);
-    parser.auditParser(audit._id);
+    parser.parseAudit(audit._id);
   });
 };
 

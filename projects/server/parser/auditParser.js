@@ -1,8 +1,8 @@
-var fs = require('fs');
-var Request = require('request');
-var config = require('../config/app.config');
-const db = require('../config/db.config');
+const fs = require('fs');
+const request = require('request');
+const config = require('../config/app.config');
 const parserConfig = config.parser;
+const db = require('../config/db.config');
 const Document = db.Document;
 const Audit = db.Audit;
 const AuditStatus = db.AuditStatus;
@@ -23,7 +23,7 @@ function readFiles(auditId, dirname, onFileContent, onError) {
       });
     });
 
-    var audit = await Audit.findOne({ _id: auditId });
+    let audit = await Audit.findOne({ _id: auditId });
     if (audit) {
       audit.status = await AuditStatus.findOne({ name: 'В работе' });
       audit.save(err => {
@@ -38,27 +38,30 @@ function readFiles(auditId, dirname, onFileContent, onError) {
 }
 
 function parser(filename, content, auditId) {
-  var base64data = Buffer.from(content, 'binary').toString('base64');
-  var body = {
+  let base64data = Buffer.from(content, 'binary').toString('base64');
+  let extension = filename
+    .substring(filename.lastIndexOf('.') + 1)
+    .toUpperCase();
+  let body = {
     base64Content: base64data,
-    documentFileType: 'DOCX'
+    documentFileType: extension
   };
 
-  var options = {
+  let options = {
     url: parserConfig.url,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body)
   };
 
-  Request.post(options, (error, response, body) => {
+  request.post(options, (error, response, body) => {
     if (error) {
       return console.dir(error);
     }
 
-    var docum = JSON.parse(body);
-    docum.name = filename;
-    docum.auditId = auditId;
-    postDocument(docum);
+    let document = JSON.parse(body);
+    document.name = filename;
+    document.auditId = auditId;
+    postDocument(document);
   });
 }
 
@@ -71,7 +74,7 @@ postDocument = async data => {
   });
 };
 
-exports.auditParser = auditId => {
+exports.parseAudit = auditId => {
   readFiles(auditId, parserConfig.pathFolder, parser, function(err) {
     throw err;
   });
