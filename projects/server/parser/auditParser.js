@@ -7,7 +7,7 @@ const Document = db.Document;
 const Audit = db.Audit;
 const AuditStatus = db.AuditStatus;
 
-function readFiles(idAudit, dirname, onFileContent, onError) {
+function readFiles(auditId, dirname, onFileContent, onError) {
   fs.readdir(dirname, async function(err, filenames) {
     if (err) {
       onError(err);
@@ -19,11 +19,11 @@ function readFiles(idAudit, dirname, onFileContent, onError) {
           onError(err);
           return;
         }
-        onFileContent(filename, content, idAudit);
+        onFileContent(filename, content, auditId);
       });
     });
 
-    var audit = await Audit.findOne({ _id: idAudit });
+    var audit = await Audit.findOne({ _id: auditId });
     if (audit) {
       audit.status = await AuditStatus.findOne({ name: 'Завершен' });
       audit.save(err => {
@@ -32,12 +32,12 @@ function readFiles(idAudit, dirname, onFileContent, onError) {
         }
       });
     } else {
-      console.log('Не найден аудит ID = ' + idAudit);
+      console.log('Не найден аудит ID = ' + auditId);
     }
   });
 }
 
-function parser(filename, content, idAudit) {
+function parser(filename, content, auditId) {
   var base64data = Buffer.from(content, 'binary').toString('base64');
   var body = {
     base64Content: base64data,
@@ -57,7 +57,7 @@ function parser(filename, content, idAudit) {
 
     var docum = JSON.parse(body);
     docum.name = filename;
-    docum.idAudit = idAudit;
+    docum.auditId = auditId;
     postDocument(docum);
   });
 }
@@ -71,8 +71,8 @@ postDocument = async data => {
   });
 };
 
-exports.auditParser = idAudit => {
-  readFiles(idAudit, parserConfig.pathFolder, parser, function(err) {
+exports.auditParser = auditId => {
+  readFiles(auditId, parserConfig.pathFolder, parser, function(err) {
     throw err;
   });
 };

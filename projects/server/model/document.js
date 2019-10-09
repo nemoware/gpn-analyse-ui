@@ -1,6 +1,7 @@
 module.exports = (mongoose, Schema) => {
+  const ObjectId = Schema.Types.ObjectId;
   let documentSchema = new Schema({
-    idAudit: String,
+    auditId: ObjectId,
     name: String,
     documentDate: Date,
     documentType: String,

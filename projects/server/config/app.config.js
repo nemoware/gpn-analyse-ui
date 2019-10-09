@@ -15,6 +15,6 @@ exports.ad = {
 };
 
 exports.parser = {
-  pathFolder: 'C:\\WORK\\gpn_docs\\test\\',
+  pathFolder: process.env.GPN_DOC_DIRECTORY,
   url: 'http://localhost:8888/document-parser'
 };
