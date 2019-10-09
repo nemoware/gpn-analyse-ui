@@ -1,26 +1,27 @@
 const EventType = require('../config/db.config').EventType;
-const EventApp = require('../config/db.config').EventApp;
+const Log = require('../config/db.config').Log;
+const logger = require('../core/logger');
 
-exports.getEventType = async (req, res) => {
-  EventType.find({}, async (err, events) => {
+exports.getEventTypes = async (req, res) => {
+  EventType.find({}, async (err, eventTypes) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
       logger.logError(req, res, err);
       return;
     }
-    res.status(200).json(events);
+    res.status(200).json(eventTypes);
   });
 };
 
-exports.getEventApp = async (req, res) => {
-  EventApp.find({}, async (err, events) => {
+exports.getLogs = async (req, res) => {
+  Log.find({}, async (err, logs) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
       console.log(err);
       logger.logError(req, res, err);
       return;
     }
-    res.status(200).json(events);
+    res.status(200).json(logs);
   });
 };

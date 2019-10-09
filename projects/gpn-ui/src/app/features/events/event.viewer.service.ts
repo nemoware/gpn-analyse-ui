@@ -21,14 +21,14 @@ export class EventViewerService {
 
     console.log(httpParams);
 
-    return this.http.get<EventApp[]>(`${api}/eventApp`, {
+    return this.http.get<EventApp[]>(`${api}/logs`, {
       params: httpParams
     });
   }
 
   getEventsType(): Observable<Array<{ _id: string; name: string }>> {
     return this.http.get<Array<{ _id: string; name: string }>>(
-      `${api}/eventType`
+      `${api}/eventTypes`
     );
   }
 }
