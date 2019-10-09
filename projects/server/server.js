@@ -1,27 +1,37 @@
 const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
-const routes = require('./route/routes');
 const path = require('path');
 const uuid = require('uuid');
-const fs = require('fs');
 const session = require('express-session');
+
 const appConfig = require('./config/app.config');
-const adAuth = require('./authorization/adAuthorization');
+
+if (process.argv[2]) {
+  appConfig.ad.on = process.argv[2] === 'true';
+}
+if (process.argv[3]) {
+  appConfig.ad.login = process.argv[3];
+}
+
+const adAuthorization = require('./authorization/adAuthorization');
+const fakeAuthorization = require('./authorization/fakeAuthorization');
+
+if (appConfig.ad.on) {
+  appConfig.ad.auth = adAuthorization;
+} else {
+  appConfig.ad.auth = fakeAuthorization;
+}
+
+const adAuth = appConfig.ad.auth;
+
 const dbAuth = require('./authorization/dbAuthorization');
+const routes = require('./route/routes');
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
 
 const port = process.env.PORT || 3000;
 const app = express();
-
-if (process.argv[2]) {
-  appConfig.ad.on = process.argv[2] === 'true';
-}
-
-if (process.argv[3]) {
-  appConfig.ad.login = process.argv[3];
-}
 
 app.use(compression());
 app.use(bodyParser.json());
@@ -48,9 +58,9 @@ app.use(async function(req, res, next) {
 
   if (!req.session.message) {
     try {
-      let result = await adAuth.getLogin(req, res);
-      if (result) {
-        login = result.sAMAccountName;
+      let user = await adAuth.getUser(req, res);
+      if (user) {
+        login = user.sAMAccountName;
       }
     } catch (err) {
       console.log('Rejected: ' + err);

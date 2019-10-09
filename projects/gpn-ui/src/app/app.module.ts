@@ -7,6 +7,9 @@ import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app/app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HideDirective } from '@core/authorization/hide.directive';
+import { AppPageGuard } from '@core/authorization/app.page.guard';
+import { FormsModule } from '@root/node_modules/@angular/forms';
 
 @NgModule({
   imports: [
@@ -17,11 +20,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     // core & shared
     CoreModule,
     SharedModule,
-
+    FormsModule,
     // app
     AppRoutingModule
   ],
-  declarations: [AppComponent],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent, HideDirective],
+  exports: [HideDirective],
+  bootstrap: [AppComponent],
+  providers: [AppPageGuard]
 })
 export class AppModule {}

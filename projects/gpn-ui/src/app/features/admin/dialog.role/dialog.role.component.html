@@ -1,0 +1,20 @@
+<span><b>Список прав доступа</b></span>
+<hr>
+<div mat-dialog-content>
+  <ul>
+    <li matInput *ngFor="let role of data.roles">
+      <label>
+        <input type="checkbox" id="chk_{{ role._id }}" [checked]="data.user_role.includes(role._id.toString())">
+        <span> {{ role.description }}</span>
+      </label>
+  </ul>
+</div>
+
+<div class="row">
+  <div class="col">
+    <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+  </div>
+  <div class="col">
+    <button mat-raised-button color="accent" (click)="Apply()">Сохранить</button>
+  </div>
+</div>
