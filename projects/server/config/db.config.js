@@ -27,6 +27,7 @@ db.User = require('../model/user')(mongoose, Schema);
 db.Role = require('../model/role')(mongoose, Schema);
 db.Log = require('../model/log')(mongoose, Schema);
 db.EventType = require('../model/eventType')(mongoose, Schema);
+db.Document = require('../model/document')(mongoose, Schema);
 
 initialize.initializeData(db);
 
