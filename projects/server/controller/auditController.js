@@ -1,17 +1,14 @@
-const Audit = require('../config/db.config').Audit;
-const AuditStatus = require('../config/db.config').AuditStatus;
-const Subsidiary = require('../config/db.config').Subsidiary;
 const logger = require('../core/logger');
+const db = require('../config/db.config');
+const Audit = db.Audit;
+const AuditStatus = db.AuditStatus;
+const Subsidiary = db.Subsidiary;
+const User = db.User;
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
-  audit.status = await AuditStatus.findOne({ name: 'Новый' }).lean();
-
-  //todo
-  audit.author = {
-    login: 'user',
-    name: 'user'
-  };
+  audit.status = await AuditStatus.findOne({ name: 'Новый' });
+  audit.author = await User.findOne({ login: req.session.message });
 
   audit.save(err => {
     if (err) {
@@ -20,7 +17,7 @@ exports.postAudit = async (req, res) => {
       logger.logError(req, res, err);
       return;
     }
-
+    logger.log(req, res, 'Создание аудита');
     res.status(201).json(audit);
   });
 };

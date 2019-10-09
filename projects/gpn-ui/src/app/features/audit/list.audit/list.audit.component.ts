@@ -34,7 +34,6 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   faSearch = faSearch;
   faAngleDown = faAngleDown;
   faTrashAlt = faTrashAlt;
-  faCommentDots = faCommentDots;
   columns: string[] = [
     'id',
     'subsidiaryName',

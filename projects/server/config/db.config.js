@@ -25,6 +25,8 @@ db.AuditStatus = require('../model/auditStatus')(mongoose, Schema);
 db.Error = require('../model/error')(mongoose, Schema);
 db.User = require('../model/user')(mongoose, Schema);
 db.Role = require('../model/role')(mongoose, Schema);
+db.Log = require('../model/log')(mongoose, Schema);
+db.EventType = require('../model/eventType')(mongoose, Schema);
 
 initialize.initializeData(db);
 

@@ -7,5 +7,5 @@ module.exports = (mongoose, Schema) => {
     { toJSON: { virtuals: true } }
   );
 
-  return mongoose.model('auditstatus', auditStatusSchema);
+  return mongoose.model('auditStatus', auditStatusSchema);
 };

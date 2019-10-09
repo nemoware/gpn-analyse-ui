@@ -1,0 +1,34 @@
+<div class="left_group">
+  <gpn-event-filter [eventsType]="eventsType" (onApplyFilter)="onApplyFilter($event)"></gpn-event-filter>
+</div>
+<div class="right_group">
+  <div class="table-container">
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата </th>
+        <td mat-cell *matCellDef="let event"> {{event.createdAt | date:'HH:mm dd.MM.yyyy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="login">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Логин </th>
+        <td mat-cell *matCellDef="let event"> {{event.login}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Событие </th>
+        <td mat-cell *matCellDef="let event"> {{event.name}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+  </div>
+  <mat-paginator [length]="count" [pageSize]="pageSize"
+                 (page)="getPaginatorData($event)">
+  </mat-paginator>
+</div>
+
+
