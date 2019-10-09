@@ -8,7 +8,6 @@ import { AuthenticatedComponent } from './authenticated/authenticated.component'
 import { ContractComponent } from './contract/components/contract.component';
 import { DocumentsListComponent } from './search/search.component';
 
-
 const routes: Routes = [
   {
     path: '',
@@ -35,7 +34,6 @@ const routes: Routes = [
         data: { title: 'gpn.analyse.menu.contract' }
       },
 
-
       {
         path: 'authenticated',
         component: AuthenticatedComponent,
@@ -50,4 +48,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AnalyseRoutingModule { }
+export class AnalyseRoutingModule {}

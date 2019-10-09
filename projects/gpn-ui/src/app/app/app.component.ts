@@ -5,33 +5,33 @@ import { Observable } from 'rxjs';
 
 import { environment as env } from '@environments/environment';
 
- 
 import {
   authLogin,
-  authLogout,  
+  authLogout,
   AppState,
   LocalStorageService,
   selectIsAuthenticated,
   selectSettingsStickyHeader,
   selectEffectiveTheme
 } from '@core/core.module';
- 
+
 @Component({
   selector: 'gpn-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'] 
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   isProd = env.production;
   envName = env.envName;
   version = env.versions.app;
   year = new Date().getFullYear();
-  logo = require('@assets/new_logo_text_ru.svg');   
+  logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
+    { link: 'audit', label: 'Аудит' },
     { link: 'dash', label: 'Дэшборд' },
     { link: 'analyse', label: 'Анализ' }
   ];
-  
+
   navigationSideMenu = [
     ...this.navigation,
     { link: 'settings', label: 'Настройки' }
@@ -52,11 +52,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.storageService.testLocalStorage();
-    
 
     this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));
-    this.theme$ = this.store.pipe(select(selectEffectiveTheme));
+    // this.theme$ = this.store.pipe(select(selectEffectiveTheme));
   }
 
   onLoginClick() {
@@ -66,6 +65,4 @@ export class AppComponent implements OnInit {
   onLogoutClick() {
     this.store.dispatch(authLogout());
   }
-
- 
 }

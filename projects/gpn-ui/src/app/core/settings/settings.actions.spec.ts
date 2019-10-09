@@ -1,15 +1,13 @@
 import {
-  actionSettingsChangeAnimationsElements,
-  actionSettingsChangeAnimationsPage,
-  actionSettingsChangeAnimationsPageDisabled,
+  // actionSettingsChangeAnimationsElements,
+  // actionSettingsChangeAnimationsPage,
+  // actionSettingsChangeAnimationsPageDisabled,
   actionSettingsChangeStickyHeader,
   actionSettingsChangeTheme
 } from './settings.actions';
- 
 
 describe('Settings Actions', () => {
-   
-
+  /*
   it('should create ActionSettingsChangeAnimationsElements action', () => {
     const action = actionSettingsChangeAnimationsElements({
       elementsAnimations: true
@@ -38,8 +36,7 @@ describe('Settings Actions', () => {
     );
     expect(action.pageAnimationsDisabled).toEqual(true);
   });
-
-   
+*/
 
   it('should create ActionSettingsChangeStickyHeader action', () => {
     const action = actionSettingsChangeStickyHeader({
@@ -49,6 +46,4 @@ describe('Settings Actions', () => {
     expect(action.type).toEqual(actionSettingsChangeStickyHeader.type);
     expect(action.stickyHeader).toEqual(true);
   });
-
- 
 });

@@ -1,0 +1,77 @@
+<div>
+  <div class="row mat-elevation-z10">
+    <div class="col">
+        <div class="search-container" style="margin-left: 15px">
+          <mat-form-field appearance="legacy" >
+          <mat-label>Поиск аудита</mat-label>
+          <input matInput placeholder="Поиск" style="width: 250px" (change)="valueSearch($event.target.value)">
+            <fa-icon [icon]="faSearch" matTooltip="Поиск" style="float: right"></fa-icon>
+        </mat-form-field>
+        </div>
+    </div>
+    <div class="col">
+
+      <button mat-raised-button color="accent" style="float: right; margin-right: 20px; margin-top: 15px" (click)="createAudit()"> Добавить </button>
+
+      <button mat-raised-button style="float: right; margin-right: 20px; margin-top: 15px; width: 120px" [matMenuTriggerFor]="toolbarEvents">
+        <span> Действия </span>
+        <fa-icon [icon]="faAngleDown" matTooltip="Список действий" style="float: left"></fa-icon>
+      </button>
+
+      <mat-menu #toolbarEvents="matMenu">
+        <button mat-menu-item (click)="deleteAudit()">
+          <mat-icon><fa-icon [icon]="faTrashAlt" style="float: left"></fa-icon></mat-icon>
+          <span> Удалить аудит </span>
+        </button>
+      </mat-menu>
+
+    </div>
+  </div>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox [checked]="row._id === selectedAudit._id" disabled="true"></mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="subsidiaryName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Наименование ДО </th>
+      <td mat-cell *matCellDef="let element"> {{element.subsidiaryName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="auditStart">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата начала </th>
+      <td mat-cell *matCellDef="let element"> {{element.auditStart | date:'dd.MM.yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="auditEnd">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата окончания </th>
+      <td mat-cell *matCellDef="let element"> {{element.auditEnd | date:'dd.MM.yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="checkedDocumentCount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Кол-во проверенных документов </th>
+      <td mat-cell *matCellDef="let element"> {{element.checkedDocumentCount}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="endAudit">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Заключение </th>
+      <td mat-cell *matCellDef="let element"> Заключение аудита от {{element.createDate | date:'dd.MM.yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="statusAudit">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Статус </th>
+      <td mat-cell *matCellDef="let element"> {{element.status.name}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns;" (click)="selectRow(row)"></tr>
+  </table>
+  <mat-paginator [length]="count" [pageSize]="pageSize"
+                 (page)="getPaginatorData($event)">
+  </mat-paginator>
+</div>
+
+

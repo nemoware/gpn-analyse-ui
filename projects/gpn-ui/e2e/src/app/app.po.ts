@@ -6,7 +6,7 @@ export class AppPage {
   }
 
   getCurrentYear() {
-    return element(by.css('.signature .year')).getText();
+    return element(by.css('span.year')).getText();
   }
 
   getAllMenus() {

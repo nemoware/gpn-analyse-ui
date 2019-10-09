@@ -2,13 +2,15 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
 const routes: Routes = [
-      
+  {
+    path: 'audit',
+    loadChildren: () =>
+      import('./features/audit/audit.module').then(m => m.AuditModule)
+  },
   {
     path: 'dash',
     loadChildren: () =>
-      import('./features/dash/dash.module').then(
-        m => m.FeatureListModule
-      )
+      import('./features/dash/dash.module').then(m => m.FeatureListModule)
   },
   {
     path: 'settings',
@@ -22,7 +24,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'dash'
+    redirectTo: 'audit'
   }
 ];
 

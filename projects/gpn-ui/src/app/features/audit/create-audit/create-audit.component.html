@@ -1,0 +1,61 @@
+<div class="container">
+
+  <h4>Новое задание на аудит</h4>
+    <mat-form-field>
+      <mat-select [formControl]="subsidiaryCtrl" placeholder="Выбрать Дочернее Общество" #selectSubsidiary>
+        <mat-option>
+          <ngx-mat-select-search [formControl]="subsidiaryFilterCtrl"
+                                 [placeholderLabel]="'Поиск дочернего общества...'"
+                                 [noEntriesFoundLabel]="'Дочернее общество не найдено'"
+          >
+            <fa-icon ngxMatSelectSearchClear [icon]="faTimes" matTooltip="Очистить поиск"></fa-icon>
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let subsidiary of filteredSubsidiaries | async" [value]="subsidiary">
+          {{subsidiary.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Путь к файлам (FTP URL)" [(ngModel)]="_ftpUrl">
+  </mat-form-field>
+  <br>
+
+  <div class="container mat-elevation-z2">
+    <span style="font-weight: bold">Диапазон дат документов</span>
+  <form [formGroup]="auditForm">
+    <mat-form-field>
+      <input matInput [matDatepicker]="auditStart" placeholder="Начало диапазона" [(ngModel)]="_auditStart"
+           formControlName='auditStart' [errorStateMatcher]="errorMatcher" readonly = "true"
+      >
+      <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
+      <mat-datepicker #auditStart></mat-datepicker>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field>
+      <input matInput [matDatepicker]="auditEnd" placeholder="Конец диапазона" [(ngModel)]="_auditEnd"
+           formControlName='auditEnd' [errorStateMatcher]="errorMatcher" readonly = "true"
+      >
+      <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
+      <mat-datepicker #auditEnd></mat-datepicker>
+      <mat-error *ngIf="auditForm.hasError('invalidDate')">
+        Проверьте корректность введенных дат!
+      </mat-error>
+    </mat-form-field>
+  </form>
+  </div>
+
+  <br>
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+    </div>
+    <div class="col">
+      <button mat-raised-button color="accent" (click)="CreateAudit()" [disabled]="!valid()">Сохранить</button>
+    </div>
+  </div>
+
+</div>
+

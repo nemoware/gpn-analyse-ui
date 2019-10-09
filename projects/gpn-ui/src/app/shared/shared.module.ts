@@ -90,7 +90,6 @@ library.add(
   faStream,
   faBook
 );
- 
 
 @NgModule({
   imports: [
@@ -119,9 +118,7 @@ library.add(
     MatPaginatorModule,
     FontAwesomeModule
   ],
-  declarations: [
-     
-  ],
+  declarations: [],
   exports: [
     CommonModule,
     FormsModule,
@@ -151,8 +148,7 @@ library.add(
     MatNativeDateModule,
     MatPaginatorModule,
 
-    FontAwesomeModule,
- 
+    FontAwesomeModule
   ]
 })
-export class SharedModule { }
+export class SharedModule {}

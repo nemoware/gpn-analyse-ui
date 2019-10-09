@@ -3,7 +3,6 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import {
-
   actionSettingsChangeTheme,
   actionSettingsChangeStickyHeader
 } from '@core/settings/settings.actions';
@@ -26,23 +25,17 @@ export class SettingsContainerComponent implements OnInit {
     { value: 'BLACK-THEME', label: 'dark' }
   ];
 
-
-  constructor(private store: Store<State>) { }
+  constructor(private store: Store<State>) {}
 
   ngOnInit() {
     this.settings$ = this.store.pipe(select(selectSettings));
   }
 
-
   onThemeSelect({ value: theme }) {
     this.store.dispatch(actionSettingsChangeTheme({ theme }));
   }
 
-
   onStickyHeaderToggle({ checked: stickyHeader }) {
     this.store.dispatch(actionSettingsChangeStickyHeader({ stickyHeader }));
   }
-
-
-
 }

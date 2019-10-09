@@ -19,25 +19,24 @@
 
 @mixin custom-components-theme($theme) {
   @include gpn-styles-reset-theme($theme);
-  @include gpn-app-component-theme($theme);  
-  
-   
-   
+  @include gpn-app-component-theme($theme);
+
   // @include gpn-parent-component-theme($theme);
   // @include gpn-child-component-theme($theme);
   @include gpn-analyse-component-theme($theme);
 }
 
+/*
 .default-theme {
   @include angular-material-theme($gpn-theme);
   @include custom-components-theme($gpn-theme);
 }
-
+*/
 .light-theme {
   @include angular-material-theme($gpn-light-theme);
   @include custom-components-theme($gpn-light-theme);
 }
-
+/*
 .black-theme {
   @include angular-material-theme($gpn-black-theme);
   @include custom-components-theme($gpn-black-theme);
@@ -46,4 +45,13 @@
 .nature-theme {
   @include angular-material-theme($gpn-nature-theme);
   @include custom-components-theme($gpn-nature-theme);
+}
+*/
+
+.mat-focused .mat-form-field-label {
+  color: rgb(0, 64, 119) !important;
+}
+
+.mat-form-field-ripple {
+  background-color: rgb(0, 64, 119) !important;
 }
