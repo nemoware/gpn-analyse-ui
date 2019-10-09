@@ -19,6 +19,7 @@ router.get('/userInfo', adminController.getUserInfo);
 router.put('/user', adminController.updateUser);
 router.delete('/user', adminController.deleteUser);
 
+const eventController = require('../controller/eventController');
 router.get('/eventTypes', eventController.getEventTypes);
 router.get('/logs', eventController.getLogs);
 
