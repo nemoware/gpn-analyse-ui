@@ -25,7 +25,7 @@ function readFiles(auditId, dirname, onFileContent, onError) {
 
     var audit = await Audit.findOne({ _id: auditId });
     if (audit) {
-      audit.status = await AuditStatus.findOne({ name: 'Завершен' });
+      audit.status = await AuditStatus.findOne({ name: 'В работе' });
       audit.save(err => {
         if (err) {
           console.log(err);
