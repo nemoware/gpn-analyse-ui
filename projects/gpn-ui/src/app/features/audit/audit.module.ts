@@ -12,13 +12,21 @@ import {
   MAT_DATE_FORMATS,
   MatFormFieldModule,
   MatSelectModule,
-  MAT_DATE_LOCALE
+  MAT_DATE_LOCALE,
+  MatTreeModule,
+  MatDialogModule
 } from '@root/node_modules/@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
 import { FontAwesomeModule } from '@root/node_modules/@fortawesome/angular-fontawesome';
+import { AuditResultComponent } from './audit-result/audit-result.component';
+import { ScrollingModule } from '@root/node_modules/@angular/cdk/scrolling';
 
 @NgModule({
-  declarations: [ListAuditComponent, CreateAuditComponent],
+  declarations: [
+    ListAuditComponent,
+    CreateAuditComponent,
+    AuditResultComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -27,9 +35,12 @@ import { FontAwesomeModule } from '@root/node_modules/@fortawesome/angular-fonta
     MatSelectModule,
     MatFormFieldModule,
     NgxMatSelectSearchModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatTreeModule,
+    MatDialogModule,
+    ScrollingModule
   ],
-  entryComponents: [CreateAuditComponent],
+  entryComponents: [CreateAuditComponent, AuditResultComponent],
   providers: [
     {
       provide: DateAdapter,

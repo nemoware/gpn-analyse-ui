@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Audit } from '@app/models/audit.model';
 import { Subsidiary } from '@app/models/subsidiary.model';
+import { DocumentParser } from '@app/models/document.model';
 
 const api = '/api';
 
@@ -34,5 +35,17 @@ export class AuditService {
   deleteAudit(id: string) {
     const urlParams = new HttpParams().set('id', id.toString());
     return this.http.delete(`${api}/audit`, { params: urlParams });
+  }
+
+  public getDoumentsParser(
+    auditId: string = null
+  ): Observable<DocumentParser[]> {
+    let httpParams = new HttpParams();
+    if (auditId) {
+      httpParams = httpParams.append('auditId', auditId);
+    }
+    return this.http.get<Array<DocumentParser>>(`${api}/documents`, {
+      params: httpParams
+    });
   }
 }

@@ -22,6 +22,7 @@ import {
   faCommentDots,
   faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
+import { AuditResultComponent } from '@app/features/audit/audit-result/audit-result.component';
 
 @Component({
   selector: 'gpn-list.audit',
@@ -134,8 +135,6 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
     });
   }
 
-  OpenAudit(elem: Audit) {}
-
   getPaginatorData(event) {
     if (event.pageIndex === this.pageIndex + 1) {
       this.lowValue = this.lowValue + this.pageSize;
@@ -166,5 +165,19 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
       filterVlaue.push({ name: 'name', value: value });
     }
     this.refreshData(filterVlaue);
+  }
+
+  openAuditResult(element) {
+    const dialogRef = this.dialog.open(AuditResultComponent, {
+      width: '1000px',
+      height: '85vh',
+      data: {
+        auditId: element._id
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+      }
+    });
   }
 }

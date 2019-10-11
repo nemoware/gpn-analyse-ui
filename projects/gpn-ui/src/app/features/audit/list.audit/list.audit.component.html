@@ -58,7 +58,9 @@
 
     <ng-container matColumnDef="endAudit">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Заключение </th>
-      <td mat-cell *matCellDef="let element"> Заключение аудита от {{element.createDate | date:'dd.MM.yyyy'}} </td>
+      <td mat-cell *matCellDef="let element">
+        <button mat-raised-button  (click)="openAuditResult(element)"> Заключение аудита от {{element.createDate | date:'dd.MM.yyyy'}} </button>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="statusAudit">
