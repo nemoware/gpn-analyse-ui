@@ -6,7 +6,20 @@ module.exports = (mongoose, Schema) => {
     documentDate: Date,
     documentType: String,
     documentNumber: String,
-    paragraphs: [{ paragraphHeader: Object, paragraphBody: Object }]
+    parse: {
+      paragraphs: [{ paragraphHeader: Object, paragraphBody: Object }]
+    },
+    analysis: {
+      original_text: String,
+      normal_text: String,
+      import_timestamp: Date,
+      analyze_timestamp: Date,
+      tokenization_maps: {
+        words: [[Number, Number]]
+      },
+      checksum: Number,
+      attributes: Object
+    }
   });
 
   return mongoose.model('document', documentSchema);

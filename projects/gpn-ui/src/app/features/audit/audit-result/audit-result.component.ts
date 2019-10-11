@@ -86,7 +86,7 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.auditservice.getDoumentsParser().subscribe(data => {
+    this.auditservice.getDoumentsParser(this.data.auditId).subscribe(data => {
       const uniqueType = data.reduce(function(a, d) {
         if (a.indexOf(d.documentType) === -1) {
           a.push(d.documentType);

@@ -37,7 +37,7 @@ function readFiles(auditId, dirname, onFileContent, onError) {
   });
 }
 
-function parser(filename, content, auditId) {
+function parse(filename, content, auditId) {
   let base64data = Buffer.from(content, 'binary').toString('base64');
   let extension = filename
     .substring(filename.lastIndexOf('.') + 1)
@@ -61,6 +61,8 @@ function parser(filename, content, auditId) {
     let document = JSON.parse(body);
     document.name = filename;
     document.auditId = auditId;
+    document.parse = { paragraphs: document.paragraphs };
+    delete document['paragraphs'];
     postDocument(document);
   });
 }
@@ -75,7 +77,7 @@ postDocument = async data => {
 };
 
 exports.parseAudit = auditId => {
-  readFiles(auditId, parserConfig.pathFolder, parser, function(err) {
+  readFiles(auditId, parserConfig.pathFolder, parse, function(err) {
     throw err;
   });
 };
