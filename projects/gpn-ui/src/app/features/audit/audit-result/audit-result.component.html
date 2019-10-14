@@ -44,7 +44,7 @@
         <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
         <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
       </button>
-      {{ node.name | translate }}
+      {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
       <mat-divider></mat-divider>
     </div>
   </mat-tree-node>
