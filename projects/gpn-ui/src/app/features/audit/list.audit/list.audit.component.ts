@@ -169,10 +169,14 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
 
   openAuditResult(element) {
     const dialogRef = this.dialog.open(AuditResultComponent, {
-      width: '1000px',
+      width: '80%',
       height: '85vh',
       data: {
-        auditId: element._id
+        auditId: element._id,
+        subsidiaryName: element.subsidiaryName,
+        auditStart: element.auditStart,
+        auditEnd: element.auditEnd,
+        status: element.status.name
       }
     });
     dialogRef.afterClosed().subscribe(result => {

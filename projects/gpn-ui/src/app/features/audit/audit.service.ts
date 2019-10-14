@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Audit } from '@app/models/audit.model';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { DocumentParser } from '@app/models/document.model';
+import { DocumentAnalyze } from '@app/models/document-analyze';
 
 const api = '/api';
 
@@ -47,5 +48,16 @@ export class AuditService {
     return this.http.get<Array<DocumentParser>>(`${api}/documents`, {
       params: httpParams
     });
+  }
+
+  public getDoumentsAnalyze(
+    auditId: string = null
+  ): Observable<DocumentAnalyze> {
+    const _url = '/assets/1 Договор.docx.json';
+    let httpParams = new HttpParams();
+    if (auditId) {
+      httpParams = httpParams.append('auditId', auditId);
+    }
+    return this.http.get<DocumentAnalyze>(_url, { params: httpParams });
   }
 }

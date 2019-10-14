@@ -16,6 +16,7 @@ import {
   selectEffectiveTheme
 } from '@core/core.module';
 import { AuthorizationData } from '@core/authorization/authorization.data';
+import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 
 @Component({
   selector: 'gpn-root',
@@ -48,8 +49,14 @@ export class AppComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private storageService: LocalStorageService,
-    private authorizationData: AuthorizationData
-  ) {}
+    private authorizationData: AuthorizationData,
+    public translate: TranslateService
+  ) {
+    translate.addLangs(['en', 'ru']);
+    translate.setDefaultLang('en');
+    const browserLang = translate.getBrowserLang();
+    translate.use(browserLang.match(/en|ru/) ? browserLang : 'en');
+  }
 
   private static isIEorEdgeOrSafari() {
     return ['ie', 'edge', 'safari'].includes(browser().name);

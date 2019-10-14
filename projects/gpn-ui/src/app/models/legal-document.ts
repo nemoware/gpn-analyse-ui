@@ -1,5 +1,5 @@
 export interface LegalDocument {
-  id?: string;
+  _id?: string;
   filename?: string;
   normal_text?: string;
   tags?: Array<Tag>;

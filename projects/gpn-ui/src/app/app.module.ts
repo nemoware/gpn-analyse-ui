@@ -10,6 +10,20 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HideDirective } from '@core/authorization/hide.directive';
 import { AppPageGuard } from '@core/authorization/app.page.guard';
 import { FormsModule } from '@root/node_modules/@angular/forms';
+import { HttpClient } from '@root/node_modules/@angular/common/http';
+import {
+  TranslateLoader,
+  TranslateModule
+} from '@root/node_modules/@ngx-translate/core';
+import { TranslateHttpLoader } from '@root/node_modules/@ngx-translate/http-loader';
+import localeRu from '@angular/common/locales/ru';
+import { registerLocaleData } from '@root/node_modules/@angular/common';
+
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient);
+}
+
+registerLocaleData(localeRu, 'ru');
 
 @NgModule({
   imports: [
@@ -22,7 +36,14 @@ import { FormsModule } from '@root/node_modules/@angular/forms';
     SharedModule,
     FormsModule,
     // app
-    AppRoutingModule
+    AppRoutingModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   declarations: [AppComponent, HideDirective],
   exports: [HideDirective],

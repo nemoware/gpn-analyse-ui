@@ -21,11 +21,22 @@ import {
   faSearch,
   faChevronDown,
   faChevronUp,
-  faTimes
+  faTimes,
+  faClock
 } from '@fortawesome/free-solid-svg-icons';
+import { Tag } from '@app/models/legal-document';
+import { DocumentAnalyze } from '@app/models/document-analyze';
+
 interface Node {
   name: string;
   children?: Node[];
+  details?: Tag;
+  confidence?: number;
+  kind?: string;
+  childCount?: number;
+  index?: number;
+  documentDate?: Date;
+  documentNumber?: string;
 }
 
 interface ExampleFlatNode {
@@ -46,7 +57,9 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   faTimes = faTimes;
+  faClock = faClock;
   docs: DocumentParser[];
+  docsA: DocumentAnalyze;
   TREE_DATA: Node[] = [];
 
   treeControl;
@@ -58,7 +71,12 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
     return {
       expandable: !!node.children && node.children.length > 0,
       name: node.name,
-      level: level
+      kind: node.kind,
+      childCount: node.childCount,
+      level: level,
+      index: node.index,
+      documentDate: node.documentDate,
+      documentNumber: node.documentNumber
     };
   };
 
@@ -69,6 +87,10 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       auditId: string;
+      subsidiaryName: string;
+      auditStart: Date;
+      auditEnd: Date;
+      status: string;
     }
   ) {}
 
@@ -86,6 +108,52 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.refreshData();
+  }
+
+  json2array(json) {
+    const result = [];
+    const keys = Object.keys(json);
+    keys.forEach(key => {
+      json[key].kind = key;
+      result.push(json[key]);
+    });
+    return result;
+  }
+
+  refreshDataA() {
+    this.auditservice.getDoumentsAnalyze().subscribe(data => {
+      const uniqueType = ['CONTRACT'];
+      this.docsA = data;
+      for (const t of uniqueType) {
+        const node = { name: t, children: [], childCount: 0 };
+        const nodeChild = { name: this.docsA._id, children: [], childCount: 0 };
+        const atr = this.json2array(data.attributes);
+
+        for (const _atr of atr) {
+          nodeChild.children.push({
+            name: _atr.display_value,
+            confidence: _atr.confidence,
+            kind: _atr.kind
+          });
+          nodeChild.childCount++;
+        }
+
+        node.children.push(nodeChild);
+        node.childCount++;
+        this.TREE_DATA.push(node);
+      }
+      this.dataSource = new MatTreeFlatDataSource(
+        this.treeControl,
+        this.treeFlattener
+      );
+      this.dataSource.data = this.TREE_DATA;
+      this.changeDetectorRefs.detectChanges();
+      console.log(this.TREE_DATA);
+    });
+  }
+
+  refreshData() {
     this.auditservice.getDoumentsParser().subscribe(data => {
       const uniqueType = data.reduce(function(a, d) {
         if (a.indexOf(d.documentType) === -1) {
@@ -94,15 +162,21 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
         return a;
       }, []);
       this.docs = data;
-
       for (const t of uniqueType) {
-        const node = { name: t, children: [] };
+        let i = 0;
+        const node = { name: t, children: [], childCount: 0 };
         for (const d of this.docs.filter(x => x.documentType === t)) {
-          node.children.push({ name: d.name });
+          i++;
+          node.children.push({
+            name: d.name,
+            index: i,
+            documentNumber: d.documentNumber,
+            documentDate: d.documentDate
+          });
         }
+        node.childCount = node.children.length;
         this.TREE_DATA.push(node);
       }
-      console.log(this.TREE_DATA);
       this.dataSource = new MatTreeFlatDataSource(
         this.treeControl,
         this.treeFlattener
