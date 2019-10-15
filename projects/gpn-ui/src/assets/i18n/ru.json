@@ -1,5 +1,12 @@
 {
   "CONTRACT": "ДОГОВОР",
   "SUPPLEMENTARY_AGREEMENT": "ДОПОЛНИТЕЛЬНОЕ СОГЛАШЕНИЕ",
-  "UNKNOWN": "НЕИЗВЕСТНЫЙ"
+  "UNKNOWN": "НЕИЗВЕСТНЫЙ",
+  "ANNEX": "ПРИЛОЖЕНИЕ",
+  "CHARTER": "УСТАВ",
+  "PROTOCOL": "ПРОТОКОЛ",
+  "REGULATION": "РЕГУЛИРОВАНИЕ",
+  "CHARITY_POLICY": "БЛАГОТВОРИТЕЛЬНАЯ ПОЛИТИКА",
+  "ORDER": "ЗАКАЗ",
+  "WORK_PLAN": "ПЛАН РАБОТЫ"
 }
