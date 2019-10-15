@@ -26,12 +26,14 @@ import { FontAwesomeModule } from '@root/node_modules/@fortawesome/angular-fonta
 import { AuditResultComponent } from './audit-parser-result/audit-parser-result.component';
 import { ScrollingModule } from '@root/node_modules/@angular/cdk/scrolling';
 import { TranslateModule } from '@root/node_modules/@ngx-translate/core';
+import { AuditAnalyseResultComponent } from './audit-analyse-result/audit-analyse-result.component';
 
 @NgModule({
   declarations: [
     ListAuditComponent,
     CreateAuditComponent,
-    AuditResultComponent
+    AuditResultComponent,
+    AuditAnalyseResultComponent
   ],
   imports: [
     CommonModule,

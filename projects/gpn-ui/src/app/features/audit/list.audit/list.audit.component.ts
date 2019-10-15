@@ -23,6 +23,7 @@ import {
   faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { AuditResultComponent } from '@app/features/audit/audit-parser-result/audit-parser-result.component';
+import { Router } from '@root/node_modules/@angular/router';
 
 @Component({
   selector: 'gpn-list.audit',
@@ -61,7 +62,8 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
     private auditservice: AuditService,
     public dialog: MatDialog,
     private changeDetectorRefs: ChangeDetectorRef,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private router: Router
   ) {}
   ngOnInit() {
     this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
@@ -168,20 +170,21 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   }
 
   openAuditResult(element) {
-    const dialogRef = this.dialog.open(AuditResultComponent, {
-      width: '80%',
-      height: '85vh',
-      data: {
-        auditId: element._id,
-        subsidiaryName: element.subsidiaryName,
-        auditStart: element.auditStart,
-        auditEnd: element.auditEnd,
-        status: element.status.name
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-      }
-    });
+    if (element.status._id === 2) {
+      const dialogRef = this.dialog.open(AuditResultComponent, {
+        width: '80%',
+        height: '85vh',
+        data: {
+          auditId: element._id,
+          subsidiaryName: element.subsidiaryName,
+          auditStart: element.auditStart,
+          auditEnd: element.auditEnd,
+          status: element.status.name
+        }
+      });
+    } else if (element.status._id === 3) {
+      console.log(element);
+      this.router.navigate(['audit/', element._id]);
+    }
   }
 }

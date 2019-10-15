@@ -2,30 +2,19 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Inject,
-  AfterViewInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  AfterViewInit
 } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef
-} from '@root/node_modules/@angular/material';
+import { ActivatedRoute } from '@root/node_modules/@angular/router';
 import { AuditService } from '@app/features/audit/audit.service';
-import { DocumentParser } from '@app/models/document.model';
-import { FlatTreeControl } from '@angular/cdk/tree';
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener
-} from '@angular/material/tree';
-import {
-  faSearch,
-  faChevronDown,
-  faChevronUp,
-  faTimes,
-  faClock
-} from '@fortawesome/free-solid-svg-icons';
-import { Tag } from '@app/models/legal-document';
+} from '@root/node_modules/@angular/material';
 import { DocumentAnalyze } from '@app/models/document-analyze';
+import { Tag } from '@app/models/legal-document';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 
 interface Node {
   name: string;
@@ -46,19 +35,17 @@ interface ExampleFlatNode {
 }
 
 @Component({
-  selector: 'gpn-audit-result',
-  templateUrl: './audit-parser-result.component.html',
-  styleUrls: ['./audit-parser-result.component.scss'],
+  selector: 'gpn-audit-analyse-result',
+  templateUrl: './audit-analyse-result.component.html',
+  styleUrls: ['./audit-analyse-result.component.scss'],
   providers: [AuditService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuditResultComponent implements OnInit, AfterViewInit {
-  faSearch = faSearch;
+export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
-  faTimes = faTimes;
-  faClock = faClock;
-  docs: DocumentParser[];
+  IdAudit;
+  docs: DocumentAnalyze;
   TREE_DATA: Node[] = [];
 
   treeControl;
@@ -80,19 +67,12 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private auditservice: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef,
-    public dialogRef: MatDialogRef<AuditResultComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: {
-      auditId: string;
-      subsidiaryName: string;
-      auditStart: Date;
-      auditEnd: Date;
-      status: string;
-    }
-  ) {}
-
+    private changeDetectorRefs: ChangeDetectorRef
+  ) {
+    this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
+  }
   ngOnInit() {
     this.treeFlattener = new MatTreeFlattener(
       this._transformer,
@@ -110,27 +90,34 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
     this.refreshData();
   }
 
+  json2array(json) {
+    const result = [];
+    const keys = Object.keys(json);
+    keys.forEach(key => {
+      json[key].kind = key;
+      result.push(json[key]);
+    });
+    return result;
+  }
+
   refreshData() {
-    this.auditservice.getDoumentsParser(this.data.auditId).subscribe(data => {
-      const uniqueType = data.reduce(function(a, d) {
-        if (a.indexOf(d.documentType) === -1) {
-          a.push(d.documentType);
-        }
-        return a;
-      }, []);
+    this.auditservice.getDoumentsAnalyze(this.IdAudit).subscribe(data => {
+      const uniqueType = ['CONTRACT'];
       this.docs = data;
       for (const t of uniqueType) {
-        let i = 0;
         const node = { name: t, children: [], childCount: 0 };
-        for (const d of this.docs.filter(x => x.documentType === t)) {
-          i++;
-          node.children.push({
-            name: d.name,
-            index: i,
-            documentNumber: d.documentNumber,
-            documentDate: d.documentDate
+        const nodeChild = { name: this.docs._id, children: [], childCount: 0 };
+        const atr = this.json2array(data.attributes);
+
+        for (const _atr of atr) {
+          nodeChild.children.push({
+            name: _atr.display_value,
+            confidence: _atr.confidence,
+            kind: _atr.kind
           });
         }
+        nodeChild.childCount = nodeChild.children.length;
+        node.children.push(nodeChild);
         node.childCount = node.children.length;
         this.TREE_DATA.push(node);
       }
@@ -141,11 +128,5 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.TREE_DATA;
       this.changeDetectorRefs.detectChanges();
     });
-  }
-
-  valueSearch(value: string) {}
-
-  closeForm() {
-    this.dialogRef.close();
   }
 }
