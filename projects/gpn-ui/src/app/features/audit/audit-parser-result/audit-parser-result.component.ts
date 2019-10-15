@@ -47,8 +47,8 @@ interface ExampleFlatNode {
 
 @Component({
   selector: 'gpn-audit-result',
-  templateUrl: './audit-result.component.html',
-  styleUrls: ['./audit-result.component.scss'],
+  templateUrl: './audit-parser-result.component.html',
+  styleUrls: ['./audit-parser-result.component.scss'],
   providers: [AuditService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

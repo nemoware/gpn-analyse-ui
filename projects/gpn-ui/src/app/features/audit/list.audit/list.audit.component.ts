@@ -22,7 +22,7 @@ import {
   faCommentDots,
   faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
-import { AuditResultComponent } from '@app/features/audit/audit-result/audit-result.component';
+import { AuditResultComponent } from '@app/features/audit/audit-parser-result/audit-parser-result.component';
 
 @Component({
   selector: 'gpn-list.audit',

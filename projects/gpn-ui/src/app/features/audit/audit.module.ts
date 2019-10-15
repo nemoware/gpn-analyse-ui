@@ -23,7 +23,7 @@ import {
 } from '@root/node_modules/@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
 import { FontAwesomeModule } from '@root/node_modules/@fortawesome/angular-fontawesome';
-import { AuditResultComponent } from './audit-result/audit-result.component';
+import { AuditResultComponent } from './audit-parser-result/audit-parser-result.component';
 import { ScrollingModule } from '@root/node_modules/@angular/cdk/scrolling';
 import { TranslateModule } from '@root/node_modules/@ngx-translate/core';
 
