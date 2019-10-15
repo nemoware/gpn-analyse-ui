@@ -6,9 +6,8 @@ module.exports = (mongoose, Schema) => {
     documentDate: Date,
     documentType: String,
     documentNumber: String,
-    parse: {
-      paragraphs: [{ paragraphHeader: Object, paragraphBody: Object }]
-    },
+    parentId: ObjectId,
+    paragraphs: [{ paragraphHeader: Object, paragraphBody: Object }],
     analysis: {
       original_text: String,
       normal_text: String,

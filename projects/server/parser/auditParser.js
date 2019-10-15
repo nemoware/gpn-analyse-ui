@@ -53,27 +53,40 @@ function parse(filename, content, auditId) {
     body: JSON.stringify(body)
   };
 
-  request.post(options, (error, response, body) => {
+  request.post(options, async (error, response, body) => {
     if (error) {
       return console.dir(error);
     }
 
-    let document = JSON.parse(body);
-    document.name = filename;
-    document.auditId = auditId;
-    document.parse = { paragraphs: document.paragraphs };
-    delete document['paragraphs'];
-    postDocument(document);
+    let result = JSON.parse(body);
+    if (
+      'documents' in result &&
+      result.documents != null &&
+      result.documents.length > 0
+    ) {
+      let document = result.documents[0];
+      document.auditId = auditId;
+      document.name = filename;
+      let parentId = await postDocument(document);
+      for (let i = 1; i < result.documents.length; i++) {
+        document = result.documents[i];
+        document.parentId = parentId;
+        document.auditId = auditId;
+        document.name = `${filename} (${i})`;
+        await postDocument(document);
+      }
+    }
   });
 }
 
 postDocument = async data => {
   let document = new Document(data);
-  document.save(async err => {
-    if (err) {
-      console.log(err);
-    }
-  });
+  try {
+    await document.save();
+    return document._id;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.parseAudit = auditId => {
