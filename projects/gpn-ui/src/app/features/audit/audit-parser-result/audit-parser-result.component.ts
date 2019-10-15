@@ -11,7 +11,7 @@ import {
   MatDialogRef
 } from '@root/node_modules/@angular/material';
 import { AuditService } from '@app/features/audit/audit.service';
-import { DocumentParser } from '@app/models/document.model';
+import { Document } from '@app/models/document.model';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import {
   MatTreeFlatDataSource,
@@ -25,7 +25,6 @@ import {
   faClock
 } from '@fortawesome/free-solid-svg-icons';
 import { Tag } from '@app/models/legal-document';
-import { DocumentAnalyze } from '@app/models/document-analyze';
 
 interface Node {
   name: string;
@@ -58,7 +57,7 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
   faChevronUp = faChevronUp;
   faTimes = faTimes;
   faClock = faClock;
-  docs: DocumentParser[];
+  docs: Document[];
   TREE_DATA: Node[] = [];
 
   treeControl;
@@ -111,7 +110,7 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
   }
 
   refreshData() {
-    this.auditservice.getDoumentsParser(this.data.auditId).subscribe(data => {
+    this.auditservice.getDouments(this.data.auditId, false).subscribe(data => {
       const uniqueType = data.reduce(function(a, d) {
         if (a.indexOf(d.documentType) === -1) {
           a.push(d.documentType);

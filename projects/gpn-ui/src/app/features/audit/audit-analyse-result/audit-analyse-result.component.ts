@@ -11,10 +11,10 @@ import {
   MatTreeFlatDataSource,
   MatTreeFlattener
 } from '@root/node_modules/@angular/material';
-import { DocumentAnalyze } from '@app/models/document-analyze';
 import { Tag } from '@app/models/legal-document';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
+import { Document } from '@app/models/document.model';
 
 interface Node {
   name: string;
@@ -45,7 +45,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   IdAudit;
-  docs: DocumentAnalyze;
+  docs: Document[];
   TREE_DATA: Node[] = [];
 
   treeControl;
@@ -101,23 +101,42 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   }
 
   refreshData() {
-    this.auditservice.getDoumentsAnalyze(this.IdAudit).subscribe(data => {
-      const uniqueType = ['CONTRACT'];
+    this.auditservice.getDouments(this.IdAudit, false).subscribe(data => {
+      const uniqueType = data.reduce(function(a, d) {
+        if (a.indexOf(d.documentType) === -1) {
+          a.push(d.documentType);
+        }
+        return a;
+      }, []);
       this.docs = data;
       for (const t of uniqueType) {
+        let i = 0;
         const node = { name: t, children: [], childCount: 0 };
-        const nodeChild = { name: this.docs._id, children: [], childCount: 0 };
-        const atr = this.json2array(data.attributes);
 
-        for (const _atr of atr) {
-          nodeChild.children.push({
-            name: _atr.display_value,
-            confidence: _atr.confidence,
-            kind: _atr.kind
-          });
+        for (const d of this.docs.filter(x => x.documentType === t)) {
+          i++;
+          const nodeChild = {
+            name: d.name,
+            index: i,
+            documentNumber: d.documentNumber,
+            documentDate: d.documentDate,
+            children: [],
+            childCount: 0
+          };
+
+          const atr = this.json2array(d.analysis.attributes);
+          let j = 1;
+          for (const _atr of atr) {
+            nodeChild.children.push({
+              index: j++,
+              name: _atr.display_value,
+              confidence: _atr.confidence,
+              kind: _atr.kind
+            });
+          }
+          nodeChild.childCount = nodeChild.children.length;
+          node.children.push(nodeChild);
         }
-        nodeChild.childCount = nodeChild.children.length;
-        node.children.push(nodeChild);
         node.childCount = node.children.length;
         this.TREE_DATA.push(node);
       }

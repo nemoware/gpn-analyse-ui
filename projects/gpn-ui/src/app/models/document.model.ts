@@ -1,9 +1,21 @@
-export interface DocumentParser {
+export interface Document {
   _id: string;
-  idAudit: string;
+  auditId: string;
   name: string;
   documentDate: Date;
   documentType: string;
   documentNumber: string;
-  paragraphs: Array<{ paragraphHeader: Object; paragraphBody: Object }>;
+  parentId: string;
+  paragraphs: [{ paragraphHeader: Object; paragraphBody: Object }];
+  analysis: {
+    original_text: string;
+    normal_text: string;
+    import_timestamp: Date;
+    analyze_timestamp: Date;
+    tokenization_maps: {
+      words: [[number, number]];
+    };
+    checksum: number;
+    attributes: Object;
+  };
 }

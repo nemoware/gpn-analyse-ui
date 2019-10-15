@@ -183,7 +183,6 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
         }
       });
     } else if (element.status._id === 3) {
-      console.log(element);
       this.router.navigate(['audit/', element._id]);
     }
   }
