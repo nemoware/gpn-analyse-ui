@@ -16,5 +16,6 @@ exports.ad = {
 
 exports.parser = {
   pathFolder: process.env.GPN_DOC_DIRECTORY,
-  url: 'http://localhost:8888/document-parser'
+  url: 'http://localhost:8888',
+  method: 'document-parser'
 };

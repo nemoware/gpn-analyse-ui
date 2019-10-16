@@ -36,7 +36,33 @@ function readFiles(auditId, dirname, onFileContent, onError) {
   });
 }
 
-function parse(filename, content, auditId) {
+exports.test = () => {
+  let filename = 'test.docx';
+  fs.readFile(`./file/${filename}`, (err, data) => {
+    if (err) throw err;
+    let options = getOptions(filename, data);
+    request.post(options, async (err, response, body) => {
+      if (err && err.code === 'ECONNREFUSED') {
+        info();
+      } else {
+        let result = JSON.parse(body);
+        info(result.version);
+      }
+    });
+  });
+};
+
+function info(version) {
+  console.log(`Document parser`);
+  console.log(`Url: ${parserConfig.url}`);
+  console.log(`Status: ${version ? 'on' : 'off'}`);
+  if (version) {
+    console.log(`Version: ${version}`);
+  }
+  console.log();
+}
+
+function getOptions(filename, content) {
   let base64data = Buffer.from(content, 'binary').toString('base64');
   let extension = filename
     .substring(filename.lastIndexOf('.') + 1)
@@ -45,13 +71,15 @@ function parse(filename, content, auditId) {
     base64Content: base64data,
     documentFileType: extension
   };
-
-  let options = {
-    url: parserConfig.url,
+  return {
+    url: `${parserConfig.url}/${parserConfig.method}`,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body)
   };
+}
 
+function parse(filename, content, auditId) {
+  let options = getOptions(filename, content);
   request.post(options, async (error, response, body) => {
     if (error) {
       return console.dir(error);

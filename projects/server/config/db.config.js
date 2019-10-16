@@ -9,10 +9,26 @@ const name = dbConfig.name;
 const initialize = require('../core/initialize');
 
 // подключение
-mongoose.connect(`mongodb://${host}:${port}/${name}`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose
+  .connect(`mongodb://${host}:${port}/${name}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    info('on');
+  })
+  .catch(() => {
+    info('off');
+  });
+
+function info(status) {
+  console.log(`Database`);
+  console.log(`Name: ${name}`);
+  console.log(`Host: ${host}`);
+  console.log(`Port: ${port}`);
+  console.log(`Status: ${status}`);
+  console.log();
+}
 
 let db = {};
 
