@@ -11,13 +11,22 @@ module.exports = (mongoose, Schema) => {
     analysis: {
       original_text: String,
       normal_text: String,
-      import_timestamp: Date,
       analyze_timestamp: Date,
       tokenization_maps: {
         words: [[Number, Number]]
       },
       checksum: Number,
-      attributes: Object
+      attributes: Object,
+      headers: [
+        {
+          value: String,
+          parent: Object,
+          span: [Number, Number],
+          span_map: String,
+          confidence: Number,
+          display_value: String
+        }
+      ]
     }
   });
 
