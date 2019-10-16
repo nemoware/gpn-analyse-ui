@@ -9,10 +9,26 @@ const name = dbConfig.name;
 const initialize = require('../core/initialize');
 
 // подключение
-mongoose.connect(`mongodb://${host}:${port}/${name}`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose
+  .connect(`mongodb://${host}:${port}/${name}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    info('on');
+  })
+  .catch(() => {
+    info('off');
+  });
+
+function info(status) {
+  console.log(`Database`);
+  console.log(`Name: ${name}`);
+  console.log(`Host: ${host}`);
+  console.log(`Port: ${port}`);
+  console.log(`Status: ${status}`);
+  console.log();
+}
 
 let db = {};
 
@@ -21,7 +37,6 @@ db.Schema = Schema;
 
 db.Subsidiary = require('../model/subsidiary')(mongoose, Schema);
 db.Audit = require('../model/audit')(mongoose, Schema);
-db.AuditStatus = require('../model/auditStatus')(mongoose, Schema);
 db.Error = require('../model/error')(mongoose, Schema);
 db.User = require('../model/user')(mongoose, Schema);
 db.Role = require('../model/role')(mongoose, Schema);

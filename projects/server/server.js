@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const uuid = require('uuid');
 const session = require('express-session');
+const parser = require('./parser/auditParser');
 
 const appConfig = require('./config/app.config');
 
@@ -100,4 +101,17 @@ app.listen(port, err => {
   }
 
   console.log(`App listening on port ${port}`);
+  console.log();
+
+  parser.test();
+
+  console.log(`Active Directory`);
+  console.log(`AD authentication ${appConfig.ad.on ? 'on' : 'off'}`);
+  if (appConfig.ad.on) {
+    console.log(`Url: ${appConfig.ad.url}`);
+    console.log(`Status: `);
+  } else {
+    console.log(`Fake user: ${appConfig.ad.login}`);
+  }
+  console.log();
 });
