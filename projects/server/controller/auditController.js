@@ -1,6 +1,7 @@
 const logger = require('../core/logger');
 const db = require('../config/db.config');
 const Audit = db.Audit;
+const Document = db.Document;
 const Subsidiary = db.Subsidiary;
 const User = db.User;
 const parser = require('../parser/auditParser');
@@ -36,18 +37,16 @@ exports.getSubsidiaries = async (req, res) => {
   });
 };
 
-/*exports.getAuditStatuses = async (req, res) => {
-  AuditStatus.find({}, (err, statuses) => {
-    if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
-      return;
-    }
-
+exports.getAuditStatuses = async (req, res) => {
+  try {
+    let statuses = await Audit.find().distinct('status');
     res.status(200).json(statuses);
-  });
-};*/
+  } catch (err) {
+    res.status(500).json({ msg: 'error', details: err });
+    console.log(err);
+    logger.logError(req, res, err);
+  }
+};
 
 exports.getAudits = async (req, res) => {
   let where = {};
@@ -93,13 +92,15 @@ exports.deleteAudit = async (req, res) => {
     logger.logError(req, res, msg);
     return;
   }
-  Audit.deleteOne({ _id: req.query.id }, err => {
-    if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
-      return;
-    }
+
+  let auditId = req.query.id;
+  try {
+    await Audit.deleteOne({ _id: auditId });
+    await Document.deleteMany({ auditId: auditId });
     res.status(200).send();
-  });
+  } catch (err) {
+    res.status(500).json({ msg: 'error', details: err });
+    console.log(err);
+    logger.logError(req, res, err);
+  }
 };

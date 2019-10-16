@@ -1,39 +1,32 @@
-const fs = require('fs');
-const request = require('request');
+const fs = require('fs-promise');
+const request = require('request-promise');
 const config = require('../config/app.config');
 const parserConfig = config.parser;
 const db = require('../config/db.config');
 const Document = db.Document;
 const Audit = db.Audit;
 
-function readFiles(auditId, dirname, onFileContent, onError) {
-  fs.readdir(dirname, async function(err, filenames) {
-    if (err) {
-      onError(err);
-      return;
-    }
-    filenames.forEach(function(filename) {
-      fs.readFile(dirname + filename, function(err, content) {
-        if (err) {
-          onError(err);
-          return;
-        }
-        onFileContent(filename, content, auditId);
-      });
-    });
+async function readFiles(auditId, dirname, onFileContent, onError) {
+  let audit = await Audit.findOne({ _id: auditId });
+  if (audit) {
+    try {
+      audit.status = 'Loading';
+      await audit.save();
 
-    let audit = await Audit.findOne({ _id: auditId });
-    if (audit) {
+      let filenames = await fs.readdir(dirname);
+      for (let filename of filenames) {
+        const content = await fs.readFile(dirname + filename);
+        await onFileContent(filename, content, auditId);
+      }
+
       audit.status = 'InWork';
-      audit.save(err => {
-        if (err) {
-          console.log(err);
-        }
-      });
-    } else {
-      console.log('Не найден аудит ID = ' + auditId);
+      await audit.save();
+    } catch (err) {
+      onError(err);
     }
-  });
+  } else {
+    console.log('Не найден аудит ID = ' + auditId);
+  }
 }
 
 exports.test = () => {
@@ -78,9 +71,9 @@ function getOptions(filename, content) {
   };
 }
 
-function parse(filename, content, auditId) {
+async function parse(filename, content, auditId) {
   let options = getOptions(filename, content);
-  request.post(options, async (error, response, body) => {
+  await request.post(options, async (error, response, body) => {
     if (error) {
       return console.dir(error);
     }
