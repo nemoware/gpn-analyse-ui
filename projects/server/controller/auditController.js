@@ -1,14 +1,13 @@
 const logger = require('../core/logger');
 const db = require('../config/db.config');
 const Audit = db.Audit;
-const AuditStatus = db.AuditStatus;
 const Subsidiary = db.Subsidiary;
 const User = db.User;
 const parser = require('../parser/auditParser');
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
-  audit.status = await AuditStatus.findOne({ name: 'Новый' });
+  audit.status = 'New';
   audit.author = await User.findOne({ login: req.session.message });
 
   audit.save(err => {
@@ -37,7 +36,7 @@ exports.getSubsidiaries = async (req, res) => {
   });
 };
 
-exports.getAuditStatuses = async (req, res) => {
+/*exports.getAuditStatuses = async (req, res) => {
   AuditStatus.find({}, (err, statuses) => {
     if (err) {
       res.status(500).json({ msg: 'error', details: err });
@@ -48,7 +47,7 @@ exports.getAuditStatuses = async (req, res) => {
 
     res.status(200).json(statuses);
   });
-};
+};*/
 
 exports.getAudits = async (req, res) => {
   let where = {};
@@ -69,20 +68,6 @@ exports.getAudits = async (req, res) => {
     }
 
     res.status(200).json(audits);
-  });
-};
-
-exports.postAuditStatus = async (req, res) => {
-  let status = new AuditStatus(req.body);
-  status.save(err => {
-    if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
-      return;
-    }
-
-    res.status(201).json(status);
   });
 };
 

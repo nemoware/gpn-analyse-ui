@@ -5,7 +5,6 @@ const parserConfig = config.parser;
 const db = require('../config/db.config');
 const Document = db.Document;
 const Audit = db.Audit;
-const AuditStatus = db.AuditStatus;
 
 function readFiles(auditId, dirname, onFileContent, onError) {
   fs.readdir(dirname, async function(err, filenames) {
@@ -25,7 +24,7 @@ function readFiles(auditId, dirname, onFileContent, onError) {
 
     let audit = await Audit.findOne({ _id: auditId });
     if (audit) {
-      audit.status = await AuditStatus.findOne({ name: 'В работе' });
+      audit.status = 'InWork';
       audit.save(err => {
         if (err) {
           console.log(err);
