@@ -36,3 +36,16 @@ exports.getDocuments = async (req, res) => {
     logger.logError(req, res, err);
   }
 };
+
+exports.getDocument = (req, res) => {
+  Document.findOne({ _id: req.query.id }, async (err, document) => {
+    if (err) {
+      res.status(500).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.logError(req, res, err);
+      return;
+    }
+    logger.log(req, res, 'Просмотр документа');
+    res.status(200).json(document);
+  });
+};

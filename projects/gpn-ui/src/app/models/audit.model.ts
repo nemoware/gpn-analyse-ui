@@ -9,7 +9,7 @@ export interface Audit {
   auditStart: Date;
   auditEnd: Date;
   checkedDocumentCount: number;
-  status: { _id: string; name: string };
+  status: string;
   createDate: Date;
   author: { _id: string; login: string; name: string };
 }

@@ -5,18 +5,23 @@ import {
   ChangeDetectorRef,
   AfterViewInit
 } from '@angular/core';
-import { ActivatedRoute } from '@root/node_modules/@angular/router';
+import { ActivatedRoute, Router } from '@root/node_modules/@angular/router';
 import { AuditService } from '@app/features/audit/audit.service';
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener
 } from '@root/node_modules/@angular/material';
 import { Tag } from '@app/models/legal-document';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faChevronUp,
+  faEye
+} from '@fortawesome/free-solid-svg-icons';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 import { Document } from '@app/models/document.model';
 
 interface Node {
+  _id?: string;
   name: string;
   children?: Node[];
   details?: Tag;
@@ -44,6 +49,7 @@ interface ExampleFlatNode {
 export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
+  faEye = faEye;
   IdAudit;
   docs: Document[];
   TREE_DATA: Node[] = [];
@@ -62,14 +68,16 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       level: level,
       index: node.index,
       documentDate: node.documentDate,
-      documentNumber: node.documentNumber
+      documentNumber: node.documentNumber,
+      _id: node._id
     };
   };
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private auditservice: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef
+    private changeDetectorRefs: ChangeDetectorRef,
+    private router: Router
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
@@ -116,6 +124,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         for (const d of this.docs.filter(x => x.documentType === t)) {
           i++;
           const nodeChild = {
+            _id: d._id,
             name: d.name,
             index: i,
             documentNumber: d.documentNumber,
@@ -147,5 +156,9 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.TREE_DATA;
       this.changeDetectorRefs.detectChanges();
     });
+  }
+
+  openEditor(node) {
+    this.router.navigate(['audit/view/', node._id]);
   }
 }

@@ -170,7 +170,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   }
 
   openAuditResult(element) {
-    if (element.status._id === 2) {
+    if (element.status === 'InWork') {
       const dialogRef = this.dialog.open(AuditResultComponent, {
         width: '80%',
         height: '85vh',
@@ -182,8 +182,8 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
           status: element.status.name
         }
       });
-    } else if (element.status._id === 3) {
-      this.router.navigate(['audit/', element._id]);
+    } else if (element.status === 'Ended') {
+      this.router.navigate(['audit/result/', element._id]);
     }
   }
 }

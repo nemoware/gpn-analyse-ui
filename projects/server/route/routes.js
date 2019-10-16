@@ -24,5 +24,6 @@ router.get('/logs', eventController.getLogs);
 
 const documentController = require('../controller/documentController');
 router.get('/documents', documentController.getDocuments);
+router.get('/document', documentController.getDocument);
 
 module.exports = router;

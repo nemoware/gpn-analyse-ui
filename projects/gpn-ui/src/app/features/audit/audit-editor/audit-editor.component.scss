@@ -1,0 +1,54 @@
+.container {
+  margin-left: 10px;
+  position: relative;
+  min-height: 200px;
+  padding: 0;
+}
+
+.left_group {
+  height: 75vh;
+  width: 15%;
+  float: left;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.central_group {
+  height: 80vh;
+  width: 70%;
+  float: left;
+}
+
+.right_group {
+  height: 75vh;
+  width: 15%;
+  float: left;
+}
+
+.link_tag {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.spinner {
+  height: 200px;
+  width: 200px;
+  animation: rotate 2s linear infinite;
+  transform-origin: center center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  animation: dash 1s ease-in-out infinite;
+  stroke-linecap: round;
+  stroke: #ddd;
+}

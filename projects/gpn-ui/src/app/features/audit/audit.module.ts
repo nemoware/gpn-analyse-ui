@@ -27,13 +27,17 @@ import { AuditResultComponent } from './audit-parser-result/audit-parser-result.
 import { ScrollingModule } from '@root/node_modules/@angular/cdk/scrolling';
 import { TranslateModule } from '@root/node_modules/@ngx-translate/core';
 import { AuditAnalyseResultComponent } from './audit-analyse-result/audit-analyse-result.component';
+import { AuditEditorComponent } from './audit-editor/audit-editor.component';
+import { ViewDocumentComponent } from './audit-editor/view-document/view-document.component';
 
 @NgModule({
   declarations: [
     ListAuditComponent,
     CreateAuditComponent,
     AuditResultComponent,
-    AuditAnalyseResultComponent
+    AuditAnalyseResultComponent,
+    AuditEditorComponent,
+    ViewDocumentComponent
   ],
   imports: [
     CommonModule,
@@ -50,6 +54,7 @@ import { AuditAnalyseResultComponent } from './audit-analyse-result/audit-analys
     TranslateModule
   ],
   entryComponents: [CreateAuditComponent, AuditResultComponent],
+  exports: [ViewDocumentComponent],
   providers: [
     {
       provide: DateAdapter,

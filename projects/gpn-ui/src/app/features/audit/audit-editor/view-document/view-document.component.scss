@@ -1,0 +1,50 @@
+.view_doc {
+  height: 92%;
+  margin-left: 10px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.headline {
+  background-color: lightskyblue;
+}
+
+.subject {
+  background-color: darkseagreen;
+}
+
+.value {
+  background-color: green;
+}
+
+.org_2_alias {
+  background: #ffe97d;
+}
+.org_1_alias {
+  background: #ffb74d;
+}
+
+.org_2_name {
+  background: #e91e63;
+}
+.org_1_name {
+  background: #ff6090;
+}
+
+.org_1_type {
+  background: #66a39d;
+}
+
+.org_2_type {
+  background: #7ed8cf;
+}
+
+.unknown {
+  background-color: lightgrey;
+}
+
+.selected {
+  background-color: palegreen;
+}

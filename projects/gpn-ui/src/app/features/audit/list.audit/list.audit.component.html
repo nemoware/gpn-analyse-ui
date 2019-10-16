@@ -65,7 +65,7 @@
 
     <ng-container matColumnDef="statusAudit">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Статус </th>
-      <td mat-cell *matCellDef="let element"> {{element.status.name}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.status | translate}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
