@@ -4,22 +4,17 @@ const db = require('../config/db.config');
 const User = db.User;
 const Role = db.Role;
 
-exports.getApplicationUsers = (req, res) => {
-  User.find({}, async (err, users) => {
-    if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
-      return;
-    }
-
-    users = JSON.parse(JSON.stringify(users));
+exports.getApplicationUsers = async (req, res) => {
+  try {
+    let users = await User.find({}, null, { lean: true });
     for (let user of users) {
       user.name = await getUserName(user.login);
     }
 
     res.status(200).json(users);
-  });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
 };
 
 exports.getGroupUsers = async (req, res) => {
