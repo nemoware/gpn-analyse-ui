@@ -5,11 +5,14 @@ exports.db = {
 };
 
 exports.ad = {
-  url: process.env.GPN_AD_URL,
-  baseDN: process.env.GPN_AD_BASEDN,
-  username: process.env.GPN_AD_USERNAME,
-  password: process.env.GPN_AD_PASS,
+  options: {
+    url: process.env.GPN_AD_URL,
+    baseDN: process.env.GPN_AD_BASEDN,
+    username: process.env.GPN_AD_USERNAME,
+    password: process.env.GPN_AD_PASS
+  },
   groupName: process.env.GPN_AD_GROUP_NAME,
+  realm: process.env.GPN_AD_REALM,
   on: true,
   login: 'admin'
 };
