@@ -29,7 +29,9 @@ module.exports = (mongoose, Schema) => {
       ]
     },
     user: {
-      attributes: Object
+      attributes: Object,
+      author: { _id: ObjectId, login: String },
+      updateDate: Date
     }
   });
 

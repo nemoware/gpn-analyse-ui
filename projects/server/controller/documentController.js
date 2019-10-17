@@ -60,3 +60,24 @@ exports.getDocument = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+exports.updateDocument = async (req, res) => {
+  let document = await Document.findOne({ _id: req.body._id });
+  if (!document) {
+    let err = 'Document not found';
+    logger.logError(req, res, err, 404);
+    return;
+  }
+
+  document.user = req.body.user;
+  document.user.author = req.session.message;
+  document.user.updateDate = new Date();
+
+  try {
+    await document.save();
+    logger.log(req, res, 'Изменение документа');
+    res.status(200).json(document);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};

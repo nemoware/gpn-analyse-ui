@@ -89,7 +89,7 @@ exports.updateUser = async (req, res) => {
   let user = await User.findOne({ _id: req.body._id });
   if (!user) {
     let err = 'user not found';
-    logger.logError(req, res, err, 400);
+    logger.logError(req, res, err, 404);
     return;
   }
   user.roles = req.body.roles;
