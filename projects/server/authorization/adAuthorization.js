@@ -4,31 +4,30 @@ const appConfig = require('../config/app.config');
 const ad = new ActiveDirectory(appConfig.ad.options);
 
 exports.getUser = async (req, res) => {
-  return new Promise(resolve => {
+  return new Promise(async resolve => {
     if (!req.headers.authorization) {
       res.set('WWW-Authenticate', 'Negotiate');
       res.status(401).send();
     } else {
-      let ticket = req.headers.authorization.substring('Negotiate '.length);
-      kerberos.initializeServer(appConfig.ad.realm, (err, server) => {
-        if (err) {
-          console.log(err);
-        } else {
-          server.step(ticket, function(err, context) {
-            if (err) {
-              console.log(err);
-            } else {
-              ad.findUser(server.username, function(err, user) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  resolve(user);
-                }
-              });
-            }
-          });
-        }
-      });
+      try {
+        let ticket = req.headers.authorization.substring('Negotiate '.length);
+        const server = await initializeServer(appConfig.ad.realm);
+        server.step(ticket, err => {
+          if (err) {
+            console.log(err);
+          } else {
+            ad.findUser(server.username, function(err, user) {
+              if (err) {
+                console.log(err);
+              } else {
+                resolve(user);
+              }
+            });
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
   });
 };
@@ -68,7 +67,7 @@ exports.test = async () => {
     adStatus = 'off';
   }
   try {
-    await initializeServer();
+    await initializeServer(appConfig.ad.realm);
   } catch (err) {
     kerberosStatus = 'off';
   }
@@ -88,9 +87,9 @@ function info(adStatus, kerberosStatus) {
   console.log();
 }
 
-function initializeServer() {
+function initializeServer(realm) {
   return new Promise(resolve => {
-    kerberos.initializeServer(appConfig.ad.realm, (err, server) => {
+    kerberos.initializeServer(realm, (err, server) => {
       resolve(server);
     });
   });

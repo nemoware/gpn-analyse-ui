@@ -55,7 +55,7 @@ app.use(
 
 app.use(async function(req, res, next) {
   let login;
-  let checked = true;
+  let checked = false;
 
   if (!req.session.message) {
     try {
@@ -65,8 +65,6 @@ app.use(async function(req, res, next) {
       }
     } catch (err) {
       console.log('Rejected: ' + err);
-      res.status(401).json({ msg: 'error', details: err });
-      return;
     }
   }
 
@@ -83,8 +81,8 @@ app.use(async function(req, res, next) {
   if (checked) {
     next();
   } else {
-    res.sendFile('index.html', {
-      root: path.join(__dirname, './')
+    res.status(401).sendFile('error.html', {
+      root: path.join(__dirname, './file/')
     });
   }
 });
