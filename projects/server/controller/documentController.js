@@ -1,6 +1,7 @@
 const db = require('../config/db.config');
 const logger = require('../core/logger');
 const Document = db.Document;
+const DocumentType = db.DocumentType;
 
 exports.getDocuments = async (req, res) => {
   if (!req.query.auditId) {
@@ -77,6 +78,25 @@ exports.updateDocument = async (req, res) => {
     await document.save();
     logger.log(req, res, 'Изменение документа');
     res.status(200).json(document);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getAttributes = async (req, res) => {
+  if (!req.query.name) {
+    let err = `Can not find attributes because type name is null`;
+    logger.logError(req, res, err, 400);
+    return;
+  }
+  try {
+    let documentType = await DocumentType.findOne({ _id: req.query.name });
+    if (documentType) {
+      res.status(200).json(documentType.attributes);
+    } else {
+      let err = `Can not find document type with name ${req.query.name}`;
+      logger.logError(req, res, err, 404);
+    }
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

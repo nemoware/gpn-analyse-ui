@@ -1,4 +1,46 @@
 {
+  "DocumentType": [
+    {
+      "_id": "CONTRACT",
+      "attributes": ["subject", "value"]
+    },
+    {
+      "_id": "SUPPLEMENTARY_AGREEMENT",
+      "attributes": []
+    },
+    {
+      "_id": "UNKNOWN",
+      "attributes": []
+    },
+    {
+      "_id": "ANNEX",
+      "attributes": []
+    },
+    {
+      "_id": "CHARTER",
+      "attributes": []
+    },
+    {
+      "_id": "PROTOCOL",
+      "attributes": []
+    },
+    {
+      "_id": "REGULATION",
+      "attributes": []
+    },
+    {
+      "_id": "CHARITY_POLICY",
+      "attributes": []
+    },
+    {
+      "_id": "ORDER",
+      "attributes": []
+    },
+    {
+      "_id": "WORK_PLAN",
+      "attributes": []
+    }
+  ],
   "User": [
     {
       "login": "admin",
