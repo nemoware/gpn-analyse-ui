@@ -66,6 +66,8 @@ app.use(async function(req, res, next) {
     } catch (err) {
       console.log('Rejected: ' + err);
     }
+  } else {
+    checked = true;
   }
 
   if (login) {
