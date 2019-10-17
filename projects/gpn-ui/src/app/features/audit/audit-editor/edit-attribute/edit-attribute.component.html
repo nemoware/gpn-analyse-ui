@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col">
+    <h1 mat-dialog-title
+        cdkDrag
+        cdkDragRootElement=".cdk-overlay-pane"
+        cdkDragHandle>Редактор атрибутов документа</h1>
+  </div>
+  <div class="col-1">
+    <fa-icon [icon]="faTimes"style="alignment: center" class="close" (click)="closeForm()" matTooltip="Закрыть"></fa-icon>
+  </div>
+</div>
+<mat-divider></mat-divider>
+  <mat-form-field style="width: 100%; height: auto">
+    <span>Фрагмент:</span>
+    <textarea matInput readonly="true">{{data.value}}</textarea>
+  </mat-form-field>
+<mat-form-field style="width: 100%">
+  <mat-label>Тип атрибута</mat-label>
+  <mat-select [(ngModel)]="doctype">
+    <mat-option *ngFor="let type of data.documentType" [value]="type">
+      {{type | translate}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<button mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right">Применить</button>

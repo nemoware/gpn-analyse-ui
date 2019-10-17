@@ -1,35 +1,21 @@
 <div class="row" *ngIf="document">
   <div class="col-3 mat-elevation-z8" >
-    <div class="container">
-      <div class="row">
-        <div class="col-8">
-          <h4>Файл: {{ document.name }}</h4>
-        </div>
-        <div class="col-4">
-
-          <button mat-icon-button matTooltip="Перейти в режим редактирования" (click)="editMode()" [disabled]="editmode">
-            <fa-icon [icon]="faEdit"></fa-icon>
-          </button>
-
-          <button mat-icon-button matTooltip="В начало документа" (click)="goToColorText('top')">
-            <fa-icon [icon]="faChevronUp"></fa-icon>
-          </button>
-
-          <button mat-icon-button matTooltip="В конец документа" (click)="goToColorText('foot')">
-            <fa-icon [icon]="faChevronDown"></fa-icon>
-          </button>
-
-        </div>
-      </div>
-      <div>
-        <ol>
-          <li *ngFor="let key of attributes" (click)="goToColorText(key.id)"><span class='link_tag'>{{key.value}}</span>
-        </ol>
-      </div>
-
-    </div>
+    <h4>Файл: {{ document.name }}</h4>
+    <cdk-virtual-scroll-viewport  style="height: 95%" itemSize="50" >
+      <gpn-tree-attributes
+        [editmode]="editmode"
+        [attributes]="document.analysis.attributes"
+        [headers]="document.analysis.headers"
+        [documentType] = "documentType"
+        (goToAttribute)="goToAttribute($event)"
+      ></gpn-tree-attributes>
+    </cdk-virtual-scroll-viewport>
   </div>
   <div class="col-9" style="height: 88vh" >
-    <gpn-view-document [document]="document" [editmode]="editmode"></gpn-view-document>
+    <gpn-view-document
+      [document]="document"
+      [documentType] = "documentType"
+      [editmode]="editmode"
+    ></gpn-view-document>
   </div>
 </div>

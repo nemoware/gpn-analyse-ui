@@ -58,4 +58,10 @@ export class AuditService {
     httpParams = httpParams.append('id', id);
     return this.http.get<Document>(`${api}/document`, { params: httpParams });
   }
+
+  public getDoumentType(name: string): Observable<string[]> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('name', name);
+    return this.http.get<string[]>(`${api}/attributes`, { params: httpParams });
+  }
 }

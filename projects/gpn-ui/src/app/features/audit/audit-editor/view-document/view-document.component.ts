@@ -4,12 +4,22 @@ import {
   ChangeDetectionStrategy,
   AfterViewInit,
   Input,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectorRef
 } from '@angular/core';
 import { Document } from '@app/models/document.model';
 import { Helper } from '@app/features/audit/helper';
 import { Tag } from '@app/models/legal-document';
 import { KindAttribute } from '@app/models/kind-attribute';
+import {
+  faChevronDown,
+  faChevronUp,
+  faEdit,
+  faSave
+} from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@root/node_modules/@angular/router';
+import { MatDialog } from '@root/node_modules/@angular/material';
+import { EditAttributeComponent } from '@app/features/audit/audit-editor/edit-attribute/edit-attribute.component';
 
 @Component({
   selector: 'gpn-view-document',
@@ -19,9 +29,19 @@ import { KindAttribute } from '@app/models/kind-attribute';
   encapsulation: ViewEncapsulation.None
 })
 export class ViewDocumentComponent implements OnInit, AfterViewInit {
+  faChevronDown = faChevronDown;
+  faChevronUp = faChevronUp;
+  faEdit = faEdit;
+  faSave = faSave;
   @Input() document: Document;
   @Input() editmode: boolean;
-  constructor() {}
+  @Input() documentType: string[];
+  changed = false;
+  constructor(
+    private router: Router,
+    public dialog: MatDialog,
+    private changeDetectorRefs: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     if (this.document) this.loadDoc();
@@ -41,6 +61,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
         for (let i = _tag.span[0]; i < _tag.span[1]; i++)
           infoTags.push([i, this.getClassName(_tag.kind)]);
       }
+
     for (let i = words.length - 1; i >= 0; i--) {
       const word = words[i];
       let classSpan;
@@ -64,7 +85,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
     return nameClassSpan;
   }
 
-  public goToColorText(id) {
+  public goToAttribute(id) {
     const element = document.getElementById(id);
     if (element != null)
       element.scrollIntoView({
@@ -73,8 +94,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
       });
   }
 
-  getSelectedText() {
-    if (!this.editmode) return;
+  getSelectedText(e: MouseEvent) {
+    if (!this.editmode || document.getSelection().isCollapsed) return;
     let idStart;
     let idEnd;
 
@@ -90,23 +111,38 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
 
     if (Number(idStart.split('_')[1]) > Number(idEnd.split('_')[1])) return;
 
-    for (const elem of this.getArrayNodes(idStart, idEnd)) {
-      elem.classList.forEach(c => {
-        elem.classList.remove(c);
-      });
-      elem.classList.add('selected');
-    }
-
     const words = this.document.analysis.tokenization_maps.words;
     const wordS = words[idStart.split('_')[1]];
     const wordE = words[idEnd.split('_')[1]];
 
     const value = this.document.analysis.normal_text.slice(wordS[0], wordE[1]);
 
-    this.addNewTag('selected', value, [
+    /*this.addNewTag('selected', value, [
       Number(idStart.split('_')[1]),
       Number(idEnd.split('_')[1])
-    ]);
+    ]);*/
+
+    const dialogRef = this.dialog.open(EditAttributeComponent, {
+      width: '600px',
+      data: {
+        top: e.pageY,
+        left: e.pageX,
+        value: value,
+        documentType: this.documentType
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.changed = true;
+        for (const elem of this.getArrayNodes(idStart, idEnd)) {
+          elem.classList.forEach(c => {
+            elem.classList.remove(c);
+          });
+          elem.classList.add(result.type);
+        }
+        this.changeDetectorRefs.detectChanges();
+      }
+    });
   }
 
   getArrayNodes(idS: string, idE: string): Array<Element> {
@@ -126,4 +162,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
     const tag: Tag = { kind, value, span };
     // this.contract.tags.push(tag);
   }
+
+  editMode() {
+    this.router.navigate(['audit/edit/', this.document._id]);
+  }
+
+  saveChanges() {}
 }

@@ -29,6 +29,9 @@ import { TranslateModule } from '@root/node_modules/@ngx-translate/core';
 import { AuditAnalyseResultComponent } from './audit-analyse-result/audit-analyse-result.component';
 import { AuditEditorComponent } from './audit-editor/audit-editor.component';
 import { ViewDocumentComponent } from './audit-editor/view-document/view-document.component';
+import { TreeAttributesComponent } from './audit-editor/tree-attributes/tree-attributes.component';
+import { EditAttributeComponent } from './audit-editor/edit-attribute/edit-attribute.component';
+import { DragDropModule } from '@root/node_modules/@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,9 @@ import { ViewDocumentComponent } from './audit-editor/view-document/view-documen
     AuditResultComponent,
     AuditAnalyseResultComponent,
     AuditEditorComponent,
-    ViewDocumentComponent
+    ViewDocumentComponent,
+    TreeAttributesComponent,
+    EditAttributeComponent
   ],
   imports: [
     CommonModule,
@@ -51,9 +56,14 @@ import { ViewDocumentComponent } from './audit-editor/view-document/view-documen
     MatTreeModule,
     MatDialogModule,
     ScrollingModule,
-    TranslateModule
+    TranslateModule,
+    DragDropModule
   ],
-  entryComponents: [CreateAuditComponent, AuditResultComponent],
+  entryComponents: [
+    CreateAuditComponent,
+    AuditResultComponent,
+    EditAttributeComponent
+  ],
   exports: [ViewDocumentComponent],
   providers: [
     {

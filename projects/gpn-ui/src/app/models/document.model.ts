@@ -1,3 +1,5 @@
+import { HeaderModel } from '@app/models/header-model';
+
 export interface Document {
   _id: string;
   auditId: string;
@@ -16,6 +18,10 @@ export interface Document {
       words: [[number, number]];
     };
     checksum: number;
+    attributes: Object;
+    headers: [HeaderModel];
+  };
+  user: {
     attributes: Object;
   };
 }

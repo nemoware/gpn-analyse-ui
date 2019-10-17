@@ -19,6 +19,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 import { Document } from '@app/models/document.model';
+import { Helper } from '@app/features/audit/helper';
 
 interface Node {
   _id?: string;
@@ -98,16 +99,6 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     this.refreshData();
   }
 
-  json2array(json) {
-    const result = [];
-    const keys = Object.keys(json);
-    keys.forEach(key => {
-      json[key].kind = key;
-      result.push(json[key]);
-    });
-    return result;
-  }
-
   refreshData() {
     this.auditservice.getDouments(this.IdAudit, false).subscribe(data => {
       const uniqueType = data.reduce(function(a, d) {
@@ -133,7 +124,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
             childCount: 0
           };
 
-          const atr = this.json2array(d.analysis.attributes);
+          const atr = Helper.json2array(d.analysis.attributes);
           let j = 1;
           for (const _atr of atr) {
             nodeChild.children.push({
