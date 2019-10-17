@@ -7,8 +7,15 @@ const Role = db.Role;
 exports.getApplicationUsers = async (req, res) => {
   try {
     let users = await User.find({}, null, { lean: true });
+
     for (let user of users) {
       user.name = await getUserName(user.login);
+
+      let roles = [];
+      for (let role of user.roles) {
+        roles.push(role.name);
+      }
+      user.roleString = roles.join(', ');
     }
 
     res.status(200).json(users);
