@@ -9,7 +9,7 @@ const parser = require('../parser/auditParser');
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
   audit.status = 'New';
-  audit.author = await User.findOne({ login: req.session.message });
+  audit.author = req.session.message;
 
   audit.save(err => {
     if (err) {

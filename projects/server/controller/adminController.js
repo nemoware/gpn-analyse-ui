@@ -33,26 +33,17 @@ exports.getGroupUsers = async (req, res) => {
   }
 };
 
-exports.getUserInfo = (req, res) => {
-  User.findOne({ login: req.session.message }, async (err, user) => {
-    if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
-      return;
+exports.getUserInfo = async (req, res) => {
+  let user = req.session.message;
+  let groupUsers = await adAuth.getGroupUsers();
+  for (let u of groupUsers) {
+    if (user.login === u.sAMAccountName) {
+      user.name = u.displayName;
     }
+  }
 
-    user = user.toJSON();
-    let groupUsers = await adAuth.getGroupUsers();
-    for (let u of groupUsers) {
-      if (user.login === u.sAMAccountName) {
-        user.name = u.displayName;
-      }
-    }
-
-    logger.log(req, res, 'Вход в приложение');
-    res.status(200).json(user);
-  });
+  logger.log(req, res, 'Вход в приложение');
+  res.status(200).json(user);
 };
 
 exports.getRoles = async (req, res) => {

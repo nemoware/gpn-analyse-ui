@@ -39,7 +39,7 @@ exports.log = async (req, res, event) => {
 
   let log = new Log({
     time: new Date(),
-    login: req.session.message,
+    login: req.session.message.login,
     eventType: eventType
   });
   log.save(err => {

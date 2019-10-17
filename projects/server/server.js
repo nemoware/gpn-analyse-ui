@@ -54,8 +54,8 @@ app.use(
 );
 
 app.use(async function(req, res, next) {
-  let login = '';
-  let checked = false;
+  let login;
+  let checked = true;
 
   if (!req.session.message) {
     try {
@@ -65,18 +65,19 @@ app.use(async function(req, res, next) {
       }
     } catch (err) {
       console.log('Rejected: ' + err);
+      res.status(401).json({ msg: 'error', details: err });
+      return;
     }
   }
 
   if (login) {
     try {
-      checked = await dbAuth.checkLogin(login);
-      if (checked) req.session.message = login;
+      let user = await dbAuth.getUser(login);
+      checked = !!user;
+      req.session.message = user;
     } catch (err) {
       console.log('Rejected: ' + error);
     }
-  } else {
-    checked = true;
   }
 
   if (checked) {
