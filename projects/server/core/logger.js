@@ -25,7 +25,7 @@ exports.logError = (req, res, err) => {
 
 exports.log = async (req, res, event) => {
   let eventType = await EventType.findOne({ name: event });
-  if (eventType === null) {
+  if (!eventType) {
     eventType = new EventType({ name: event });
     try {
       await eventType.save();

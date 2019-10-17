@@ -51,7 +51,7 @@ exports.getAuditStatuses = async (req, res) => {
 exports.getAudits = async (req, res) => {
   let where = {};
 
-  if (req.query.name != null) {
+  if (req.query.name) {
     where['subsidiary.name'] = {
       $regex: `.*${req.query.name}.*`,
       $options: 'i'
@@ -85,7 +85,7 @@ exports.postSubsidiary = async (req, res) => {
 };
 
 exports.deleteAudit = async (req, res) => {
-  if (req.query.id == null) {
+  if (!req.query.id) {
     let msg = 'Cannot delete audit because id is null';
     res.status(400).json({ msg: 'error', details: 'id is null' });
     console.log(msg);

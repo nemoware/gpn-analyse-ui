@@ -86,7 +86,7 @@ exports.postUser = async (req, res) => {
 };
 
 exports.deleteUser = (req, res) => {
-  if (req.query.id == null) {
+  if (!req.query.id) {
     let msg = 'Cannot delete user because id is null';
     res.status(400).json({ msg: 'error', details: 'id is null' });
     console.log(msg);
@@ -108,7 +108,7 @@ exports.deleteUser = (req, res) => {
 
 exports.updateUser = async (req, res) => {
   let user = await User.findOne({ _id: req.body._id });
-  if (user === null) {
+  if (!user) {
     let err = 'user not found';
     res.status(400).json({ msg: 'error', details: 'user not found' });
     console.log(err);

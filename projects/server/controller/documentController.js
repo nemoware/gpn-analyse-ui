@@ -3,7 +3,7 @@ const logger = require('../core/logger');
 const Document = db.Document;
 
 exports.getDocuments = async (req, res) => {
-  if (req.query.auditId == null) {
+  if (!req.query.auditId) {
     let err = 'Can not find documents: auditId is null';
     res.status(400).json({ msg: 'error', details: err });
     console.log(err);

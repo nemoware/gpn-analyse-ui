@@ -83,11 +83,7 @@ async function parse(filename, content, auditId) {
     }
 
     let result = JSON.parse(body);
-    if (
-      'documents' in result &&
-      result.documents != null &&
-      result.documents.length > 0
-    ) {
+    if (result.documents && result.documents.length > 0) {
       let document = result.documents[0];
       document.auditId = auditId;
       document.name = filename;
