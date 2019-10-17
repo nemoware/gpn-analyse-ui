@@ -5,9 +5,7 @@ const logger = require('../core/logger');
 exports.getEventTypes = async (req, res) => {
   EventType.find({}, async (err, eventTypes) => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
     res.status(200).json(eventTypes);
@@ -17,9 +15,7 @@ exports.getEventTypes = async (req, res) => {
 exports.getLogs = async (req, res) => {
   Log.find({}, async (err, logs) => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
     res.status(200).json(logs);

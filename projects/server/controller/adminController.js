@@ -7,9 +7,7 @@ const Role = db.Role;
 exports.getApplicationUsers = (req, res) => {
   User.find({}, async (err, users) => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
 
@@ -27,9 +25,7 @@ exports.getGroupUsers = async (req, res) => {
     let users = await adAuth.getGroupUsers();
     res.status(200).json(users);
   } catch (err) {
-    res.status(500).json({ msg: 'error', details: err });
-    console.log(err);
-    logger.logError(req, res, err);
+    logger.logError(req, res, err, 500);
   }
 };
 
@@ -49,9 +45,7 @@ exports.getUserInfo = async (req, res) => {
 exports.getRoles = async (req, res) => {
   Role.find({}, (err, roles) => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
 
@@ -63,9 +57,7 @@ exports.postUser = async (req, res) => {
   let user = new User(req.body);
   user.save(async err => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
     user = user.toJSON();
@@ -79,16 +71,12 @@ exports.postUser = async (req, res) => {
 exports.deleteUser = (req, res) => {
   if (!req.query.id) {
     let msg = 'Cannot delete user because id is null';
-    res.status(400).json({ msg: 'error', details: 'id is null' });
-    console.log(msg);
-    logger.logError(req, res, msg);
+    logger.logError(req, res, msg, 400);
     return;
   }
   User.deleteOne({ _id: req.query.id }, err => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
 
@@ -101,17 +89,13 @@ exports.updateUser = async (req, res) => {
   let user = await User.findOne({ _id: req.body._id });
   if (!user) {
     let err = 'user not found';
-    res.status(400).json({ msg: 'error', details: 'user not found' });
-    console.log(err);
-    logger.logError(req, res, err);
+    logger.logError(req, res, err, 400);
     return;
   }
   user.roles = req.body.roles;
   user.save(async err => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
 

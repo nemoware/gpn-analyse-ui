@@ -5,9 +5,7 @@ const Document = db.Document;
 exports.getDocuments = async (req, res) => {
   if (!req.query.auditId) {
     let err = 'Can not find documents: auditId is null';
-    res.status(400).json({ msg: 'error', details: err });
-    console.log(err);
-    logger.logError(req, res, err);
+    logger.logError(req, res, err, 400);
     return;
   }
 
@@ -31,9 +29,7 @@ exports.getDocuments = async (req, res) => {
 
     res.status(200).json(documents);
   } catch (err) {
-    res.status(500).json({ msg: 'error', details: err });
-    console.log(err);
-    logger.logError(req, res, err);
+    logger.logError(req, res, err, 500);
   }
 };
 
@@ -41,15 +37,15 @@ exports.getDocument = async (req, res) => {
   try {
     if (!req.query.id) {
       let err = `Can not find document because id is null`;
-      res.status(400).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 400);
       return;
     }
+
     let document = await Document.findOne(
       { _id: req.query.id },
       '-paragraphs'
     ).lean();
+
     if (document) {
       logger.log(req, res, 'Просмотр документа');
       if (document.user) {
@@ -58,13 +54,9 @@ exports.getDocument = async (req, res) => {
       res.status(200).json(document);
     } else {
       let err = `Can not find document with id ${req.query.id}`;
-      res.status(404).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 404);
     }
   } catch (err) {
-    res.status(500).json({ msg: 'error', details: err });
-    console.log(err);
-    logger.logError(req, res, err);
+    logger.logError(req, res, err, 500);
   }
 };

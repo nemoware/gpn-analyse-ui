@@ -3,7 +3,10 @@ const Error = db.Error;
 const Log = db.Log;
 const EventType = db.EventType;
 
-exports.logError = (req, res, err) => {
+exports.logError = (req, res, err, status) => {
+  res.status(status).json({ msg: 'error', details: err });
+  console.log(err);
+
   let error = new Error({
     time: new Date(),
     method: req.method,
@@ -18,7 +21,6 @@ exports.logError = (req, res, err) => {
     if (err) {
       console.log(err);
       res.status(500).json({ msg: 'error', details: err });
-      return;
     }
   });
 };
@@ -30,9 +32,7 @@ exports.log = async (req, res, event) => {
     try {
       await eventType.save();
     } catch (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
   }

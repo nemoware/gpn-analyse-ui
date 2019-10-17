@@ -13,9 +13,7 @@ exports.postAudit = async (req, res) => {
 
   audit.save(err => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
     logger.log(req, res, 'Создание аудита');
@@ -27,9 +25,7 @@ exports.postAudit = async (req, res) => {
 exports.getSubsidiaries = async (req, res) => {
   Subsidiary.find({}, (err, subsidiaries) => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
 
@@ -42,9 +38,7 @@ exports.getAuditStatuses = async (req, res) => {
     let statuses = await Audit.find().distinct('status');
     res.status(200).json(statuses);
   } catch (err) {
-    res.status(500).json({ msg: 'error', details: err });
-    console.log(err);
-    logger.logError(req, res, err);
+    logger.logError(req, res, err, 500);
   }
 };
 
@@ -60,9 +54,7 @@ exports.getAudits = async (req, res) => {
 
   Audit.find(where, (err, audits) => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
 
@@ -74,9 +66,7 @@ exports.postSubsidiary = async (req, res) => {
   let subsidiary = new Subsidiary(req.body);
   subsidiary.save(err => {
     if (err) {
-      res.status(500).json({ msg: 'error', details: err });
-      console.log(err);
-      logger.logError(req, res, err);
+      logger.logError(req, res, err, 500);
       return;
     }
 
@@ -87,9 +77,7 @@ exports.postSubsidiary = async (req, res) => {
 exports.deleteAudit = async (req, res) => {
   if (!req.query.id) {
     let msg = 'Cannot delete audit because id is null';
-    res.status(400).json({ msg: 'error', details: 'id is null' });
-    console.log(msg);
-    logger.logError(req, res, msg);
+    logger.logError(req, res, msg, 400);
     return;
   }
 
@@ -99,8 +87,6 @@ exports.deleteAudit = async (req, res) => {
     await Document.deleteMany({ auditId: auditId });
     res.status(200).send();
   } catch (err) {
-    res.status(500).json({ msg: 'error', details: err });
-    console.log(err);
-    logger.logError(req, res, err);
+    logger.logError(req, res, err, 500);
   }
 };
