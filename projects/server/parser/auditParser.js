@@ -29,20 +29,24 @@ async function readFiles(auditId, dirname, onFileContent, onError) {
   }
 }
 
-exports.test = () => {
+exports.test = async () => {
   let filename = 'test.docx';
-  fs.readFile(`./file/${filename}`, (err, data) => {
-    if (err) throw err;
-    let options = getOptions(filename, data);
-    request.post(options, async (err, response, body) => {
-      if (err && err.code === 'ECONNREFUSED') {
-        info();
-      } else {
-        let result = JSON.parse(body);
-        info(result.version);
-      }
-    });
-  });
+  let data;
+  try {
+    data = await fs.readFile(`./file/${filename}`);
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+
+  let options = getOptions(filename, data);
+  try {
+    let body = await request.post(options);
+    let result = JSON.parse(body);
+    info(result.version);
+  } catch (err) {
+    info();
+  }
 };
 
 function info(version) {
