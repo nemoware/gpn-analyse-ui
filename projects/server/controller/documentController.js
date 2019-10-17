@@ -37,15 +37,34 @@ exports.getDocuments = async (req, res) => {
   }
 };
 
-exports.getDocument = (req, res) => {
-  Document.findOne({ _id: req.query.id }, async (err, document) => {
-    if (err) {
-      res.status(500).json({ msg: 'error', details: err });
+exports.getDocument = async (req, res) => {
+  try {
+    if (!req.query.id) {
+      let err = `Can not find document because id is null`;
+      res.status(400).json({ msg: 'error', details: err });
       console.log(err);
       logger.logError(req, res, err);
       return;
     }
-    logger.log(req, res, 'Просмотр документа');
-    res.status(200).json(document);
-  });
+    let document = await Document.findOne(
+      { _id: req.query.id },
+      '-paragraphs'
+    ).lean();
+    if (document) {
+      logger.log(req, res, 'Просмотр документа');
+      if (document.user) {
+        delete document.analysis.attributes;
+      }
+      res.status(200).json(document);
+    } else {
+      let err = `Can not find document with id ${req.query.id}`;
+      res.status(404).json({ msg: 'error', details: err });
+      console.log(err);
+      logger.logError(req, res, err);
+    }
+  } catch (err) {
+    res.status(500).json({ msg: 'error', details: err });
+    console.log(err);
+    logger.logError(req, res, err);
+  }
 };

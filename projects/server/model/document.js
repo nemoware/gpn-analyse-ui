@@ -27,6 +27,9 @@ module.exports = (mongoose, Schema) => {
           display_value: String
         }
       ]
+    },
+    user: {
+      attributes: Object
     }
   });
 
