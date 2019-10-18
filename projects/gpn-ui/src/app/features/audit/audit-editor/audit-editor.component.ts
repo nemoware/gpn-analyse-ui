@@ -40,18 +40,9 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.auditservice.getDoument(this.IdDocument).subscribe(data => {
-      if (this.editmode) {
-        this.auditservice
-          .getDoumentType(data.documentType)
-          .subscribe(docType => {
-            this.documentType = docType;
-            this.document = data;
-            this.changeDetectorRefs.detectChanges();
-          });
-      } else {
-        this.document = data;
-        this.changeDetectorRefs.detectChanges();
-      }
+      console.log(data);
+      this.document = data;
+      this.changeDetectorRefs.detectChanges();
     });
   }
 

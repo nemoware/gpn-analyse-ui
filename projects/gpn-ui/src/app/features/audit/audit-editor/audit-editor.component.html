@@ -1,15 +1,33 @@
 <div class="row" *ngIf="document">
   <div class="col-3 mat-elevation-z8" >
     <h4>Файл: {{ document.name }}</h4>
-    <cdk-virtual-scroll-viewport  style="height: 95%" itemSize="50" >
-      <gpn-tree-attributes
-        [editmode]="editmode"
-        [attributes]="document.analysis.attributes"
-        [headers]="document.analysis.headers"
-        [documentType] = "documentType"
-        (goToAttribute)="goToAttribute($event)"
-      ></gpn-tree-attributes>
-    </cdk-virtual-scroll-viewport>
+    <mat-tab-group color="accent">
+
+      <mat-tab label="Детали">
+        <div style="margin-left: 10px">
+          <label>Время анализа</label><br>
+          <span>{{ document.analysis.analyze_timestamp | date :'dd.MM.yyyy HH:mm'}}</span>
+          <mat-divider></mat-divider>
+          <label>Уверенность анализа</label><br>
+          <span>100%</span>
+          <mat-divider></mat-divider>
+          <label>Связанные документы</label>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Фрагменты">
+        <cdk-virtual-scroll-viewport  style="height: 80vh" itemSize="50" >
+        <gpn-tree-attributes
+          [editmode]="editmode"
+          [attributes]="document.analysis.attributes"
+          [headers]="document.analysis.headers"
+          [documentType] = "documentType"
+          (goToAttribute)="goToAttribute($event)"
+        ></gpn-tree-attributes>
+      </cdk-virtual-scroll-viewport>
+      </mat-tab>
+
+    </mat-tab-group>
   </div>
   <div class="col-9" style="height: 88vh" >
     <gpn-view-document

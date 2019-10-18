@@ -9,6 +9,7 @@ import {
   MatDialogRef
 } from '@root/node_modules/@angular/material';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { AttributeModel } from '@app/models/attribute-model';
 @Component({
   selector: 'gpn-edit-attribute',
   templateUrl: './edit-attribute.component.html',
@@ -24,8 +25,11 @@ export class EditAttributeComponent implements OnInit {
     public data: {
       left: number;
       top: number;
+      kind: string;
+      display_value: string;
       value: string;
-      documentType: string[];
+      documentType: AttributeModel[];
+      editable: boolean;
     }
   ) {}
 
@@ -43,6 +47,10 @@ export class EditAttributeComponent implements OnInit {
 
   applyChanges() {
     this.dialogRef.close({ type: this.doctype });
+  }
+
+  deleteAtr() {
+    confirm('Удалить данный атрибут?');
   }
 
   valid(): boolean {

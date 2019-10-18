@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col">
-    <h1 mat-dialog-title
+    <label
         cdkDrag
         cdkDragRootElement=".cdk-overlay-pane"
-        cdkDragHandle>Редактор атрибутов документа</h1>
+        cdkDragHandle><b>Редактор фрагментов документа</b></label>
   </div>
   <div class="col-1">
     <fa-icon [icon]="faTimes"style="alignment: center" class="close" (click)="closeForm()" matTooltip="Закрыть"></fa-icon>
@@ -11,15 +11,45 @@
 </div>
 <mat-divider></mat-divider>
   <mat-form-field style="width: 100%; height: auto">
-    <span>Фрагмент:</span>
-    <textarea matInput readonly="true">{{data.value}}</textarea>
+    <span>Фрагмент документа:</span>
+    <textarea matInput readonly="true">{{data.display_value}}</textarea>
   </mat-form-field>
-<mat-form-field style="width: 100%">
-  <mat-label>Тип атрибута</mat-label>
-  <mat-select [(ngModel)]="doctype">
-    <mat-option *ngFor="let type of data.documentType" [value]="type">
-      {{type | translate}}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
-<button mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right">Применить</button>
+<div class="row">
+  <div class="col">
+    <mat-form-field style="width: 100%">
+      <mat-label>Тип фрагмента</mat-label>
+        <mat-select [(ngModel)]="data.kind" [disabled]="!data.editable">
+        <mat-option *ngFor="let type of data.documentType" [value]="type">
+        {{type.kind | translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col">
+    <ng-template [ngTemplateOutlet]= "data.kind == 'subject' ? numberTemplate : stringTemplate"
+                 [ngTemplateOutletContext]= "{ $implicit: data}">
+    </ng-template>
+  </div>
+</div>
+<label style="color: red" *ngIf="!data.editable">*Данный атрибут не редактируется!</label>
+<button  mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right; width: 100px; margin-left: 10px ">Применить</button>
+<button mat-raised-button color="warn" (click)="deleteAtr()" [disabled]="!data.editable" style="float: right; width: 100px;">Удалить</button>
+
+
+<ng-template #numberTemplate let-data>
+  <mat-form-field style="width: 100%">
+    <mat-label>Значение</mat-label>
+    <input type="number" class="form-control" matInput placeholder="Значение" [(ngModel)]="data.value" readonly="!data.editable">
+  </mat-form-field>
+</ng-template>
+
+<ng-template #stringTemplate>
+  <mat-form-field style="width: 100%;">
+    <mat-label>Значение</mat-label>
+    <textarea matInput style="height: 22px" [(ngModel)]="data.value" readonly="!data.editable"></textarea>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #dictionaryTemplate>
+
+</ng-template>

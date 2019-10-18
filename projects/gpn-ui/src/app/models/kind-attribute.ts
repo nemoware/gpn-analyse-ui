@@ -6,5 +6,6 @@ export enum KindAttribute {
   'org_2_alias',
   'org_2_type',
   'subject',
-  'value'
+  'value',
+  'currency'
 }
