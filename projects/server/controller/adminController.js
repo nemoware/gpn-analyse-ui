@@ -7,15 +7,18 @@ const Role = db.Role;
 exports.getApplicationUsers = async (req, res) => {
   try {
     let users = await User.find({}, null, { lean: true });
-
-    for (let user of users) {
-      user.name = await getUserName(user.login);
-
-      let roles = [];
-      for (let role of user.roles) {
-        roles.push(role.name);
+    for (let i = 0; i < users.length; i++) {
+      try {
+        users[i].name = await getUserName(users[i].login);
+        users[i].roleString = users[i].roles.map(r => r.name).join(', ');
+      } catch (err) {
+        let silent;
+        if (err.code === 'NOADUSER') {
+          users.splice(i--, 1);
+          silent = true;
+        }
+        logger.logError(req, res, err, 500, silent);
       }
-      user.roleString = roles.join(', ');
     }
 
     res.status(200).json(users);
@@ -34,88 +37,84 @@ exports.getGroupUsers = async (req, res) => {
 };
 
 exports.getUserInfo = async (req, res) => {
-  let user = req.session.message;
-  let groupUsers = await adAuth.getGroupUsers();
-  for (let u of groupUsers) {
-    if (user.login === u.sAMAccountName) {
-      user.name = u.displayName;
-    }
-  }
-
+  const user = req.session.message;
+  user.name = await getUserName(user.login);
   logger.log(req, res, 'Вход в приложение');
   res.status(200).json(user);
 };
 
 exports.getRoles = async (req, res) => {
-  Role.find({}, (err, roles) => {
-    if (err) {
-      logger.logError(req, res, err, 500);
-      return;
-    }
-
+  try {
+    const roles = await Role.find();
     res.status(200).json(roles);
-  });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
 };
 
 exports.postUser = async (req, res) => {
-  let user = new User(req.body);
-  user.save(async err => {
-    if (err) {
-      logger.logError(req, res, err, 500);
-      return;
-    }
+  try {
+    let user = new User(req.body);
+    let userName = await getUserName(user.login);
+    await user.save();
+
     user = user.toJSON();
-    user.name = await getUserName(user.login);
+    user.name = userName;
 
     logger.log(req, res, 'Добавление пользователя');
     res.status(201).json(user);
-  });
+  } catch (err) {
+    let status = 500;
+    if (err.code === 'NOADUSER') status = 400;
+    logger.logError(req, res, err, status);
+  }
 };
 
-exports.deleteUser = (req, res) => {
+exports.deleteUser = async (req, res) => {
   if (!req.query.id) {
     let msg = 'Cannot delete user because id is null';
     logger.logError(req, res, msg, 400);
     return;
   }
-  User.deleteOne({ _id: req.query.id }, err => {
-    if (err) {
-      logger.logError(req, res, err, 500);
-      return;
-    }
-
+  try {
+    await User.deleteOne({ _id: req.query.id });
     logger.log(req, res, 'Удаление пользователя');
     res.status(200).send();
-  });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
 };
 
 exports.updateUser = async (req, res) => {
   let user = await User.findOne({ _id: req.body._id });
   if (!user) {
-    let err = 'user not found';
+    let err = `Can not find user with id ${req.body._id}`;
     logger.logError(req, res, err, 404);
     return;
   }
+
   user.roles = req.body.roles;
-  user.save(async err => {
-    if (err) {
-      logger.logError(req, res, err, 500);
-      return;
-    }
+
+  try {
+    await user.save();
 
     user = user.toJSON();
     user.name = await getUserName(user.login);
 
     logger.log(req, res, 'Изменение прав пользователя');
     res.status(200).json(user);
-  });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
 };
 
 async function getUserName(login) {
-  let groupUsers = await adAuth.getGroupUsers();
-  for (let u of groupUsers) {
-    if (login === u.sAMAccountName) {
-      return u.displayName;
-    }
+  const users = await adAuth.getGroupUsers();
+  const user = users.find(u => u.sAMAccountName === login);
+  if (!user) {
+    let err = new Error(`There is no user in AD with sAMAccountName ${login}`);
+    err.code = 'NOADUSER';
+    throw err;
   }
+  return user.displayName;
 }

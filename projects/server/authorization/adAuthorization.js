@@ -3,7 +3,7 @@ const ActiveDirectory = require('activedirectory');
 const appConfig = require('../config/app.config');
 const ad = new ActiveDirectory(appConfig.ad.options);
 
-exports.getUser = async (req, res) => {
+exports.getUser = (req, res) => {
   return new Promise(async resolve => {
     if (!req.headers.authorization) {
       res.set('WWW-Authenticate', 'Negotiate');
