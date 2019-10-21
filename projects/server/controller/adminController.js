@@ -60,6 +60,7 @@ exports.postUser = async (req, res) => {
 
     user = user.toJSON();
     user.name = userName;
+    user.roleString = user.roles.map(r => r.name).join(', ');
 
     logger.log(req, res, 'Добавление пользователя');
     res.status(201).json(user);
@@ -100,6 +101,7 @@ exports.updateUser = async (req, res) => {
 
     user = user.toJSON();
     user.name = await getUserName(user.login);
+    user.roleString = user.roles.map(r => r.name).join(', ');
 
     logger.log(req, res, 'Изменение прав пользователя');
     res.status(200).json(user);
