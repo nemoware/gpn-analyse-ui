@@ -10,6 +10,9 @@ import { AuditService } from '@app/features/audit/audit.service';
 import { ActivatedRoute, Router } from '@root/node_modules/@angular/router';
 import { Document } from '@app/models/document.model';
 import { ViewDocumentComponent } from '@app/features/audit/audit-editor/view-document/view-document.component';
+import { TreeAttributesComponent } from '@app/features/audit/audit-editor/tree-attributes/tree-attributes.component';
+import { AttributeModel } from '@app/models/attribute-model';
+import { Helper } from '@app/features/audit/helper';
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -21,10 +24,12 @@ import { ViewDocumentComponent } from '@app/features/audit/audit-editor/view-doc
 export class AuditEditorComponent implements OnInit, AfterViewInit {
   IdDocument;
   document: Document;
-  attributes: Array<{ kind: string; value: string; id: string }> = [];
+  attributes: Array<AttributeModel>;
   editmode: boolean;
   @ViewChild(ViewDocumentComponent, { static: false })
   view_doc: ViewDocumentComponent;
+  @ViewChild(TreeAttributesComponent, { static: false })
+  tree: TreeAttributesComponent;
   documentType: string[];
 
   constructor(
@@ -40,13 +45,25 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.auditservice.getDoument(this.IdDocument).subscribe(data => {
-      console.log(data);
       this.document = data;
+      console.log(data);
+      if (this.document.user) {
+        this.attributes = Helper.json2array(this.document.user.attributes);
+        console.log('user_atr');
+      } else {
+        this.attributes = Helper.json2array(this.document.analysis.attributes);
+        console.log('analyse_atr');
+      }
+
       this.changeDetectorRefs.detectChanges();
     });
   }
 
   goToAttribute(id: string) {
     this.view_doc.goToAttribute(id);
+  }
+
+  changeAttribute(attributes: AttributeModel[]) {
+    this.tree.updateAttributes(attributes);
   }
 }

@@ -22,8 +22,10 @@ import {
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 import { Helper } from '@app/features/audit/helper';
 import { HeaderModel } from '@app/models/header-model';
+import { AttributeModel } from '@app/models/attribute-model';
 
 interface Node {
+  display_value?: string;
   value: string;
   children?: Node[];
   kind?: string;
@@ -44,7 +46,7 @@ interface ExampleFlatNode {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeAttributesComponent implements OnInit, AfterViewInit {
-  @Input() attributes: {};
+  @Input() attributes: Array<AttributeModel>;
   @Input() headers: HeaderModel[];
   @Input() editmode: boolean;
   @Input() documentType: string[];
@@ -65,6 +67,7 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
   private _transformer = (node: Node, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
+      display_value: node.display_value,
       value: node.value,
       kind: node.kind,
       level: level,
@@ -89,22 +92,25 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
   }
 
   refreshData() {
+    this.TREE_DATA = [];
     let i = 1;
     const nodeH = { value: 'HEADERS', children: [], childCount: 0 };
     for (const h of this.headers) {
       nodeH.children.push({
         index: i++,
         value: h.value,
+        display_value: h.display_value,
         kind: 'header',
         idWord: 'span_' + (h.span ? h.span[0] : -1)
       });
     }
     const nodeA = { value: 'ATTRIBUTES', children: [], childCount: 0 };
     i = 1;
-    for (const a of Helper.json2array(this.attributes)) {
+    for (const a of this.attributes) {
       nodeA.children.push({
         index: i++,
         value: a.value,
+        display_value: a.display_value,
         kind: a.kind,
         idWord: 'span_' + (a.span ? a.span[0] : -1)
       });
@@ -131,5 +137,10 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
 
   clickAttribute(node) {
     this.goToAttribute.emit(node.idWord);
+  }
+
+  public updateAttributes(attributes: AttributeModel[]) {
+    this.attributes = attributes;
+    this.refreshData();
   }
 }

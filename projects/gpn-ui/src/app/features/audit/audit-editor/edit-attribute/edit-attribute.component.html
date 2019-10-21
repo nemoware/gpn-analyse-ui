@@ -10,46 +10,65 @@
   </div>
 </div>
 <mat-divider></mat-divider>
+
   <mat-form-field style="width: 100%; height: auto">
-    <span>Фрагмент документа:</span>
-    <textarea matInput readonly="true">{{data.display_value}}</textarea>
+    <mat-label>Фрагмент документае</mat-label>
+    <textarea matInput readonly="true" [readOnly]="true">{{data.display_value}}</textarea>
   </mat-form-field>
+
 <div class="row">
-  <div class="col">
-    <mat-form-field style="width: 100%">
-      <mat-label>Тип фрагмента</mat-label>
-        <mat-select [(ngModel)]="data.kind" [disabled]="!data.editable">
-        <mat-option *ngFor="let type of data.documentType" [value]="type">
-        {{type.kind | translate}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  <div class="col">
-    <ng-template [ngTemplateOutlet]= "data.kind == 'subject' ? numberTemplate : stringTemplate"
-                 [ngTemplateOutletContext]= "{ $implicit: data}">
-    </ng-template>
+
+    <div class="col">
+      <form [formGroup]="editForm">
+        <mat-form-field style="width: 100%">
+          <mat-label>Тип фрагмента</mat-label>
+            <mat-select (selectionChange)="changedKind($event)" formControlName = "kind">
+            <mat-option *ngFor="let type of data.documentType" [value]="type">
+            {{type.kind | translate}}
+            </mat-option>
+        </mat-select>
+        </mat-form-field>
+      </form>
+    </div>
+
+  <div class="col" *ngIf="selectedKind" [ngSwitch]="selectedKind.type">
+
+    <ng-container *ngSwitchCase="'number'">
+      <mat-form-field style="width: 100%">
+        <mat-label>Значение</mat-label>
+        <input (change)="change($event)" type="number" class="form-control" matInput placeholder="Значение" [(ngModel)]="data.value" readonly="{{!data.editable}}">
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'string'">
+      <mat-form-field style="width: 100%;">
+        <mat-label>Значение</mat-label>
+        <textarea (change)="change($event)" matInput style="height: 22px" [(ngModel)]="data.value" readonly="{{!data.editable}}"></textarea>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'dictionary'">
+      <mat-form-field style="width: 100%">
+        <mat-label>Значение</mat-label>
+        <mat-select (selectionChange)="change($event)" [(ngModel)]="data.value" disabled="{{!data.editable}}">
+          <mat-option *ngFor="let _value of selectedKind.values" [value]="_value">
+            {{_value | translate}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
   </div>
 </div>
-<label style="color: red" *ngIf="!data.editable">*Данный атрибут не редактируется!</label>
-<button  mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right; width: 100px; margin-left: 10px ">Применить</button>
-<button mat-raised-button color="warn" (click)="deleteAtr()" [disabled]="!data.editable" style="float: right; width: 100px;">Удалить</button>
+<div class="row">
+  <div class="col">
+    <label style="color: red" *ngIf="!data.editable">*Данный фрагмент не редактируется!</label>
+  </div>
+  <div class="col">
+    <button  mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right; width: 100px; margin-left: 10px ">Применить</button>
+    <button mat-raised-button (click)="deleteAtr()" [disabled]="_new || !data.editable" style="float: right; width: 100px;">Удалить</button>
+  </div>
+</div>
 
 
-<ng-template #numberTemplate let-data>
-  <mat-form-field style="width: 100%">
-    <mat-label>Значение</mat-label>
-    <input type="number" class="form-control" matInput placeholder="Значение" [(ngModel)]="data.value" readonly="!data.editable">
-  </mat-form-field>
-</ng-template>
 
-<ng-template #stringTemplate>
-  <mat-form-field style="width: 100%;">
-    <mat-label>Значение</mat-label>
-    <textarea matInput style="height: 22px" [(ngModel)]="data.value" readonly="!data.editable"></textarea>
-  </mat-form-field>
-</ng-template>
-
-<ng-template #dictionaryTemplate>
-
-</ng-template>

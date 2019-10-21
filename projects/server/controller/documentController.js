@@ -63,14 +63,14 @@ exports.getDocument = async (req, res) => {
 };
 
 exports.updateDocument = async (req, res) => {
-  let document = await Document.findOne({ _id: req.body._id });
+  let document = await Document.findOne({ _id: req.query._id });
   if (!document) {
     let err = 'Document not found';
     logger.logError(req, res, err, 404);
     return;
   }
 
-  document.user = req.body.user;
+  document.user.attributes = req.body.user;
   document.user.author = req.session.message;
   document.user.updateDate = new Date();
 

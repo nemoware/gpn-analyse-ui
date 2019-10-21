@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Audit } from '@app/models/audit.model';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { Document } from '@app/models/document.model';
-import { AttributeModel } from '@app/models/attribute-model';
+import { KindAttributeModel } from '@app/models/kind-attribute-model';
 
 const api = '/api';
 
@@ -60,11 +60,21 @@ export class AuditService {
     return this.http.get<Document>(`${api}/document`, { params: httpParams });
   }
 
-  public getDoumentType(name: string): Observable<AttributeModel[]> {
+  public getDoumentType(name: string): Observable<KindAttributeModel[]> {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('name', name);
-    return this.http.get<AttributeModel[]>(`${api}/attributes`, {
+    return this.http.get<KindAttributeModel[]>(`${api}/attributes`, {
       params: httpParams
     });
+  }
+
+  public updateDocument(id: string, attributes: {}): Observable<Document> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('_id', id);
+    return this.http.put<Document>(
+      `${api}/document`,
+      { user: attributes },
+      { params: httpParams }
+    );
   }
 }

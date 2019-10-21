@@ -5,7 +5,9 @@ import {
   AfterViewInit,
   Input,
   ViewEncapsulation,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { Document } from '@app/models/document.model';
 import { Helper } from '@app/features/audit/helper';
@@ -21,6 +23,7 @@ import { Router } from '@root/node_modules/@angular/router';
 import { MatDialog } from '@root/node_modules/@angular/material';
 import { EditAttributeComponent } from '@app/features/audit/audit-editor/edit-attribute/edit-attribute.component';
 import { AuditService } from '@app/features/audit/audit.service';
+import { KindAttributeModel } from '@app/models/kind-attribute-model';
 import { AttributeModel } from '@app/models/attribute-model';
 
 @Component({
@@ -35,19 +38,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
   faChevronUp = faChevronUp;
   faEdit = faEdit;
   faSave = faSave;
+
   @Input() document: Document;
   @Input() editmode: boolean;
-  @Input() documentType: AttributeModel[];
-  attributes: Array<{
-    confidence: number;
-    display_value: string;
-    kind: string;
-    value: string;
-    span: number[];
-    span_map: string;
-    word: number[];
-    className: string;
-  }>;
+  @Input() documentType: KindAttributeModel[];
+  @Input() attributes: Array<AttributeModel>;
+  @Output() changeAttribute = new EventEmitter<AttributeModel[]>();
+
   changed = false;
   constructor(
     private router: Router,
@@ -58,14 +55,29 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     if (this.document) {
-      if (this.editmode && this.document.user == null) {
-        this.document.user = { attributes: this.document.analysis.attributes };
-      }
       this.loadDoc();
     }
   }
 
   ngAfterViewInit(): void {
+    this.documentType = [
+      {
+        kind: 'subject',
+        type: 'dictionary',
+        values: ['Charity', 'Deal', 'PropertyDeal'],
+        editable: true
+      },
+      { kind: 'value', type: 'number', values: null, editable: true },
+      { kind: 'org_1_name', type: 'string', values: null, editable: true },
+      { kind: 'org_1_alt_name', type: 'string', values: null, editable: true },
+      { kind: 'org_1_alias', type: 'string', values: null, editable: false },
+      { kind: 'org_1_type', type: 'string', values: null, editable: false },
+      { kind: 'org_2_name', type: 'string', values: null, editable: true },
+      { kind: 'org_2_alt_name', type: 'string', values: null, editable: true },
+      { kind: 'org_2_alias', type: 'string', values: null, editable: false },
+      { kind: 'org_2_type', type: 'string', values: null, editable: false },
+      { kind: 'new_attribute', type: 'string', values: null, editable: false }
+    ];
     if (this.editmode) {
       /*this.auditservice
         .getDoumentType(this.document.documentType)
@@ -79,17 +91,9 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
     const view_doc = document.getElementById('view_doc');
     let result = this.document.analysis.normal_text;
     const words = this.document.analysis.tokenization_maps.words;
-    if (this.document.user) {
-      this.attributes = Helper.json2array(this.document.user.attributes);
-      console.log('user_atr');
-    } else {
-      this.attributes = Helper.json2array(this.document.analysis.attributes);
-      console.log('analyse_atr');
-    }
 
     for (const _atr of this.attributes) {
       _atr.word = [];
-      _atr.className = this.getClassName(_atr.kind);
       if (_atr.span)
         for (let i = _atr.span[0]; i < _atr.span[1]; i++) _atr.word.push(i);
     }
@@ -98,7 +102,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
       const word = words[i];
       let classSpan;
       const _atr = this.attributes.find(x => x.word.includes(i));
-      if (_atr) classSpan = _atr.className;
+      if (_atr) classSpan = _atr.kind;
       else classSpan = 'span';
       const txtS = `<span class="${classSpan}" id="span_${i}">`;
       const txtE = '</span>';
@@ -132,6 +136,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
     let kind: string;
     let value: string;
     let display_value: string;
+    let editable = true;
+    let word: number[] = [];
     if (
       document.getSelection().anchorNode === null ||
       (document.getSelection().isCollapsed &&
@@ -163,7 +169,11 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
       kind = _atr.kind;
       value = _atr.value;
       display_value = _atr.display_value;
-      console.log(_atr);
+      const selectedKind = this.documentType.find(c => c.kind === _atr.kind);
+      editable = selectedKind.editable;
+      idStart = 'span_' + _atr.span[0];
+      idEnd = 'span_' + _atr.span[1];
+      word = _atr.word;
     } else {
       if (document.getSelection().anchorNode.parentElement.id === 'view_doc') {
         idStart = (document.getSelection().anchorNode
@@ -176,6 +186,12 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
       } else idEnd = document.getSelection().focusNode.parentElement.id;
 
       if (Number(idStart.split('_')[1]) > Number(idEnd.split('_')[1])) return;
+      for (
+        let i = Number(idStart.split('_')[1]);
+        i <= Number(idEnd.split('_')[1]);
+        i++
+      )
+        word.push(i);
       const words = this.document.analysis.tokenization_maps.words;
       const wordS = words[idStart.split('_')[1]];
       const wordE = words[idEnd.split('_')[1]];
@@ -186,30 +202,45 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
     }
 
     const dialogRef = this.dialog.open(EditAttributeComponent, {
-      width: '600px',
+      width: '50%',
       data: {
         top: e.pageY,
         left: e.pageX,
-        kind: kind,
         display_value: display_value,
         value: value,
         documentType: this.documentType,
-        editable: true
+        kind: kind,
+        editable: editable,
+        attributes: this.attributes,
+        word: word
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        console.log(result);
+        this.attributes = result.attributes;
+        this.changeAttribute.emit(result.attributes);
         this.changed = true;
-        for (const elem of this.getArrayNodes(idStart, idEnd)) {
-          elem.classList.forEach(c => {
-            elem.classList.remove(c);
-          });
-          elem.classList.add(result.type);
-        }
+        this.setElementClass(idStart, idEnd, result.kind);
+        if (result.delete)
+          this.setElementClass(
+            'span_' + result.delete[0],
+            'span_' + result.delete[1],
+            'span'
+          );
         this.changeDetectorRefs.detectChanges();
       }
     });
+  }
+
+  setElementClass(idStart, idEnd, kind) {
+    for (const elem of this.getArrayNodes(idStart, idEnd)) {
+      elem.classList.forEach(c => {
+        elem.classList.remove(c);
+      });
+      elem.classList.add(kind);
+    }
   }
 
   getArrayNodes(idS: string, idE: string): Array<Element> {
@@ -225,14 +256,26 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
     return nodes;
   }
 
-  addNewTag(kind: string, value: string, span: Array<number>) {
-    const tag: Tag = { kind, value, span };
-    // this.contract.tags.push(tag);
-  }
-
   editMode() {
     this.router.navigate(['audit/edit/', this.document._id]);
   }
 
-  saveChanges() {}
+  saveChanges() {
+    const atr = {};
+    this.attributes.forEach(
+      item =>
+        (atr[item.kind] = {
+          confidence: item.confidence,
+          display_value: item.display_value,
+          kind: item.kind,
+          span: item.span,
+          span_map: item.span_map,
+          value: item.value
+        })
+    );
+
+    this.auditservice.updateDocument(this.document._id, atr).subscribe(data => {
+      console.log(data);
+    });
+  }
 }

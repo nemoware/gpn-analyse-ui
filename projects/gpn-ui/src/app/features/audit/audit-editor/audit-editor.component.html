@@ -19,7 +19,7 @@
         <cdk-virtual-scroll-viewport  style="height: 80vh" itemSize="50" >
         <gpn-tree-attributes
           [editmode]="editmode"
-          [attributes]="document.analysis.attributes"
+          [attributes]="attributes"
           [headers]="document.analysis.headers"
           [documentType] = "documentType"
           (goToAttribute)="goToAttribute($event)"
@@ -34,6 +34,8 @@
       [document]="document"
       [documentType] = "documentType"
       [editmode]="editmode"
+      [attributes] = "attributes"
+      (changeAttribute)= "changeAttribute($event)"
     ></gpn-view-document>
   </div>
 </div>

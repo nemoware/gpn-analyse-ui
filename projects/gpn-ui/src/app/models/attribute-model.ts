@@ -1,6 +1,9 @@
 export interface AttributeModel {
+  confidence: number;
+  display_value: string;
   kind: string;
-  type: string;
-  values: [string];
-  editable: boolean;
+  value: string;
+  span: number[];
+  span_map: string;
+  word: number[];
 }
