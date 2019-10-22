@@ -1,16 +1,14 @@
-const fs = require('fs');
+const fs = require('fs-promise');
 
-exports.initializeData = db => {
-  fs.readFile('./json/initialData.json', 'utf8', async (err, data) => {
-    if (err) throw err;
-    let collections = JSON.parse(data);
-    for (let collection in collections) {
-      if (collection in db) {
-        let documents = await db[collection].find();
-        if (documents.length === 0) {
-          db[collection].insertMany(collections[collection]);
-        }
+exports.initializeData = async db => {
+  const content = await fs.readFile('./json/initialData.json', 'utf8');
+  const data = JSON.parse(content);
+  for (let collection of data) {
+    if (collection.name in db) {
+      let documents = await db[collection.name].find();
+      if (documents.length === 0) {
+        await db[collection.name].insertMany(collection.values);
       }
     }
-  });
+  }
 };

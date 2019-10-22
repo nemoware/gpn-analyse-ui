@@ -2,6 +2,7 @@ const db = require('../config/db.config');
 const logger = require('../core/logger');
 const Document = db.Document;
 const DocumentType = db.DocumentType;
+const Dictionary = db.Dictionary;
 
 exports.getDocuments = async (req, res) => {
   if (!req.query.auditId) {
@@ -90,9 +91,22 @@ exports.getAttributes = async (req, res) => {
     return;
   }
   try {
-    let documentType = await DocumentType.findOne({ _id: req.query.name });
+    let documentType = await DocumentType.findOne({
+      _id: req.query.name
+    }).lean();
     if (documentType) {
-      res.status(200).json(documentType.attributes);
+      let attributes = documentType.attributes;
+      for (let attribute of attributes) {
+        if (attribute.dictionaryName) {
+          let dictionary = await Dictionary.findOne({
+            _id: attribute.dictionaryName
+          }).lean();
+          if (dictionary) {
+            attribute.values = dictionary.values;
+          }
+        }
+      }
+      res.status(200).json(attributes);
     } else {
       let err = `Can not find document type with name ${req.query.name}`;
       logger.logError(req, res, err, 404);
@@ -100,4 +114,9 @@ exports.getAttributes = async (req, res) => {
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
+};
+
+exports.getDocumentTypes = async (req, res) => {
+  let documentTypes = await DocumentType.find();
+  res.status(200).json(documentTypes);
 };

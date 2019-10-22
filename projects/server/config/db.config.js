@@ -44,7 +44,18 @@ db.Log = require('../model/log')(mongoose, Schema);
 db.EventType = require('../model/eventType')(mongoose, Schema);
 db.Document = require('../model/document')(mongoose, Schema);
 db.DocumentType = require('../model/documentType')(mongoose, Schema);
+db.Dictionary = require('../model/dictionary')(mongoose, Schema);
 
-initialize.initializeData(db);
+initialize
+  .initializeData(db)
+  .then(() => {
+    console.log('Initial data inserted');
+    console.log();
+  })
+  .catch(err => {
+    console.log('Error while inserting initial data:');
+    console.log(err);
+    console.log();
+  });
 
 module.exports = db;

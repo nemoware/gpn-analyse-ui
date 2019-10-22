@@ -27,5 +27,6 @@ router.get('/documents', documentController.getDocuments);
 router.get('/document', documentController.getDocument);
 router.put('/document', documentController.updateDocument);
 router.get('/attributes', documentController.getAttributes);
+router.get('/documentTypes', documentController.getDocumentTypes);
 
 module.exports = router;
