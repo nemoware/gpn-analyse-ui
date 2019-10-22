@@ -5,6 +5,7 @@ const parserConfig = config.parser;
 const db = require('../config/db.config');
 const Document = db.Document;
 const Audit = db.Audit;
+const path = require('path');
 
 async function readFiles(auditId, dirname, onFileContent, onError) {
   let audit = await Audit.findOne({ _id: auditId });
@@ -15,7 +16,7 @@ async function readFiles(auditId, dirname, onFileContent, onError) {
 
       let filenames = await fs.readdir(audit.ftpUrl);
       for (let filename of filenames) {
-        const content = await fs.readFile(audit.ftpUrl + '\\' + filename);
+        const content = await fs.readFile(path.join(audit.ftpUrl, filename));
         await onFileContent(filename, content, auditId);
       }
 
