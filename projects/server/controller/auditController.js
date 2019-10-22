@@ -1,5 +1,6 @@
 const logger = require('../core/logger');
 const db = require('../config/db.config');
+const fs = require('fs-promise');
 const Audit = db.Audit;
 const Document = db.Document;
 const Subsidiary = db.Subsidiary;
@@ -11,16 +12,22 @@ exports.postAudit = async (req, res) => {
   audit.status = 'New';
   audit.author = req.session.message;
 
-  audit.save(err => {
-    if (err) {
-      logger.logError(req, res, err, 500);
-      return;
-    }
+  try {
+    await fs.access(audit.ftpUrl);
+  } catch (err) {
+    logger.logError(req, res, err, 400);
+    return;
+  }
+
+  try {
+    await audit.save();
     logger.log(req, res, 'Создание аудита');
     res.status(201).json(audit);
 
     parser.parseAudit(audit);
-  });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
 };
 
 exports.getSubsidiaries = async (req, res) => {
