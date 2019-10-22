@@ -15,7 +15,16 @@ exports.postAudit = async (req, res) => {
   try {
     await fs.access(audit.ftpUrl);
   } catch (err) {
-    logger.logError(req, res, err, 400);
+    if (err.code === 'ENOENT') {
+      logger.logError(
+        req,
+        res,
+        `No such file or directory: ${audit.ftpUrl}`,
+        400
+      );
+    } else {
+      logger.logError(req, res, err, 500);
+    }
     return;
   }
 
