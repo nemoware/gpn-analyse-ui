@@ -76,7 +76,7 @@ async function parse(filename, auditId) {
       }
     }
   } catch (err) {
-    logger.logLocalError(err);
+    logger.logLocalError(err.message);
   }
 }
 

@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
     public translate: TranslateService
   ) {
     translate.addLangs(['en', 'ru']);
-    translate.setDefaultLang('en');
+    translate.setDefaultLang('ru');
     const browserLang = translate.getBrowserLang();
     translate.use(browserLang.match(/en|ru/) ? browserLang : 'en');
   }
