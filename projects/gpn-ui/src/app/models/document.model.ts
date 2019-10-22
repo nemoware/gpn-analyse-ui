@@ -23,5 +23,7 @@ export interface Document {
   };
   user: {
     attributes: Object;
+    author: { _id: string; login: String };
+    updateDate: Date;
   };
 }

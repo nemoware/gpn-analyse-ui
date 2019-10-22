@@ -13,9 +13,9 @@ async function readFiles(auditId, dirname, onFileContent, onError) {
       audit.status = 'Loading';
       await audit.save();
 
-      let filenames = await fs.readdir(dirname);
+      let filenames = await fs.readdir(audit.ftpUrl);
       for (let filename of filenames) {
-        const content = await fs.readFile(dirname + filename);
+        const content = await fs.readFile(audit.ftpUrl + '\\' + filename);
         await onFileContent(filename, content, auditId);
       }
 

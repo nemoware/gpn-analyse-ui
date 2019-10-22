@@ -4,7 +4,7 @@
     <span><b>{{ data.subsidiaryName }}</b> {{ data.auditStart | date :'dd.MM.yyyy'}} - {{data.auditEnd | date : 'dd.MM.yyyy'}}</span>
     <br>
     <fa-icon [icon]="faClock" style="float: left"></fa-icon>
-    <span style="margin-left: 10px"> Статус: {{ data.status}} </span>
+    <span style="margin-left: 10px"> Статус: {{ data.status | translate}} </span>
     <!--<br>
     <div class="search-container" style="margin-left: 15px">
       <mat-form-field appearance="legacy" >

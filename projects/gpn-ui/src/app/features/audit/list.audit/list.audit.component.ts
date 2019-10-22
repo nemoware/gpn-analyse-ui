@@ -179,7 +179,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
           subsidiaryName: element.subsidiaryName,
           auditStart: element.auditStart,
           auditEnd: element.auditEnd,
-          status: element.status.name
+          status: element.status
         }
       });
     } else if (element.status === 'Ended') {
