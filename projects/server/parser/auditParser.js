@@ -6,29 +6,7 @@ const db = require('../config/db.config');
 const Document = db.Document;
 const Audit = db.Audit;
 const path = require('path');
-
-async function readFiles(auditId, dirname, onFileContent, onError) {
-  let audit = await Audit.findOne({ _id: auditId });
-  if (audit) {
-    try {
-      audit.status = 'Loading';
-      await audit.save();
-
-      let filenames = await fs.readdir(audit.ftpUrl);
-      for (let filename of filenames) {
-        const content = await fs.readFile(path.join(audit.ftpUrl, filename));
-        await onFileContent(filename, content, auditId);
-      }
-
-      audit.status = 'InWork';
-      await audit.save();
-    } catch (err) {
-      onError(err);
-    }
-  } else {
-    console.log('Не найден аудит ID = ' + auditId);
-  }
-}
+const logger = require('../core/logger');
 
 exports.test = async () => {
   let filename = 'test.docx';
@@ -76,13 +54,13 @@ function getOptions(filename, content) {
   };
 }
 
-async function parse(filename, content, auditId) {
-  let options = getOptions(filename, content);
-  await request.post(options, async (error, response, body) => {
-    if (error) {
-      return console.dir(error);
-    }
+async function parse(filename, auditId) {
+  const content = await fs.readFile(filename);
 
+  let options = getOptions(filename, content);
+
+  try {
+    const body = await request.post(options);
     let result = JSON.parse(body);
     if (result.documents && result.documents.length > 0) {
       let document = result.documents[0];
@@ -97,7 +75,9 @@ async function parse(filename, content, auditId) {
         await postDocument(document);
       }
     }
-  });
+  } catch (err) {
+    logger.logLocalError(err);
+  }
 }
 
 postDocument = async data => {
@@ -110,8 +90,26 @@ postDocument = async data => {
   }
 };
 
-exports.parseAudit = auditId => {
-  readFiles(auditId, parserConfig.pathFolder, parse, function(err) {
-    throw err;
-  });
+exports.parseAudit = async audit => {
+  audit.status = 'Loading';
+  await audit.save();
+
+  await parseDirectory(audit.ftpUrl, audit._id);
+
+  audit.status = 'InWork';
+  await audit.save();
 };
+
+async function parseDirectory(directory, auditId) {
+  let filenames = await fs.readdir(directory);
+  let promises = [];
+  for (let filename of filenames) {
+    const stat = await fs.stat(path.join(directory, filename));
+    if (stat && stat.isDirectory()) {
+      await parseDirectory(path.join(directory, filename), auditId);
+    } else {
+      promises.push(parse(path.join(directory, filename), auditId));
+    }
+  }
+  await Promise.all(promises);
+}

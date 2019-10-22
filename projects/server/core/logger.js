@@ -28,6 +28,21 @@ exports.logError = async (req, res, err, status, silent) => {
   }
 };
 
+exports.logLocalError = async err => {
+  console.log(err);
+
+  let error = new Error({
+    time: new Date(),
+    text: err
+  });
+
+  try {
+    await error.save();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 exports.log = async (req, res, event) => {
   let eventType = await EventType.findOne({ name: event });
   if (!eventType) {
