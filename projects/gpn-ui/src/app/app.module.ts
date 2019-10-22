@@ -18,6 +18,8 @@ import {
 import { TranslateHttpLoader } from '@root/node_modules/@ngx-translate/http-loader';
 import localeRu from '@angular/common/locales/ru';
 import { registerLocaleData } from '@root/node_modules/@angular/common';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpErrorInterceptor } from '@app/app/http-error.interceptor';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient);
@@ -48,6 +50,13 @@ registerLocaleData(localeRu, 'ru');
   declarations: [AppComponent, HideDirective],
   exports: [HideDirective],
   bootstrap: [AppComponent],
-  providers: [AppPageGuard]
+  providers: [
+    AppPageGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
+    }
+  ]
 })
 export class AppModule {}
