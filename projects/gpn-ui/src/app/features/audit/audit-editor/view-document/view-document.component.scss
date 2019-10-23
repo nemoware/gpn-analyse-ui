@@ -5,10 +5,26 @@
   white-space: -moz-pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
+  background: white;
 }
 
 .headline {
-  background-color: lightskyblue;
+  //background-color: lightskyblue;
+  font-weight: 900;
+}
+
+.subject,
+.value,
+.org_2_alias,
+.org_1_alias,
+.org_2_name,
+.org_2_alt_name,
+.org_1_name,
+.org_1_alt_name,
+.org_1_type,
+.org_2_type,
+.hint {
+  border-radius: 5px;
 }
 
 .subject {
@@ -58,6 +74,9 @@
   background-color: palegreen;
 }
 
-.header {
-  font-weight: 900;
+.hint {
+  background: white;
+  border: 1px solid black;
+  vertical-align: super;
+  font-size: 10px;
 }

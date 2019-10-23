@@ -116,7 +116,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
           tagStart = `<span class="${_atr.kind}">`;
         }
         if (_atr.span[1] - 1 === i) {
-          tagEnd = '</span>';
+          tagEnd = `<span class="hint"> ${_atr.kind}</span></span>`;
         }
       }
 
@@ -128,10 +128,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
       );
       if (_header) {
         if (_header.span[0] === i) {
-          headerStart = `<span class="${'header'}">`;
+          headerStart = `<span class="headline">`;
         }
         if (_header.span[1] - 1 === i) {
-          headerEnd = '</span>';
+          headerEnd = '</span> ';
         }
       }
 
@@ -163,7 +163,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
 
   getSelectedText(e: MouseEvent) {
     return;
-    if (!this.editmode) return;
+    if (!this.editmode || e.button > 0) return;
     let selectAttribute: string;
     let kind: string;
     let value: string;
