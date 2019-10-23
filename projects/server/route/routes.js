@@ -21,6 +21,7 @@ router.delete('/user', adminController.deleteUser);
 const eventController = require('../controller/eventController');
 router.get('/eventTypes', eventController.getEventTypes);
 router.get('/logs', eventController.getLogs);
+router.post('/error', eventController.postError);
 
 const documentController = require('../controller/documentController');
 router.get('/documents', documentController.getDocuments);
