@@ -21,9 +21,9 @@
     <div style="width: 100%">
       <div class="row">
       <div class="col">
-        <button mat-icon-button *ngIf="node.level == 1">
+        <button mat-icon-button *ngIf="node.level == 1" (click)="openError(node)" [disabled] = "node.parseError == null">
           <fa-icon *ngIf="node.parseError == null" [icon]="faClock" matTooltip="В работе"></fa-icon>
-          <fa-icon *ngIf="node.parseError != null" [icon]="faExclamationTriangle" matTooltip="С ошибками" (click)="openError(node)"></fa-icon>
+          <fa-icon *ngIf="node.parseError != null" [icon]="faExclamationTriangle" matTooltip="С ошибками" ></fa-icon>
         </button>
         {{ node.index }} {{ node.name }}
       </div>

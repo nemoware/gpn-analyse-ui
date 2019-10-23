@@ -179,6 +179,6 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   }
 
   openError(node) {
-    alert(node.parseError);
+    if (node.parseError) alert(node.parseError);
   }
 }
