@@ -26,4 +26,5 @@ export interface Document {
     author: { _id: string; login: String };
     updateDate: Date;
   };
+  parseError: string;
 }

@@ -15,11 +15,16 @@ import { Tag } from '@app/models/legal-document';
 import {
   faChevronDown,
   faChevronUp,
-  faEye
+  faEye,
+  faClock,
+  faFlagCheckered,
+  faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 import { Document } from '@app/models/document.model';
 import { Helper } from '@app/features/audit/helper';
+import { Audit } from '@app/models/audit.model';
+import { forEachComment } from '@root/node_modules/tslint';
 
 interface Node {
   _id?: string;
@@ -32,6 +37,7 @@ interface Node {
   index?: number;
   documentDate?: Date;
   documentNumber?: string;
+  parseError?: string;
 }
 
 interface ExampleFlatNode {
@@ -51,10 +57,13 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   faEye = faEye;
+  faClock = faClock;
+  faExclamationTriangle = faExclamationTriangle;
+  faFlagCheckered = faFlagCheckered;
   IdAudit;
   docs: Document[];
   TREE_DATA: Node[] = [];
-
+  audit: Audit;
   treeControl;
   treeFlattener;
   dataSource;
@@ -70,7 +79,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       index: node.index,
       documentDate: node.documentDate,
       documentNumber: node.documentNumber,
-      _id: node._id
+      _id: node._id,
+      parseError: node.parseError
     };
   };
 
@@ -96,11 +106,18 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.refreshData();
+    this.auditservice
+      .getAudits([{ name: 'id', value: this.IdAudit }])
+      .subscribe(data => {
+        console.log(data);
+        this.audit = data[0];
+        this.refreshData();
+      });
   }
 
   refreshData() {
     this.auditservice.getDouments(this.IdAudit, false).subscribe(data => {
+      console.log(data);
       const uniqueType = data.reduce(function(a, d) {
         if (a.indexOf(d.documentType) === -1) {
           a.push(d.documentType);
@@ -121,23 +138,27 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
             documentNumber: d.documentNumber,
             documentDate: d.documentDate,
             children: [],
-            childCount: 0
+            childCount: 0,
+            parseError: d.parseError
           };
 
-          const atr = Helper.json2array(d.analysis.attributes);
-          let j = 1;
-          for (const _atr of atr) {
-            nodeChild.children.push({
-              index: j++,
-              name: _atr.display_value,
-              confidence: _atr.confidence,
-              kind: _atr.kind
-            });
+          if (d.analysis.attributes) {
+            const atr = Helper.json2array(d.analysis.attributes);
+            let j = 1;
+            for (const _atr of atr) {
+              nodeChild.children.push({
+                index: j++,
+                name: _atr.display_value,
+                confidence: _atr.confidence,
+                kind: _atr.kind
+              });
+            }
           }
           nodeChild.childCount = nodeChild.children.length;
           node.children.push(nodeChild);
+
+          node.childCount = node.children.length;
         }
-        node.childCount = node.children.length;
         this.TREE_DATA.push(node);
       }
       this.dataSource = new MatTreeFlatDataSource(
@@ -145,11 +166,19 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         this.treeFlattener
       );
       this.dataSource.data = this.TREE_DATA;
+      for (const n of this.treeControl.dataNodes) {
+        if (n.level === 0) this.treeControl.expand(n);
+      }
+
       this.changeDetectorRefs.detectChanges();
     });
   }
 
   openEditor(node) {
     this.router.navigate(['audit/view/', node._id]);
+  }
+
+  openError(node) {
+    alert(node.parseError);
   }
 }

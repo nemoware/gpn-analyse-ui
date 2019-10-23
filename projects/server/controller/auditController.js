@@ -69,6 +69,10 @@ exports.getAudits = async (req, res) => {
     };
   }
 
+  if (req.query.id) {
+    where['_id'] = req.query.id;
+  }
+
   Audit.find(where, (err, audits) => {
     if (err) {
       logger.logError(req, res, err, 500);

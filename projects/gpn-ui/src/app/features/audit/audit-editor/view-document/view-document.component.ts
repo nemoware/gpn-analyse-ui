@@ -100,12 +100,43 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
 
     for (let i = words.length - 1; i >= 0; i--) {
       const word = words[i];
-      let classSpan;
-      const _atr = this.attributes.find(x => x.word.includes(i));
-      if (_atr) classSpan = _atr.kind;
-      else classSpan = 'span';
-      const txtS = `<span class="${classSpan}" id="span_${i}">`;
-      const txtE = '</span>';
+      let tagStart = '';
+      let tagEnd = '';
+      let headerStart = '';
+      let headerEnd = '';
+
+      const _atr = this.attributes.find(
+        x =>
+          x.display_value != null &&
+          (x.span[0] === i || x.span[1] - 1 === i) &&
+          x.span[0] !== x.span[1]
+      );
+      if (_atr) {
+        if (_atr.span[0] === i) {
+          tagStart = `<span class="${_atr.kind}">`;
+        }
+        if (_atr.span[1] - 1 === i) {
+          tagEnd = '</span>';
+        }
+      }
+
+      const _header = this.document.analysis.headers.find(
+        x =>
+          x.display_value != null &&
+          (x.span[0] === i || x.span[1] - 1 === i) &&
+          x.span[0] !== x.span[1]
+      );
+      if (_header) {
+        if (_header.span[0] === i) {
+          headerStart = `<span class="${'header'}">`;
+        }
+        if (_header.span[1] - 1 === i) {
+          headerEnd = '</span>';
+        }
+      }
+
+      const txtS = headerStart + tagStart + `<span id="span_${i}">`;
+      const txtE = '</span>' + tagEnd + headerEnd;
       result = result.slice(0, word[1]) + txtE + result.slice(word[1]);
       result = result.slice(0, word[0]) + txtS + result.slice(word[0]);
     }
@@ -131,6 +162,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
   }
 
   getSelectedText(e: MouseEvent) {
+    return;
     if (!this.editmode) return;
     let selectAttribute: string;
     let kind: string;

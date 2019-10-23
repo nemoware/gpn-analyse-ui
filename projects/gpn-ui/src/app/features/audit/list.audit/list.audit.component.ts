@@ -76,6 +76,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   refreshData(filter: Array<{ name: string; value: string }> = null) {
     this.auditservice.getAudits(filter).subscribe(data => {
       this.audits = data;
+      console.log(data);
       this.selectedAudit = this.audits[0];
       this.refreshViewTable();
     });
@@ -170,8 +171,8 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   }
 
   openAuditResult(element) {
-    if (element.status === 'InWork') {
-      const dialogRef = this.dialog.open(AuditResultComponent, {
+    if (['InWork', 'Ended'].includes(element.status)) {
+      /*const dialogRef = this.dialog.open(AuditResultComponent, {
         width: '80%',
         height: '85vh',
         data: {
@@ -182,7 +183,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
           status: element.status
         }
       });
-    } else if (element.status === 'Ended') {
+    } else if (element.status === 'Ended') {*/
       this.router.navigate(['audit/result/', element._id]);
     }
   }
