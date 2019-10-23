@@ -63,25 +63,31 @@ async function parse(filename, auditId) {
     const body = await request.post(options);
     let result = JSON.parse(body);
     if (result.documents && result.documents.length > 0) {
-      let document = result.documents[0];
-      document.auditId = auditId;
-      document.name = filename;
-      let parentId = await postDocument(document);
+      let parentId = await postDocument(result.documents[0], auditId, filename);
       for (let i = 1; i < result.documents.length; i++) {
-        document = result.documents[i];
-        document.parentId = parentId;
-        document.auditId = auditId;
-        document.name = `${filename} (${i})`;
-        await postDocument(document);
+        await postDocument(
+          result.documents[i],
+          auditId,
+          `${filename} (${i})`,
+          parentId
+        );
       }
     }
   } catch (err) {
-    logger.logLocalError(err.message);
+    let document = {
+      documentType: 'PARSE_ERROR'
+    };
+    await postDocument(document, auditId, filename, null, err.message);
   }
 }
 
-postDocument = async data => {
+postDocument = async (data, auditId, name, parentId, parseError) => {
   let document = new Document(data);
+  document.auditId = auditId;
+  document.name = name;
+  if (parentId) document.parentId = parentId;
+  if (parseError) document.parseError = parseError;
+
   try {
     await document.save();
     return document._id;

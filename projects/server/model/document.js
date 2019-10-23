@@ -32,7 +32,8 @@ module.exports = (mongoose, Schema) => {
       attributes: Object,
       author: { _id: ObjectId, login: String },
       updateDate: Date
-    }
+    },
+    parseError: String
   });
 
   return mongoose.model('document', documentSchema);
