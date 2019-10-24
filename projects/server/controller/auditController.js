@@ -1,10 +1,9 @@
+const fs = require('fs-promise');
 const logger = require('../core/logger');
 const db = require('../config/db.config');
-const fs = require('fs-promise');
 const Audit = db.Audit;
 const Document = db.Document;
 const Subsidiary = db.Subsidiary;
-const User = db.User;
 const parser = require('../parser/auditParser');
 
 exports.postAudit = async (req, res) => {
@@ -107,6 +106,62 @@ exports.deleteAudit = async (req, res) => {
     await Audit.deleteOne({ _id: auditId });
     await Document.deleteMany({ auditId: auditId });
     res.status(200).send();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getFiles = async (req, res) => {
+  try {
+    if (!req.query.auditId) {
+      logger.logError(
+        req,
+        res,
+        'Can not get files because auditId is null',
+        400
+      );
+      return;
+    }
+    const audit = await Audit.findOne({ _id: req.query.auditId });
+    let filePaths, fileObjects, errors;
+
+    if (audit.status === 'Loading') {
+      filePaths = await parser.getPaths(audit.ftpUrl);
+    } else if (audit.status === 'InWork') {
+      filePaths = await Document.find({ auditId: req.query.auditId }).distinct(
+        'filename'
+      );
+      errors = await Document.find(
+        { 'parse.documentType': { $exists: false } },
+        null,
+        { lean: true }
+      );
+    }
+
+    fileObjects = filePaths.map(f => {
+      let result = {
+        filename: f
+      };
+      if (errors) {
+        let error = errors.find(e => e.filename === f);
+        if (error) {
+          if (error.parse.message) {
+            result.error = error.parse.message;
+          } else {
+            result.error = error.parse;
+          }
+        }
+      }
+      return result;
+    });
+
+    const files = parser.getFiles(fileObjects);
+    if (errors) {
+      for (let error of errors) {
+      }
+    }
+
+    res.status(200).json(files);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

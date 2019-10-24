@@ -4,7 +4,6 @@ const config = require('../config/app.config');
 const parserConfig = config.parser;
 const db = require('../config/db.config');
 const Document = db.Document;
-const Audit = db.Audit;
 const path = require('path');
 const logger = require('../core/logger');
 
@@ -40,8 +39,9 @@ function info(version) {
 
 function getOptions(filename, content) {
   let base64data = Buffer.from(content, 'binary').toString('base64');
-  let extension = filename
-    .substring(filename.lastIndexOf('.') + 1)
+  let extension = path
+    .extname(filename)
+    .substring(1)
     .toUpperCase();
   let body = {
     base64Content: base64data,
@@ -54,8 +54,8 @@ function getOptions(filename, content) {
   };
 }
 
-async function parse(filename, auditId) {
-  const content = await fs.readFile(filename);
+async function parse(root, filename, auditId) {
+  const content = await fs.readFile(path.join(root, filename));
 
   let options = getOptions(filename, content);
 
@@ -63,38 +63,31 @@ async function parse(filename, auditId) {
     const body = await request.post(options);
     let result = JSON.parse(body);
     if (result.documents && result.documents.length > 0) {
-      let parentId = await postDocument(result.documents[0], auditId, filename);
-      for (let i = 1; i < result.documents.length; i++) {
-        await postDocument(
-          result.documents[i],
-          auditId,
-          `${filename} (${i})`,
-          parentId
-        );
+      for (let document of result.documents) {
+        await postDocument(document, auditId, filename);
       }
     }
   } catch (err) {
-    let document = {
-      documentType: 'PARSE_ERROR'
-    };
-    await postDocument(document, auditId, filename, null, err.message);
+    if (err.response && err.response.body) {
+      await postDocument(JSON.parse(err.response.body), auditId, filename);
+    } else {
+      logger.logLocalError(err);
+    }
   }
 }
 
-postDocument = async (data, auditId, name, parentId, parseError) => {
-  let document = new Document(data);
+async function postDocument(data, auditId, filename) {
+  let document = new Document();
   document.auditId = auditId;
-  document.name = name;
-  if (parentId) document.parentId = parentId;
-  if (parseError) document.parseError = parseError;
+  document.filename = filename;
+  document.parse = data;
 
   try {
     await document.save();
-    return document._id;
   } catch (err) {
     console.log(err);
   }
-};
+}
 
 exports.parseAudit = async audit => {
   audit.status = 'Loading';
@@ -107,15 +100,67 @@ exports.parseAudit = async audit => {
 };
 
 async function parseDirectory(directory, auditId) {
-  let filenames = await fs.readdir(directory);
+  let filePaths = await getPaths(directory);
   let promises = [];
-  for (let filename of filenames) {
-    const stat = await fs.stat(path.join(directory, filename));
-    if (stat && stat.isDirectory()) {
-      await parseDirectory(path.join(directory, filename), auditId);
-    } else {
-      promises.push(parse(path.join(directory, filename), auditId));
-    }
+  for (let filePath of filePaths) {
+    promises.push(parse(directory, filePath, auditId));
   }
   await Promise.all(promises);
 }
+
+async function getPaths(directory, root) {
+  if (!root) {
+    root = directory;
+  }
+  let filenames = await fs.readdir(directory);
+  let result = [];
+  for (let filename of filenames) {
+    const stat = await fs.stat(path.join(directory, filename));
+    if (stat && stat.isDirectory()) {
+      const subdirectory = await getPaths(path.join(directory, filename), root);
+      result = result.concat(subdirectory);
+    } else {
+      result.push(path.relative(root, path.join(directory, filename)));
+    }
+  }
+  return result;
+}
+
+exports.getPaths = getPaths;
+
+exports.getFiles = fileObjects => {
+  let files = [];
+  for (let fileObject of fileObjects) {
+    //Получаем части пути (последовательность директорий, и последний элемент - сам файл)
+    const pathParts = fileObject.filename.split(path.sep);
+    let file,
+      array = files;
+    for (let part of pathParts) {
+      //если file != null, значит эт директория
+      if (file) {
+        //в таком случае добавляем массив файлов
+        if (!file.files) {
+          file.files = [];
+        }
+        //и заменяем им текущий массив array
+        array = file.files;
+      }
+      //проверяем, добавлен ли уже элемент с таким именем (если да - то это директория)
+      let directory = array.find(e => e.name === part);
+      if (!directory) {
+        //если нет, добавляем файл в текущий массив файлов
+        file = {
+          name: part
+        };
+        if (fileObject.error) {
+          file.error = fileObject.error;
+        }
+        array.push(file);
+      } else {
+        file = directory;
+      }
+    }
+  }
+
+  return files;
+};

@@ -2,12 +2,8 @@ module.exports = (mongoose, Schema) => {
   const ObjectId = Schema.Types.ObjectId;
   let documentSchema = new Schema({
     auditId: ObjectId,
-    name: String,
-    documentDate: Date,
-    documentType: String,
-    documentNumber: String,
-    parentId: ObjectId,
-    paragraphs: [{ paragraphHeader: Object, paragraphBody: Object }],
+    filename: String,
+    parse: Object,
     analysis: {
       original_text: String,
       normal_text: String,
@@ -32,8 +28,7 @@ module.exports = (mongoose, Schema) => {
       attributes: Object,
       author: { _id: ObjectId, login: String },
       updateDate: Date
-    },
-    parseError: String
+    }
   });
 
   return mongoose.model('document', documentSchema);
