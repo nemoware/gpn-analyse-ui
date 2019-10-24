@@ -4,6 +4,13 @@ const Document = db.Document;
 const DocumentType = db.DocumentType;
 const Dictionary = db.Dictionary;
 
+const documentFields = `filename
+parse.documentDate
+parse.documentType
+parse.documentNumber
+user
+`;
+
 exports.getDocuments = async (req, res) => {
   if (!req.query.auditId) {
     let err = 'Can not find documents: auditId is null';
@@ -12,22 +19,36 @@ exports.getDocuments = async (req, res) => {
   }
 
   try {
-    let exclude;
+    let include;
     if (req.query.full === 'false') {
-      exclude = `-auditId
-      -paragraphs
-      -analysis.original_text
-      -analysis.normal_text
-      -analysis.import_timestamp
-      -analysis.analyze_timestamp
-      -analysis.tokenization_maps
-      -analysis.checksum`;
+      include = documentFields + `analysis.headers analysis.attributes`;
     }
 
     let documents = await Document.find(
-      { auditId: req.query.auditId },
-      exclude
+      { auditId: req.query.auditId, 'parse.documentType': { $exists: true } },
+      include,
+      { lean: true }
     );
+
+    documents = documents.map(d => {
+      let document = {
+        filename: d.filename,
+        documentDate: d.parse.documentDate,
+        documentType: d.parse.documentType,
+        documentNumber: d.parse.documentNumber
+      };
+      if (d.analysis && d.analysis.attributes) {
+        document.analysis = {
+          headers: d.analysis.headers
+        };
+        if (d.user) {
+          document.user = d.user;
+        } else {
+          document.analysis.attributes = d.analysis.attributes;
+        }
+      }
+      return document;
+    });
 
     res.status(200).json(documents);
   } catch (err) {
@@ -44,12 +65,18 @@ exports.getDocument = async (req, res) => {
     }
 
     let document = await Document.findOne(
-      { _id: req.query.id },
-      '-paragraphs'
+      { _id: req.query.id, 'parse.documentType': { $exists: true } },
+      documentFields + `analysis`
     ).lean();
 
     if (document) {
       logger.log(req, res, 'Просмотр документа');
+
+      document.documentDate = document.parse.documentDate;
+      document.documentType = document.parse.documentType;
+      document.documentNumber = document.parse.documentNumber;
+      delete document.parse;
+
       if (document.user) {
         delete document.analysis.attributes;
       }
@@ -117,6 +144,10 @@ exports.getAttributes = async (req, res) => {
 };
 
 exports.getDocumentTypes = async (req, res) => {
-  let documentTypes = await DocumentType.find();
-  res.status(200).json(documentTypes);
+  try {
+    let documentTypes = await DocumentType.find();
+    res.status(200).json(documentTypes);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
 };

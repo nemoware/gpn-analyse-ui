@@ -123,11 +123,12 @@ exports.getFiles = async (req, res) => {
       return;
     }
     const audit = await Audit.findOne({ _id: req.query.auditId });
+
     let filePaths, fileObjects, errors;
 
-    if (audit.status === 'Loading') {
+    if (audit.status === 'New' || audit.status === 'Loading') {
       filePaths = await parser.getPaths(audit.ftpUrl);
-    } else if (audit.status === 'InWork') {
+    } else {
       filePaths = await Document.find({ auditId: req.query.auditId }).distinct(
         'filename'
       );
