@@ -62,7 +62,7 @@ async function parse(root, filename, auditId) {
   try {
     const body = await request.post(options);
     let result = JSON.parse(body);
-    if (result.documents && result.documents.length > 0) {
+    if (result.documents) {
       for (let document of result.documents) {
         await postDocument(document, auditId, filename);
       }
@@ -77,10 +77,11 @@ async function parse(root, filename, auditId) {
 }
 
 async function postDocument(data, auditId, filename) {
-  let document = new Document();
-  document.auditId = auditId;
-  document.filename = filename;
-  document.parse = data;
+  let document = new Document({
+    auditId: auditId,
+    filename: filename,
+    parse: data
+  });
 
   try {
     await document.save();
@@ -136,7 +137,7 @@ exports.getFiles = fileObjects => {
     let file,
       array = files;
     for (let part of pathParts) {
-      //если file != null, значит эт директория
+      //если file != null, значит это директория
       if (file) {
         //в таком случае добавляем массив файлов
         if (!file.files) {

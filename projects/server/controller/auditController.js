@@ -124,6 +124,16 @@ exports.getFiles = async (req, res) => {
     }
     const audit = await Audit.findOne({ _id: req.query.auditId });
 
+    if (!audit) {
+      logger.logError(
+        req,
+        res,
+        `Can not find audit with id ${req.query.auditId}`,
+        404
+      );
+      return;
+    }
+
     let filePaths, fileObjects, errors;
 
     if (audit.status === 'New' || audit.status === 'Loading') {
@@ -137,6 +147,11 @@ exports.getFiles = async (req, res) => {
         null,
         { lean: true }
       );
+    }
+
+    if (!filePaths) {
+      logger.logError(req, res, 'Error while getting audit files', 500);
+      return;
     }
 
     fileObjects = filePaths.map(f => {
@@ -157,10 +172,6 @@ exports.getFiles = async (req, res) => {
     });
 
     const files = parser.getFiles(fileObjects);
-    if (errors) {
-      for (let error of errors) {
-      }
-    }
 
     res.status(200).json(files);
   } catch (err) {
