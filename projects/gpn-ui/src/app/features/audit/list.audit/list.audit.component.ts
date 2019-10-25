@@ -171,7 +171,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   }
 
   openAuditResult(element) {
-    if (['InWork', 'Ended'].includes(element.status)) {
+    if (element.status !== 'New') {
       /*const dialogRef = this.dialog.open(AuditResultComponent, {
         width: '80%',
         height: '85vh',

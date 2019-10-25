@@ -6,7 +6,10 @@ import { CoreModule } from './core/core.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app/app.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  BrowserAnimationsModule,
+  NoopAnimationsModule
+} from '@angular/platform-browser/animations';
 import { HideDirective } from '@core/authorization/hide.directive';
 import { AppPageGuard } from '@core/authorization/app.page.guard';
 import { FormsModule } from '@root/node_modules/@angular/forms';
@@ -31,6 +34,7 @@ registerLocaleData(localeRu, 'ru');
   imports: [
     // angular
     NoopAnimationsModule,
+    BrowserAnimationsModule,
     BrowserModule,
 
     // core & shared

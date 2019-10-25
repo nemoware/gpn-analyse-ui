@@ -18,17 +18,22 @@ import {
   faEye,
   faClock,
   faFlagCheckered,
-  faExclamationTriangle
+  faExclamationTriangle,
+  faFolder,
+  faFolderOpen,
+  faFile
 } from '@fortawesome/free-solid-svg-icons';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 import { Document } from '@app/models/document.model';
 import { Helper } from '@app/features/audit/helper';
 import { Audit } from '@app/models/audit.model';
-import { forEachComment } from '@root/node_modules/tslint';
+
+import { FileModel } from '@app/models/file-model';
+import { DocumentTypeModel } from '@app/models/document-type-model';
 
 interface Node {
   _id?: string;
-  name: string;
+  filename: string;
   children?: Node[];
   details?: Tag;
   confidence?: number;
@@ -60,6 +65,9 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   faClock = faClock;
   faExclamationTriangle = faExclamationTriangle;
   faFlagCheckered = faFlagCheckered;
+  faFolder = faFolder;
+  faFolderOpen = faFolderOpen;
+  faFile = faFile;
   IdAudit;
   docs: Document[];
   TREE_DATA: Node[] = [];
@@ -67,12 +75,17 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   treeControl;
   treeFlattener;
   dataSource;
+  selectedPage = 0;
+  maxPageIndex = 0;
+  files: FileModel[];
+  loading = false;
+  documentType: DocumentTypeModel[];
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   private _transformer = (node: Node, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
-      name: node.name,
+      filename: node.filename,
       kind: node.kind,
       childCount: node.childCount,
       level: level,
@@ -109,69 +122,144 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     this.auditservice
       .getAudits([{ name: 'id', value: this.IdAudit }])
       .subscribe(data => {
-        console.log(data);
         this.audit = data[0];
-        this.refreshData();
+
+        this.auditservice.getDoumentType().subscribe(res => {
+          this.documentType = res;
+        });
+
+        if (this.audit.status === 'Loading') {
+          this.selectedPage = 0;
+        } else this.selectedPage = 1;
+        this.refreshData(true);
       });
   }
 
-  refreshData() {
-    this.auditservice.getDouments(this.IdAudit, false).subscribe(data => {
-      console.log(data);
-      const uniqueType = data.reduce(function(a, d) {
-        if (a.indexOf(d.documentType) === -1) {
-          a.push(d.documentType);
-        }
-        return a;
-      }, []);
-      this.docs = data;
-      for (const t of uniqueType) {
-        let i = 0;
-        const node = { name: t, children: [], childCount: 0 };
-
-        for (const d of this.docs.filter(x => x.documentType === t)) {
-          i++;
-          const nodeChild = {
-            _id: d._id,
-            name: d.name,
-            index: i,
-            documentNumber: d.documentNumber,
-            documentDate: d.documentDate,
-            children: [],
-            childCount: 0,
-            parseError: d.parseError
-          };
-
-          if (d.analysis.attributes) {
-            const atr = Helper.json2array(d.analysis.attributes);
-            let j = 1;
-            for (const _atr of atr) {
-              nodeChild.children.push({
-                index: j++,
-                name: _atr.display_value,
-                confidence: _atr.confidence,
-                kind: _atr.kind
-              });
-            }
-          }
-          nodeChild.childCount = nodeChild.children.length;
-          node.children.push(nodeChild);
-
-          node.childCount = node.children.length;
-        }
-        this.TREE_DATA.push(node);
+  fillNodes(files: FileModel, parentNode: Node = null) {
+    const node = {
+      filename: files.name,
+      children: [],
+      childCount: 0,
+      parseError: files.error
+    };
+    if (parentNode != null) parentNode.children.push(node);
+    else this.TREE_DATA.push(node);
+    if (files.files) {
+      node.childCount = files.files.length;
+      for (const n of files.files) {
+        this.fillNodes(n, node);
       }
-      this.dataSource = new MatTreeFlatDataSource(
-        this.treeControl,
-        this.treeFlattener
-      );
-      this.dataSource.data = this.TREE_DATA;
+    }
+  }
+
+  refreshData(checkDoc = false) {
+    this.loading = true;
+    this.TREE_DATA = [];
+    if (this.selectedPage === 0) {
+      this.auditservice.getFiles(this.IdAudit).subscribe(data => {
+        this.files = data;
+        for (const n of this.files) this.fillNodes(n);
+        this.refreshTree();
+      });
+    } else {
+      this.auditservice.getDouments(this.IdAudit, false).subscribe(data => {
+        this.docs = data;
+
+        if (checkDoc) {
+          if (
+            this.docs.find(
+              x => x.analysis != null && x.analysis.attributes != null
+            )
+          ) {
+            this.selectedPage = 2;
+            this.maxPageIndex = 2;
+          } else if (this.docs.length > 0) {
+            this.selectedPage = 1;
+            this.maxPageIndex = 1;
+          } else {
+            this.selectedPage = 0;
+            this.maxPageIndex = 0;
+            this.refreshData();
+          }
+          return;
+        }
+
+        if (this.selectedPage === 2) {
+          this.docs = this.docs.filter(
+            x => x.analysis != null && x.analysis.attributes != null
+          );
+        }
+
+        const uniqueType = this.docs.reduce(function(a, d) {
+          if (a.indexOf(d.documentType) === -1) {
+            a.push(d.documentType);
+          }
+          return a;
+        }, []);
+
+        for (const t of uniqueType) {
+          let i = 0;
+          const node = { filename: t, children: [], childCount: 0 };
+
+          for (const d of this.docs.filter(x => x.documentType === t)) {
+            i++;
+            const nodeChild = {
+              _id: d._id,
+              filename: d.filename,
+              index: i,
+              documentNumber: d.documentNumber,
+              documentDate: d.documentDate,
+              children: [],
+              childCount: 0,
+              parseError: d.parseError
+            };
+
+            if (this.selectedPage === 2 && d.analysis.attributes) {
+              const atr = Helper.json2array(d.analysis.attributes);
+              const docType = this.documentType.find(
+                x => x._id === d.documentType
+              );
+              let j = 1;
+              for (const _atr of atr) {
+                const kindAttr = docType.attributes.find(
+                  x => x.kind === _atr.kind
+                );
+                if (kindAttr != null && kindAttr.editable)
+                  nodeChild.children.push({
+                    index: j++,
+                    filename: _atr.display_value,
+                    confidence: _atr.confidence,
+                    kind: _atr.kind
+                  });
+              }
+            }
+
+            nodeChild.childCount = nodeChild.children.length;
+            node.children.push(nodeChild);
+            node.childCount = node.children.length;
+          }
+          this.TREE_DATA.push(node);
+        }
+        console.log(this.TREE_DATA);
+        this.refreshTree();
+      });
+    }
+    this.loading = false;
+  }
+
+  refreshTree() {
+    this.dataSource = new MatTreeFlatDataSource(
+      this.treeControl,
+      this.treeFlattener
+    );
+    this.dataSource.data = this.TREE_DATA;
+    if (this.selectedPage === 0) this.treeControl.expandAll();
+    else
       for (const n of this.treeControl.dataNodes) {
         if (n.level === 0) this.treeControl.expand(n);
       }
 
-      this.changeDetectorRefs.detectChanges();
-    });
+    this.changeDetectorRefs.detectChanges();
   }
 
   openEditor(node) {
@@ -180,5 +268,10 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
 
   openError(node) {
     if (node.parseError) alert(node.parseError);
+  }
+
+  changePage(e) {
+    this.selectedPage = e.index;
+    this.refreshData();
   }
 }

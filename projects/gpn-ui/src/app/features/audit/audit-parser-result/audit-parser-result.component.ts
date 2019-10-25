@@ -124,7 +124,7 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
         for (const d of this.docs.filter(x => x.documentType === t)) {
           i++;
           node.children.push({
-            name: d.name,
+            name: d.filename,
             index: i,
             documentNumber: d.documentNumber,
             documentDate: d.documentDate

@@ -6,6 +6,8 @@ import { Audit } from '@app/models/audit.model';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { Document } from '@app/models/document.model';
 import { KindAttributeModel } from '@app/models/kind-attribute-model';
+import { FileModel } from '@app/models/file-model';
+import { DocumentTypeModel } from '@app/models/document-type-model';
 
 const api = '/api';
 
@@ -54,18 +56,24 @@ export class AuditService {
     });
   }
 
+  public getFiles(auditId: string = null): Observable<FileModel[]> {
+    let httpParams = new HttpParams();
+    if (auditId) {
+      httpParams = httpParams.append('auditId', auditId);
+    }
+    return this.http.get<Array<FileModel>>(`${api}/files`, {
+      params: httpParams
+    });
+  }
+
   public getDoument(id: string): Observable<Document> {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('id', id);
     return this.http.get<Document>(`${api}/document`, { params: httpParams });
   }
 
-  public getDoumentType(name: string): Observable<KindAttributeModel[]> {
-    let httpParams = new HttpParams();
-    httpParams = httpParams.append('name', name);
-    return this.http.get<KindAttributeModel[]>(`${api}/attributes`, {
-      params: httpParams
-    });
+  public getDoumentType(): Observable<DocumentTypeModel[]> {
+    return this.http.get<DocumentTypeModel[]>(`${api}/documentTypes`);
   }
 
   public updateDocument(id: string, attributes: {}): Observable<Document> {

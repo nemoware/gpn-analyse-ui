@@ -3,7 +3,7 @@ import { HeaderModel } from '@app/models/header-model';
 export interface Document {
   _id: string;
   auditId: string;
-  name: string;
+  filename: string;
   documentDate: Date;
   documentType: string;
   documentNumber: string;
