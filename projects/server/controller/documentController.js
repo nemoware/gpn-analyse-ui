@@ -142,7 +142,11 @@ exports.getAttributes = async (req, res) => {
 
 exports.getDocumentTypes = async (req, res) => {
   try {
-    let documentTypes = await DocumentType.find();
+    let where = {};
+    if (req.query.name) {
+      where._id = req.query.name;
+    }
+    let documentTypes = await DocumentType.find(where);
     res.status(200).json(documentTypes);
   } catch (err) {
     logger.logError(req, res, err, 500);
