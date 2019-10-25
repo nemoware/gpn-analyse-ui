@@ -113,7 +113,8 @@ exports.deleteAudit = async (req, res) => {
 
 exports.getFiles = async (req, res) => {
   try {
-    if (!req.query.auditId) {
+    const auditId = req.query.auditId;
+    if (!auditId) {
       logger.logError(
         req,
         res,
@@ -122,15 +123,10 @@ exports.getFiles = async (req, res) => {
       );
       return;
     }
-    const audit = await Audit.findOne({ _id: req.query.auditId });
+    const audit = await Audit.findOne({ _id: auditId });
 
     if (!audit) {
-      logger.logError(
-        req,
-        res,
-        `Can not find audit with id ${req.query.auditId}`,
-        404
-      );
+      logger.logError(req, res, `Can not find audit with id ${auditId}`, 404);
       return;
     }
 
@@ -139,11 +135,11 @@ exports.getFiles = async (req, res) => {
     if (audit.status === 'New' || audit.status === 'Loading') {
       filePaths = await parser.getPaths(audit.ftpUrl);
     } else {
-      filePaths = await Document.find({ auditId: req.query.auditId }).distinct(
+      filePaths = await Document.find({ auditId: auditId }).distinct(
         'filename'
       );
       errors = await Document.find(
-        { 'parse.documentType': { $exists: false } },
+        { auditId: auditId, parserResponseCode: { $ne: 200 } },
         null,
         { lean: true }
       );

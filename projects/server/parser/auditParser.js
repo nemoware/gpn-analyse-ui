@@ -1,5 +1,5 @@
 const fs = require('fs-promise');
-const request = require('request-promise');
+const request = require('request');
 const config = require('../config/app.config');
 const parserConfig = config.parser;
 const db = require('../config/db.config');
@@ -19,8 +19,8 @@ exports.test = async () => {
 
   let options = getOptions(filename, data);
   try {
-    let body = await request.post(options);
-    let result = JSON.parse(body);
+    let response = await post(options);
+    let result = JSON.parse(response.body);
     info(result.version);
   } catch (err) {
     info();
@@ -60,27 +60,46 @@ async function parse(root, filename, auditId) {
   let options = getOptions(filename, content);
 
   try {
-    const body = await request.post(options);
-    let result = JSON.parse(body);
+    const response = await post(options);
+    const result = JSON.parse(response.body);
+    const version = result.version;
     if (result.documents) {
       for (let document of result.documents) {
-        await postDocument(document, auditId, filename);
+        await postDocument(document, auditId, filename, response.code, version);
       }
+    } else {
+      await postDocument(result, auditId, filename, response.code);
     }
   } catch (err) {
-    if (err.response && err.response.body) {
-      await postDocument(JSON.parse(err.response.body), auditId, filename);
-    } else {
-      logger.logLocalError(err);
-    }
+    logger.logLocalError(err);
   }
 }
 
-async function postDocument(data, auditId, filename) {
+function post(options) {
+  return new Promise((resolve, reject) => {
+    request.post(options, (err, response, body) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({
+          code: response.statusCode,
+          body: body
+        });
+      }
+    });
+  });
+}
+
+async function postDocument(data, auditId, filename, responseCode, version) {
+  if (!data.version) {
+    data.version = version;
+  }
+
   let document = new Document({
     auditId: auditId,
     filename: filename,
-    parse: data
+    parse: data,
+    parserResponseCode: responseCode
   });
 
   try {

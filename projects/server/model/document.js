@@ -4,6 +4,7 @@ module.exports = (mongoose, Schema) => {
     auditId: ObjectId,
     filename: String,
     parse: Object,
+    parserResponseCode: Number,
     analysis: {
       original_text: String,
       normal_text: String,

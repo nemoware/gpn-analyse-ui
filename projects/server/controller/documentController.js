@@ -21,11 +21,11 @@ exports.getDocuments = async (req, res) => {
   try {
     let include;
     if (req.query.full === 'false') {
-      include = documentFields + `analysis.headers analysis.attributes`;
+      include = documentFields + `analysis.attributes`;
     }
 
     let documents = await Document.find(
-      { auditId: req.query.auditId, 'parse.documentType': { $exists: true } },
+      { auditId: req.query.auditId, parserResponseCode: 200 },
       include,
       { lean: true }
     );
@@ -38,13 +38,10 @@ exports.getDocuments = async (req, res) => {
         documentNumber: d.parse.documentNumber
       };
       if (d.analysis && d.analysis.attributes) {
-        document.analysis = {
-          headers: d.analysis.headers
-        };
         if (d.user) {
           document.user = d.user;
         } else {
-          document.analysis.attributes = d.analysis.attributes;
+          document.analysis = d.analysis;
         }
       }
       return document;
@@ -65,7 +62,7 @@ exports.getDocument = async (req, res) => {
     }
 
     let document = await Document.findOne(
-      { _id: req.query.id, 'parse.documentType': { $exists: true } },
+      { _id: req.query.id, parserResponseCode: 200 },
       documentFields + `analysis`
     ).lean();
 
