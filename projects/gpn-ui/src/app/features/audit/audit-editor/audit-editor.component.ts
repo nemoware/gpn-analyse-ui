@@ -54,7 +54,6 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
         this.attributes = Helper.json2array(this.document.analysis.attributes);
         console.log('analyse_atr');
       }
-
       this.changeDetectorRefs.detectChanges();
     });
   }

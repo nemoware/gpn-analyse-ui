@@ -59,6 +59,16 @@
             "kind": "currency",
             "type": "string",
             "editable": false
+          },
+          {
+            "kind": "org_1_alt_name",
+            "type": "string",
+            "editable": false
+          },
+          {
+            "kind": "org_2_alt_name",
+            "type": "string",
+            "editable": false
           }
         ]
       },

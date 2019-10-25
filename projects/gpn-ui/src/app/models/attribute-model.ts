@@ -5,5 +5,4 @@ export interface AttributeModel {
   value: string;
   span: number[];
   span_map: string;
-  word: number[];
 }

@@ -29,6 +29,8 @@ export class EditAttributeComponent implements OnInit {
   selectedKind: KindAttributeModel;
   _change = false;
   _new = false;
+  infoMessage = 'Данный фрагмент не редактируется!';
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<EditAttributeComponent>,
@@ -42,9 +44,14 @@ export class EditAttributeComponent implements OnInit {
       value: string;
       documentType: KindAttributeModel[];
       attributes: AttributeModel[];
-      word: number[];
+      indexStart: number;
+      indexEnd: number;
+      editMode: boolean;
     }
-  ) {}
+  ) {
+    if (!this.data.editMode)
+      this.infoMessage = 'В режиме просмотра редактирование запрещено!';
+  }
 
   ngOnInit() {
     this._new = this.data.kind == null;
@@ -56,7 +63,7 @@ export class EditAttributeComponent implements OnInit {
 
     this.editForm = this.fb.group({
       kind: new FormControl(
-        { value: null, disabled: !this.data.editable },
+        { value: null, disabled: !this.data.editable || !this.data.editMode },
         Validators.required
       )
     });
@@ -92,9 +99,8 @@ export class EditAttributeComponent implements OnInit {
       display_value: this.data.display_value,
       kind: this.selectedKind.kind,
       value: this.data.value,
-      span: [this.data.word[0], this.data.word[this.data.word.length - 1]],
-      span_map: 'word',
-      word: this.data.word
+      span: [this.data.indexStart, this.data.indexEnd],
+      span_map: 'word'
     });
     this.dialogRef.close({
       attributes: this.data.attributes,
@@ -114,8 +120,8 @@ export class EditAttributeComponent implements OnInit {
         );
         this.dialogRef.close({
           attributes: this.data.attributes,
-          kind: 'span',
-          delete: null
+          kind: null,
+          delete: del
         });
       }
     }
@@ -123,6 +129,7 @@ export class EditAttributeComponent implements OnInit {
 
   valid(): boolean {
     if (
+      !this.data.editMode ||
       !this.data.editable ||
       this.data.value == null ||
       this.data.value.length === 0 ||

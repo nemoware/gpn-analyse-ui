@@ -7,24 +7,25 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef,
   Output,
-  EventEmitter
+  EventEmitter,
+  OnDestroy
 } from '@angular/core';
 import { Document } from '@app/models/document.model';
-import { Helper } from '@app/features/audit/helper';
-import { Tag } from '@app/models/legal-document';
 import { KindAttribute } from '@app/models/kind-attribute';
 import {
   faChevronDown,
   faChevronUp,
   faEdit,
-  faSave
+  faSave,
+  faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@root/node_modules/@angular/router';
 import { MatDialog } from '@root/node_modules/@angular/material';
 import { EditAttributeComponent } from '@app/features/audit/audit-editor/edit-attribute/edit-attribute.component';
 import { AuditService } from '@app/features/audit/audit.service';
-import { KindAttributeModel } from '@app/models/kind-attribute-model';
 import { AttributeModel } from '@app/models/attribute-model';
+import { DocumentTypeModel } from '@app/models/document-type-model';
+import { KindAttributeModel } from '@app/models/kind-attribute-model';
 
 @Component({
   selector: 'gpn-view-document',
@@ -33,11 +34,12 @@ import { AttributeModel } from '@app/models/attribute-model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class ViewDocumentComponent implements OnInit, AfterViewInit {
+export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   faEdit = faEdit;
   faSave = faSave;
+  faTimes = faTimes;
 
   @Input() document: Document;
   @Input() editmode: boolean;
@@ -55,48 +57,36 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     if (this.document) {
-      this.loadDoc();
+      this.refreshView();
     }
   }
 
   ngAfterViewInit(): void {
-    this.documentType = [
-      {
-        kind: 'subject',
-        type: 'dictionary',
-        values: ['Charity', 'Deal', 'PropertyDeal'],
-        editable: true
-      },
-      { kind: 'value', type: 'number', values: null, editable: true },
-      { kind: 'org_1_name', type: 'string', values: null, editable: true },
-      { kind: 'org_1_alt_name', type: 'string', values: null, editable: true },
-      { kind: 'org_1_alias', type: 'string', values: null, editable: false },
-      { kind: 'org_1_type', type: 'string', values: null, editable: false },
-      { kind: 'org_2_name', type: 'string', values: null, editable: true },
-      { kind: 'org_2_alt_name', type: 'string', values: null, editable: true },
-      { kind: 'org_2_alias', type: 'string', values: null, editable: false },
-      { kind: 'org_2_type', type: 'string', values: null, editable: false },
-      { kind: 'new_attribute', type: 'string', values: null, editable: false }
-    ];
-    if (this.editmode) {
-      /*this.auditservice
-        .getDoumentType(this.document.documentType)
-        .subscribe(docType => {
-          this.documentType = docType;
-        });*/
-    }
+    this.auditservice
+      .getDoumentTypeAtr(this.document.documentType)
+      .subscribe(docType => {
+        this.documentType = docType;
+        console.log(this.documentType);
+      });
   }
 
-  loadDoc() {
+  refreshView() {
     const view_doc = document.getElementById('view_doc');
     let result = this.document.analysis.normal_text;
     const words = this.document.analysis.tokenization_maps.words;
-
+    const elementsH = document.getElementsByClassName('hint');
+    for (let i = 0; i < elementsH.length; i++) {
+      elementsH[i].removeEventListener(
+        'click',
+        this.getInfoAttribute.bind(this)
+      );
+    }
+    /*
     for (const _atr of this.attributes) {
       _atr.word = [];
       if (_atr.span)
         for (let i = _atr.span[0]; i < _atr.span[1]; i++) _atr.word.push(i);
-    }
+    }*/
 
     for (let i = words.length - 1; i >= 0; i--) {
       const word = words[i];
@@ -116,7 +106,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
           tagStart = `<span class="${_atr.kind}">`;
         }
         if (_atr.span[1] - 1 === i) {
-          tagEnd = `<span class="hint"> ${_atr.kind}</span></span>`;
+          tagEnd = `<span class="hint" (click)="this.detInfoAttribute()"> ${_atr.kind} </span></span>`;
         }
       }
 
@@ -142,7 +132,29 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
     }
 
     result = '<span id="top"></span>' + result + '<span id="foot"> </span>';
-    view_doc.insertAdjacentHTML('afterbegin', result);
+    if (view_doc.innerHTML) view_doc.innerHTML = result;
+    else view_doc.insertAdjacentHTML('afterbegin', result);
+    const elements = document.getElementsByClassName('hint');
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].addEventListener('click', this.getInfoAttribute.bind(this));
+    }
+  }
+
+  getInfoAttribute(e) {
+    const _atr = this.attributes.find(
+      x => x.kind === e.target.parentElement.classList[0]
+    );
+    if (_atr) {
+      const kindAtr = this.documentType.find(x => x.kind === _atr.kind);
+      this.showAttributeInfo(
+        _atr.span[0],
+        _atr.span[1] - 1,
+        _atr.display_value,
+        _atr.kind,
+        _atr.value,
+        kindAtr.editable
+      );
+    }
   }
 
   getClassName(kind: string) {
@@ -162,14 +174,11 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
   }
 
   getSelectedText(e: MouseEvent) {
-    return;
     if (!this.editmode || e.button > 0) return;
-    let selectAttribute: string;
-    let kind: string;
-    let value: string;
+
+    console.log(document.getSelection());
+
     let display_value: string;
-    let editable = true;
-    let word: number[] = [];
     if (
       document.getSelection().anchorNode === null ||
       (document.getSelection().isCollapsed &&
@@ -189,62 +198,57 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
         element.classList.contains('span')
       )
         return;
-      else selectAttribute = element.id;
     }
 
     let idStart;
     let idEnd;
-    // select attribute
-    if (selectAttribute) {
-      const indexWord = Number(selectAttribute.split('_')[1]);
-      const _atr = this.attributes.find(x => x.word.includes(indexWord));
-      kind = _atr.kind;
-      value = _atr.value;
-      display_value = _atr.display_value;
-      const selectedKind = this.documentType.find(c => c.kind === _atr.kind);
-      editable = selectedKind.editable;
-      idStart = 'span_' + _atr.span[0];
-      idEnd = 'span_' + _atr.span[1];
-      word = _atr.word;
-    } else {
-      if (document.getSelection().anchorNode.parentElement.id === 'view_doc') {
-        idStart = (document.getSelection().anchorNode
-          .nextSibling as HTMLElement).id;
-      } else idStart = document.getSelection().anchorNode.parentElement.id;
 
-      if (document.getSelection().focusNode.parentElement.id === 'view_doc') {
-        idEnd = (document.getSelection().focusNode
-          .previousSibling as HTMLElement).id;
-      } else idEnd = document.getSelection().focusNode.parentElement.id;
+    if (document.getSelection().anchorNode.parentElement.id === 'view_doc') {
+      idStart = (document.getSelection().anchorNode.nextSibling as HTMLElement)
+        .id;
+    } else idStart = document.getSelection().anchorNode.parentElement.id;
 
-      if (Number(idStart.split('_')[1]) > Number(idEnd.split('_')[1])) return;
-      for (
-        let i = Number(idStart.split('_')[1]);
-        i <= Number(idEnd.split('_')[1]);
-        i++
-      )
-        word.push(i);
-      const words = this.document.analysis.tokenization_maps.words;
-      const wordS = words[idStart.split('_')[1]];
-      const wordE = words[idEnd.split('_')[1]];
-      display_value = this.document.analysis.normal_text.slice(
-        wordS[0],
-        wordE[1]
-      );
-    }
+    if (document.getSelection().focusNode.parentElement.id === 'view_doc') {
+      idEnd = (document.getSelection().focusNode.previousSibling as HTMLElement)
+        .id;
+    } else idEnd = document.getSelection().focusNode.parentElement.id;
 
+    console.log(idStart);
+    console.log(idEnd);
+
+    if (Number(idStart.split('_')[1]) > Number(idEnd.split('_')[1])) return;
+
+    const words = this.document.analysis.tokenization_maps.words;
+    const wordS = words[idStart.split('_')[1]];
+    const wordE = words[idEnd.split('_')[1]];
+    display_value = this.document.analysis.normal_text.slice(
+      wordS[0],
+      wordE[1]
+    );
+  }
+
+  showAttributeInfo(
+    indexStart: number,
+    indexEnd: number,
+    display_value?: string,
+    kind?: string,
+    value?: string,
+    editable?: boolean
+  ) {
     const dialogRef = this.dialog.open(EditAttributeComponent, {
       width: '50%',
       data: {
-        top: e.pageY,
-        left: e.pageX,
+        //top: e.pageY,
+        //left: e.pageX,
         display_value: display_value,
+        kind: kind,
         value: value,
         documentType: this.documentType,
-        kind: kind,
         editable: editable,
         attributes: this.attributes,
-        word: word
+        indexStart: indexStart,
+        indexEnd: indexEnd,
+        editMode: this.editmode
       }
     });
 
@@ -254,14 +258,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
         this.attributes = result.attributes;
         this.changeAttribute.emit(result.attributes);
         this.changed = true;
-        this.setElementClass(idStart, idEnd, result.kind);
-        if (result.delete)
-          this.setElementClass(
-            'span_' + result.delete[0],
-            'span_' + result.delete[1],
-            'span'
-          );
-        this.changeDetectorRefs.detectChanges();
+        this.refreshView();
       }
     });
   }
@@ -309,5 +306,15 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit {
     this.auditservice.updateDocument(this.document._id, atr).subscribe(data => {
       console.log(data);
     });
+  }
+
+  ngOnDestroy(): void {
+    const elements = document.getElementsByClassName('hint');
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].removeEventListener(
+        'click',
+        this.getInfoAttribute.bind(this)
+      );
+    }
   }
 }
