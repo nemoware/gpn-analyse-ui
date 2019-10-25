@@ -35,7 +35,8 @@ exports.getDocuments = async (req, res) => {
         filename: d.filename,
         documentDate: d.parse.documentDate,
         documentType: d.parse.documentType,
-        documentNumber: d.parse.documentNumber
+        documentNumber: d.parse.documentNumber,
+        _id: d._id
       };
       if (d.analysis && d.analysis.attributes) {
         if (d.user) {
