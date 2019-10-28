@@ -1,0 +1,46 @@
+<span><b>{{ document.audit.subsidiaryName }}</b> {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</span>
+<br>
+<fa-icon *ngIf="this.document.audit.status == 'InWork'" [icon]="faClock" style="float: left"></fa-icon>
+<fa-icon *ngIf="this.document.audit.status == 'Ended'" [icon]="faFlagCheckered" style="float: left"></fa-icon>
+<span style="margin-left: 10px"> Статус: {{ document.audit.status | translate}} </span>
+<mat-divider></mat-divider>
+<span><b>Файл: {{ document.filename }}</b></span>
+<mat-divider></mat-divider>
+<label>Время анализа</label><br>
+<span>{{ document.analysis.analyze_timestamp | date :'dd.MM.yyyy HH:mm'}}</span>
+<mat-divider></mat-divider>
+<label>Уверенность анализа</label><br>
+<span>100%</span>
+<mat-divider></mat-divider>
+<div *ngIf="document.user">
+  <label><b>Корректировка</b></label><br>
+  <label>Дата: </label> <span> {{ document.user.updateDate | date:'dd.MM.yyyy' }} </span><br>
+  <label>Пользователь: </label> <span> {{ document.user.author.login }} </span>
+  <mat-divider></mat-divider>
+</div>
+<label><b>Связанные документы</b></label>
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <div style="width: 100%" >
+      <div class="row">
+        <div class="col col-lg-1"> {{node.index}}</div>
+        <div class="col"> {{ node.name }}  </div>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <div style="width: 100%">
+      <button mat-icon-button matTreeNodeToggle
+              [attr.aria-label]="'toggle ' + node.name">
+        <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
+        <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
+      </button>
+      {{ node.name | translate }}
+    </div>
+  </mat-tree-node>
+
+</mat-tree>

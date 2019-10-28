@@ -32,6 +32,7 @@ import { ViewDocumentComponent } from './audit-editor/view-document/view-documen
 import { TreeAttributesComponent } from './audit-editor/tree-attributes/tree-attributes.component';
 import { EditAttributeComponent } from './audit-editor/edit-attribute/edit-attribute.component';
 import { DragDropModule } from '@root/node_modules/@angular/cdk/drag-drop';
+import { DocumentDetailsComponent } from './document-details/document-details.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { DragDropModule } from '@root/node_modules/@angular/cdk/drag-drop';
     AuditEditorComponent,
     ViewDocumentComponent,
     TreeAttributesComponent,
-    EditAttributeComponent
+    EditAttributeComponent,
+    DocumentDetailsComponent
   ],
   imports: [
     CommonModule,

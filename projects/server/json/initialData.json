@@ -69,6 +69,11 @@
             "kind": "org_2_alt_name",
             "type": "string",
             "editable": false
+          },
+          {
+            "kind": "org_1_type_ext",
+            "type": "string",
+            "editable": false
           }
         ]
       },

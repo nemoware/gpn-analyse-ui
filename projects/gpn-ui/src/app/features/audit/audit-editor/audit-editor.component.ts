@@ -13,7 +13,7 @@ import { ViewDocumentComponent } from '@app/features/audit/audit-editor/view-doc
 import { TreeAttributesComponent } from '@app/features/audit/audit-editor/tree-attributes/tree-attributes.component';
 import { AttributeModel } from '@app/models/attribute-model';
 import { Helper } from '@app/features/audit/helper';
-import { faClock, faFlagCheckered } from '@fortawesome/free-solid-svg-icons';
+import { LinksDocumentModel } from '@app/models/links-document-model';
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -32,8 +32,6 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   @ViewChild(TreeAttributesComponent, { static: false })
   tree: TreeAttributesComponent;
   documentType: string[];
-  faClock = faClock;
-  faFlagCheckered = faFlagCheckered;
 
   constructor(
     private activatedRoute: ActivatedRoute,

@@ -9,5 +9,6 @@ export enum KindAttribute {
   'value',
   'currency',
   'org_1_alt_name',
-  'org_2_alt_name'
+  'org_2_alt_name',
+  'org_1_type_ext'
 }

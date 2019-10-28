@@ -8,6 +8,7 @@ import { Document } from '@app/models/document.model';
 import { KindAttributeModel } from '@app/models/kind-attribute-model';
 import { FileModel } from '@app/models/file-model';
 import { DocumentTypeModel } from '@app/models/document-type-model';
+import { LinksDocumentModel } from '@app/models/links-document-model';
 
 const api = '/api';
 
@@ -96,5 +97,13 @@ export class AuditService {
       { user: attributes },
       { params: httpParams }
     );
+  }
+
+  public getLinkDocuments(id: string): Observable<Array<LinksDocumentModel>> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('documentId', id);
+    return this.http.get<Array<LinksDocumentModel>>(`${api}/links`, {
+      params: httpParams
+    });
   }
 }

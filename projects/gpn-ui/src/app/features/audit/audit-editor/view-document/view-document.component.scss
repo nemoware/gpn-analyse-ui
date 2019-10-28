@@ -23,7 +23,9 @@
 .org_1_alt_name,
 .org_1_type,
 .org_2_type,
-.hint {
+.hint,
+.org_1_type_ext,
+.currency {
   border-radius: 5px;
   border: 1px solid grey;
 }
@@ -65,6 +67,14 @@
 
 .org_2_type {
   background: linear-gradient(to bottom, white, #7ed8cf);
+}
+
+.org_1_type_ext {
+  background: linear-gradient(to bottom, white, cornflowerblue);
+}
+
+.currency {
+  background: linear-gradient(to bottom, white, lightskyblue);
 }
 
 .unknown {
