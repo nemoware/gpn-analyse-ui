@@ -45,6 +45,7 @@ db.EventType = require('../model/eventType')(mongoose, Schema);
 db.Document = require('../model/document')(mongoose, Schema);
 db.DocumentType = require('../model/documentType')(mongoose, Schema);
 db.Dictionary = require('../model/dictionary')(mongoose, Schema);
+db.Link = require('../model/link')(mongoose, Schema);
 
 initialize
   .initializeData(db)

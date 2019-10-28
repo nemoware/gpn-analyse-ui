@@ -4,6 +4,7 @@ const Document = db.Document;
 const DocumentType = db.DocumentType;
 const Dictionary = db.Dictionary;
 const Audit = db.Audit;
+const Link = db.Link;
 
 const documentFields = `filename
 parse.documentDate
@@ -161,6 +162,45 @@ exports.getDocumentTypes = async (req, res) => {
   try {
     let documentTypes = await DocumentType.find();
     res.status(200).json(documentTypes);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getLinks = async (req, res) => {
+  if (!req.query.documentId) {
+    let err = `Can not get links for document because documentId is null`;
+    logger.logError(req, res, err, 400);
+    return;
+  }
+
+  const documentId = req.query.documentId;
+
+  try {
+    let linksFrom = await Link.find({ from: documentId }).distinct('to');
+    let linksTo = await Link.find({ to: documentId }).distinct('from');
+
+    let links = linksFrom.concat(linksTo);
+
+    let documents = [];
+    for (let link of links) {
+      let document = await Document.findOne(
+        {
+          _id: link,
+          parserResponseCode: 200
+        },
+        `filename parse.documentDate parse.documentType parse.documentNumber`
+      ).lean();
+
+      document.documentDate = document.parse.documentDate;
+      document.documentType = document.parse.documentType;
+      document.documentNumber = document.parse.documentNumber;
+      delete document.parse;
+
+      documents.push(document);
+    }
+
+    res.status(200).json(documents);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
