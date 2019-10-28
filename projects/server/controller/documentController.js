@@ -3,6 +3,7 @@ const logger = require('../core/logger');
 const Document = db.Document;
 const DocumentType = db.DocumentType;
 const Dictionary = db.Dictionary;
+const Audit = db.Audit;
 
 const documentFields = `filename
 parse.documentDate
@@ -64,21 +65,36 @@ exports.getDocument = async (req, res) => {
 
     let document = await Document.findOne(
       { _id: req.query.id, parserResponseCode: 200 },
-      documentFields + `analysis`
+      documentFields + `analysis auditId`
     ).lean();
 
     if (document) {
       logger.log(req, res, 'Просмотр документа');
 
-      document.documentDate = document.parse.documentDate;
-      document.documentType = document.parse.documentType;
-      document.documentNumber = document.parse.documentNumber;
-      delete document.parse;
+      let audit = await Audit.findOne(
+        { _id: document.auditId },
+        `subsidiary.name auditStart auditEnd status -_id`
+      ).lean();
 
-      if (document.user) {
-        delete document.analysis.attributes;
+      if (audit) {
+        audit.subsidiaryName = audit.subsidiary.name;
+        delete audit.subsidiary;
+
+        document.documentDate = document.parse.documentDate;
+        document.documentType = document.parse.documentType;
+        document.documentNumber = document.parse.documentNumber;
+        document.audit = audit;
+        delete document.parse;
+        delete document.auditId;
+
+        if (document.user) {
+          delete document.analysis.attributes;
+        }
+        res.status(200).json(document);
+      } else {
+        let err = `Can not find audit with id ${document.auditId}`;
+        logger.logError(req, res, err, 404);
       }
-      res.status(200).json(document);
     } else {
       let err = `Can not find document with id ${req.query.id}`;
       logger.logError(req, res, err, 404);
@@ -143,11 +159,7 @@ exports.getAttributes = async (req, res) => {
 
 exports.getDocumentTypes = async (req, res) => {
   try {
-    let where = {};
-    if (req.query.name) {
-      where._id = req.query.name;
-    }
-    let documentTypes = await DocumentType.find(where);
+    let documentTypes = await DocumentType.find();
     res.status(200).json(documentTypes);
   } catch (err) {
     logger.logError(req, res, err, 500);
