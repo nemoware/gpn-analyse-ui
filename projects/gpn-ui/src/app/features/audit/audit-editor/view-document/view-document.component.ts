@@ -178,19 +178,37 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
 
     let idStart;
+    let parentStart;
     let idEnd;
+    let parentEnd;
 
     if (document.getSelection().anchorNode.parentElement.id === 'view_doc') {
       idStart = (document.getSelection().anchorNode.nextSibling as HTMLElement)
         .id;
-    } else idStart = document.getSelection().anchorNode.parentElement.id;
+      parentStart = (document.getSelection().anchorNode
+        .nextSibling as HTMLElement).parentElement;
+    } else {
+      idStart = document.getSelection().anchorNode.parentElement.id;
+      parentStart = document.getSelection().anchorNode.parentElement
+        .parentElement;
+    }
 
     if (document.getSelection().focusNode.parentElement.id === 'view_doc') {
       idEnd = (document.getSelection().focusNode.previousSibling as HTMLElement)
         .id;
-    } else idEnd = document.getSelection().focusNode.parentElement.id;
+      parentEnd = (document.getSelection().anchorNode
+        .previousSibling as HTMLElement).parentElement;
+    } else {
+      idEnd = document.getSelection().focusNode.parentElement.id;
+      parentEnd = document.getSelection().focusNode.parentElement.parentElement;
+    }
 
     if (Number(idStart.split('_')[1]) > Number(idEnd.split('_')[1])) return;
+
+    if (parentEnd !== parentStart) {
+      alert('Пересечение атрибутов недопустимо!');
+      return;
+    }
 
     const words = this.document.analysis.tokenization_maps.words;
     const wordS = words[idStart.split('_')[1]];
@@ -224,7 +242,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         display_value: display_value,
         kind: kind,
         value: value,
-        documentType: this.documentType,
+        documentType:
+          kind && !editable
+            ? this.documentType
+            : this.documentType.filter(x => x.editable),
         editable: editable,
         attributes: this.attributes,
         indexStart: Number(indexStart),
