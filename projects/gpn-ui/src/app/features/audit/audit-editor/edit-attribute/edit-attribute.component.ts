@@ -147,7 +147,8 @@ export class EditAttributeComponent implements OnInit {
     if (this.selectedKind.type === 'string') {
       this.data.value = this.data.display_value;
     } else if (this.selectedKind.type === 'number') {
-      this.data.value = this.data.display_value.match(/\d+/)[0];
+      const value = this.data.display_value.match(/\d+/);
+      if (value) this.data.value = value[0];
     }
   }
 
