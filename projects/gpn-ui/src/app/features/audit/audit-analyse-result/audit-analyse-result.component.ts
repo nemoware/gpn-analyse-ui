@@ -33,7 +33,7 @@ import { DocumentTypeModel } from '@app/models/document-type-model';
 
 interface Node {
   _id?: string;
-  filename: string;
+  name: string;
   children?: Node[];
   details?: Tag;
   confidence?: number;
@@ -85,7 +85,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   private _transformer = (node: Node, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
-      filename: node.filename,
+      name: node.name,
       kind: node.kind,
       childCount: node.childCount,
       level: level,
@@ -137,7 +137,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
 
   fillNodes(files: FileModel, parentNode: Node = null) {
     const node = {
-      filename: files.name,
+      name: files.name,
       children: [],
       childCount: 0,
       parseError: files.error
@@ -164,13 +164,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     } else {
       this.auditservice.getDouments(this.IdAudit, false).subscribe(data => {
         this.docs = data;
-
         if (checkDoc) {
-          if (
-            this.docs.find(
-              x => x.analysis != null && x.analysis.attributes != null
-            )
-          ) {
+          if (this.docs.find(x => x.analysis != null || x.user != null)) {
             this.selectedPage = 2;
             this.maxPageIndex = 2;
           } else if (this.docs.length > 0) {
@@ -186,7 +181,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
 
         if (this.selectedPage === 2) {
           this.docs = this.docs.filter(
-            x => x.analysis != null && x.analysis.attributes != null
+            x => x.analysis != null || x.user != null
           );
         }
 
@@ -199,13 +194,13 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
 
         for (const t of uniqueType) {
           let i = 0;
-          const node = { filename: t, children: [], childCount: 0 };
+          const node = { name: t, children: [], childCount: 0 };
 
           for (const d of this.docs.filter(x => x.documentType === t)) {
             i++;
             const nodeChild = {
               _id: d._id,
-              filename: d.filename,
+              name: d.filename,
               index: i,
               documentNumber: d.documentNumber,
               documentDate: d.documentDate,
@@ -214,8 +209,15 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
               parseError: d.parseError
             };
 
-            if (this.selectedPage === 2 && d.analysis.attributes) {
-              const atr = Helper.json2array(d.analysis.attributes);
+            if (
+              this.selectedPage === 2 &&
+              ((d.analysis != null && d.analysis.attributes) ||
+                (d.user != null && d.user.attributes))
+            ) {
+              const atr =
+                d.analysis != null
+                  ? Helper.json2array(d.analysis.attributes)
+                  : Helper.json2array(d.user.attributes);
               const docType = this.documentType.find(
                 x => x._id === d.documentType
               );
@@ -227,7 +229,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
                 if (kindAttr != null && kindAttr.editable)
                   nodeChild.children.push({
                     index: j++,
-                    filename: _atr.display_value,
+                    name: _atr.value,
                     confidence: _atr.confidence,
                     kind: _atr.kind
                   });
@@ -240,7 +242,6 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
           }
           this.TREE_DATA.push(node);
         }
-        console.log(this.TREE_DATA);
         this.refreshTree();
       });
     }

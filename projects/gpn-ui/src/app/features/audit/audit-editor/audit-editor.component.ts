@@ -53,13 +53,10 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   refreshData() {
     this.auditservice.getDoument(this.IdDocument).subscribe(data => {
       this.document = data;
-      console.log(data);
       if (this.document.user) {
         this.attributes = Helper.json2array(this.document.user.attributes);
-        console.log('user_atr');
       } else {
         this.attributes = Helper.json2array(this.document.analysis.attributes);
-        console.log('analyse_atr');
       }
       this.changeDetectorRefs.detectChanges();
     });

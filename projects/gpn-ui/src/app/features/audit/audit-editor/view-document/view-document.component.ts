@@ -66,7 +66,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       .getDoumentTypeAtr(this.document.documentType)
       .subscribe(docType => {
         this.documentType = docType;
-        console.log(this.documentType);
       });
   }
 
@@ -169,7 +168,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getSelectedText(e: MouseEvent) {
     if (!this.editmode || e.button > 0) return;
-    console.log(document.getSelection());
 
     let display_value: string;
     if (
@@ -191,9 +189,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       idEnd = (document.getSelection().focusNode.previousSibling as HTMLElement)
         .id;
     } else idEnd = document.getSelection().focusNode.parentElement.id;
-
-    console.log(idStart);
-    console.log(idEnd);
 
     if (Number(idStart.split('_')[1]) > Number(idEnd.split('_')[1])) return;
 
@@ -240,7 +235,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result);
         this.attributes = result.attributes;
         this.changeAttribute.emit(result.attributes);
         this.changed = true;

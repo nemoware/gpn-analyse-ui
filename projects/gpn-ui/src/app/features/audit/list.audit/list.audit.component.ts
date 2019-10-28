@@ -76,7 +76,6 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   refreshData(filter: Array<{ name: string; value: string }> = null) {
     this.auditservice.getAudits(filter).subscribe(data => {
       this.audits = data;
-      console.log(data);
       this.selectedAudit = this.audits[0];
       this.refreshViewTable();
     });
