@@ -39,13 +39,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   faChevronUp = faChevronUp;
   faEdit = faEdit;
   faSave = faSave;
-  faTimes = faTimes;
 
   @Input() document: Document;
   @Input() editmode: boolean;
   @Input() documentType: KindAttributeModel[];
   @Input() attributes: Array<AttributeModel>;
   @Output() changeAttribute = new EventEmitter<AttributeModel[]>();
+  @Output() refresh = new EventEmitter();
 
   changed = false;
   constructor(
@@ -81,12 +81,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getInfoAttribute.bind(this)
       );
     }
-    /*
-    for (const _atr of this.attributes) {
-      _atr.word = [];
-      if (_atr.span)
-        for (let i = _atr.span[0]; i < _atr.span[1]; i++) _atr.word.push(i);
-    }*/
 
     for (let i = words.length - 1; i >= 0; i--) {
       const word = words[i];
@@ -149,10 +143,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       this.showAttributeInfo(
         _atr.span[0],
         _atr.span[1] - 1,
+        kindAtr.editable,
         _atr.display_value,
         _atr.kind,
-        _atr.value,
-        kindAtr.editable
+        _atr.value
       );
     }
   }
@@ -175,30 +169,15 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getSelectedText(e: MouseEvent) {
     if (!this.editmode || e.button > 0) return;
-
     console.log(document.getSelection());
 
     let display_value: string;
     if (
       document.getSelection().anchorNode === null ||
-      (document.getSelection().isCollapsed &&
-        document.getSelection().anchorNode.parentElement.id === 'view_doc')
+      document.getSelection().isCollapsed ||
+      document.getSelection().focusNode.nodeValue === ' '
     )
       return;
-    else if (
-      document.getSelection().isCollapsed &&
-      document.getSelection().anchorNode.parentElement.id !== 'view_doc'
-    ) {
-      const element = document.getElementById(
-        document.getSelection().anchorNode.parentElement.id
-      );
-      if (
-        element == null ||
-        element.classList == null ||
-        element.classList.contains('span')
-      )
-        return;
-    }
 
     let idStart;
     let idEnd;
@@ -225,15 +204,22 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       wordS[0],
       wordE[1]
     );
+
+    this.showAttributeInfo(
+      idStart.split('_')[1],
+      idEnd.split('_')[1],
+      true,
+      display_value
+    );
   }
 
   showAttributeInfo(
     indexStart: number,
     indexEnd: number,
+    editable: boolean,
     display_value?: string,
     kind?: string,
-    value?: string,
-    editable?: boolean
+    value?: string
   ) {
     const dialogRef = this.dialog.open(EditAttributeComponent, {
       width: '50%',
@@ -246,8 +232,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         documentType: this.documentType,
         editable: editable,
         attributes: this.attributes,
-        indexStart: indexStart,
-        indexEnd: indexEnd,
+        indexStart: Number(indexStart),
+        indexEnd: Number(indexEnd) + 1,
         editMode: this.editmode
       }
     });
@@ -304,7 +290,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.auditservice.updateDocument(this.document._id, atr).subscribe(data => {
-      console.log(data);
+      this.changed = false;
+      this.refresh.emit();
     });
   }
 

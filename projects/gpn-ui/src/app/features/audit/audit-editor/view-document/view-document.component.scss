@@ -25,58 +25,55 @@
 .org_2_type,
 .hint {
   border-radius: 5px;
+  border: 1px solid grey;
 }
 
 .subject {
-  background-color: darkseagreen;
+  background: linear-gradient(to bottom, white, darkseagreen);
 }
 
 .value {
-  background-color: green;
+  background: linear-gradient(to bottom, white, palegreen);
 }
 
 .org_2_alias {
-  background: #ffe97d;
+  background: linear-gradient(to bottom, white, #ffe97d);
 }
 .org_1_alias {
-  background: #ffb74d;
+  background: linear-gradient(to bottom, white, #ffb74d);
 }
 
 .org_2_name {
-  background: #e91e63;
+  background: linear-gradient(to bottom, white, #e91e63);
 }
 
 .org_2_alt_name {
-  background: #e91e63;
+  background: linear-gradient(to bottom, white, #e91e63);
 }
 
 .org_1_name {
-  background: #ff6090;
+  background: linear-gradient(to bottom, white, #ff6090);
 }
 
 .org_1_alt_name {
-  background: #ff6090;
+  background: linear-gradient(to bottom, white, #ff6090);
 }
 
 .org_1_type {
-  background: #66a39d;
+  background: linear-gradient(to bottom, white, #66a39d);
 }
 
 .org_2_type {
-  background: #7ed8cf;
+  background: linear-gradient(to bottom, white, #7ed8cf);
 }
 
 .unknown {
-  background-color: lightgrey;
-}
-
-.value {
-  background-color: palegreen;
+  background: linear-gradient(to bottom, white, lightgrey);
 }
 
 .hint {
   background: white;
-  border: 1px solid gray;
+  border: 1px solid grey;
   vertical-align: super;
   font-size: 10px;
   cursor: pointer;

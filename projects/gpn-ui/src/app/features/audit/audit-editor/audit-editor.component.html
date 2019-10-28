@@ -1,10 +1,17 @@
 <div class="row" *ngIf="document">
   <div class="col-3 mat-elevation-z8" >
-    <h4>Файл: {{ document.name }}</h4>
     <mat-tab-group color="accent">
 
       <mat-tab label="Детали">
         <div style="margin-left: 10px">
+          <span><b>{{ document.audit.subsidiaryName }}</b> {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</span>
+          <br>
+          <fa-icon *ngIf="this.document.audit.status == 'InWork'" [icon]="faClock" style="float: left"></fa-icon>
+          <fa-icon *ngIf="this.document.audit.status == 'Ended'" [icon]="faFlagCheckered" style="float: left"></fa-icon>
+          <span style="margin-left: 10px"> Статус: {{ document.audit.status | translate}} </span>
+          <mat-divider></mat-divider>
+          <span><b>Файл: {{ document.filename }}</b></span>
+          <mat-divider></mat-divider>
           <label>Время анализа</label><br>
           <span>{{ document.analysis.analyze_timestamp | date :'dd.MM.yyyy HH:mm'}}</span>
           <mat-divider></mat-divider>
@@ -42,6 +49,7 @@
       [editmode]="editmode"
       [attributes] = "attributes"
       (changeAttribute)= "changeAttribute($event)"
+      (refresh)="refresh()"
     ></gpn-view-document>
   </div>
 </div>

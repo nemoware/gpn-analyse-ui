@@ -27,4 +27,10 @@ export interface Document {
     updateDate: Date;
   };
   parseError: string;
+  audit: {
+    subsidiaryName: string;
+    auditStart: Date;
+    auditEnd: Date;
+    status: string;
+  };
 }

@@ -102,6 +102,7 @@ export class EditAttributeComponent implements OnInit {
       span: [this.data.indexStart, this.data.indexEnd],
       span_map: 'word'
     });
+    console.log(this.data.attributes);
     this.dialogRef.close({
       attributes: this.data.attributes,
       kind: this.selectedKind.kind,
@@ -143,6 +144,11 @@ export class EditAttributeComponent implements OnInit {
     this.data.value = null;
     this._change = true;
     this.selectedKind = this.editForm.get('kind').value;
+    if (this.selectedKind.type === 'string') {
+      this.data.value = this.data.display_value;
+    } else if (this.selectedKind.type === 'number') {
+      this.data.value = this.data.display_value.match(/\d+/)[0];
+    }
   }
 
   change(e) {
