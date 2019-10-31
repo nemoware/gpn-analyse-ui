@@ -163,6 +163,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   refreshData(checkDoc = false) {
     this.loading = true;
     this.errorCount = 0;
+    this.documentCount = 0;
     this.TREE_DATA = [];
     if (this.selectedPage === 0) {
       this.auditservice.getFiles(this.IdAudit).subscribe(data => {
