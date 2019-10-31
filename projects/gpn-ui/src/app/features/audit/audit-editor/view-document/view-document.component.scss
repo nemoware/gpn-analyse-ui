@@ -25,6 +25,7 @@
 .org_2_type,
 .hint,
 .org_1_type_ext,
+.org_structural_level,
 .currency {
   border-radius: 5px;
   border: 1px solid grey;
@@ -75,6 +76,10 @@
 
 .currency {
   background: linear-gradient(to bottom, white, lightskyblue);
+}
+
+.org_structural_level {
+  background: linear-gradient(to bottom, white, rosybrown);
 }
 
 .unknown {

@@ -99,7 +99,7 @@
         <div style="width: 100%">
           <div class="row">
             <div class="col">
-              {{ node.index }}. {{ node.kind | translate }}: {{ node.name.toString() | translate }}
+              {{ node.kind | translate }}: {{ node.name.toString() | translate }}
               <button mat-icon-button *ngIf="node.level === 1" matTooltip="Просмотр" (click)="openEditor(node)">
                 <fa-icon [icon]="faEye"></fa-icon>
               </button>
