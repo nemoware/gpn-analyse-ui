@@ -177,8 +177,8 @@ exports.getLinks = async (req, res) => {
   const documentId = req.query.documentId;
 
   try {
-    let linksFrom = await Link.find({ from: documentId }).distinct('to');
-    let linksTo = await Link.find({ to: documentId }).distinct('from');
+    let linksFrom = await Link.find({ fromId: documentId }).distinct('toId');
+    let linksTo = await Link.find({ toId: documentId }).distinct('fromId');
 
     let links = linksFrom.concat(linksTo);
 
@@ -201,6 +201,47 @@ exports.getLinks = async (req, res) => {
     }
 
     res.status(200).json(documents);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.postLink = async (req, res) => {
+  try {
+    let link = new Link(req.body);
+    await link.save();
+    res.status(201).json(link);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.updateLink = async (req, res) => {
+  let link = await Link.findOne({ _id: req.body._id });
+  if (!link) {
+    let err = 'Link not found';
+    logger.logError(req, res, err, 404);
+    return;
+  }
+
+  try {
+    await Link.replaceOne({ _id: link._id }, req.body);
+    res.status(200).send();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.deleteLink = async (req, res) => {
+  if (!req.query.id) {
+    let msg = 'Cannot delete link because id is null';
+    logger.logError(req, res, msg, 400);
+    return;
+  }
+
+  try {
+    await Link.deleteOne({ _id: req.query.id });
+    res.status(200).send();
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

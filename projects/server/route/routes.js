@@ -31,5 +31,8 @@ router.put('/document', documentController.updateDocument);
 router.get('/attributes', documentController.getAttributes);
 router.get('/documentTypes', documentController.getDocumentTypes);
 router.get('/links', documentController.getLinks);
+router.post('/link', documentController.postLink);
+router.put('/link', documentController.updateLink);
+router.delete('/link', documentController.deleteLink);
 
 module.exports = router;
