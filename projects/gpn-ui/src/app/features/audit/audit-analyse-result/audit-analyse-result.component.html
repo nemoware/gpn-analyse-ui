@@ -17,14 +17,18 @@
 
 <mat-tab-group color="accent" (selectedTabChange)="changePage($event)" animationDuration="1000ms" [(selectedIndex)]="selectedPage">
   <mat-tab label="Файлы">
+    <div style="margin-left: 10px">
+      <span> <b>Количетсво файлов:</b> </span> <span> {{ documentCount }} </span> <span style="margin-left: 15px"><b> Количетсво ошибок: </b> </span> <span> {{ errorCount }} </span>
+    </div>
+    <mat-divider></mat-divider>
     <mat-tree *ngIf="!loading" [dataSource]="dataSource" [treeControl]="treeControl">
 
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
         <div style="width: 100%">
           <fa-icon style="margin-left: 15px" [icon]="faFile"></fa-icon>
-          <span style="margin-left: 15px" [ngClass]="{errorFile: node.parseError != null}"> {{ node.name }} </span>
+          <span style="margin-left: 15px" [ngClass]="{errorFile: node.error != null}"> {{ node.name }} </span>
 
-          <button mat-icon-button (click)="openError(node)" *ngIf="node.parseError != null" style="margin-left: 5px" >
+          <button mat-icon-button (click)="openError(node)" *ngIf="node.error != null" style="margin-left: 5px" >
             <fa-icon [icon]="faExclamationTriangle" ></fa-icon>
           </button>
           <mat-divider></mat-divider>
@@ -89,7 +93,6 @@
     </mat-tree>
   </mat-tab>
   <mat-tab label="Анализ" [disabled]="maxPageIndex < 2">
-
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>

@@ -42,7 +42,7 @@ interface Node {
   index?: number;
   documentDate?: Date;
   documentNumber?: string;
-  parseError?: string;
+  error?: string;
 }
 
 interface ExampleFlatNode {
@@ -77,6 +77,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   dataSource;
   selectedPage = 0;
   maxPageIndex = 0;
+  errorCount = 0;
+  documentCount = 0;
   files: FileModel[];
   loading = false;
   documentType: DocumentTypeModel[];
@@ -93,7 +95,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       documentDate: node.documentDate,
       documentNumber: node.documentNumber,
       _id: node._id,
-      parseError: node.parseError
+      error: node.error
     };
   };
 
@@ -140,10 +142,16 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       name: files.name,
       children: [],
       childCount: 0,
-      parseError: files.error
+      error: files.error
     };
+
+    if (files.error != null) this.errorCount++;
+    if (files.files == null) this.documentCount++;
+
     if (parentNode != null) parentNode.children.push(node);
-    else this.TREE_DATA.push(node);
+    else {
+      this.TREE_DATA.push(node);
+    }
     if (files.files) {
       node.childCount = files.files.length;
       for (const n of files.files) {
@@ -154,6 +162,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
 
   refreshData(checkDoc = false) {
     this.loading = true;
+    this.errorCount = 0;
     this.TREE_DATA = [];
     if (this.selectedPage === 0) {
       this.auditservice.getFiles(this.IdAudit).subscribe(data => {
@@ -259,7 +268,6 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       for (const n of this.treeControl.dataNodes) {
         if (n.level === 0) this.treeControl.expand(n);
       }
-
     this.changeDetectorRefs.detectChanges();
   }
 
