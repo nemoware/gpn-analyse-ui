@@ -5,7 +5,7 @@ const Role = db.Role;
 exports.getUser = async login => {
   console.log(`Check login ${login}`);
 
-  let count = await User.count();
+  let count = await User.countDocuments();
 
   let user;
   if (!count) {
