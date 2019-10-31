@@ -86,7 +86,7 @@ exports.getDocument = async (req, res) => {
         document.documentNumber = document.parse.documentNumber;
         document.audit = audit;
         delete document.parse;
-        delete document.auditId;
+        //delete document.auditId;
 
         if (document.user) {
           delete document.analysis.attributes;
