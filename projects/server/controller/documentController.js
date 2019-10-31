@@ -268,7 +268,7 @@ exports.getDocumentsByType = async (req, res) => {
         parserResponseCode: 200
       },
       `parse.documentDate
-    parse.documentType
+    filename
     parse.documentNumber`,
       { lean: true }
     );
