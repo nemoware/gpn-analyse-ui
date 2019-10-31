@@ -95,7 +95,23 @@
       },
       {
         "_id": "PROTOCOL",
-        "attributes": []
+        "attributes": [
+          {
+            "kind": "org_1_name",
+            "type": "string",
+            "editable": true
+          },
+          {
+            "kind": "org_1_type",
+            "type": "string",
+            "editable": true
+          },
+          {
+            "kind": "org_structural_level",
+            "type": "string",
+            "editable": true
+          }
+        ]
       },
       {
         "_id": "REGULATION",
