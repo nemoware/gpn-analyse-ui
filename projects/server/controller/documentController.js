@@ -246,3 +246,45 @@ exports.deleteLink = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+exports.getDocumentsByType = async (req, res) => {
+  if (!req.query.auditId) {
+    let err = 'Can not find documents: auditId is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+
+  if (!req.query.type) {
+    let err = 'Can not find documents: type is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+
+  try {
+    let documents = await Document.find(
+      {
+        auditId: req.query.auditId,
+        'parse.documentType': req.query.type,
+        parserResponseCode: 200
+      },
+      `parse.documentDate
+    parse.documentType
+    parse.documentNumber`,
+      { lean: true }
+    );
+
+    documents = documents.map(d => {
+      return {
+        filename: d.filename,
+        documentDate: d.parse.documentDate,
+        documentType: d.parse.documentType,
+        documentNumber: d.parse.documentNumber,
+        _id: d._id
+      };
+    });
+
+    res.status(200).json(documents);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};

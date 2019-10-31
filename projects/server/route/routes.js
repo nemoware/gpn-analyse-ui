@@ -26,6 +26,7 @@ router.post('/error', eventController.postError);
 
 const documentController = require('../controller/documentController');
 router.get('/documents', documentController.getDocuments);
+router.get('/documentsByType', documentController.getDocumentsByType);
 router.get('/document', documentController.getDocument);
 router.put('/document', documentController.updateDocument);
 router.get('/attributes', documentController.getAttributes);
