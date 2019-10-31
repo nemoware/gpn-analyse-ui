@@ -13,7 +13,9 @@ exports.postAudit = async (req, res) => {
       let audit = new Audit({
         author: req.session.message,
         status: 'Ended',
-        subsidiary: subsidiary,
+        subsidiary: {
+          name: 'ООО "АЛЬФА-ИНТЕГРАТОР-ИНФОЭНЕРГО"'
+        },
         auditStart: new Date(2019, 11, 1),
         auditEnd: new Date(2019, 11, 30),
         createDate: new Date()
@@ -25,9 +27,9 @@ exports.postAudit = async (req, res) => {
       const filenames = await fs.readdir(directory);
       for (let filename of filenames) {
         let type;
-        if (filename.toLowerCase().indexOf('договор' >= 0)) {
+        if (filename.toLowerCase().indexOf('договор') >= 0) {
           type = 'CONTRACT';
-        } else if (filename.toLowerCase().indexOf('протокол' >= 0)) {
+        } else if (filename.toLowerCase().indexOf('протокол') >= 0) {
           type = 'PROTOCOL';
         }
 
