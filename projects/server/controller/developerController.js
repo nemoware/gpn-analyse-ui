@@ -3,13 +3,11 @@ const path = require('path');
 const logger = require('../core/logger');
 const db = require('../config/db.config');
 const Audit = db.Audit;
-const Subsidiary = db.Subsidiary;
 const Document = db.Document;
 
 exports.postAudit = async (req, res) => {
   if (req.body.jsonDirectory) {
     try {
-      let subsidiary = await Subsidiary.findOne().lean();
       let audit = new Audit({
         author: req.session.message,
         status: 'Ended',

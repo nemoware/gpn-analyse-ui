@@ -132,22 +132,6 @@
     ]
   },
   {
-    "name": "User",
-    "values": [
-      {
-        "login": "admin",
-        "roles": [
-          {
-            "_id": "3",
-            "name": "RAdmin",
-            "description": "Role #3 - Admin",
-            "appPage": "admin"
-          }
-        ]
-      }
-    ]
-  },
-  {
     "name": "Role",
     "values": [
       {

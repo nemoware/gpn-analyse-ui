@@ -76,7 +76,7 @@ app.use(async function(req, res, next) {
       checked = !!user;
       req.session.message = user;
     } catch (err) {
-      console.log('Rejected: ' + error);
+      console.log('Rejected: ' + err);
     }
   }
 

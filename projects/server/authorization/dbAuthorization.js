@@ -1,7 +1,25 @@
 const db = require('../config/db.config');
 const User = db.User;
+const Role = db.Role;
 
-exports.getUser = login => {
-  console.log(`check login ${login}`);
-  return User.findOne({ login: login }).lean();
+exports.getUser = async login => {
+  console.log(`Check login ${login}`);
+
+  let count = await User.count();
+
+  let user;
+  if (!count) {
+    let role = await Role.findOne({ name: 'RAdmin' }).lean();
+    user = new User({
+      login: login,
+      roles: [role]
+    });
+    await user.save();
+  }
+
+  if (!user) {
+    user = await User.findOne({ login: login });
+  }
+
+  return user.toObject();
 };
