@@ -48,7 +48,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      expires: 1000
+      expires: 60000
     }
   })
 );
