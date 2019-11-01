@@ -54,7 +54,7 @@ function getOptions(filename, content) {
   };
 }
 
-async function parse(root, filename, auditId) {
+async function parse(root, filename, audit) {
   const content = await fs.readFile(path.join(root, filename));
 
   let options = getOptions(filename, content);
@@ -65,15 +65,34 @@ async function parse(root, filename, auditId) {
     const version = result.version;
     if (result.documents) {
       for (let document of result.documents) {
-        await postDocument(document, auditId, filename, response.code, version);
+        await postDocument(
+          document,
+          audit._id,
+          filename,
+          response.code,
+          version
+        );
       }
     } else {
-      await postDocument(result, auditId, filename, response.code);
+      await postDocument(result, audit._id, filename, response.code);
     }
   } catch (err) {
-    logger.logLocalError(err);
+    if (err.code === 'ECONNREFUSED') {
+      await postDocument(
+        {
+          documentType: err.code
+        },
+        audit._id,
+        filename,
+        504
+      );
+    } else {
+      logger.logLocalError(err);
+    }
   }
 }
+
+exports.parse = parse;
 
 function post(options) {
   return new Promise((resolve, reject) => {
@@ -113,17 +132,30 @@ exports.parseAudit = async audit => {
   audit.status = 'Loading';
   await audit.save();
 
-  await parseDirectory(audit.ftpUrl, audit._id);
+  await parseDirectory(audit);
 
-  audit.status = 'InWork';
+  await this.setParseStatus(audit);
+};
+
+exports.setParseStatus = async audit => {
+  let count = await Document.countDocuments({
+    auditId: audit._id,
+    parserResponseCode: 504
+  });
+  if (count) {
+    audit.status = 'LoadingFailed';
+  } else {
+    audit.status = 'InWork';
+  }
   await audit.save();
 };
 
-async function parseDirectory(directory, auditId) {
+async function parseDirectory(audit) {
+  const directory = audit.ftpUrl;
   let filePaths = await getPaths(directory);
   let promises = [];
   for (let filePath of filePaths) {
-    promises.push(parse(directory, filePath, auditId));
+    promises.push(parse(directory, filePath, audit));
   }
   await Promise.all(promises);
 }

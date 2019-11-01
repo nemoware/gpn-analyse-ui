@@ -9,6 +9,7 @@ router.get('/audits', auditController.getAudits);
 router.post('/subsidiary', auditController.postSubsidiary);
 router.delete('/audit', auditController.deleteAudit);
 router.get('/files', auditController.getFiles);
+router.put('/parse', auditController.parse);
 
 const adminController = require('../controller/adminController');
 router.get('/roles', adminController.getRoles);

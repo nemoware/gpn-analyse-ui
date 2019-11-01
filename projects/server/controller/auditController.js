@@ -174,3 +174,42 @@ exports.getFiles = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+exports.parse = async (req, res) => {
+  if (!req.query.id) {
+    let msg = 'Cannot update audit because id is null';
+    logger.logError(req, res, msg, 400);
+    return;
+  }
+
+  let auditId = req.query.id;
+  try {
+    let audit = await Audit.findOne({ _id: auditId });
+
+    if (!audit) {
+      let msg = `Cannot find audit with id ${auditId}`;
+      logger.logError(req, res, msg, 404);
+      return;
+    }
+
+    audit.status = 'Loading';
+    await audit.save();
+
+    res.status(200).send();
+
+    let documents = await Document.find({
+      auditId: auditId,
+      parserResponseCode: { $ne: 200 }
+    });
+
+    for (let document of documents) {
+      let filename = document.filename;
+      await Document.deleteOne({ _id: document._id });
+      await parser.parse(audit.ftpUrl, filename, audit);
+    }
+
+    await parser.setParseStatus(audit);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
