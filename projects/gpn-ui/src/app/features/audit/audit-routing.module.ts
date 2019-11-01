@@ -18,7 +18,8 @@ const routes: Routes = [
   {
     path: 'view/:id',
     component: AuditEditorComponent,
-    data: { title: 'Просмотр документа', editmode: false }
+    data: { title: 'Просмотр документа', editmode: false },
+    runGuardsAndResolvers: 'always'
   },
   {
     path: 'edit/:id',
