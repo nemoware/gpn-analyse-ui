@@ -32,7 +32,9 @@ import { ViewDocumentComponent } from './audit-editor/view-document/view-documen
 import { TreeAttributesComponent } from './audit-editor/tree-attributes/tree-attributes.component';
 import { EditAttributeComponent } from './audit-editor/edit-attribute/edit-attribute.component';
 import { DragDropModule } from '@root/node_modules/@angular/cdk/drag-drop';
-import { DocumentDetailsComponent } from './document-details/document-details.component';
+import { DocumentDetailsComponent } from './audit-editor/document-details/document-details.component';
+import { SearchDocumentComponent } from './audit-editor/search-document/search-document.component';
+import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { DocumentDetailsComponent } from './document-details/document-details.co
     ViewDocumentComponent,
     TreeAttributesComponent,
     EditAttributeComponent,
-    DocumentDetailsComponent
+    DocumentDetailsComponent,
+    SearchDocumentComponent
   ],
   imports: [
     CommonModule,
@@ -59,12 +62,14 @@ import { DocumentDetailsComponent } from './document-details/document-details.co
     MatDialogModule,
     ScrollingModule,
     TranslateModule,
-    DragDropModule
+    DragDropModule,
+    NgxSpinnerModule
   ],
   entryComponents: [
     CreateAuditComponent,
     AuditResultComponent,
-    EditAttributeComponent
+    EditAttributeComponent,
+    SearchDocumentComponent
   ],
   exports: [ViewDocumentComponent],
   providers: [

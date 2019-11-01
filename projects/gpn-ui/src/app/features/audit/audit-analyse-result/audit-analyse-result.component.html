@@ -18,7 +18,7 @@
 <mat-tab-group color="accent" (selectedTabChange)="changePage($event)" animationDuration="1000ms" [(selectedIndex)]="selectedPage">
   <mat-tab label="Файлы">
     <div style="margin-left: 10px">
-      <span> <b>Количетсво файлов:</b> </span> <span> {{ documentCount }} </span> <span style="margin-left: 15px"><b> Количетсво ошибок: </b> </span> <span> {{ errorCount }} </span>
+      <span> <b>Количество файлов:</b> </span> <span> {{ documentCount }} </span> <span style="margin-left: 15px"><b> Количество ошибок: </b> </span> <span> {{ errorCount }} </span>
     </div>
     <mat-divider></mat-divider>
     <mat-tree *ngIf="!loading" [dataSource]="dataSource" [treeControl]="treeControl">

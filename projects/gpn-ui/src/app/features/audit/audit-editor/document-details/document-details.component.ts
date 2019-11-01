@@ -7,22 +7,26 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import {
-  faClock,
-  faFlagCheckered,
-  faChevronDown,
-  faChevronUp
-} from '@fortawesome/free-solid-svg-icons';
-import {
+  MatDialog,
   MatTreeFlatDataSource,
   MatTreeFlattener
 } from '@root/node_modules/@angular/material';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
-import { HeaderModel } from '@app/models/header-model';
 import { Document } from '@app/models/document.model';
 import { AuditService } from '@app/features/audit/audit.service';
 import { LinksDocumentModel } from '@app/models/links-document-model';
-import { Helper } from '@app/features/audit/helper';
 import { Tag } from '@app/models/legal-document';
+import {
+  faClock,
+  faFlagCheckered,
+  faChevronDown,
+  faChevronUp,
+  faSearch,
+  faEye,
+  faTimes,
+  faPlus
+} from '@fortawesome/free-solid-svg-icons';
+import { SearchDocumentComponent } from '@app/features/audit/audit-editor/search-document/search-document.component';
 
 interface Node {
   _id?: string;
@@ -35,7 +39,8 @@ interface Node {
   index?: number;
   documentDate?: Date;
   documentNumber?: string;
-  parseError?: string;
+  type: string;
+  linkId?: string;
 }
 
 interface ExampleFlatNode {
@@ -52,11 +57,16 @@ interface ExampleFlatNode {
 })
 export class DocumentDetailsComponent implements OnInit, AfterViewInit {
   @Input() document: Document;
+  @Input() editable: boolean;
 
   faClock = faClock;
   faFlagCheckered = faFlagCheckered;
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
+  faSearch = faSearch;
+  faEye = faEye;
+  faTimes = faTimes;
+  faPlus = faPlus;
 
   TREE_DATA: Node[] = [];
   treeControl;
@@ -70,13 +80,17 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
       expandable: !!node.children && node.children.length > 0,
       name: node.name,
       level: level,
-      index: node.index
+      index: node.index,
+      type: node.type,
+      _id: node._id,
+      linkId: node.linkId
     };
   };
 
   constructor(
     private auditservice: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef
+    private changeDetectorRefs: ChangeDetectorRef,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -96,7 +110,6 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
     this.TREE_DATA = [];
     this.auditservice.getLinkDocuments(this.document._id).subscribe(res => {
       this.linkDoc = res;
-
       const uniqueType = this.linkDoc.reduce(function(a, d) {
         if (a.indexOf(d.documentType) === -1) {
           a.push(d.documentType);
@@ -106,7 +119,7 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
 
       for (const t of uniqueType) {
         let i = 0;
-        const node = { name: t, children: [], childCount: 0 };
+        const node = { name: t, children: [], childCount: 0, type: t };
 
         for (const d of this.linkDoc.filter(x => x.documentType === t)) {
           i++;
@@ -115,7 +128,9 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
             name: d.filename,
             index: i,
             documentNumber: d.documentNumber,
-            documentDate: d.documentDate
+            documentDate: d.documentDate,
+            type: t,
+            linkId: d.linkId
           };
 
           node.children.push(nodeChild);
@@ -124,8 +139,28 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
 
         this.TREE_DATA.push(node);
       }
+
+      this.createEmpty('PROTOCOL', uniqueType);
+      this.createEmpty('CHARTER', uniqueType);
+
       this.refreshTree();
     });
+  }
+
+  createEmpty(type: string, uniqueType: string[]) {
+    if (!uniqueType.includes(type)) {
+      const node = { name: type, children: [], childCount: 0, type: type };
+      const nodeChild = {
+        _id: -1,
+        name: 'Не определен',
+        index: -1,
+        documentNumber: null,
+        documentDate: null,
+        type: type
+      };
+      node.children.push(nodeChild);
+      this.TREE_DATA.push(node);
+    }
   }
 
   refreshTree() {
@@ -140,5 +175,42 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.refreshData();
+  }
+
+  addDocument(node) {
+    const docs = Array.from(
+      this.TREE_DATA.find(x => x.type === node.type).children.filter(
+        x => x.type === node.type
+      ),
+      x => x._id
+    );
+    const dialogRef = this.dialog.open(SearchDocumentComponent, {
+      width: '800px',
+      height: '85%',
+      data: {
+        auditId: this.document.auditId,
+        type: node.type,
+        Docs: docs
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.auditservice
+          .postLinks({ fromId: this.document._id, toId: result._id })
+          .subscribe(data => {
+            this.refreshData();
+          });
+      }
+    });
+  }
+
+  deleteDocument(node) {
+    if (
+      confirm('Вы действительно изъять данный документ из списка связанных?')
+    ) {
+      this.auditservice.deleteLinks(node.linkId).subscribe(data => {
+        this.refreshData();
+      });
+    }
   }
 }

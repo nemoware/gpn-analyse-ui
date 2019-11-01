@@ -23,6 +23,7 @@ import localeRu from '@angular/common/locales/ru';
 import { registerLocaleData } from '@root/node_modules/@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from '@app/app/http-error.interceptor';
+import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient);
@@ -36,6 +37,7 @@ registerLocaleData(localeRu, 'ru');
     NoopAnimationsModule,
     BrowserAnimationsModule,
     BrowserModule,
+    NgxSpinnerModule,
 
     // core & shared
     CoreModule,

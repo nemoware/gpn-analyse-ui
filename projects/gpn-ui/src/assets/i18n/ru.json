@@ -13,6 +13,7 @@
   "Loading": "Загрузка",
   "InWork": "В работе",
   "Ended": "Завершен",
+  "LoadingFailed": "Ошибка загрузки",
   "ATTRIBUTES": "АТРИБУТЫ",
   "HEADERS": "ЗАГОЛОВКИ",
   "subject": "Предмет",

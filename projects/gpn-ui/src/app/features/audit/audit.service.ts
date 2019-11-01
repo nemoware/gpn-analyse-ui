@@ -106,4 +106,31 @@ export class AuditService {
       params: httpParams
     });
   }
+
+  public getDocumentsByType(
+    auditId: string,
+    type: string
+  ): Observable<Array<LinksDocumentModel>> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('auditId', auditId);
+    httpParams = httpParams.append('type', type);
+    return this.http.get<Array<LinksDocumentModel>>(`${api}/documentsByType`, {
+      params: httpParams
+    });
+  }
+
+  public postLinks(link: {
+    fromId: string;
+    toId: string;
+  }): Observable<{ _id: string; fromId: string; toId: string }> {
+    return this.http.post<{ _id: string; fromId: string; toId: string }>(
+      `${api}/link`,
+      link
+    );
+  }
+
+  public deleteLinks(id: string) {
+    const urlParams = new HttpParams().set('id', id.toString());
+    return this.http.delete(`${api}/link`, { params: urlParams });
+  }
 }

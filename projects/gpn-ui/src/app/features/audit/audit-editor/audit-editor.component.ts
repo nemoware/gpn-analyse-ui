@@ -14,6 +14,7 @@ import { TreeAttributesComponent } from '@app/features/audit/audit-editor/tree-a
 import { AttributeModel } from '@app/models/attribute-model';
 import { Helper } from '@app/features/audit/helper';
 import { LinksDocumentModel } from '@app/models/links-document-model';
+import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -36,10 +37,12 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private auditservice: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef
+    private changeDetectorRefs: ChangeDetectorRef,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit() {
+    this.spinner.show();
     this.IdDocument = this.activatedRoute.snapshot.paramMap.get('id');
     this.editmode = this.activatedRoute.snapshot.data['editmode'];
   }
@@ -49,6 +52,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   }
 
   refreshData() {
+    this.spinner.show();
     this.auditservice.getDoument(this.IdDocument).subscribe(data => {
       this.document = data;
       if (this.document.user) {
@@ -57,6 +61,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
         this.attributes = Helper.json2array(this.document.analysis.attributes);
       }
       this.changeDetectorRefs.detectChanges();
+      this.spinner.hide();
     });
   }
 

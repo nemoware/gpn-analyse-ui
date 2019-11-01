@@ -4,4 +4,5 @@ export interface LinksDocumentModel {
   documentDate: Date;
   documentType: string;
   documentNumber: string;
+  linkId: string;
 }

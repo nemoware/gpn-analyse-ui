@@ -77,6 +77,7 @@
     "lit-element": "^2.2.1",
     "mongoose": "^5.7.6",
     "ngx-mat-select-search": "^1.8.0",
+    "ngx-spinner": "^8.0.3",
     "request": "^2.88.0",
     "rxjs": "~6.5.0",
     "tslib": "^1.9.0",
