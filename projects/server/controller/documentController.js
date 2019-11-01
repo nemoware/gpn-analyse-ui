@@ -177,16 +177,21 @@ exports.getLinks = async (req, res) => {
   const documentId = req.query.documentId;
 
   try {
-    let linksFrom = await Link.find({ fromId: documentId }).distinct('toId');
-    let linksTo = await Link.find({ toId: documentId }).distinct('fromId');
+    let linksFrom = await Link.find({ fromId: documentId }, `toId`, {
+      lean: true
+    });
+    let linksTo = await Link.find({ toId: documentId }, `fromId`, {
+      lean: true
+    });
 
     let links = linksFrom.concat(linksTo);
 
     let documents = [];
     for (let link of links) {
+      let documentId = link.toId ? link.toId : link.fromId;
       let document = await Document.findOne(
         {
-          _id: link,
+          _id: documentId,
           parserResponseCode: 200
         },
         `filename parse.documentDate parse.documentType parse.documentNumber`
@@ -195,6 +200,7 @@ exports.getLinks = async (req, res) => {
       document.documentDate = document.parse.documentDate;
       document.documentType = document.parse.documentType;
       document.documentNumber = document.parse.documentNumber;
+      document.linkId = link._id;
       delete document.parse;
 
       documents.push(document);
