@@ -145,7 +145,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       error: files.error
     };
 
-    if (files.error != null) this.errorCount++;
+    if (files.error != null && files.files == null) this.errorCount++;
     if (files.files == null) this.documentCount++;
 
     if (parentNode != null) parentNode.children.push(node);
