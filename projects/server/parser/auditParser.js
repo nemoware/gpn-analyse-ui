@@ -205,7 +205,7 @@ exports.getFiles = fileObjects => {
     const pathParts = fileObject.filename.split(path.sep);
     let file,
       array = files;
-    for (let part of pathParts) {
+    for (let i = 0; i < pathParts.length; i++) {
       //если file != null, значит это директория
       if (file) {
         //в таком случае добавляем массив файлов
@@ -216,13 +216,13 @@ exports.getFiles = fileObjects => {
         array = file.files;
       }
       //проверяем, добавлен ли уже элемент с таким именем (если да - то это директория)
-      let directory = array.find(e => e.name === part);
+      let directory = array.find(e => e.name === pathParts[i]);
       if (!directory) {
         //если нет, добавляем файл в текущий массив файлов
         file = {
-          name: part
+          name: pathParts[i]
         };
-        if (fileObject.error) {
+        if (i === pathParts.length - 1 && fileObject.error) {
           file.error = fileObject.error;
         }
         array.push(file);
