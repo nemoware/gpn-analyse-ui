@@ -256,11 +256,23 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        document.body.classList.add('wait-cursor');
         this.attributes = result.attributes;
         this.changeAttribute.emit(result.attributes);
         this.changed = true;
-        this.refreshView();
+        this.wait().then(x => {
+          document.body.classList.remove('wait-cursor');
+        });
       }
+    });
+  }
+
+  wait() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.refreshView();
+        resolve(true);
+      }, 100);
     });
   }
 
