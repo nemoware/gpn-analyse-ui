@@ -55,9 +55,26 @@ function getOptions(filename, content) {
 }
 
 async function parse(root, filename, audit) {
-  const content = await fs.readFile(path.join(root, filename));
-
-  let options = getOptions(filename, content);
+  let options;
+  try {
+    const content = await fs.readFile(path.join(root, filename));
+    options = getOptions(filename, content);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      await postDocument(
+        {
+          documentType: err.code,
+          message: 'File not found'
+        },
+        audit._id,
+        filename,
+        0
+      );
+      return;
+    } else {
+      logger.logLocalError(err);
+    }
+  }
 
   try {
     const response = await post(options);
@@ -80,7 +97,8 @@ async function parse(root, filename, audit) {
     if (err.code === 'ECONNREFUSED') {
       await postDocument(
         {
-          documentType: err.code
+          documentType: err.code,
+          message: 'Parser module is off'
         },
         audit._id,
         filename,

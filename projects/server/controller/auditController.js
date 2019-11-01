@@ -204,8 +204,8 @@ exports.parse = async (req, res) => {
 
     for (let document of documents) {
       let filename = document.filename;
-      await Document.deleteOne({ _id: document._id });
       await parser.parse(audit.ftpUrl, filename, audit);
+      await Document.deleteOne({ _id: document._id });
     }
 
     await parser.setParseStatus(audit);
