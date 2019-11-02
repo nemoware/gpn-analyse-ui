@@ -22,16 +22,16 @@ $ npm install
 $ ng b
 ```
 
-5\. Change directory to projects\server and run the server:
+5\. Run the server:
 
 ```
-$ node server.js
+node ./projects/server/server.js
 ```
 
-6\. For starting without AD authentication put false as the first parameter:
+- For starting without AD authentication put false as the first parameter:
 
 ```bash
-$ node server.js false
+node ./projects/server/server.js false
 ```
 
 7\. Also, without AD authentication you can define username (by default it is admin) for the client session as the second parameter:
