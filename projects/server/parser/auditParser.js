@@ -7,11 +7,12 @@ const Document = db.Document;
 const path = require('path');
 const logger = require('../core/logger');
 
-exports.test = async () => {
+exports.test = async () => {    
   let filename = 'test.docx';
   let data;
   try {
-    data = await fs.readFile(`./file/${filename}`);
+    let docpath = path.join(__dirname, '..', 'file', filename);
+    data = await fs.readFile(docpath);
   } catch (err) {
     console.log(err);
     return;

@@ -1,4 +1,4 @@
-[
+exports.fakeUser =[
   {
     "dn": "CN=Иванов Иван,OU=Company,DC=company,DC=loc",
     "userPrincipalName": "admin@company.loc",

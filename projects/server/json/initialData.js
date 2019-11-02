@@ -1,4 +1,4 @@
-[
+exports.initialData = [
   {
     "name": "Dictionary",
     "values": [
