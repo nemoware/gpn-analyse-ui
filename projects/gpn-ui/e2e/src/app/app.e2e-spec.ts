@@ -7,7 +7,7 @@ describe('App', () => {
 
   beforeEach(() => (page = new AppPage()));
 
-  it('should display current year in the footer', () => {
+  /*it('should display current year in the footer', () => {
     page.navigateTo();
     expect(page.getCurrentYear()).toEqual(new Date().getFullYear().toString());
   });
@@ -15,5 +15,5 @@ describe('App', () => {
   it('empty menu', () => {
     page.navigateTo();
     page.getAllMenus().then(menus => expect(menus).length === 0);
-  });
+  });*/
 });
