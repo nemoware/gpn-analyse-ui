@@ -1,10 +1,8 @@
-const fs = require('fs-promise');
 const appConfig = require('../config/app.config');
+const userdata = require('../json/fakeUser');
 
 exports.getUser = async (req, res) => {
-  const data = await fs.readFile('./json/fakeUser.json', 'utf8');
-  let users = JSON.parse(data);
-  for (let user of users) {
+  for (let user of userdata.fakeUser) {
     if (user.sAMAccountName === appConfig.ad.login) {
       return user;
     }
@@ -14,9 +12,7 @@ exports.getUser = async (req, res) => {
 };
 
 exports.getUserName = async login => {
-  const data = await fs.readFile('./json/fakeUser.json', 'utf8');
-  let users = JSON.parse(data);
-  for (let user of users) {
+  for (let user of userdata.fakeUser) {
     if (user.sAMAccountName === login) {
       return user.displayName;
     }
@@ -24,6 +20,5 @@ exports.getUserName = async login => {
 };
 
 exports.getGroupUsers = async () => {
-  const data = await fs.readFile('./json/fakeUser.json', 'utf8');
-  return JSON.parse(data);
+  return userdata.fakeUser;
 };

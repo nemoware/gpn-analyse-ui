@@ -1,9 +1,7 @@
-const fs = require('fs-promise');
+const idata = require('../json/initialData');
 
 exports.initializeData = async db => {
-  const content = await fs.readFile('./json/initialData.json', 'utf8');
-  const data = JSON.parse(content);
-  for (let collection of data) {
+  for (let collection of idata.initialData) {
     if (collection.name in db) {
       let documents = await db[collection.name].find();
       if (documents.length === 0) {
