@@ -29,6 +29,8 @@ exports.postAudit = async (req, res) => {
           type = 'CONTRACT';
         } else if (filename.toLowerCase().indexOf('протокол') >= 0) {
           type = 'PROTOCOL';
+        } else if (filename.toLowerCase().indexOf('уста') >= 0) {
+          type = 'CHARTER';
         }
 
         if (type) {
