@@ -26,6 +26,7 @@ import { AuditService } from '@app/features/audit/audit.service';
 import { AttributeModel } from '@app/models/attribute-model';
 import { DocumentTypeModel } from '@app/models/document-type-model';
 import { KindAttributeModel } from '@app/models/kind-attribute-model';
+import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 
 @Component({
   selector: 'gpn-view-document',
@@ -52,7 +53,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public dialog: MatDialog,
     private changeDetectorRefs: ChangeDetectorRef,
-    private auditservice: AuditService
+    private auditservice: AuditService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -96,10 +98,12 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       if (_atr) {
         if (_atr.span[0] === i) {
-          tagStart = `<span class="${_atr.kind}">`;
+          tagStart = `<span class="${_atr.kind} hint_span">`;
         }
         if (_atr.span[1] - 1 === i) {
-          tagEnd = `<span class="hint" (click)="this.detInfoAttribute()"> ${_atr.kind} </span></span>`;
+          tagEnd = `<span class="hint"> ${this.translate.instant(
+            _atr.kind
+          )} </span></span>`;
         }
       }
 

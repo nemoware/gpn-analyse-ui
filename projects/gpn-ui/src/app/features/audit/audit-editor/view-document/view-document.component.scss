@@ -13,20 +13,8 @@
   font-weight: 900;
 }
 
-.subject,
-.value,
-.org_2_alias,
-.org_1_alias,
-.org_2_name,
-.org_2_alt_name,
-.org_1_name,
-.org_1_alt_name,
-.org_1_type,
-.org_2_type,
-.hint,
-.org_1_type_ext,
-.org_structural_level,
-.currency {
+.hint_span,
+.hint {
   border-radius: 5px;
   border: 1px solid grey;
 }
@@ -35,7 +23,10 @@
   background: linear-gradient(to bottom, white, darkseagreen);
 }
 
-.value {
+.value,
+.competence_CEO_finance_constraint_max_value,
+.competence_CEO_deals_constraint_max_value,
+.competence_CEO_court_constraint_max_value {
   background: linear-gradient(to bottom, white, palegreen);
 }
 
@@ -74,7 +65,10 @@
   background: linear-gradient(to bottom, white, cornflowerblue);
 }
 
-.currency {
+.currency,
+.competence_CEO_deals_constraint_max_currency,
+.competence_CEO_finance_constraint_max_currency,
+.competence_CEO_court_constraint_max_currency {
   background: linear-gradient(to bottom, white, lightskyblue);
 }
 
@@ -82,8 +76,28 @@
   background: linear-gradient(to bottom, white, rosybrown);
 }
 
+.competence_CEO_finance_constraint_max_sign,
+.competence_CEO_deals_constraint_max_sign,
+.competence_CEO_court_constraint_max_sign {
+  background: linear-gradient(to bottom, white, salmon);
+}
+
+.competence_CEO_finance,
+.competence_CEO_deals,
+.competence_CEO_court {
+  background: linear-gradient(to bottom, white, sandybrown);
+}
+
 .unknown {
   background: linear-gradient(to bottom, white, lightgrey);
+}
+
+.competence_CEO,
+.competence_AllMembers,
+.ShareholdersGeneralMeeting,
+.BoardOfDirectors,
+.competence_CEO {
+  background: linear-gradient(to bottom, white, antiquewhite);
 }
 
 .hint {

@@ -31,5 +31,33 @@
   "Charity": "Благотворительность",
   "Deal": "Сделка",
   "PropertyDeal": "Сделка с имуществом",
-  "PARSE_ERROR": "С ОШИБКАМИ"
+  "PARSE_ERROR": "С ОШИБКАМИ",
+
+  "finance": "финансирование",
+  "deals": "сделки",
+  "court": "суд",
+
+  "competence_AllMembers": "Общее собрание Участников",
+  "ShareholdersGeneralMeeting": "Генеральное собрание акционеров",
+  "BoardOfDirectors": "Совет директоров",
+  "CEO": "Генеральный директор",
+  "competence_CEO": "Генеральный директор",
+
+  "competence_CEO_court": "ГД - суд",
+  "competence_CEO_court_constraint_max": "ГД : суд пороговые значения",
+  "competence_CEO_court_constraint_max_sign": "ГД порог для суда",
+  "competence_CEO_court_constraint_max_value": "ГД сумма для суд",
+  "competence_CEO_court_constraint_max_currency": "ГД валюта для суд",
+
+  "competence_CEO_finance": "ГД - финансирование",
+  "competence_CEO_finance_constraint_max": "ГД : финансирование пороговые значения",
+  "competence_CEO_finance_constraint_max_sign": "ГД порог для финансирования",
+  "competence_CEO_finance_constraint_max_value": "ГД сумма для финансирования",
+  "competence_CEO_finance_constraint_max_currency": "ГД валюта для финансирования",
+
+  "competence_CEO_deals": "ГД - сделка",
+  "competence_CEO_deals_constraint_max": "ГД : сделка пороговые значения",
+  "competence_CEO_deals_constraint_max_sign": "ГД порог для сделки",
+  "competence_CEO_deals_constraint_max_value": "ГД сумма для сделки",
+  "competence_CEO_deals_constraint_max_currency": "ГД валюта для сделки"
 }

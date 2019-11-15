@@ -36,6 +36,19 @@
     </mat-tab-group>
   </div>
   <div class="col-9" style="height: 88vh" >
+
+    <mat-accordion *ngIf="document.documentType == 'CHARTER'">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Компетенция
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          <gpn-competencecharts
+          [attributes] = "attributes"></gpn-competencecharts>
+      </mat-expansion-panel>
+    </mat-accordion>
+
     <gpn-view-document
       [document]="document"
       [documentType] = "documentType"

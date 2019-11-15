@@ -4,7 +4,9 @@
     <div style="width: 100%" >
       <div class="row">
         <div class="col col-lg-2"> {{node.index}}</div>
-        <div class="col"> <span class="link_tag" (click)="clickAttribute(node)"> {{ node.display_value }} </span> </div>
+        <div class="col"> <span class="link_tag" (click)="clickAttribute(node)">
+         {{ node.kind | translate }} {{ node.display_value }}
+        </span> </div>
       </div>
       <mat-divider></mat-divider>
     </div>
@@ -17,7 +19,7 @@
         <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
         <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
       </button>
-      {{ node.value | translate }}
+      {{ node.kind | translate }}
     </div>
   </mat-tree-node>
 

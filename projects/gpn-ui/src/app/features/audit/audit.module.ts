@@ -19,7 +19,8 @@ import {
   MatSelectModule,
   MAT_DATE_LOCALE,
   MatTreeModule,
-  MatDialogModule
+  MatDialogModule,
+  MatExpansionModule
 } from '@root/node_modules/@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
 import { FontAwesomeModule } from '@root/node_modules/@fortawesome/angular-fontawesome';
@@ -35,6 +36,8 @@ import { DragDropModule } from '@root/node_modules/@angular/cdk/drag-drop';
 import { DocumentDetailsComponent } from './audit-editor/document-details/document-details.component';
 import { SearchDocumentComponent } from './audit-editor/search-document/search-document.component';
 import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
+import { CompetencechartsComponent } from './audit-editor/competencecharts/competencecharts.component';
+import { HighchartsChartComponent } from '@root/node_modules/highcharts-angular';
 
 @NgModule({
   declarations: [
@@ -47,7 +50,9 @@ import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
     TreeAttributesComponent,
     EditAttributeComponent,
     DocumentDetailsComponent,
-    SearchDocumentComponent
+    SearchDocumentComponent,
+    CompetencechartsComponent,
+    HighchartsChartComponent
   ],
   imports: [
     CommonModule,
@@ -63,7 +68,8 @@ import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
     ScrollingModule,
     TranslateModule,
     DragDropModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MatExpansionModule
   ],
   entryComponents: [
     CreateAuditComponent,

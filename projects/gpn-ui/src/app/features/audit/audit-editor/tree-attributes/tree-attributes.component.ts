@@ -94,7 +94,12 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
   refreshData() {
     this.TREE_DATA = [];
     let i = 1;
-    const nodeH = { value: 'HEADERS', children: [], childCount: 0 };
+    const nodeH = {
+      kind: 'HEADERS',
+      value: 'HEADERS',
+      children: [],
+      childCount: 0
+    };
     for (const h of this.headers) {
       nodeH.children.push({
         index: i++,
@@ -104,16 +109,31 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
         idWord: 'span_' + (h.span ? h.span[0] : -1)
       });
     }
-    const nodeA = { value: 'ATTRIBUTES', children: [], childCount: 0 };
+    const nodeA = {
+      kind: 'ATTRIBUTES',
+      value: 'ATTRIBUTES',
+      children: [],
+      childCount: 0
+    };
     i = 1;
+    this.sortAttributes();
     for (const a of this.attributes) {
-      nodeA.children.push({
+      const child = {
         index: i++,
         value: a.value,
         display_value: a.display_value,
         kind: a.kind,
-        idWord: 'span_' + (a.span ? a.span[0] : -1)
-      });
+        idWord: 'span_' + (a.span ? a.span[0] : -1),
+        children: []
+      };
+
+      if (a.parent) {
+        const p = this.getParent(a.parent, nodeA.children);
+        console.log(p);
+        if (p) p.children.push(child);
+      } else {
+        nodeA.children.push(child);
+      }
     }
     this.TREE_DATA.push(nodeH);
     this.TREE_DATA.push(nodeA);
@@ -131,6 +151,16 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
     this.changeDetectorRefs.detectChanges();
   }
 
+  getParent(name: string, children: any[]): any {
+    for (const c of children) {
+      if (c.kind === name) return c;
+      if (c.children) {
+        const p = this.getParent(name, c.children);
+        if (p) return p;
+      }
+    }
+  }
+
   ngAfterViewInit(): void {
     this.refreshData();
   }
@@ -142,5 +172,12 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
   public updateAttributes(attributes: AttributeModel[]) {
     this.attributes = attributes;
     this.refreshData();
+  }
+
+  sortAttributes() {
+    this.attributes = this.attributes.sort((a, b) => {
+      if (!a.parent || !b.parent) return 0;
+      return a.parent.localeCompare(b.parent);
+    });
   }
 }
