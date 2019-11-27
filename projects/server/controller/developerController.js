@@ -71,18 +71,42 @@ exports.getAttributes = async (req, res) => {
   for (let document of documents) {
     if (document.analysis && document.analysis.attributes) {
       for (let attribute in document.analysis.attributes) {
-        if (attributes.indexOf(attribute) < (await 0)) {
-          attributes.push(attribute);
+        const subAttributes = attribute.split('/');
+        for (let i = 0; i < subAttributes.length; i++) {
+          const level = i + 1;
+          let subAttribute = subAttributes[i];
+          const parts = subAttribute.split('-');
+          if (!Number.isNaN(+parts[parts.length - 1])) {
+            parts.pop();
+          }
+          subAttribute = parts.join('-');
+          if (attributes.map(a => a.kind).indexOf(subAttribute) < 0) {
+            attributes.push({
+              kind: subAttribute,
+              type: 'string',
+              level
+            });
+          }
         }
       }
     }
   }
 
   res.send(attributes);
-  /*res.send(attributes.map(a => {
-    return {
-      kind: a,
-      type: 'string'
-    };
-  }));*/
+};
+
+exports.getDocumentAttributes = async (req, res) => {
+  const document = await Document.findById(
+    req.params.id,
+    `analysis.attributes`
+  );
+  const attributes = [];
+
+  if (document.analysis && document.analysis.attributes) {
+    for (let attribute in document.analysis.attributes) {
+      attributes.push(attribute);
+    }
+  }
+
+  res.send(attributes);
 };
