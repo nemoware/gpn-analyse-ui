@@ -4,11 +4,48 @@
     "values": [
       {
         "_id": "Subject",
-        "values": ["Charity", "Deal", "PropertyDeal"]
+        "values": [
+          {
+            "id": "Charity"
+          },
+          {
+            "id": "Deal"
+          },
+          {
+            "id": "PropertyDeal"
+          }
+        ]
       },
       {
         "_id": "Currency",
-        "values": ["RUB", "EUR", "USD"]
+        "values": [
+          {
+            "id": "RUB"
+          },
+          {
+            "id": "EUR"
+          },
+          {
+            "id": "USD"
+          }
+        ]
+      },
+      {
+        "_id": "Sign",
+        "values": [
+          {
+            "id": -1,
+            "value": "More"
+          },
+          {
+            "id": 0,
+            "value": "Equal"
+          },
+          {
+            "id": 1,
+            "value": "Less"
+          }
+        ]
       }
     ]
   },
