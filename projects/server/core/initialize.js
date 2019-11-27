@@ -1,7 +1,7 @@
-const idata = require('../json/initialData');
+const collections = require('../json/initialData');
 
 exports.initializeData = async db => {
-  for (let collection of idata.initialData) {
+  for (let collection of collections) {
     if (collection.name in db) {
       let documents = await db[collection.name].find();
       if (documents.length === 0) {

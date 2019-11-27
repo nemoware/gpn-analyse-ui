@@ -1,8 +1,8 @@
 const appConfig = require('../config/app.config');
-const userdata = require('../json/fakeUser');
+const users = require('../json/fakeUser');
 
 exports.getUser = async (req, res) => {
-  for (let user of userdata.fakeUser) {
+  for (let user of users) {
     if (user.sAMAccountName === appConfig.ad.login) {
       return user;
     }
@@ -12,7 +12,7 @@ exports.getUser = async (req, res) => {
 };
 
 exports.getUserName = async login => {
-  for (let user of userdata.fakeUser) {
+  for (let user of users) {
     if (user.sAMAccountName === login) {
       return user.displayName;
     }
@@ -20,5 +20,5 @@ exports.getUserName = async login => {
 };
 
 exports.getGroupUsers = async () => {
-  return userdata.fakeUser;
+  return users;
 };

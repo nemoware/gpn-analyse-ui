@@ -39,5 +39,6 @@ router.delete('/link', documentController.deleteLink);
 
 const developerController = require('../controller/developerController');
 router.post('/dev/audit', developerController.postAudit);
+router.get('/dev/attributes', developerController.getAttributes);
 
 module.exports = router;

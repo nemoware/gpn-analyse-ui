@@ -29,25 +29,29 @@ exports.postAudit = async (req, res) => {
           type = 'CONTRACT';
         } else if (filename.toLowerCase().indexOf('протокол') >= 0) {
           type = 'PROTOCOL';
-        } else if (filename.toLowerCase().indexOf('уста') >= 0) {
+        } else if (filename.toLowerCase().indexOf('устав') >= 0) {
           type = 'CHARTER';
         }
 
         if (type) {
-          let content = await fs.readFile(path.resolve(directory, filename));
-          let json = JSON.parse(content);
-          json.analyze_timestamp = new Date();
-          let document = new Document({
-            auditId: audit._id,
-            analysis: json,
-            filename: filename,
-            parse: {
-              documentType: type
-            },
-            parserResponseCode: 200
-          });
+          try {
+            let content = await fs.readFile(path.resolve(directory, filename));
+            let json = JSON.parse(content);
+            json.analyze_timestamp = new Date();
+            let document = new Document({
+              auditId: audit._id,
+              analysis: json,
+              filename: filename,
+              parse: {
+                documentType: type
+              },
+              parserResponseCode: 200
+            });
 
-          await document.save();
+            await document.save();
+          } catch (err) {
+            console.log(err);
+          }
         }
       }
 
@@ -56,4 +60,29 @@ exports.postAudit = async (req, res) => {
       logger.logError(req, res, err, 500);
     }
   }
+};
+
+exports.getAttributes = async (req, res) => {
+  const documents = await Document.find(
+    { 'parse.documentType': req.query.type },
+    `analysis.attributes`
+  );
+  const attributes = [];
+  for (let document of documents) {
+    if (document.analysis && document.analysis.attributes) {
+      for (let attribute in document.analysis.attributes) {
+        if (attributes.indexOf(attribute) < (await 0)) {
+          attributes.push(attribute);
+        }
+      }
+    }
+  }
+
+  res.send(attributes);
+  /*res.send(attributes.map(a => {
+    return {
+      kind: a,
+      type: 'string'
+    };
+  }));*/
 };
