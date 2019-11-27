@@ -101,7 +101,8 @@
           {
             "kind": "sign",
             "parent": "sign-value-currency",
-            "type": "number",
+            "type": "dictionary",
+            "dictionaryName": "Sign",
             "show": true,
             "level": 2
           },
@@ -227,7 +228,8 @@
           },
           {
             "kind": "sign",
-            "type": "number",
+            "type": "dictionary",
+            "dictionaryName": "Sign",
             "level": 4
           },
           {
@@ -272,7 +274,8 @@
           },
           {
             "kind": "sign",
-            "type": "number",
+            "type": "dictionary",
+            "dictionaryName": "Sign",
             "parent": "sign-value-currency",
             "level": 3
           },
