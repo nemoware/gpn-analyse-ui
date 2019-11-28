@@ -1,6 +1,4 @@
 .view_doc {
-  height: 92%;
-  margin-left: 10px;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -o-pre-wrap;
@@ -61,7 +59,8 @@
   background: linear-gradient(to bottom, white, #7ed8cf);
 }
 
-.org_1_type_ext {
+.org_1_type_ext,
+.sign {
   background: linear-gradient(to bottom, white, cornflowerblue);
 }
 
@@ -84,7 +83,9 @@
 
 .competence_CEO_finance,
 .competence_CEO_deals,
-.competence_CEO_court {
+.competence_CEO_court,
+.RealEstate,
+.Lawsuit {
   background: linear-gradient(to bottom, white, sandybrown);
 }
 
@@ -92,11 +93,10 @@
   background: linear-gradient(to bottom, white, lightgrey);
 }
 
-.competence_CEO,
-.competence_AllMembers,
+.CEO,
+.AllMembers,
 .ShareholdersGeneralMeeting,
-.BoardOfDirectors,
-.competence_CEO {
+.BoardOfDirectors {
   background: linear-gradient(to bottom, white, antiquewhite);
 }
 

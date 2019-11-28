@@ -3,7 +3,9 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
-  AfterViewInit
+  AfterViewInit,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import addMore from 'highcharts/highcharts-more';
@@ -19,14 +21,16 @@ addMore(Highcharts);
 })
 export class CompetencechartsComponent implements OnInit, AfterViewInit {
   @Input() attributes: Array<AttributeModel>;
+  @Output() goToAttribute = new EventEmitter<string>();
 
   highcharts = Highcharts;
   colorSeries = [
     { name: 'finance', color: '#D7BDE2', colorPlotLines: '#9B59B6' },
     { name: 'deals', color: '#A9CCE3', colorPlotLines: '#2980B9' },
-    { name: 'court', color: '#A3E4D7', colorPlotLines: '#1ABC9C' }
+    { name: 'court', color: '#A3E4D7', colorPlotLines: '#1ABC9C' },
+    { name: 'RealEstate', color: '#D6DBDF', colorPlotLines: '#99A3A4' },
+    { name: 'Lawsuit', color: '#FDEBD0', colorPlotLines: '#F5B041' }
   ];
-  postLineSeries = [];
 
   constructor(private translate: TranslateService) {}
 
@@ -57,7 +61,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
       plotLines: []
     },
     tooltip: {
-      //enabled: false,
+      enabled: false,
       borderColor: 'black',
       headerFormat: '<span style = "font-size:10px"><b>{point.key}</b></span>',
       pointFormat: `<table>
@@ -95,91 +99,121 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {}
 
+  getRoot(key: string) {
+    const atr = this.attributes.find(x => x.key === key);
+    if (!atr.parent) return this.getRoot(atr.parent);
+    else return atr;
+  }
+
   ngOnInit() {
-    let competences = this.attributes.filter(x =>
-      x.kind.includes('competence')
+    console.log(this.attributes);
+    const constraints = this.attributes.filter(
+      x =>
+        ['constraint-min', 'constraint-max'].includes(x.kind) && x.num == null
     );
-    competences = competences.sort((a, b) => {
-      if (!a.parent || !b.parent) return 0;
-      return a.parent.localeCompare(b.parent);
-    });
-
     const series: any[] = [];
+    const category: any[] = [];
+    console.log(constraints);
+    const values = [];
+    this.attributes
+      .filter(x => x.kind === 'value')
+      .forEach(x => values.push(Number(x.value)));
+    //const delta = (Math.max.apply(null, values) + Math.min.apply(null, values)) / 2;
+    const delta = Math.min.apply(null, values) / 2;
+    console.log(delta);
+    for (const c of constraints) {
+      const rootAtr = this.attributes.find(
+        x => x.key === c.parent.split('/')[0]
+      );
+      const seriaAtr = this.attributes.find(x => x.key === c.parent);
 
-    for (const c of competences) {
-      if (!c.parent) {
-        for (const s of competences.filter(x => x.parent === c.kind)) {
-          const nameSerie = s.kind.split('_');
-          const name = nameSerie[nameSerie.length - 1];
-          const colorSerie = this.colorSeries.find(x => x.name === name);
+      let newSerie = series.find(s => s.kind === seriaAtr.kind);
+      if (!newSerie) {
+        const events = {
+          show: function(chart) {
+            if (chart.target.userOptions.plotLines)
+              for (const line of chart.target.userOptions.plotLines)
+                chart.target.chart.yAxis[0].addPlotLine(line);
+          },
+          hide: function(chart) {
+            chart.target.chart.yAxis[0].removePlotLine(seriaAtr.kind);
+          },
+          click: function(e) {
+            document.getElementById('highcharts_div').innerHTML =
+              e.point.keylow != null ? e.point.keylow : e.point.keyhigh;
+            document.getElementById('highcharts_div').click();
+          }
+        };
 
-          const events = {
-            show: function(chart) {
-              if (chart.target.userOptions.plotLines)
-                for (const line of chart.target.userOptions.plotLines)
-                  chart.target.chart.yAxis[0].addPlotLine(line);
-              console.log(chart.target.userOptions);
-            },
-            hide: function(chart) {
-              chart.target.chart.yAxis[0].removePlotLine(name);
-            }
-          };
+        newSerie = {
+          key: seriaAtr.key,
+          color: this.colorSeries.find(x => x.name === seriaAtr.kind).color,
+          name: this.translate.instant(seriaAtr.kind),
+          kind: seriaAtr.kind,
+          data: [],
+          events: events,
+          plotLines: []
+        };
+        series.push(newSerie);
+      }
 
-          let newSerie = {
-            color: null,
-            name: null,
-            kind: null,
-            data: [],
-            events: events,
-            plotLines: []
-          };
-          if (!series.find(x => x.kind === name)) {
-            newSerie = {
-              color: colorSerie.color,
-              name: this.translate.instant(name),
-              kind: name,
-              data: [],
-              events: events,
-              plotLines: []
-            };
-            series.push(newSerie);
-          } else newSerie = series.find(x => x.kind === name);
-          const lowSum = competences.find(
-            x => x.kind === s.kind + '_constraint_min'
-          );
-          const highSum = competences.find(
-            x => x.kind === s.kind + '_constraint_max'
-          );
+      if (!category.find(x => x.kind === rootAtr.kind))
+        category.push({
+          key: rootAtr.key,
+          kind: rootAtr.kind,
+          name: this.translate.instant(rootAtr.kind)
+        });
+    }
 
-          const range = {
-            labellow: null,
-            labelhigh: null,
-            labeltooltip: null,
-            low: null,
-            high: null,
-            color: null
-          };
+    for (const s of series) {
+      const colorSerie = this.colorSeries.find(x => x.name === s.kind);
 
+      for (const c of category) {
+        const lowSum = constraints.find(
+          x =>
+            x.kind === 'constraint-min' &&
+            x.parent.includes(c.kind) &&
+            x.parent.includes(s.kind)
+        );
+        const highSum = constraints.find(
+          x =>
+            x.kind === 'constraint-max' &&
+            x.parent.includes(c.kind) &&
+            x.parent.includes(s.kind)
+        );
+
+        const range = {
+          keylow: null,
+          keyhigh: null,
+          labellow: null,
+          labelhigh: null,
+          labeltooltip: null,
+          low: null,
+          high: null,
+          color: null
+        };
+
+        if (lowSum || highSum) {
           if (lowSum) {
-            console.log(lowSum);
-            const currency = competences.find(
-              x => x.kind === lowSum.kind + '_currency'
+            const currency = this.attributes.find(
+              x => x.key === lowSum.key + '/currency'
             );
-            const sign = competences.find(
-              x => x.kind === lowSum.kind + '_sign'
+            const sign = this.attributes.find(
+              x => x.key === lowSum.key + '/sign'
             );
-            const value = competences.find(
-              x => x.kind === lowSum.kind + '_value'
+            const value = this.attributes.find(
+              x => x.key === lowSum.key + '/value'
             );
             range.labellow = value.value + ' ' + currency.value;
             range.labeltooltip = value.value + ' ' + currency.value + ' - ';
             range.low = value.value;
+            range.keylow = value.key;
 
             if (
-              !newSerie.plotLines.find(x => x.value === value.value) &&
+              !s.plotLines.find(x => x.value === value.value) &&
               Number(value.value) !== 0
             ) {
-              newSerie.plotLines.push({
+              s.plotLines.push({
                 value: value.value,
                 color: colorSerie.colorPlotLines,
                 width: 2,
@@ -193,25 +227,29 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
             range.labeltooltip = 'Не определено - ';
             range.color = {
               linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
-              stops: [[0, colorSerie.color], [1, 'white']]
+              stops: [
+                [0, colorSerie.color],
+                [1, 'white']
+              ]
             };
           }
 
           if (highSum) {
-            const currency = competences.find(
-              x => x.kind === highSum.kind + '_currency'
+            const currency = this.attributes.find(
+              x => x.key === highSum.key + '/currency'
             );
-            const sign = competences.find(
-              x => x.kind === highSum.kind + '_sign'
+            const sign = this.attributes.find(
+              x => x.key === highSum.key + '/sign'
             );
-            const value = competences.find(
-              x => x.kind === highSum.kind + '_value'
+            const value = this.attributes.find(
+              x => x.key === highSum.key + '/value'
             );
             range.labelhigh = value.value + ' ' + currency.value;
             range.labeltooltip += value.value + ' ' + currency.value;
             range.high = value.value;
-            if (!newSerie.plotLines.find(x => x.value === value.value)) {
-              newSerie.plotLines.push({
+            range.keyhigh = value.key;
+            if (!s.plotLines.find(x => x.value === value.value)) {
+              s.plotLines.push({
                 value: value.value,
                 color: colorSerie.colorPlotLines,
                 width: 2,
@@ -221,18 +259,23 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
             }
           } else {
             range.labelhigh = 'Не определено';
-            range.high = range.low;
+            range.high = range.low + delta;
             range.labeltooltip += 'Не определено';
             range.color = {
               linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
-              stops: [[0, 'white'], [1, colorSerie.color]]
+              stops: [
+                [0, 'white'],
+                [1, colorSerie.color]
+              ]
             };
           }
-
-          newSerie.data.push(range);
         }
-        this.chartOptions.xAxis.categories.push(this.translate.instant(c.kind));
+        s.data.push(range);
       }
+    }
+
+    for (const c of category) {
+      this.chartOptions.xAxis.categories.push(this.translate.instant(c.kind));
     }
 
     let i = 0.5;
@@ -250,5 +293,15 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
     }
     this.chartOptions.series = series;
     console.log(series);
+  }
+
+  changeHighchartsSpan(event) {
+    console.log(event);
+    console.log(event.srcElement.innerHTML);
+    const atr = this.attributes.find(x => x.key === event.srcElement.innerHTML);
+    console.log(atr);
+    if (atr) {
+      this.goToAttribute.emit('span_' + atr.span[0]);
+    }
   }
 }

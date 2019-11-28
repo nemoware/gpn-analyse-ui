@@ -38,6 +38,7 @@ import { SearchDocumentComponent } from './audit-editor/search-document/search-d
 import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
 import { CompetencechartsComponent } from './audit-editor/competencecharts/competencecharts.component';
 import { HighchartsChartComponent } from '@root/node_modules/highcharts-angular';
+import { AngularResizedEventModule } from 'angular-resize-event';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { HighchartsChartComponent } from '@root/node_modules/highcharts-angular'
     TranslateModule,
     DragDropModule,
     NgxSpinnerModule,
-    MatExpansionModule
+    MatExpansionModule,
+    AngularResizedEventModule
   ],
   entryComponents: [
     CreateAuditComponent,

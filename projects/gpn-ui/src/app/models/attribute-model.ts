@@ -6,4 +6,6 @@ export interface AttributeModel {
   span: number[];
   span_map: string;
   parent: string;
+  num: number;
+  key: string;
 }

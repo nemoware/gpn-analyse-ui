@@ -165,7 +165,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     const element = document.getElementById(id);
     if (element != null)
       element.scrollIntoView({
-        block: 'center',
+        block: 'start',
         behavior: 'smooth'
       });
   }
@@ -300,10 +300,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       nodes.push(elem);
     }
     return nodes;
-  }
-
-  editMode() {
-    this.router.navigate(['audit/edit/', this.document._id]);
   }
 
   saveChanges() {

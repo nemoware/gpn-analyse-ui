@@ -1,3 +1,4 @@
+
 <ngx-spinner
   bdColor="rgba(250,250,250,0.2)"
   size="large"
@@ -6,8 +7,8 @@
 >
   <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
 </ngx-spinner>
-<div class="row" *ngIf="document" style="background: white">
-  <div class="col-3 mat-elevation-z8" >
+<div class="row" *ngIf="document" style="background: white; height: 100%">
+  <div class="col-3">
     <mat-tab-group color="accent">
 
       <mat-tab label="Детали">
@@ -17,45 +18,78 @@
             [editable]="editmode"
           >
           </gpn-document-details>
-
         </div>
       </mat-tab>
 
-      <mat-tab label="Фрагменты">
+      <mat-tab label="Заголовки">
         <cdk-virtual-scroll-viewport  style="height: 80vh" itemSize="50" >
-        <gpn-tree-attributes
-          [editmode]="editmode"
-          [attributes]="attributes"
-          [headers]="document.analysis.headers"
-          [documentType] = "documentType"
-          (goToAttribute)="goToAttribute($event)"
-        ></gpn-tree-attributes>
-      </cdk-virtual-scroll-viewport>
+          <gpn-tree-attributes
+            [editmode]="editmode"
+            [attributes]="attributes"
+            [headers]="document.analysis.headers"
+            [documentType] = "documentType"
+            (goToAttribute)="goToAttribute($event)"
+          ></gpn-tree-attributes>
+        </cdk-virtual-scroll-viewport>
       </mat-tab>
 
     </mat-tab-group>
   </div>
-  <div class="col-9" style="height: 88vh" >
 
-    <mat-accordion *ngIf="document.documentType == 'CHARTER'">
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Компетенция
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-          <gpn-competencecharts
-          [attributes] = "attributes"></gpn-competencecharts>
-      </mat-expansion-panel>
-    </mat-accordion>
+  <div class="col-9" style="border: 4px double black; display: flex;	flex-direction: column; padding-left: 0px">
 
-    <gpn-view-document
-      [document]="document"
-      [documentType] = "documentType"
-      [editmode]="editmode"
-      [attributes] = "attributes"
-      (changeAttribute)= "changeAttribute($event)"
-      (refresh)="refresh()"
-    ></gpn-view-document>
+    <div>
+
+      <button mat-icon-button matTooltip="Перейти в режим редактирования" (click)="editMode()" [disabled]="editmode">
+        <fa-icon [icon]="faEdit"></fa-icon>
+      </button>
+
+      <button mat-icon-button matTooltip="Сохранить изменения" (click)="saveChanges()" [disabled]="!changed">
+        <fa-icon [icon]="faSave"></fa-icon>
+      </button>
+
+      <button mat-icon-button matTooltip="В начало документа" (click)="goToAttribute('top')" style="float: right">
+        <fa-icon [icon]="faChevronUp"></fa-icon>
+      </button>
+
+      <button mat-icon-button matTooltip="В конец документа" (click)="goToAttribute('foot')" style="float: right">
+        <fa-icon [icon]="faChevronDown"></fa-icon>
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <gpn-competencecharts *ngIf="document.documentType == 'CHARTER'"
+                          (goToAttribute)="goToAttribute($event)"
+                          [attributes] = "attributes"></gpn-competencecharts>
+
+     <!--<mat-accordion *ngIf="document.documentType == 'CHARTER'">
+       <mat-expansion-panel>
+         <mat-expansion-panel-header>
+           <mat-panel-title>
+             Компетенция
+           </mat-panel-title>
+         </mat-expansion-panel-header>
+         <gpn-competencecharts *ngIf="document.documentType == 'CHARTER'"
+                               (goToAttribute)="goToAttribute($event)"
+                               [attributes] = "attributes"></gpn-competencecharts>
+       </mat-expansion-panel>
+     </mat-accordion>-->
+
+    <div id="container_view_document" style="background: white; height: 100%; border: 2px double red;" (resized)="onResized($event)">
+      <div id="document_v" style="overflow-y: scroll; height: 250px; overflow-x: hidden;">
+        <gpn-view-document
+        [document]="document"
+        [documentType] = "documentType"
+        [editmode]="editmode"
+        [attributes] = "attributes"
+        (changeAttribute)= "changeAttribute($event)"
+        (refresh)="refresh()"
+      ></gpn-view-document>
+      </div>
+    </div>
+
   </div>
 </div>
+
+
+

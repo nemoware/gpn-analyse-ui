@@ -30,7 +30,7 @@ interface Node {
   children?: Node[];
   kind?: string;
   index?: number;
-  idWord?: number;
+  idWord?: string;
 }
 
 interface ExampleFlatNode {
@@ -101,7 +101,7 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
       childCount: 0
     };
     for (const h of this.headers) {
-      nodeH.children.push({
+      this.TREE_DATA.push({
         index: i++,
         value: h.value,
         display_value: h.display_value,
@@ -109,6 +109,7 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
         idWord: 'span_' + (h.span ? h.span[0] : -1)
       });
     }
+    /*
     const nodeA = {
       kind: 'ATTRIBUTES',
       value: 'ATTRIBUTES',
@@ -134,9 +135,8 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
       } else {
         nodeA.children.push(child);
       }
-    }
-    this.TREE_DATA.push(nodeH);
-    this.TREE_DATA.push(nodeA);
+    }*/
+    //this.TREE_DATA.push(nodeA);
     this.dataSource = new MatTreeFlatDataSource(
       this.treeControl,
       this.treeFlattener
@@ -145,9 +145,9 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
     this.treeControl.expand(
       this.treeControl.dataNodes.find(x => x.value === 'HEADERS')
     );
-    this.treeControl.expand(
+    /*this.treeControl.expand(
       this.treeControl.dataNodes.find(x => x.value === 'ATTRIBUTES')
-    );
+    );*/
     this.changeDetectorRefs.detectChanges();
   }
 

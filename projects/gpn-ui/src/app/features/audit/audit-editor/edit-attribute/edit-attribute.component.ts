@@ -101,7 +101,9 @@ export class EditAttributeComponent implements OnInit {
       value: this.data.value,
       span: [this.data.indexStart, this.data.indexEnd],
       span_map: 'word',
-      parent: null
+      parent: null,
+      num: null,
+      key: null
     });
     console.log(this.data.attributes);
     this.dialogRef.close({
