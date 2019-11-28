@@ -3,7 +3,7 @@ const logger = require('../core/logger');
 const db = require('../config/db.config');
 const Audit = db.Audit;
 const Document = db.Document;
-const Subsidiary = db.Subsidiary;
+const subsidiaries = require('../json/subsidiary');
 const parser = require('../parser/auditParser');
 
 exports.postAudit = async (req, res) => {
@@ -39,14 +39,7 @@ exports.postAudit = async (req, res) => {
 };
 
 exports.getSubsidiaries = async (req, res) => {
-  Subsidiary.find({}, (err, subsidiaries) => {
-    if (err) {
-      logger.logError(req, res, err, 500);
-      return;
-    }
-
-    res.status(200).json(subsidiaries);
-  });
+  res.send(subsidiaries);
 };
 
 exports.getAuditStatuses = async (req, res) => {
@@ -79,18 +72,6 @@ exports.getAudits = async (req, res) => {
     }
 
     res.status(200).json(audits);
-  });
-};
-
-exports.postSubsidiary = async (req, res) => {
-  let subsidiary = new Subsidiary(req.body);
-  subsidiary.save(err => {
-    if (err) {
-      logger.logError(req, res, err, 500);
-      return;
-    }
-
-    res.status(201).json(subsidiary);
   });
 };
 

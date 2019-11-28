@@ -101,7 +101,7 @@ app.listen(port, err => {
     return;
   }
 
-  console.log(`App listening on port ${port}`);
+  console.log(`App is listening on port ${port}`);
   console.log();
 
   parser.test();

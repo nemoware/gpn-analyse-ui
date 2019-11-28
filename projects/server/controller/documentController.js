@@ -1,10 +1,10 @@
 const db = require('../config/db.config');
 const logger = require('../core/logger');
 const Document = db.Document;
-const DocumentType = db.DocumentType;
-const Dictionary = db.Dictionary;
 const Audit = db.Audit;
 const Link = db.Link;
+const documentTypes = require('../json/documentType');
+const dictionaries = require('../json/dictionary');
 
 const documentFields = `filename
 parse.documentDate
@@ -133,16 +133,14 @@ exports.getAttributes = async (req, res) => {
     return;
   }
   try {
-    let documentType = await DocumentType.findOne({
-      _id: req.query.name
-    }).lean();
+    const documentType = documentTypes.find(dt => dt._id === req.query.name);
     if (documentType) {
       let attributes = documentType.attributes;
       for (let attribute of attributes) {
         if (attribute.dictionaryName) {
-          let dictionary = await Dictionary.findOne({
-            _id: attribute.dictionaryName
-          }).lean();
+          let dictionary = dictionaries.find(
+            d => d._id === attribute.dictionaryName
+          );
           if (dictionary) {
             attribute.values = dictionary.values;
           }
@@ -159,12 +157,7 @@ exports.getAttributes = async (req, res) => {
 };
 
 exports.getDocumentTypes = async (req, res) => {
-  try {
-    let documentTypes = await DocumentType.find();
-    res.status(200).json(documentTypes);
-  } catch (err) {
-    logger.logError(req, res, err, 500);
-  }
+  res.send(documentTypes);
 };
 
 exports.getLinks = async (req, res) => {

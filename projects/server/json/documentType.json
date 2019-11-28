@@ -1,0 +1,278 @@
+[
+  {
+    "_id": "CONTRACT",
+    "attributes": [
+      {
+        "kind": "org-1-type",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "org-1-name",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "org-1-alias",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "org-2-type",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "org-2-name",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "org-2-alias",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "subject",
+        "type": "dictionary",
+        "dictionaryName": "Subject",
+        "level": 1
+      },
+      {
+        "kind": "value",
+        "parent": "sign-value-currency",
+        "type": "number",
+        "show": true,
+        "level": 2
+      },
+      {
+        "kind": "sign",
+        "parent": "sign-value-currency",
+        "type": "dictionary",
+        "dictionaryName": "Sign",
+        "show": true,
+        "level": 2
+      },
+      {
+        "kind": "currency",
+        "parent": "sign-value-currency",
+        "type": "dictionary",
+        "dictionaryName": "Currency",
+        "show": true,
+        "level": 2
+      },
+      {
+        "kind": "sign-value-currency",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "org-1-alt-name",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "org-1-type-ext",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "org-2-alt-name",
+        "type": "string",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "_id": "SUPPLEMENTARY_AGREEMENT",
+    "attributes": []
+  },
+  {
+    "_id": "UNKNOWN",
+    "attributes": []
+  },
+  {
+    "_id": "ANNEX",
+    "attributes": []
+  },
+  {
+    "_id": "CHARTER",
+    "attributes": [
+      {
+        "kind": "ShareholdersGeneralMeeting",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "BoardOfDirectors",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "CEO",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "AllMembers",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "BoardOfCompany",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "Deal",
+        "type": "string",
+        "level": 2
+      },
+      {
+        "kind": "Charity",
+        "type": "string",
+        "level": 2
+      },
+      {
+        "kind": "Other",
+        "type": "string",
+        "level": 2
+      },
+      {
+        "kind": "Lawsuit",
+        "type": "string",
+        "level": 2
+      },
+      {
+        "kind": "RealEstate",
+        "type": "string",
+        "level": 2
+      },
+      {
+        "kind": "Insurance",
+        "type": "string",
+        "level": 2
+      },
+      {
+        "kind": "Consulting",
+        "type": "string",
+        "level": 2
+      },
+      {
+        "kind": "Consulting",
+        "type": "string",
+        "level": 3
+      },
+      {
+        "kind": "Consulting",
+        "type": "string",
+        "level": 3
+      },
+      {
+        "kind": "value",
+        "type": "number",
+        "level": 4
+      },
+      {
+        "kind": "sign",
+        "type": "dictionary",
+        "dictionaryName": "Sign",
+        "level": 4
+      },
+      {
+        "kind": "currency",
+        "type": "dictionary",
+        "dictionaryName": "Currency",
+        "level": 4
+      }
+    ]
+  },
+  {
+    "_id": "PROTOCOL",
+    "attributes": [
+      {
+        "kind": "org-1-name",
+        "type": "string",
+        "show": true,
+        "level": 1
+      },
+      {
+        "kind": "org-1-type",
+        "type": "string",
+        "show": true,
+        "level": 1
+      },
+      {
+        "kind": "org-structural-level",
+        "type": "string",
+        "show": true,
+        "level": 1
+      },
+      {
+        "kind": "agenda-item",
+        "type": "string",
+        "level": 1
+      },
+      {
+        "kind": "sign-value-currency",
+        "type": "string",
+        "parent": "agenda-item",
+        "level": 2
+      },
+      {
+        "kind": "sign",
+        "type": "dictionary",
+        "dictionaryName": "Sign",
+        "parent": "sign-value-currency",
+        "level": 3
+      },
+      {
+        "kind": "value",
+        "type": "number",
+        "parent": "sign-value-currency",
+        "level": 3
+      },
+      {
+        "kind": "currency",
+        "type": "dictionary",
+        "dictionaryName": "Currency",
+        "parent": "sign-value-currency",
+        "level": 3
+      },
+      {
+        "kind": "contract-agent-org",
+        "type": "string",
+        "parent": "agenda-item",
+        "level": 2
+      },
+      {
+        "kind": "type",
+        "type": "string",
+        "parent": "contract-agent-org",
+        "level": 3
+      },
+      {
+        "kind": "name",
+        "type": "string",
+        "parent": "contract-agent-org",
+        "level": 3
+      }
+    ]
+  },
+  {
+    "_id": "REGULATION",
+    "attributes": []
+  },
+  {
+    "_id": "CHARITY_POLICY",
+    "attributes": []
+  },
+  {
+    "_id": "ORDER",
+    "attributes": []
+  },
+  {
+    "_id": "WORK_PLAN",
+    "attributes": []
+  }
+]

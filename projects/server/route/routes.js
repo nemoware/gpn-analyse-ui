@@ -6,7 +6,6 @@ router.post('/audit', auditController.postAudit);
 router.get('/subsidiaries', auditController.getSubsidiaries);
 router.get('/auditStatuses', auditController.getAuditStatuses);
 router.get('/audits', auditController.getAudits);
-router.post('/subsidiary', auditController.postSubsidiary);
 router.delete('/audit', auditController.deleteAudit);
 router.get('/files', auditController.getFiles);
 router.put('/parse', auditController.parse);
