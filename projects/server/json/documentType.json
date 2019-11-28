@@ -4,82 +4,68 @@
     "attributes": [
       {
         "kind": "org-1-type",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "org-1-name",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "org-1-alias",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "org-2-type",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "org-2-name",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "org-2-alias",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "subject",
         "type": "dictionary",
-        "dictionaryName": "Subject",
-        "level": 1
-      },
-      {
-        "kind": "value",
-        "parent": "sign-value-currency",
-        "type": "number",
-        "show": true,
-        "level": 2
-      },
-      {
-        "kind": "sign",
-        "parent": "sign-value-currency",
-        "type": "dictionary",
-        "dictionaryName": "Sign",
-        "show": true,
-        "level": 2
-      },
-      {
-        "kind": "currency",
-        "parent": "sign-value-currency",
-        "type": "dictionary",
-        "dictionaryName": "Currency",
-        "show": true,
-        "level": 2
+        "dictionaryName": "Subject"
       },
       {
         "kind": "sign-value-currency",
-        "type": "string",
-        "level": 1
+        "type": "string"
+      },
+      {
+        "kind": "value",
+        "type": "number",
+        "parents": ["sign-value-currency"],
+        "show": true
+      },
+      {
+        "kind": "sign",
+        "type": "dictionary",
+        "dictionaryName": "Sign",
+        "parents": ["sign-value-currency"],
+        "show": true
+      },
+      {
+        "kind": "currency",
+        "type": "dictionary",
+        "dictionaryName": "Currency",
+        "parents": ["sign-value-currency"],
+        "show": true
       },
       {
         "kind": "org-1-alt-name",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "org-1-type-ext",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "org-2-alt-name",
-        "type": "string",
-        "level": 1
+        "type": "string"
       }
     ]
   },
@@ -100,90 +86,156 @@
     "attributes": [
       {
         "kind": "ShareholdersGeneralMeeting",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "BoardOfDirectors",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "CEO",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "AllMembers",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "BoardOfCompany",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "Deal",
         "type": "string",
-        "level": 2
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
       },
       {
         "kind": "Charity",
         "type": "string",
-        "level": 2
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
       },
       {
         "kind": "Other",
         "type": "string",
-        "level": 2
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
       },
       {
         "kind": "Lawsuit",
         "type": "string",
-        "level": 2
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
       },
       {
         "kind": "RealEstate",
         "type": "string",
-        "level": 2
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
       },
       {
         "kind": "Insurance",
         "type": "string",
-        "level": 2
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
       },
       {
         "kind": "Consulting",
         "type": "string",
-        "level": 2
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
       },
       {
-        "kind": "Consulting",
+        "kind": "constraint-min",
         "type": "string",
-        "level": 3
+        "parents": [
+          "Deal",
+          "Charity",
+          "Other",
+          "Lawsuit",
+          "RealEstate",
+          "Insurance",
+          "Consulting"
+        ]
       },
       {
-        "kind": "Consulting",
+        "kind": "constraint-max",
         "type": "string",
-        "level": 3
+        "parents": [
+          "Deal",
+          "Charity",
+          "Other",
+          "Lawsuit",
+          "RealEstate",
+          "Insurance",
+          "Consulting"
+        ]
+      },
+      {
+        "kind": "constraint",
+        "type": "string",
+        "parents": [
+          "Deal",
+          "Charity",
+          "Other",
+          "Lawsuit",
+          "RealEstate",
+          "Insurance",
+          "Consulting"
+        ]
       },
       {
         "kind": "value",
         "type": "number",
-        "level": 4
+        "parents": ["constraint-min", "constraint-max", "constraint"]
       },
       {
         "kind": "sign",
         "type": "dictionary",
         "dictionaryName": "Sign",
-        "level": 4
+        "parents": ["constraint-min", "constraint-max", "constraint"]
       },
       {
         "kind": "currency",
         "type": "dictionary",
         "dictionaryName": "Currency",
-        "level": 4
+        "parents": ["constraint-min", "constraint-max", "constraint"]
       }
     ]
   },
@@ -193,69 +245,58 @@
       {
         "kind": "org-1-name",
         "type": "string",
-        "show": true,
-        "level": 1
+        "show": true
       },
       {
         "kind": "org-1-type",
         "type": "string",
-        "show": true,
-        "level": 1
+        "show": true
       },
       {
         "kind": "org-structural-level",
         "type": "string",
-        "show": true,
-        "level": 1
+        "show": true
       },
       {
         "kind": "agenda-item",
-        "type": "string",
-        "level": 1
+        "type": "string"
       },
       {
         "kind": "sign-value-currency",
         "type": "string",
-        "parent": "agenda-item",
-        "level": 2
+        "parents": ["agenda-item"]
       },
       {
         "kind": "sign",
         "type": "dictionary",
         "dictionaryName": "Sign",
-        "parent": "sign-value-currency",
-        "level": 3
+        "parents": ["sign-value-currency"]
       },
       {
         "kind": "value",
         "type": "number",
-        "parent": "sign-value-currency",
-        "level": 3
+        "parents": ["sign-value-currency"]
       },
       {
         "kind": "currency",
         "type": "dictionary",
         "dictionaryName": "Currency",
-        "parent": "sign-value-currency",
-        "level": 3
+        "parents": ["sign-value-currency"]
       },
       {
         "kind": "contract-agent-org",
         "type": "string",
-        "parent": "agenda-item",
-        "level": 2
+        "parents": ["agenda-item"]
       },
       {
         "kind": "type",
         "type": "string",
-        "parent": "contract-agent-org",
-        "level": 3
+        "parents": ["contract-agent-org"]
       },
       {
         "kind": "name",
         "type": "string",
-        "parent": "contract-agent-org",
-        "level": 3
+        "parents": ["contract-agent-org"]
       }
     ]
   },

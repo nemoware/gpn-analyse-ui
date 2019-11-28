@@ -4,7 +4,7 @@ const Document = db.Document;
 const Audit = db.Audit;
 const Link = db.Link;
 const documentTypes = require('../json/documentType');
-const dictionaries = require('../json/dictionary');
+const Attribute = require('../model/attribute');
 
 const documentFields = `filename
 parse.documentDate
@@ -135,18 +135,18 @@ exports.getAttributes = async (req, res) => {
   try {
     const documentType = documentTypes.find(dt => dt._id === req.query.name);
     if (documentType) {
-      let attributes = documentType.attributes;
+      let attributes = documentType.attributes.map(a => new Attribute(a));
       for (let attribute of attributes) {
-        if (attribute.dictionaryName) {
-          let dictionary = dictionaries.find(
-            d => d._id === attribute.dictionaryName
-          );
-          if (dictionary) {
-            attribute.values = dictionary.values;
+        if (attribute.parents) {
+          for (let parent of attribute.parents.map(p =>
+            attributes.find(a => a.kind === p)
+          )) {
+            parent.children.push(attribute);
           }
         }
       }
-      res.status(200).json(attributes);
+
+      res.send(attributes.filter(a => a.root));
     } else {
       let err = `Can not find document type with name ${req.query.name}`;
       logger.logError(req, res, err, 404);
