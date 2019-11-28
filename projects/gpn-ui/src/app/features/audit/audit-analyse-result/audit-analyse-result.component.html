@@ -27,10 +27,6 @@
         <div style="width: 100%">
           <fa-icon style="margin-left: 15px" [icon]="faFile"></fa-icon>
           <span style="margin-left: 15px" [ngClass]="{errorFile: node.error != null}"> {{ node.name }} </span>
-
-          <button mat-icon-button (click)="openError(node)" *ngIf="node.error != null" style="margin-left: 5px" >
-            <fa-icon [icon]="faExclamationTriangle" ></fa-icon>
-          </button>
           <mat-divider></mat-divider>
         </div>
       </mat-tree-node>
@@ -43,7 +39,7 @@
                 <fa-icon [icon]="faFolder" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
                 <fa-icon [icon]="faFolderOpen" *ngIf="treeControl.isExpanded(node)"></fa-icon>
               </button>
-              {{ node.name }} {{ '(' + node.childCount + ')' }}
+                {{ node.name }} {{ '(' + node.childCount + ')' }}
             </div>
           </div>
           <mat-divider></mat-divider>
@@ -61,7 +57,7 @@
         <div style="width: 100%">
           <div class="row">
             <div class="col">
-              {{ node.index }} {{ node.name }}
+              {{ node.name }}
             </div>
             <div class="col col-lg-2"> {{node.documentNumber}} </div>
             <div class="col col-lg-3"> {{node.documentDate | date:'d MMMM yyyy'}} </div>
@@ -78,7 +74,9 @@
                 <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
                 <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
               </button>
-              {{ node.index }} {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
+              <span [ngStyle]="{'color': node.name === 'UNKNOWN' ? 'red' : 'black'}">
+                {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
+              </span>
               <button mat-icon-button *ngIf="node.level === 1" matTooltip="Просмотр" (click)="openEditor(node)">
                 <fa-icon [icon]="faEye"></fa-icon>
               </button>
@@ -118,8 +116,7 @@
                 <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
                 <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
               </button>
-              {{ node.index }}. {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
-
+              {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
               <button mat-icon-button *ngIf="node.level === 1" matTooltip="Просмотр" (click)="openEditor(node)">
                 <fa-icon [icon]="faEye"></fa-icon>
               </button>
