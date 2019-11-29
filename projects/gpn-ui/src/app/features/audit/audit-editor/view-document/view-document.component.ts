@@ -157,8 +157,9 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       startWord.parentElement.insertBefore(span, startWord);
       span.appendChild(range.extractContents());
       range.insertNode(span);
-      span.previousElementSibling.remove();
-      span.children[span.children.length - 1].remove();
+      if (span.previousElementSibling) span.previousElementSibling.remove();
+      if (span.children[span.children.length - 1])
+        span.children[span.children.length - 1].remove();
     } else {
       startWord.parentElement.insertBefore(span, startWord);
       span.appendChild(startWord);
