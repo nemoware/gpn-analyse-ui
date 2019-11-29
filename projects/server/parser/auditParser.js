@@ -153,10 +153,10 @@ exports.parseAudit = async audit => {
 
   await parseDirectory(audit);
 
-  await this.setParseStatus(audit);
+  await this.setResult(audit);
 };
 
-exports.setParseStatus = async audit => {
+exports.setResult = async audit => {
   let count = await Document.countDocuments({
     auditId: audit._id,
     parserResponseCode: 504
@@ -164,7 +164,12 @@ exports.setParseStatus = async audit => {
   if (count) {
     audit.status = 'LoadingFailed';
   } else {
+    count = await Document.countDocuments({
+      auditId: audit._id,
+      parserResponseCode: 200
+    });
     audit.status = 'InWork';
+    audit.checkedDocumentCount = count;
   }
   await audit.save();
 };

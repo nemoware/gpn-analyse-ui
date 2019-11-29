@@ -27,7 +27,6 @@ if (appConfig.ad.on) {
 const adAuth = appConfig.ad.auth;
 
 const dbAuth = require('./authorization/dbAuthorization');
-const routes = require('./route/routes');
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
 
@@ -93,7 +92,20 @@ app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
 
 app.use('/', express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
 
-app.use('/api', routes);
+const adminRouter = require('./routers/adminRouter');
+app.use('/api', adminRouter);
+
+const auditRouter = require('./routers/auditRouter');
+app.use('/api', auditRouter);
+
+const developerRouter = require('./routers/developerRouter');
+app.use('/api', developerRouter);
+
+const documentRouter = require('./routers/documentRouter');
+app.use('/api', documentRouter);
+
+const eventRouter = require('./routers/eventRouter');
+app.use('/api', eventRouter);
 
 app.listen(port, err => {
   if (err) {
@@ -101,7 +113,7 @@ app.listen(port, err => {
     return;
   }
 
-  console.log(`App listening on port ${port}`);
+  console.log(`App is listening on port ${port}`);
   console.log();
 
   parser.test();
