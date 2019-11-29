@@ -1,8 +1,7 @@
+const roles = require('../json/role');
 const logger = require('../core/logger');
 const adAuth = require('../config/app.config').ad.auth;
-const db = require('../config/db.config');
-const User = db.User;
-const Role = db.Role;
+const User = require('../config/db.config').User;
 
 exports.getApplicationUsers = async (req, res) => {
   try {
@@ -44,12 +43,7 @@ exports.getUserInfo = async (req, res) => {
 };
 
 exports.getRoles = async (req, res) => {
-  try {
-    const roles = await Role.find();
-    res.status(200).json(roles);
-  } catch (err) {
-    logger.logError(req, res, err, 500);
-  }
+  res.send(roles);
 };
 
 exports.postUser = async (req, res) => {

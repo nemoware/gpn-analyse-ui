@@ -1,0 +1,319 @@
+[
+  {
+    "_id": "CONTRACT",
+    "attributes": [
+      {
+        "kind": "org-1-type",
+        "type": "string"
+      },
+      {
+        "kind": "org-1-name",
+        "type": "string"
+      },
+      {
+        "kind": "org-1-alias",
+        "type": "string"
+      },
+      {
+        "kind": "org-2-type",
+        "type": "string"
+      },
+      {
+        "kind": "org-2-name",
+        "type": "string"
+      },
+      {
+        "kind": "org-2-alias",
+        "type": "string"
+      },
+      {
+        "kind": "subject",
+        "type": "dictionary",
+        "dictionaryName": "Subject"
+      },
+      {
+        "kind": "sign-value-currency",
+        "type": "string"
+      },
+      {
+        "kind": "value",
+        "type": "number",
+        "parents": ["sign-value-currency"],
+        "show": true
+      },
+      {
+        "kind": "sign",
+        "type": "dictionary",
+        "dictionaryName": "Sign",
+        "parents": ["sign-value-currency"],
+        "show": true
+      },
+      {
+        "kind": "currency",
+        "type": "dictionary",
+        "dictionaryName": "Currency",
+        "parents": ["sign-value-currency"],
+        "show": true
+      },
+      {
+        "kind": "org-1-alt-name",
+        "type": "string"
+      },
+      {
+        "kind": "org-1-type-ext",
+        "type": "string"
+      },
+      {
+        "kind": "org-2-alt-name",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "_id": "SUPPLEMENTARY_AGREEMENT",
+    "attributes": []
+  },
+  {
+    "_id": "UNKNOWN",
+    "attributes": []
+  },
+  {
+    "_id": "ANNEX",
+    "attributes": []
+  },
+  {
+    "_id": "CHARTER",
+    "attributes": [
+      {
+        "kind": "ShareholdersGeneralMeeting",
+        "type": "string"
+      },
+      {
+        "kind": "BoardOfDirectors",
+        "type": "string"
+      },
+      {
+        "kind": "CEO",
+        "type": "string"
+      },
+      {
+        "kind": "AllMembers",
+        "type": "string"
+      },
+      {
+        "kind": "BoardOfCompany",
+        "type": "string"
+      },
+      {
+        "kind": "Deal",
+        "type": "string",
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
+      },
+      {
+        "kind": "Charity",
+        "type": "string",
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
+      },
+      {
+        "kind": "Other",
+        "type": "string",
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
+      },
+      {
+        "kind": "Lawsuit",
+        "type": "string",
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
+      },
+      {
+        "kind": "RealEstate",
+        "type": "string",
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
+      },
+      {
+        "kind": "Insurance",
+        "type": "string",
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
+      },
+      {
+        "kind": "Consulting",
+        "type": "string",
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ]
+      },
+      {
+        "kind": "constraint-min",
+        "type": "string",
+        "parents": [
+          "Deal",
+          "Charity",
+          "Other",
+          "Lawsuit",
+          "RealEstate",
+          "Insurance",
+          "Consulting"
+        ]
+      },
+      {
+        "kind": "constraint-max",
+        "type": "string",
+        "parents": [
+          "Deal",
+          "Charity",
+          "Other",
+          "Lawsuit",
+          "RealEstate",
+          "Insurance",
+          "Consulting"
+        ]
+      },
+      {
+        "kind": "constraint",
+        "type": "string",
+        "parents": [
+          "Deal",
+          "Charity",
+          "Other",
+          "Lawsuit",
+          "RealEstate",
+          "Insurance",
+          "Consulting"
+        ]
+      },
+      {
+        "kind": "value",
+        "type": "number",
+        "parents": ["constraint-min", "constraint-max", "constraint"]
+      },
+      {
+        "kind": "sign",
+        "type": "dictionary",
+        "dictionaryName": "Sign",
+        "parents": ["constraint-min", "constraint-max", "constraint"]
+      },
+      {
+        "kind": "currency",
+        "type": "dictionary",
+        "dictionaryName": "Currency",
+        "parents": ["constraint-min", "constraint-max", "constraint"]
+      }
+    ]
+  },
+  {
+    "_id": "PROTOCOL",
+    "attributes": [
+      {
+        "kind": "org-1-name",
+        "type": "string",
+        "show": true
+      },
+      {
+        "kind": "org-1-type",
+        "type": "string",
+        "show": true
+      },
+      {
+        "kind": "org-structural-level",
+        "type": "string",
+        "show": true
+      },
+      {
+        "kind": "agenda-item",
+        "type": "string"
+      },
+      {
+        "kind": "sign-value-currency",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "sign",
+        "type": "dictionary",
+        "dictionaryName": "Sign",
+        "parents": ["sign-value-currency"]
+      },
+      {
+        "kind": "value",
+        "type": "number",
+        "parents": ["sign-value-currency"]
+      },
+      {
+        "kind": "currency",
+        "type": "dictionary",
+        "dictionaryName": "Currency",
+        "parents": ["sign-value-currency"]
+      },
+      {
+        "kind": "contract-agent-org",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "type",
+        "type": "string",
+        "parents": ["contract-agent-org"]
+      },
+      {
+        "kind": "name",
+        "type": "string",
+        "parents": ["contract-agent-org"]
+      }
+    ]
+  },
+  {
+    "_id": "REGULATION",
+    "attributes": []
+  },
+  {
+    "_id": "CHARITY_POLICY",
+    "attributes": []
+  },
+  {
+    "_id": "ORDER",
+    "attributes": []
+  },
+  {
+    "_id": "WORK_PLAN",
+    "attributes": []
+  }
+]

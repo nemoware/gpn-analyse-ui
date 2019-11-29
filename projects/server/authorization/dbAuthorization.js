@@ -1,13 +1,13 @@
+const roles = require('../json/role');
 const db = require('../config/db.config');
 const User = db.User;
-const Role = db.Role;
 
 exports.getUser = async login => {
   let count = await User.countDocuments();
 
   let user;
   if (!count) {
-    let role = await Role.findOne({ name: 'RAdmin' }).lean();
+    let role = roles.find(r => r.name === 'RAdmin');
     user = new User({
       login: login,
       roles: [role]

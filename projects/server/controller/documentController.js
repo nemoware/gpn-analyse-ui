@@ -1,10 +1,10 @@
 const db = require('../config/db.config');
 const logger = require('../core/logger');
 const Document = db.Document;
-const DocumentType = db.DocumentType;
-const Dictionary = db.Dictionary;
 const Audit = db.Audit;
 const Link = db.Link;
+const documentTypes = require('../json/documentType');
+const Attribute = require('../model/attribute');
 
 const documentFields = `filename
 parse.documentDate
@@ -133,22 +133,20 @@ exports.getAttributes = async (req, res) => {
     return;
   }
   try {
-    let documentType = await DocumentType.findOne({
-      _id: req.query.name
-    }).lean();
+    const documentType = documentTypes.find(dt => dt._id === req.query.name);
     if (documentType) {
-      let attributes = documentType.attributes;
+      let attributes = documentType.attributes.map(a => new Attribute(a));
       for (let attribute of attributes) {
-        if (attribute.dictionaryName) {
-          let dictionary = await Dictionary.findOne({
-            _id: attribute.dictionaryName
-          }).lean();
-          if (dictionary) {
-            attribute.values = dictionary.values;
+        if (attribute.parents) {
+          for (let parent of attribute.parents.map(p =>
+            attributes.find(a => a.kind === p)
+          )) {
+            parent.children.push(attribute);
           }
         }
       }
-      res.status(200).json(attributes);
+
+      res.send(attributes.filter(a => a.root));
     } else {
       let err = `Can not find document type with name ${req.query.name}`;
       logger.logError(req, res, err, 404);
@@ -159,12 +157,7 @@ exports.getAttributes = async (req, res) => {
 };
 
 exports.getDocumentTypes = async (req, res) => {
-  try {
-    let documentTypes = await DocumentType.find();
-    res.status(200).json(documentTypes);
-  } catch (err) {
-    logger.logError(req, res, err, 500);
-  }
+  res.send(documentTypes);
 };
 
 exports.getLinks = async (req, res) => {
