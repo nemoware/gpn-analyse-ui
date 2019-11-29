@@ -144,6 +144,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     span.appendChild(firstWord);
     console.log(firstWord);*/
 
+    if (atr.span[0] === atr.span[1]) return;
+
     const span = document.createElement('span');
     span.classList.add(atr.kind);
     span.classList.add('hint_span');
