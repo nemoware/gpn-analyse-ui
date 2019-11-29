@@ -2,7 +2,7 @@ export interface Audit {
   _id: string;
   subsidiaryName: string;
   subsidiary: {
-    _id: string;
+    // _id: string;
     name: string;
   };
   ftpUrl: string;

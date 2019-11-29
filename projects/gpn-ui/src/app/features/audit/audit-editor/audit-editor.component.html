@@ -1,12 +1,3 @@
-
-<ngx-spinner
-  bdColor="rgba(250,250,250,0.2)"
-  size="large"
-  color="#0074D9"
-  type="timer"
->
-  <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
-</ngx-spinner>
 <div class="row" *ngIf="document" style="background: white; height: 100%">
   <div class="col-3">
     <mat-tab-group color="accent">
@@ -46,6 +37,10 @@
 
       <button mat-icon-button matTooltip="Сохранить изменения" (click)="saveChanges()" [disabled]="!changed">
         <fa-icon [icon]="faSave"></fa-icon>
+      </button>
+
+      <button mat-icon-button matTooltip="Обновить" (click)="refresh()">
+        <fa-icon [icon]="faSyncAlt"></fa-icon>
       </button>
 
       <button mat-icon-button matTooltip="В начало документа" (click)="goToAttribute('top')" style="float: right">

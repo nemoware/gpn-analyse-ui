@@ -20,7 +20,7 @@ import {
   faChevronUp,
   faEdit,
   faSave,
-  faTimes
+  faSyncAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -44,18 +44,17 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   faChevronUp = faChevronUp;
   faEdit = faEdit;
   faSave = faSave;
+  faSyncAlt = faSyncAlt;
   changed = false;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private auditservice: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef,
-    private spinner: NgxSpinnerService
+    private changeDetectorRefs: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.spinner.show();
     this.IdDocument = this.activatedRoute.snapshot.paramMap.get('id');
     this.editmode = this.activatedRoute.snapshot.data['editmode'];
   }
@@ -65,7 +64,6 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   }
 
   refreshData() {
-    this.spinner.show();
     this.auditservice.getDoument(this.IdDocument).subscribe(data => {
       this.document = data;
       if (this.document.user) {
@@ -74,7 +72,6 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
         this.attributes = Helper.json2array(this.document.analysis.attributes);
       }
       this.changeDetectorRefs.detectChanges();
-      this.spinner.hide();
     });
   }
 
@@ -88,7 +85,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   }
 
   refresh() {
-    this.refreshData();
+    this.view_doc.refreshView(this.attributes);
   }
 
   onResized(event: ResizedEvent) {

@@ -28,40 +28,45 @@
   background: linear-gradient(to bottom, white, palegreen);
 }
 
-.org_2_alias {
+.org-2-alias {
   background: linear-gradient(to bottom, white, #ffe97d);
 }
-.org_1_alias {
+.org-1-alias {
   background: linear-gradient(to bottom, white, #ffb74d);
 }
 
-.org_2_name {
+.org-2-name {
   background: linear-gradient(to bottom, white, #e91e63);
 }
 
-.org_2_alt_name {
+.org-2-alt-name {
   background: linear-gradient(to bottom, white, #e91e63);
 }
 
-.org_1_name {
+.org-1-name {
   background: linear-gradient(to bottom, white, #ff6090);
 }
 
-.org_1_alt_name {
+.org-1-alt-name {
   background: linear-gradient(to bottom, white, #ff6090);
 }
 
-.org_1_type {
+.org-1-type {
   background: linear-gradient(to bottom, white, #66a39d);
 }
 
-.org_2_type {
+.org-2-type {
   background: linear-gradient(to bottom, white, #7ed8cf);
 }
 
-.org_1_type_ext,
+.org-1-type-ext,
 .sign {
   background: linear-gradient(to bottom, white, cornflowerblue);
+}
+
+.constraint-min,
+.constraint-max {
+  background: linear-gradient(to bottom, white, red);
 }
 
 .currency,
@@ -105,5 +110,5 @@
   border: 1px solid grey;
   vertical-align: super;
   font-size: 10px;
-  cursor: pointer;
+  //cursor: pointer;
 }

@@ -36,7 +36,6 @@ export class EditAttributeComponent implements OnInit {
     public dialogRef: MatDialogRef<EditAttributeComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      editable: boolean;
       left: number;
       top: number;
       kind: string;
@@ -48,10 +47,7 @@ export class EditAttributeComponent implements OnInit {
       indexEnd: number;
       editMode: boolean;
     }
-  ) {
-    if (!this.data.editMode)
-      this.infoMessage = 'В режиме просмотра редактирование запрещено!';
-  }
+  ) {}
 
   ngOnInit() {
     this._new = this.data.kind == null;
@@ -62,10 +58,7 @@ export class EditAttributeComponent implements OnInit {
     });*/
 
     this.editForm = this.fb.group({
-      kind: new FormControl(
-        { value: null, disabled: !this.data.editable || !this.data.editMode },
-        Validators.required
-      )
+      kind: new FormControl({ value: null }, Validators.required)
     });
     if (this.data.kind) {
       this.selectedKind = this.data.documentType.find(
@@ -133,8 +126,6 @@ export class EditAttributeComponent implements OnInit {
 
   valid(): boolean {
     if (
-      !this.data.editMode ||
-      !this.data.editable ||
       this.data.value == null ||
       this.data.value.length === 0 ||
       !this._change

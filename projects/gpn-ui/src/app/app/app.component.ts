@@ -17,6 +17,7 @@ import {
 } from '@core/core.module';
 import { AuthorizationData } from '@core/authorization/authorization.data';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
+import { Dictionaries } from '@app/models/dictionaries';
 
 @Component({
   selector: 'gpn-root',

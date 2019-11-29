@@ -55,7 +55,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   pageSize = 15;
   lowValue = 0;
   highValue = 15;
-  hover: string = '';
+  hover = '';
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

@@ -32,9 +32,9 @@
     <ng-container matColumnDef="subsidiaryName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Наименование ДО </th>
       <td mat-cell *matCellDef="let element">
-          <span (mouseover)="hover = element.id" (mouseleave)="hover = '0'"
-                [ngStyle]="{'text-decoration': hover == element.id  ? 'underline' : 'none', 'font-weight': element.id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
-                (click)="openAuditResult(element)"> {{element.subsidiaryName}}
+          <span (mouseover)="hover = element._id" (mouseleave)="hover = '0'"
+                [ngStyle]="{'text-decoration': hover == element.id  ? 'underline' : 'none', 'font-weight': element._id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
+                (click)="openAuditResult(element)"> {{element.subsidiary.name}}
           </span>
       </td>
 
@@ -44,8 +44,8 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата начала </th>
       <td mat-cell *matCellDef="let element">
 
-        <span (mouseover)="hover = element.id" (mouseleave)="hover = '0'"
-              [ngStyle]="{'text-decoration': hover == element.id  ? 'underline' : 'none', 'font-weight': element.id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
+        <span (mouseover)="hover = element._id" (mouseleave)="hover = '0'"
+              [ngStyle]="{'text-decoration': hover == element._id  ? 'underline' : 'none', 'font-weight': element._id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
             (click)="openAuditResult(element)"> {{element.auditStart | date:'dd.MM.yyyy'}}
           </span>
 
@@ -56,8 +56,8 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата окончания </th>
       <td mat-cell *matCellDef="let element">
 
-        <span (mouseover)="hover = element.id" (mouseleave)="hover = '0'"
-              [ngStyle]="{'text-decoration': hover == element.id  ? 'underline' : 'none', 'font-weight': element.id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
+        <span (mouseover)="hover = element._id" (mouseleave)="hover = '0'"
+              [ngStyle]="{'text-decoration': hover == element._id  ? 'underline' : 'none', 'font-weight': element._id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
             (click)="openAuditResult(element)"> {{element.auditEnd | date:'dd.MM.yyyy'}}
           </span>
 
@@ -68,8 +68,8 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Кол-во документов </th>
       <td mat-cell *matCellDef="let element">
 
-        <span (mouseover)="hover = element.id" (mouseleave)="hover = '0'"
-              [ngStyle]="{'text-decoration': hover == element.id  ? 'underline' : 'none', 'font-weight': element.id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
+        <span (mouseover)="hover = element._id" (mouseleave)="hover = '0'"
+              [ngStyle]="{'text-decoration': hover == element._id  ? 'underline' : 'none', 'font-weight': element._id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
             (click)="openAuditResult(element)"> {{element.checkedDocumentCount}}
           </span>
 
@@ -80,8 +80,8 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата создания аудита </th>
       <td mat-cell *matCellDef="let element">
 
-        <span (mouseover)="hover = element.id" (mouseleave)="hover = '0'"
-              [ngStyle]="{'text-decoration': hover == element.id  ? 'underline' : 'none', 'font-weight': element.id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
+        <span (mouseover)="hover = element._id" (mouseleave)="hover = '0'"
+              [ngStyle]="{'text-decoration': hover == element._id  ? 'underline' : 'none', 'font-weight': element._id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
             (click)="openAuditResult(element)"> {{element.createDate | date:'dd.MM.yyyy  hh:mm'}}
           </span>
 
@@ -92,8 +92,8 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Статус </th>
       <td mat-cell *matCellDef="let element">
 
-        <span (mouseover)="hover = element.id" (mouseleave)="hover = '0'"
-            [ngStyle]="{'text-decoration': hover == element.id  ? 'underline' : 'none', 'font-weight': element.id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
+        <span (mouseover)="hover = element._id" (mouseleave)="hover = '0'"
+            [ngStyle]="{'text-decoration': hover == element._id  ? 'underline' : 'none', 'font-weight': element._id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
             (click)="openAuditResult(element)"> {{element.status | translate}}
           </span>
 

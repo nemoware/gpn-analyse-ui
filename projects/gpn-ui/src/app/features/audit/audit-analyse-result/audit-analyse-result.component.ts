@@ -238,7 +238,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
                 const kindAttr = docType.attributes.find(
                   x => x.kind === _atr.kind
                 );
-                if (kindAttr != null && kindAttr.editable)
+                if (kindAttr != null && kindAttr.show)
                   nodeChild.children.push({
                     index: j++,
                     name: _atr.value,
