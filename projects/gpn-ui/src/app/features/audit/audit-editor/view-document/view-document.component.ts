@@ -100,7 +100,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           x.span[0] !== x.span[1]
       );
       if (_atr) {
-        let clazz = this.getAttributeClass(_atr.kind)
+        const clazz = this.getAttributeClass(_atr.kind)
         if (_atr.span[0] === i) {
           tagStart = `<span class="${clazz} hint_span">`;
         }
