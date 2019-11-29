@@ -65,14 +65,26 @@ exports.getAudits = async (req, res) => {
     where['_id'] = req.query.id;
   }
 
-  Audit.find(where, (err, audits) => {
-    if (err) {
-      logger.logError(req, res, err, 500);
-      return;
-    }
+  try {
+    let audits = await Audit.find(where, null, { lean: true });
 
-    res.status(200).json(audits);
-  });
+    audits = audits.map(a => {
+      a.sortDate = new Date(
+        Math.max(a.createDate.getTime(), a.auditEnd.getTime())
+      );
+      return a;
+    });
+
+    audits.sort((a, b) => {
+      if (a.sortDate > b.sortDate) return -1;
+      if (a.sortDate === b.sortDate) return 0;
+      if (a.sortDate < b.sortDate) return 1;
+    });
+
+    res.send(audits);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
 };
 
 exports.deleteAudit = async (req, res) => {
