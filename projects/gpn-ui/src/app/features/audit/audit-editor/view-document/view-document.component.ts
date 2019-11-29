@@ -71,6 +71,9 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  
+
+
   refreshView() {
     const view_doc = document.getElementById('view_doc');
     let result = this.document.analysis.normal_text;
@@ -97,13 +100,14 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           x.span[0] !== x.span[1]
       );
       if (_atr) {
+        let clazz = this.getAttributeClass(_atr.kind)
         if (_atr.span[0] === i) {
-          tagStart = `<span class="${_atr.kind} hint_span">`;
+          tagStart = `<span class="${clazz} hint_span">`;
         }
         if (_atr.span[1] - 1 === i) {
-          tagEnd = `<span class="hint"> ${this.translate.instant(
-            _atr.kind
-          )} </span></span>`;
+          tagEnd = `<span class="hint">${this.translate.instant(
+            clazz
+          )}</span></span>`;
         }
       }
 
@@ -159,6 +163,14 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     if (kind.includes('headline')) nameClassSpan = 'headline';
     if (kind in KindAttribute) nameClassSpan = kind;
     return nameClassSpan;
+  }
+
+  getAttributeClass(attrKind) {
+    // TODO compare with getClassName (which is not in use)  
+    let clazz =attrKind.split('/').pop()
+    clazz = clazz.replace('_', '-');
+    clazz = clazz.replace(/(?<=.)(-\d+)$/, '')
+    return clazz;
   }
 
   public goToAttribute(id) {

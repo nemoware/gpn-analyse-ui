@@ -1,3 +1,5 @@
+@import '~@angular/material/theming';
+
 .view_doc {
   height: 92%;
   margin-left: 10px;
@@ -6,32 +8,35 @@
   white-space: -o-pre-wrap;
   word-wrap: break-word;
   background: white;
+  font-size: 12px;
+
+  font-family: Arial, Helvetica, sans-serif;
+  padding-right: 20px;
 }
 
 .headline {
   //background-color: lightskyblue;
-  font-weight: 900;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .hint_span,
 .hint {
-  border-radius: 5px;
-  border: 1px solid grey;
+  border-radius: 2px;
+  background: mat-color($mat-blue, 200);  
 }
+
 
 .subject {
-  background: linear-gradient(to bottom, white, darkseagreen);
+  background: darkseagreen;
 }
 
-.value,
-.competence_CEO_finance_constraint_max_value,
-.competence_CEO_deals_constraint_max_value,
-.competence_CEO_court_constraint_max_value {
-  background: linear-gradient(to bottom, white, palegreen);
+.value{
+  background:  palegreen;
 }
 
 .org_2_alias {
-  background: linear-gradient(to bottom, white, #ffe97d);
+  background:   #ffe97d;
 }
 .org_1_alias {
   background: linear-gradient(to bottom, white, #ffb74d);
@@ -45,24 +50,17 @@
   background: linear-gradient(to bottom, white, #e91e63);
 }
 
-.org_1_name {
-  background: linear-gradient(to bottom, white, #ff6090);
-}
-
 .org_1_alt_name {
   background: linear-gradient(to bottom, white, #ff6090);
 }
 
-.org_1_type {
-  background: linear-gradient(to bottom, white, #66a39d);
-}
 
 .org_2_type {
   background: linear-gradient(to bottom, white, #7ed8cf);
 }
 
 .org_1_type_ext {
-  background: linear-gradient(to bottom, white, cornflowerblue);
+  background:  cornflowerblue;
 }
 
 .currency,
@@ -102,8 +100,158 @@
 
 .hint {
   background: white;
-  border: 1px solid grey;
+  border: 1px solid mat-color($mat-grey, 300);
   vertical-align: super;
   font-size: 10px;
   cursor: pointer;
+}
+
+$org_level_t: 50;
+$comp_t: 200;
+
+.ShareholdersGeneralMeeting,
+.AllMembers{
+  background: mat-color($mat-deep-orange, $org_level_t);  
+}
+
+.BoardOfDirectors{
+  background: mat-color($mat-lime, $org_level_t);  
+}
+.CEO{
+  background: mat-color($mat-indigo, $org_level_t);  
+}
+.BoardOfCompany{
+  background: mat-color($mat-purple, $org_level_t);  
+}
+// -----------
+
+.org-1-name {
+  background: mat-color($mat-red, 400);  
+}
+
+.org-1-type {
+  background: mat-color($mat-blue, 200);  
+}
+
+.org-1-type-ext {
+  background: mat-color($mat-indigo, 200);  
+}
+
+.org-2-type-ext {
+  background: mat-color($mat-indigo, 100);  
+}
+
+.org-1-alt-name {
+  background: mat-color($mat-red, 100);  
+}
+
+.org-2-alt-name {
+  background: mat-color($mat-red, 100);  
+}
+
+.org-2-name {
+  background: mat-color($mat-red, 200);  
+}
+
+.org-2-type {
+  background: mat-color($mat-blue, 100);  
+}
+
+.org-structural-level {
+  background: mat-color($mat-orange, 200);  
+}
+
+.subject {
+  background: mat-color($mat-amber, 300);
+}
+
+.value{
+  background:  mat-color($mat-teal, 300);
+}
+.currency{
+  background:  mat-color($mat-teal, 200);
+}
+.sign{
+  background:  mat-color($mat-teal, 100);
+}
+
+
+.constraint-min{
+  background:  mat-color($mat-teal, 100);
+
+  .value{
+    background:  mat-color($mat-teal, 300);
+  }
+}
+
+.constraint-max{
+  background:  mat-color($mat-pink, 100);
+
+  .value{
+    background:  mat-color($mat-pink, 300)!important;
+  }
+  .sign{
+    background:  mat-color($mat-pink, 100)!important;
+  }
+  .currency{
+    background:  mat-color($mat-pink, 200);
+  }
+}
+// ------------
+
+$comp_fade:0.3;
+
+.Deal{  
+  background: fade-out(mat-color($mat-deep-purple, $comp_t), $comp_fade);
+}
+.Charity{
+  background: fade-out(mat-color($mat-pink, $comp_t), $comp_fade);
+}   
+.Other {
+  background: fade-out(mat-color($mat-blue-grey, $comp_t), $comp_fade);
+}  
+
+.Lawsuit{
+  background: fade-out(mat-color($mat-indigo, $comp_t), $comp_fade);
+}
+
+.RealEstate{
+  background: fade-out(mat-color($mat-brown, $comp_t), $comp_fade);
+}
+
+.Insurance{
+  background: fade-out(mat-color($mat-cyan, $comp_t), $comp_fade);
+}
+
+.Consulting{
+  background: fade-out(mat-color($mat-blue, $comp_t), $comp_fade);
+}
+ 
+
+// --------------
+.hint_span{
+  padding: 2px 2px;
+}
+
+.hint {
+  vertical-align: text-top;
+  position: relative;
+  top: -4px;
+  border:none;
+  background: none;
+  padding: 2px 3px;
+
+  font-size: 10px;
+  cursor: pointer;  
+  text-decoration: underline;
+  font-weight: 600;
+
+  margin-left:3px;
+
+  &:hover{    
+    // border:1px solid mat-color($mat-blue, 300);
+    border-radius: 2px;
+    background:white    
+  }
+  
 }
