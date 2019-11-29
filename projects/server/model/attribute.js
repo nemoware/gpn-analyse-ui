@@ -1,5 +1,3 @@
-const dictionaries = require('../json/dictionary');
-
 class Attribute {
   constructor(attribute) {
     this.kind = attribute.kind;
@@ -15,15 +13,9 @@ class Attribute {
     const result = {
       kind: this.kind,
       type: this.type,
-      show: this.show
+      show: this.show,
+      dictionaryName: this.dictionaryName
     };
-
-    if (this.dictionaryName) {
-      const dictionary = dictionaries.find(d => d._id === this.dictionaryName);
-      if (dictionary) {
-        result.values = dictionary.values;
-      }
-    }
 
     if (this.children.length > 0) {
       result.children = this.children;
