@@ -18,6 +18,7 @@
   //background-color: lightskyblue;
   font-size: 14px;
   font-weight: 600;
+  margin-top: 0.5em;
 }
 
 .hint_span,
@@ -27,77 +28,10 @@
 }
 
 
-.subject {
-  background: darkseagreen;
-}
-
-.value{
-  background:  palegreen;
-}
-
-.org_2_alias {
-  background:   #ffe97d;
-}
-.org_1_alias {
-  background: linear-gradient(to bottom, white, #ffb74d);
-}
-
-.org_2_name {
-  background: linear-gradient(to bottom, white, #e91e63);
-}
-
-.org_2_alt_name {
-  background: linear-gradient(to bottom, white, #e91e63);
-}
-
-.org_1_alt_name {
-  background: linear-gradient(to bottom, white, #ff6090);
-}
-
-
-.org_2_type {
-  background: linear-gradient(to bottom, white, #7ed8cf);
-}
-
-.org_1_type_ext {
-  background:  cornflowerblue;
-}
-
-.currency,
-.competence_CEO_deals_constraint_max_currency,
-.competence_CEO_finance_constraint_max_currency,
-.competence_CEO_court_constraint_max_currency {
-  background: linear-gradient(to bottom, white, lightskyblue);
-}
-
-.org_structural_level {
-  background: linear-gradient(to bottom, white, rosybrown);
-}
-
-.competence_CEO_finance_constraint_max_sign,
-.competence_CEO_deals_constraint_max_sign,
-.competence_CEO_court_constraint_max_sign {
-  background: linear-gradient(to bottom, white, salmon);
-}
-
-.competence_CEO_finance,
-.competence_CEO_deals,
-.competence_CEO_court {
-  background: linear-gradient(to bottom, white, sandybrown);
-}
-
 .unknown {
   background: linear-gradient(to bottom, white, lightgrey);
 }
-
-.competence_CEO,
-.competence_AllMembers,
-.ShareholdersGeneralMeeting,
-.BoardOfDirectors,
-.competence_CEO {
-  background: linear-gradient(to bottom, white, antiquewhite);
-}
-
+ 
 .hint {
   background: white;
   border: 1px solid mat-color($mat-grey, 300);
@@ -125,38 +59,56 @@ $comp_t: 200;
 }
 // -----------
 
+$org_1_base: $mat-red;
+$org_1_base_alt: $mat-pink;
+$org_2_base: $mat-indigo;
+$org_2_base_alt: $mat-blue;
+
 .org-1-name {
-  background: mat-color($mat-red, 400);  
-}
-
-.org-1-type {
-  background: mat-color($mat-blue, 200);  
-}
-
-.org-1-type-ext {
-  background: mat-color($mat-indigo, 200);  
-}
-
-.org-2-type-ext {
-  background: mat-color($mat-indigo, 100);  
+  background: mat-color($org_1_base, 300);  
 }
 
 .org-1-alt-name {
-  background: mat-color($mat-red, 100);  
+  background: mat-color($org_1_base, 200);  
+}
+
+.org-1-type {
+  background: mat-color($org_1_base_alt, 200);  
+}
+
+.org-1-type-ext {
+  background: mat-color($org_1_base_alt, 100);  
+}
+
+.org-1-alias {
+  background: mat-color($org_1_base_alt, 200);  
+}
+// -----
+
+.org-2-name {
+  background: mat-color($org_2_base, 300);  
 }
 
 .org-2-alt-name {
-  background: mat-color($mat-red, 100);  
-}
-
-.org-2-name {
-  background: mat-color($mat-red, 200);  
+  background: mat-color($org_2_base, 200);  
 }
 
 .org-2-type {
-  background: mat-color($mat-blue, 100);  
+  background: mat-color($org_2_base_alt, 200);  
 }
 
+.org-2-type-ext {
+  background: mat-color($org_2_base_alt, 100);  
+}
+
+.org-2-alias {
+  background: mat-color($org_2_base_alt, 200);  
+}
+
+ 
+
+
+// =========================
 .org-structural-level {
   background: mat-color($mat-orange, 200);  
 }
