@@ -39,12 +39,10 @@ import { Observable, Observer } from '@root/node_modules/rxjs';
 export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
-  faEdit = faEdit;
-  faSave = faSave;
 
   @Input() document: Document;
   @Input() editmode: boolean;
-  @Input() documentType: KindAttributeModel[];
+  @Input() kinds: KindAttributeModel[];
   @Input() attributes: Array<AttributeModel>;
   @Output() changeAttribute = new EventEmitter<AttributeModel[]>();
   @Output() refresh = new EventEmitter();
@@ -70,7 +68,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.auditservice
       .getDoumentTypeAtr(this.document.documentType)
       .subscribe(docType => {
-        this.documentType = docType;
+        this.kinds = docType;
       });
   }
 
@@ -89,13 +87,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     const myObservables = Observable.create((observer: Observer<string>) => {
       setTimeout(() => {
         observer.next(
-          this.genTextByWords(
+          this.wrapWords(
             this.attributes,
             this.document.analysis.tokenization_maps.words,
             this.document.analysis.normal_text
           )
         );
-      }, 10);
+      }, 50);
     });
 
     const customSubscrition = myObservables.subscribe(
@@ -104,6 +102,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         if (view_doc.innerHTML) view_doc.innerHTML = response;
         else view_doc.insertAdjacentHTML('afterbegin', response);
         customSubscrition.unsubscribe();
+
+        for (const atr of this.document.analysis.headers) {
+          this.setAttribute(atr.span[0], atr.span[1], 'headline', false);
+        }
 
         const sortedAttributes = this.attributes.sort((a, b) => {
           if (!a.parent && !b.parent) return 0;
@@ -115,7 +117,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         for (const atr of sortedAttributes) {
-          this.setTextAttribue(atr);
+          this.setAttribute(atr.span[0], atr.span[1], atr.kind, true, atr.key);
         }
 
         if (this.editmode) {
@@ -136,23 +138,23 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  setTextAttribue(atr: AttributeModel) {
-    /*const firstWord = document.getElementById('span_' + indexStart);
-    const endWord = document.getElementById('span_' + indexStart);
-    const parentNode = firstWord.parentElement;
-    parentNode.insertBefore(span, firstWord);
-    span.appendChild(firstWord);
-    console.log(firstWord);*/
-
-    if (atr.span[0] === atr.span[1]) return;
+  setAttribute(
+    indexStart: number,
+    indexEnd: number,
+    kind: string,
+    needHint: boolean = true,
+    key?: string
+  ) {
+    if (indexStart === indexEnd) return;
 
     const span = document.createElement('span');
-    span.classList.add(atr.kind);
-    span.classList.add('hint_span');
-    const startWord = document.getElementById('span_' + atr.span[0]);
+    span.classList.add(kind);
+    if (needHint) span.classList.add('hint_span');
+    if (key) span.id = key;
+    const startWord = document.getElementById('span_' + indexStart);
 
-    if (atr.span[0] !== atr.span[1] - 1) {
-      const endWord = document.getElementById('span_' + atr.span[1]);
+    if (indexStart !== indexEnd - 1) {
+      const endWord = document.getElementById('span_' + indexEnd);
       const range = document.createRange();
       range.setStart(startWord, 0);
       range.setEnd(endWord, 0);
@@ -167,23 +169,34 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       span.appendChild(startWord);
     }
 
-    const spanHint = document.createElement('span');
-    spanHint.insertAdjacentText('afterbegin', this.translate.instant(atr.kind));
-    spanHint.classList.add('hint');
-    span.appendChild(spanHint);
-
-    /*
-    for (let i = atr.span[0]; i < atr.span[1]; i++) {
-      range.selectNode(document.getElementById('span_' + i));
-      console.log(range);
-
-      const parentNode = nextWord.parentElement;
-      parentNode.insertBefore(span, nextWord);
-      span.appendChild(nextWord);
-    }*/
+    if (needHint) {
+      const spanHint = document.createElement('span');
+      spanHint.insertAdjacentText('afterbegin', this.translate.instant(kind));
+      spanHint.classList.add('hint');
+      if (this.editmode) spanHint.classList.add('hint_pointer');
+      span.appendChild(spanHint);
+    }
   }
 
-  genTextByWords(
+  removeAttribute(atr: AttributeModel) {
+    const element = document.getElementById(atr.key);
+    this.removeElement(element);
+    console.log(this.attributes);
+  }
+
+  removeElement(element) {
+    if (element.hasChildNodes())
+      element
+        .querySelectorAll(':scope > .hint_span')
+        .forEach(x => this.removeElement(x));
+    //element.childNodes.forEach( x => this.removeElement(x));
+    element.lastChild.remove();
+    element.insertAdjacentHTML('beforebegin', element.innerHTML);
+    element.remove();
+    this.attributes = this.attributes.filter(x => x.key !== element.id);
+  }
+
+  wrapWords(
     attributes: Array<AttributeModel>,
     words: [[number, number]],
     normal_text: string
@@ -199,74 +212,15 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         '</span>' +
         result.slice(words[i][1]);
     }
-
-    return result;
-
-    for (let i = words.length - 1; i >= 0; i--) {
-      const word = words[i];
-      let tagStart = '';
-      let tagEnd = '';
-      let headerStart = '';
-      let headerEnd = '';
-
-      const _atr = attributes.find(
-        x => (x.span[0] === i || x.span[1] - 1 === i) && x.span[0] !== x.span[1]
-      );
-      if (_atr) {
-        if (_atr.span[0] === i) {
-          tagStart = `<span class="${_atr.kind} hint_span">`;
-        }
-        if (_atr.span[1] - 1 === i) {
-          tagEnd = `<span class="hint" style="cursor: ${
-            this.editmode ? 'pointer' : 'default'
-          }"> ${this.translate.instant(_atr.kind)} </span></span>`;
-        }
-      }
-
-      const _header = this.document.analysis.headers.find(
-        x =>
-          x.display_value != null &&
-          (x.span[0] === i || x.span[1] - 1 === i) &&
-          x.span[0] !== x.span[1]
-      );
-      if (_header) {
-        if (_header.span[0] === i) {
-          headerStart = `<span class="headline">`;
-        }
-        if (_header.span[1] - 1 === i) {
-          headerEnd = '</span> ';
-        }
-      }
-
-      const txtS = headerStart + tagStart + `<span id="span_${i}">`;
-      const txtE = '</span>' + tagEnd + headerEnd;
-      result = result.slice(0, word[1]) + txtE + result.slice(word[1]);
-      result = result.slice(0, word[0]) + txtS + result.slice(word[0]);
-    }
-    result = '<span id="top"></span>' + result + '<span id="foot"> </span>';
     return result;
   }
 
   getInfoAttribute(e) {
-    const _atr = this.attributes.find(
-      x => x.kind === e.target.parentElement.classList[0]
+    const atr = this.attributes.find(
+      x => x.key === e.srcElement.parentElement.id
     );
-    if (_atr) {
-      this.showAttributeInfo(
-        _atr.span[0],
-        _atr.span[1] - 1,
-        _atr.display_value,
-        _atr.kind,
-        _atr.value
-      );
-    }
-  }
-
-  getClassName(kind: string) {
-    let nameClassSpan = 'unknown';
-    if (kind.includes('headline')) nameClassSpan = 'headline';
-    if (kind in KindAttribute) nameClassSpan = kind;
-    return nameClassSpan;
+    const atrParent = this.attributes.find(x => x.key === atr.parent);
+    this.showAttributeInfo(atr, atrParent);
   }
 
   public goToAttribute(id) {
@@ -329,48 +283,38 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       wordS[0],
       wordE[1]
     );
-
+    /*
     this.showAttributeInfo(
       idStart.split('_')[1],
       idEnd.split('_')[1],
       display_value
-    );
+    );*/
   }
 
-  showAttributeInfo(
-    indexStart: number,
-    indexEnd: number,
-    display_value?: string,
-    kind?: string,
-    value?: string
-  ) {
-    if (!this.editmode) return;
-
+  showAttributeInfo(atr: AttributeModel, atrParent: AttributeModel) {
     const dialogRef = this.dialog.open(EditAttributeComponent, {
       width: '50%',
       data: {
-        //top: e.pageY,
-        //left: e.pageX,
-        display_value: display_value,
-        kind: kind,
-        value: value,
-        documentType: this.documentType,
-        attributes: this.attributes,
-        indexStart: Number(indexStart),
-        indexEnd: Number(indexEnd) + 1,
-        editMode: this.editmode
+        atr: atr,
+        atrParent: atrParent,
+        kinds: atrParent
+          ? this.kinds.find(x => x.kind === atrParent.kind).children
+          : this.kinds
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        document.body.classList.add('wait-cursor');
+        if (result.delete) {
+          this.removeAttribute(atr);
+        }
+        /*document.body.classList.add('wait-cursor');
         this.attributes = result.attributes;
         this.changeAttribute.emit(result.attributes);
         this.changed = true;
         this.wait(result.attributes).then(x => {
           document.body.classList.remove('wait-cursor');
-        });
+        });*/
       }
     });
   }

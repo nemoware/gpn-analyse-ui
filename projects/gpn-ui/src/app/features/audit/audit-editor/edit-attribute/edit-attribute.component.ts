@@ -17,6 +17,7 @@ import {
   Validators
 } from '@root/node_modules/@angular/forms';
 import { AttributeModel } from '@app/models/attribute-model';
+import { Dictionaries } from '@app/models/dictionaries';
 @Component({
   selector: 'gpn-edit-attribute',
   templateUrl: './edit-attribute.component.html',
@@ -27,30 +28,30 @@ export class EditAttributeComponent implements OnInit {
   faTimes = faTimes;
   editForm: FormGroup;
   selectedKind: KindAttributeModel;
+  dictionaryValues: Array<{ id: string; value: string }>;
   _change = false;
   _new = false;
-  infoMessage = 'Данный фрагмент не редактируется!';
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<EditAttributeComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      left: number;
-      top: number;
-      kind: string;
-      display_value: string;
-      value: string;
-      documentType: KindAttributeModel[];
-      attributes: AttributeModel[];
-      indexStart: number;
-      indexEnd: number;
-      editMode: boolean;
+      atr: AttributeModel;
+      atrParent: AttributeModel;
+      kinds: KindAttributeModel[];
     }
   ) {}
 
   ngOnInit() {
-    this._new = this.data.kind == null;
+    this._new = !this.data.atr.kind;
+    if (
+      this.data.atr.kind &&
+      this.data.kinds.find(x => x.kind === this.data.atr.kind).dictionaryName
+    )
+      this.dictionaryValues = Dictionaries.getDictionary(
+        this.data.kinds.find(x => x.kind === this.data.atr.kind).dictionaryName
+      );
     /* const rightMostPos = window.innerWidth - Number(this.data.left);
     this.dialogRef.updatePosition({
       top: `${this.data.top}px`,
@@ -60,9 +61,9 @@ export class EditAttributeComponent implements OnInit {
     this.editForm = this.fb.group({
       kind: new FormControl({ value: null }, Validators.required)
     });
-    if (this.data.kind) {
-      this.selectedKind = this.data.documentType.find(
-        c => c.kind === this.data.kind
+    if (this.data.atr.kind) {
+      this.selectedKind = this.data.kinds.find(
+        c => c.kind === this.data.atr.kind
       );
       this.editForm.get('kind').setValue(this.selectedKind);
     }
@@ -73,7 +74,7 @@ export class EditAttributeComponent implements OnInit {
   }
 
   applyChanges() {
-    const _atr = this.data.attributes.find(
+    /* const _atr = this.data.attributes.find(
       c => c.kind === this.selectedKind.kind
     );
     if (_atr) {
@@ -103,39 +104,28 @@ export class EditAttributeComponent implements OnInit {
       attributes: this.data.attributes,
       kind: this.selectedKind.kind,
       delete: _atr && this._new ? _atr.span : null
-    });
+    });*/
   }
 
   deleteAtr() {
     if (confirm('Удалить данный атрибут?')) {
-      const del = this.data.attributes.find(
-        c => c.kind === this.selectedKind.kind
-      );
-      if (del) {
-        this.data.attributes = this.data.attributes.filter(
-          item => item.kind !== del.kind
-        );
-        this.dialogRef.close({
-          attributes: this.data.attributes,
-          kind: null,
-          delete: del
-        });
-      }
+      this.dialogRef.close({ delete: true });
     }
   }
 
   valid(): boolean {
-    if (
+    /*if (
       this.data.value == null ||
       this.data.value.length === 0 ||
       !this._change
     )
       return false;
-    else return this.editForm.valid;
+    else return this.editForm.valid;*/
+    return false;
   }
 
   changedKind(e) {
-    this.data.value = null;
+    /*this.data.value = null;
     this._change = true;
     this.selectedKind = this.editForm.get('kind').value;
     if (this.selectedKind.type === 'string') {
@@ -143,7 +133,7 @@ export class EditAttributeComponent implements OnInit {
     } else if (this.selectedKind.type === 'number') {
       const value = this.data.display_value.match(/\d+/);
       if (value) this.data.value = value[0];
-    }
+    }*/
   }
 
   change(e) {

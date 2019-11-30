@@ -71,10 +71,10 @@
      </mat-accordion>-->
 
     <div id="container_view_document" style="background: white; height: 100%; border: 2px double red;" (resized)="onResized($event)">
-      <div id="document_v" style="overflow-y: scroll; height: 250px; overflow-x: hidden;">
+      <div id="document_v" style="height: 250px; overflow-x: hidden;">
         <gpn-view-document
         [document]="document"
-        [documentType] = "documentType"
+        [kinds] = "documentType"
         [editmode]="editmode"
         [attributes] = "attributes"
         (changeAttribute)= "changeAttribute($event)"

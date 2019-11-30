@@ -33,7 +33,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Наименование ДО </th>
       <td mat-cell *matCellDef="let element">
           <span (mouseover)="hover = element._id" (mouseleave)="hover = '0'"
-                [ngStyle]="{'text-decoration': hover == element.id  ? 'underline' : 'none', 'font-weight': element._id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
+                [ngStyle]="{'text-decoration': hover == element._id  ? 'underline' : 'none', 'font-weight': element._id === selectedAudit._id ? 'bold' : 'normal'  }" class="link_tag"
                 (click)="openAuditResult(element)"> {{element.subsidiary.name}}
           </span>
       </td>

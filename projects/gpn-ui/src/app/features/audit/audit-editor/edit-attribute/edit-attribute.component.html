@@ -13,7 +13,7 @@
 
   <mat-form-field style="width: 100%; height: auto">
     <mat-label>Фрагмент документае</mat-label>
-    <textarea matInput readonly="true" [readOnly]="true">{{data.display_value}}</textarea>
+    <textarea matInput readonly="true" [readOnly]="true">{{data.atr.display_value}}</textarea>
   </mat-form-field>
 
 <div class="row">
@@ -23,7 +23,7 @@
         <mat-form-field style="width: 100%">
           <mat-label>Тип фрагмента</mat-label>
             <mat-select (selectionChange)="changedKind($event)" formControlName = "kind">
-            <mat-option *ngFor="let type of data.documentType" [value]="type">
+            <mat-option *ngFor="let type of data.kinds" [value]="type">
             {{type.kind | translate}}
             </mat-option>
         </mat-select>
@@ -36,23 +36,23 @@
     <ng-container *ngSwitchCase="'number'">
       <mat-form-field style="width: 100%">
         <mat-label>Значение</mat-label>
-        <input (change)="change($event)" type="number" class="form-control" matInput placeholder="Значение" [(ngModel)]="data.value">
+        <input (change)="change($event)" type="number" class="form-control" matInput placeholder="Значение" [(ngModel)]="data.atr.value">
       </mat-form-field>
     </ng-container>
 
     <ng-container *ngSwitchCase="'string'">
       <mat-form-field style="width: 100%;">
         <mat-label>Значение</mat-label>
-        <textarea (change)="change($event)" matInput style="height: 22px" [(ngModel)]="data.value"></textarea>
+        <textarea (change)="change($event)" matInput style="height: 22px" [(ngModel)]="data.atr.value"></textarea>
       </mat-form-field>
     </ng-container>
 
     <ng-container *ngSwitchCase="'dictionary'">
       <mat-form-field style="width: 100%">
         <mat-label>Значение</mat-label>
-        <mat-select (selectionChange)="change($event)" [(ngModel)]="data.value">
-          <mat-option *ngFor="let _value of selectedKind.values" [value]="_value">
-            {{_value | translate}}
+        <mat-select (selectionChange)="change($event)" [(ngModel)]="data.atr.value">
+          <mat-option *ngFor="let _value of dictionaryValues" [value]="_value.id">
+            {{_value.value | translate}}
           </mat-option>
         </mat-select>
       </mat-form-field>

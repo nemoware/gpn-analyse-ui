@@ -1,9 +1,11 @@
 .view_doc {
+  overflow-y: scroll;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
   background: white;
+  font-family: 'Times New Roman', fantasy;
 }
 
 .headline {
@@ -111,5 +113,10 @@
   border: 1px solid grey;
   vertical-align: super;
   font-size: 10px;
+  font-family: 'Arial', serif;
   //cursor: pointer;
+}
+
+.hint_pointer {
+  cursor: pointer;
 }
