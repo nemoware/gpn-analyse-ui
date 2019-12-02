@@ -63,11 +63,9 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     console.log(this.attributes);
     this.refreshView();
-    document.body.addEventListener(
-      'click',
-      this.getInfoAttribute.bind(this),
-      false
-    );
+    document
+      .getElementById('view_doc')
+      .addEventListener('click', this.getInfoAttribute.bind(this));
   }
 
   ngAfterViewInit(): void {
@@ -127,16 +125,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
             atr.key,
             atr.changed
           );
-        }
-
-        if (this.editmode) {
-          const elements = document.getElementsByClassName('hint');
-          for (let i = 0; i < elements.length; i++) {
-            elements[i].addEventListener(
-              'click',
-              this.getInfoAttribute.bind(this)
-            );
-          }
         }
 
         this.spinner.hide();
@@ -226,6 +214,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getInfoAttribute(e) {
+    console.log(e);
     if (e.target.classList.contains('hint') && this.editmode) {
       const atr = this.attributes.find(
         x => x.key === e.target.parentElement.id
@@ -383,12 +372,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    const elements = document.getElementsByClassName('hint');
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].removeEventListener(
-        'click',
-        this.getInfoAttribute.bind(this)
-      );
-    }
+    document
+      .getElementById('view_doc')
+      .removeEventListener('click', this.getInfoAttribute.bind(this));
   }
 }

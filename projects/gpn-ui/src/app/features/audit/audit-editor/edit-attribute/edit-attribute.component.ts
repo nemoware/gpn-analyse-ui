@@ -75,38 +75,6 @@ export class EditAttributeComponent implements OnInit {
       kind: this.selectedKind.kind,
       value: this.data.value
     });
-
-    /* const _atr = this.data.attributes.find(
-      c => c.kind === this.selectedKind.kind
-    );
-    if (_atr) {
-      if (
-        this._new &&
-        !confirm('Фрагмент текста с таким типом уже сущесвует! Заменить?')
-      )
-        return;
-      this.data.attributes = this.data.attributes.filter(
-        item => item.kind !== _atr.kind
-      );
-    }
-
-    this.data.attributes.push({
-      confidence: 1,
-      display_value: this.data.display_value,
-      kind: this.selectedKind.kind,
-      value: this.data.value,
-      span: [this.data.indexStart, this.data.indexEnd],
-      span_map: 'word',
-      parent: null,
-      num: null,
-      key: null
-    });
-    console.log(this.data.attributes);
-    this.dialogRef.close({
-      attributes: this.data.attributes,
-      kind: this.selectedKind.kind,
-      delete: _atr && this._new ? _atr.span : null
-    });*/
   }
 
   deleteAtr() {
@@ -130,6 +98,12 @@ export class EditAttributeComponent implements OnInit {
     this.data.value = null;
     this._change = true;
     this.selectedKind = this.editForm.get('kind').value;
+
+    if (this.selectedKind.dictionaryName)
+      this.dictionaryValues = Dictionaries.getDictionary(
+        this.selectedKind.dictionaryName
+      );
+
     if (this.selectedKind.type === 'string') {
       this.data.value = this.data.displayValue;
     } else if (this.selectedKind.type === 'number') {
