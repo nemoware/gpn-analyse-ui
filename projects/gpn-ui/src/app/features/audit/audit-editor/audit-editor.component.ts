@@ -63,7 +63,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
     this.refreshData();
   }
 
-  refreshData() {
+  refreshData(needRefresh: boolean = false) {
     this.auditservice.getDoument(this.IdDocument).subscribe(data => {
       this.document = data;
       if (this.document.user) {
@@ -71,6 +71,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
       } else {
         this.attributes = Helper.json2array(this.document.analysis.attributes);
       }
+      if (needRefresh) this.view_doc.refreshView(this.attributes);
       this.changeDetectorRefs.detectChanges();
     });
   }
@@ -85,7 +86,8 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   }
 
   refresh() {
-    this.view_doc.refreshView(this.attributes);
+    this.refreshData(true);
+    //
   }
 
   onResized(event: ResizedEvent) {

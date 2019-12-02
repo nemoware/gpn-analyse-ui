@@ -37,34 +37,31 @@ export class EditAttributeComponent implements OnInit {
     public dialogRef: MatDialogRef<EditAttributeComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      atr: AttributeModel;
+      displayValue: string;
+      span: [];
+      value: string;
+      kind: string;
       atrParent: AttributeModel;
       kinds: KindAttributeModel[];
     }
   ) {}
 
   ngOnInit() {
-    this._new = !this.data.atr.kind;
+    this._new = !this.data.kind;
     if (
-      this.data.atr.kind &&
-      this.data.kinds.find(x => x.kind === this.data.atr.kind).dictionaryName
+      this.data.kind &&
+      this.data.kinds.find(x => x.kind === this.data.kind).dictionaryName
     )
       this.dictionaryValues = Dictionaries.getDictionary(
-        this.data.kinds.find(x => x.kind === this.data.atr.kind).dictionaryName
+        this.data.kinds.find(x => x.kind === this.data.kind).dictionaryName
       );
-    /* const rightMostPos = window.innerWidth - Number(this.data.left);
-    this.dialogRef.updatePosition({
-      top: `${this.data.top}px`,
-      right: `${rightMostPos}px`
-    });*/
 
     this.editForm = this.fb.group({
       kind: new FormControl({ value: null }, Validators.required)
     });
-    if (this.data.atr.kind) {
-      this.selectedKind = this.data.kinds.find(
-        c => c.kind === this.data.atr.kind
-      );
+
+    if (this.data.kind) {
+      this.selectedKind = this.data.kinds.find(c => c.kind === this.data.kind);
       this.editForm.get('kind').setValue(this.selectedKind);
     }
   }
@@ -74,6 +71,11 @@ export class EditAttributeComponent implements OnInit {
   }
 
   applyChanges() {
+    this.dialogRef.close({
+      kind: this.selectedKind.kind,
+      value: this.data.value
+    });
+
     /* const _atr = this.data.attributes.find(
       c => c.kind === this.selectedKind.kind
     );
@@ -114,26 +116,26 @@ export class EditAttributeComponent implements OnInit {
   }
 
   valid(): boolean {
-    /*if (
+    if (
       this.data.value == null ||
       this.data.value.length === 0 ||
       !this._change
     )
       return false;
-    else return this.editForm.valid;*/
+    else return this.editForm.valid;
     return false;
   }
 
   changedKind(e) {
-    /*this.data.value = null;
+    this.data.value = null;
     this._change = true;
     this.selectedKind = this.editForm.get('kind').value;
     if (this.selectedKind.type === 'string') {
-      this.data.value = this.data.display_value;
+      this.data.value = this.data.displayValue;
     } else if (this.selectedKind.type === 'number') {
-      const value = this.data.display_value.match(/\d+/);
+      const value = this.data.displayValue.match(/\d+/);
       if (value) this.data.value = value[0];
-    }*/
+    }
   }
 
   change(e) {

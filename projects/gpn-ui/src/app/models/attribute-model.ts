@@ -1,6 +1,5 @@
 export interface AttributeModel {
   confidence: number;
-  display_value: string;
   kind: string;
   value: string;
   span: number[];
@@ -8,4 +7,5 @@ export interface AttributeModel {
   parent: string;
   num: number;
   key: string;
+  changed?: boolean;
 }
