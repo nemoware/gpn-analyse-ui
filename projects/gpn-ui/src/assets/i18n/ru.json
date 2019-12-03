@@ -33,8 +33,10 @@
   "currency": "Валюта",
   "sign": "Знак",
   "org_structural_level": "Структурный уровень",
+  "org-structural-level": "Структурный уровень",
   "constraint-min": "Порог мин.",
   "constraint-max": "Порог макс.",
+  "agenda-item": "Пункт повестки дня",
 
   "Charity": "Благотворительность",
   "Deal": "Сделка",

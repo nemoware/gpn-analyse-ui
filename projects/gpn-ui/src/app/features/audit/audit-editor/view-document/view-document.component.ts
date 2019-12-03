@@ -161,7 +161,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     key?: string,
     changed?: boolean
   ) {
-    if (indexStart === indexEnd) return;
+    if (indexStart === indexEnd || !kind || kind.length === 0) return;
 
     const span = document.createElement('span');
     span.classList.add(kind);
@@ -224,7 +224,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-
   getClassName(kind: string) {
     let nameClassSpan = 'unknown';
     if (kind.includes('headline')) nameClassSpan = 'headline';
@@ -232,15 +231,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     return nameClassSpan;
   }
 
-  getAttributeClass(attrKind) {
-    // TODO compare with getClassName (which is not in use)  
-    let clazz =attrKind.split('/').pop()
-    clazz = clazz.replace('_', '-');
-    clazz = clazz.replace(/(?<=.)(-\d+)$/, '')
-    return clazz;
-  }
-
- 
   public goToAttribute(id) {
     const element = document.getElementById(id);
     if (element != null)

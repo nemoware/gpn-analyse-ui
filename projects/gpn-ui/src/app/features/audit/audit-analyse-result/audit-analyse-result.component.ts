@@ -34,7 +34,8 @@ import { DocumentTypeModel } from '@app/models/document-type-model';
 interface Node {
   _id?: string;
   name: string;
-  children?: Node[];
+  children?: any[];
+  docs?: [];
   details?: Tag;
   confidence?: number;
   kind?: string;
@@ -43,6 +44,8 @@ interface Node {
   documentDate?: Date;
   documentNumber?: string;
   error?: string;
+  documentType?: string;
+  attributes?: any;
 }
 
 interface ExampleFlatNode {
@@ -83,6 +86,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   files: FileModel[];
   loading = false;
   documentType: DocumentTypeModel[];
+  mouseOverID = '';
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   private _transformer = (node: Node, level: number) => {
@@ -95,8 +99,11 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       index: node.index,
       documentDate: node.documentDate,
       documentNumber: node.documentNumber,
+      documentType: node.documentType,
       _id: node._id,
-      error: node.error
+      error: node.error,
+      attributes: node.attributes,
+      docs: node.docs
     };
   };
 
@@ -126,15 +133,12 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       .getAudits([{ name: 'id', value: this.IdAudit }])
       .subscribe(data => {
         this.audit = data[0];
-
+        this.maxPageIndex = this.audit.typeViewResult;
+        this.selectedPage = this.audit.typeViewResult;
         this.auditservice.getDoumentType().subscribe(res => {
           this.documentType = res;
         });
-
-        if (this.audit.status === 'Loading') {
-          this.selectedPage = 0;
-        } else this.selectedPage = 1;
-        this.refreshData(true);
+        this.refreshData();
       });
   }
 
@@ -161,12 +165,13 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     }
   }
 
-  refreshData(checkDoc = false) {
+  refreshData() {
     this.loading = true;
     this.errorCount = 0;
     this.documentCount = 0;
     this.checkCount = 0;
     this.TREE_DATA = [];
+
     if (this.selectedPage === 0) {
       this.auditservice.getFiles(this.IdAudit).subscribe(data => {
         this.files = data;
@@ -176,22 +181,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     } else {
       this.auditservice.getDouments(this.IdAudit, false).subscribe(data => {
         this.docs = data;
-        if (checkDoc) {
-          if (this.docs.find(x => x.analysis != null || x.user != null)) {
-            this.selectedPage = 2;
-            this.maxPageIndex = 2;
-          } else if (this.docs.length > 0) {
-            this.selectedPage = 1;
-            this.maxPageIndex = 1;
-          } else {
-            this.selectedPage = 0;
-            this.maxPageIndex = 0;
-            this.refreshData();
-          }
-          return;
-        }
 
-        if (this.selectedPage === 2) {
+        if (this.audit.typeViewResult === 2) {
           this.docs = this.docs.filter(
             x => x.analysis != null || x.user != null
           );
@@ -207,9 +198,10 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         for (const t of uniqueType) {
           let i = 0;
           const node = { name: t, children: [], childCount: 0 };
-
+          const docs = { docs: [] };
           for (const d of this.docs.filter(x => x.documentType === t)) {
             i++;
+
             const nodeChild = {
               _id: d._id,
               name: d.filename,
@@ -218,40 +210,24 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
               documentDate: d.documentDate,
               children: [],
               childCount: 0,
-              parseError: d.parseError
+              parseError: d.parseError,
+              documentType: t,
+              attributes: null
             };
 
-            if (
-              this.selectedPage === 2 &&
-              ((d.analysis != null && d.analysis.attributes) ||
-                (d.user != null && d.user.attributes))
-            ) {
-              const atr =
-                d.analysis != null
-                  ? Helper.json2array(d.analysis.attributes)
-                  : Helper.json2array(d.user.attributes);
-              const docType = this.documentType.find(
-                x => x._id === d.documentType
-              );
-              let j = 1;
-              for (const _atr of atr) {
-                const kindAttr = docType.attributes.find(
-                  x => x.kind === _atr.kind
-                );
-                if (kindAttr != null && kindAttr.show)
-                  nodeChild.children.push({
-                    index: j++,
-                    name: _atr.value,
-                    confidence: _atr.confidence,
-                    kind: _atr.kind
-                  });
-              }
-            }
-
-            nodeChild.childCount = nodeChild.children.length;
-            node.children.push(nodeChild);
-            node.childCount = node.children.length;
+            if (this.selectedPage === 2) {
+              nodeChild.attributes =
+                d.user != null
+                  ? Helper.json2array(d.user.attributes)
+                  : Helper.json2array(d.analysis.attributes);
+              docs.docs.push(nodeChild);
+            } else node.children.push(nodeChild);
           }
+
+          if (this.selectedPage === 2) {
+            node.children.push(docs);
+            node.childCount = docs.docs.length;
+          } else node.childCount = node.children.length;
           this.TREE_DATA.push(node);
         }
         this.refreshTree();
@@ -286,5 +262,9 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   changePage(e) {
     this.selectedPage = e.index;
     this.refreshData();
+  }
+
+  mouseOver(node) {
+    this.mouseOverID = node._id;
   }
 }
