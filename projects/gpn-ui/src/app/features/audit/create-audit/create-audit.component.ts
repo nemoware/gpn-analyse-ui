@@ -113,13 +113,10 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setInitialValue() {
     this.filteredSubsidiaries
-      .pipe(
-        take(1),
-        takeUntil(this._onDestroy)
-      )
+      .pipe(take(1), takeUntil(this._onDestroy))
       .subscribe(() => {
         this.selectSubsidiary.compareWith = (a: Subsidiary, b: Subsidiary) =>
-          a._id === b._id;
+          a.name === b.name;
       });
   }
 
