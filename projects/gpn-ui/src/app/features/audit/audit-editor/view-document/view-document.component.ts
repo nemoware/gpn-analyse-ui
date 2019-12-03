@@ -224,6 +224,23 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+
+  getClassName(kind: string) {
+    let nameClassSpan = 'unknown';
+    if (kind.includes('headline')) nameClassSpan = 'headline';
+    if (kind in KindAttribute) nameClassSpan = kind;
+    return nameClassSpan;
+  }
+
+  getAttributeClass(attrKind) {
+    // TODO compare with getClassName (which is not in use)  
+    let clazz =attrKind.split('/').pop()
+    clazz = clazz.replace('_', '-');
+    clazz = clazz.replace(/(?<=.)(-\d+)$/, '')
+    return clazz;
+  }
+
+ 
   public goToAttribute(id) {
     const element = document.getElementById(id);
     if (element != null)
