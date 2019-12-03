@@ -75,11 +75,24 @@ exports.getAudits = async (req, res) => {
       return a;
     });
 
-    audits.sort((a, b) => {
-      if (a.sortDate > b.sortDate) return -1;
-      if (a.sortDate === b.sortDate) return 0;
-      if (a.sortDate < b.sortDate) return 1;
-    });
+    const checks = [
+      { 'analysis.attributes': { $exists: true } },
+      { parserResponseCode: 200 }
+    ];
+    for (let audit of audits) {
+      let typeViewResult = checks.length;
+      for (let check of checks) {
+        check.auditId = audit._id;
+        let document = await Document.findOne(check);
+        if (document) {
+          break;
+        }
+        typeViewResult--;
+      }
+      audit.typeViewResult = typeViewResult;
+    }
+
+    audits.sort((a, b) => b.sortDate.getTime() - a.sortDate.getTime());
 
     res.send(audits);
   } catch (err) {

@@ -23,7 +23,10 @@ exports.postAudit = async (req, res) => {
 
       let directory = req.body.jsonDirectory;
       const filenames = await fs.readdir(directory);
+
+      let i = 0;
       for (let filename of filenames) {
+        i++;
         let type;
         if (filename.toLowerCase().indexOf('договор') >= 0) {
           type = 'CONTRACT';
@@ -43,7 +46,9 @@ exports.postAudit = async (req, res) => {
               analysis: json,
               filename: filename,
               parse: {
-                documentType: type
+                documentType: type,
+                documentDate: new Date(),
+                documentNumber: i
               },
               parserResponseCode: 200
             });
