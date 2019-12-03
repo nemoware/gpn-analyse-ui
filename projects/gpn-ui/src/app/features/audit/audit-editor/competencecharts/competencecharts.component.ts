@@ -25,9 +25,9 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
 
   highcharts = Highcharts;
   colorSeries = [
-    { name: 'finance', color: '#D7BDE2', colorPlotLines: '#9B59B6' },
-    { name: 'deals', color: '#A9CCE3', colorPlotLines: '#2980B9' },
-    { name: 'court', color: '#A3E4D7', colorPlotLines: '#1ABC9C' },
+    { name: 'Finance', color: '#D7BDE2', colorPlotLines: '#9B59B6' },
+    { name: 'Deal', color: '#A9CCE3', colorPlotLines: '#2980B9' },
+    { name: 'Court', color: '#A3E4D7', colorPlotLines: '#1ABC9C' },
     { name: 'RealEstate', color: '#D6DBDF', colorPlotLines: '#99A3A4' },
     { name: 'Lawsuit', color: '#FDEBD0', colorPlotLines: '#F5B041' },
     { name: 'Consulting', color: '#F6DDCC', colorPlotLines: '#F8C471' },
