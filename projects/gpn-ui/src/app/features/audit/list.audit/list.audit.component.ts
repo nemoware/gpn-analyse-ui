@@ -20,7 +20,8 @@ import {
   faSearch,
   faAngleDown,
   faCommentDots,
-  faTrashAlt
+  faTrashAlt,
+  faCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { AuditResultComponent } from '@app/features/audit/audit-parser-result/audit-parser-result.component';
 import { Router } from '@root/node_modules/@angular/router';
@@ -36,8 +37,8 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   faSearch = faSearch;
   faAngleDown = faAngleDown;
   faTrashAlt = faTrashAlt;
+  faCircle = faCircle;
   columns: string[] = [
-    'id',
     'subsidiaryName',
     'auditStart',
     'auditEnd',
@@ -54,6 +55,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   pageSize = 15;
   lowValue = 0;
   highValue = 15;
+  hover = '';
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

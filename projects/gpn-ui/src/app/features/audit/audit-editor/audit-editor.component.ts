@@ -13,8 +13,15 @@ import { ViewDocumentComponent } from '@app/features/audit/audit-editor/view-doc
 import { TreeAttributesComponent } from '@app/features/audit/audit-editor/tree-attributes/tree-attributes.component';
 import { AttributeModel } from '@app/models/attribute-model';
 import { Helper } from '@app/features/audit/helper';
-import { LinksDocumentModel } from '@app/models/links-document-model';
 import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
+import { ResizedEvent } from 'angular-resize-event';
+import {
+  faChevronDown,
+  faChevronUp,
+  faEdit,
+  faSave,
+  faSyncAlt
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -33,16 +40,21 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   @ViewChild(TreeAttributesComponent, { static: false })
   tree: TreeAttributesComponent;
   documentType: string[];
+  faChevronDown = faChevronDown;
+  faChevronUp = faChevronUp;
+  faEdit = faEdit;
+  faSave = faSave;
+  faSyncAlt = faSyncAlt;
+  changed = false;
 
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private auditservice: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef,
-    private spinner: NgxSpinnerService
+    private changeDetectorRefs: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.spinner.show();
     this.IdDocument = this.activatedRoute.snapshot.paramMap.get('id');
     this.editmode = this.activatedRoute.snapshot.data['editmode'];
   }
@@ -51,8 +63,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
     this.refreshData();
   }
 
-  refreshData() {
-    this.spinner.show();
+  refreshData(needRefresh: boolean = false) {
     this.auditservice.getDoument(this.IdDocument).subscribe(data => {
       this.document = data;
       if (this.document.user) {
@@ -60,8 +71,8 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
       } else {
         this.attributes = Helper.json2array(this.document.analysis.attributes);
       }
+      if (needRefresh) this.view_doc.refreshView(this.attributes);
       this.changeDetectorRefs.detectChanges();
-      this.spinner.hide();
     });
   }
 
@@ -70,10 +81,27 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   }
 
   changeAttribute(attributes: AttributeModel[]) {
+    this.changed = true;
     this.tree.updateAttributes(attributes);
   }
 
   refresh() {
-    this.refreshData();
+    this.refreshData(true);
+    //
+  }
+
+  onResized(event: ResizedEvent) {
+    const el1 = document.getElementById('document_v');
+    el1.setAttribute('style', 'height:' + event.newHeight + 'px');
+    const el = document.getElementById('view_doc');
+    el.setAttribute('style', 'height:' + (event.newHeight - 10) + 'px');
+  }
+
+  saveChanges() {
+    this.view_doc.saveChanges();
+  }
+
+  editMode() {
+    this.router.navigate(['audit/edit/', this.document._id]);
   }
 }

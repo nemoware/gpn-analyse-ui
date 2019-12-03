@@ -79,6 +79,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   maxPageIndex = 0;
   errorCount = 0;
   documentCount = 0;
+  checkCount = 0;
   files: FileModel[];
   loading = false;
   documentType: DocumentTypeModel[];
@@ -164,6 +165,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     this.loading = true;
     this.errorCount = 0;
     this.documentCount = 0;
+    this.checkCount = 0;
     this.TREE_DATA = [];
     if (this.selectedPage === 0) {
       this.auditservice.getFiles(this.IdAudit).subscribe(data => {
@@ -236,7 +238,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
                 const kindAttr = docType.attributes.find(
                   x => x.kind === _atr.kind
                 );
-                if (kindAttr != null && kindAttr.editable)
+                if (kindAttr != null && kindAttr.show)
                   nodeChild.children.push({
                     index: j++,
                     name: _atr.value,
@@ -269,6 +271,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       for (const n of this.treeControl.dataNodes) {
         if (n.level === 0) this.treeControl.expand(n);
       }
+    this.checkCount = this.documentCount - this.errorCount;
     this.changeDetectorRefs.detectChanges();
   }
 

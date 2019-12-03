@@ -1,6 +1,7 @@
 export interface KindAttributeModel {
   kind: string;
   type: string;
-  values: string[];
-  editable: boolean;
+  dictionaryName?: string;
+  children?: KindAttributeModel[];
+  show?: true;
 }

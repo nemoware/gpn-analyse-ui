@@ -85,6 +85,14 @@
     "_id": "CHARTER",
     "attributes": [
       {
+        "kind": "org-1-name",
+        "type": "string"
+      },
+      {
+        "kind": "org-1-type",
+        "type": "string"
+      },
+      {
         "kind": "ShareholdersGeneralMeeting",
         "type": "string"
       },

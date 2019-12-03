@@ -17,6 +17,7 @@ import {
 } from '@core/core.module';
 import { AuthorizationData } from '@core/authorization/authorization.data';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
+import { Dictionaries } from '@app/models/dictionaries';
 
 @Component({
   selector: 'gpn-root',
@@ -32,8 +33,8 @@ export class AppComponent implements OnInit {
   logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
     { link: 'audit', label: 'Аудит' },
-    { link: 'dash', label: 'Дэшборд' },
-    { link: 'analyse', label: 'Анализ' },
+    // { link: 'dash', label: 'Дэшборд' },
+    // { link: 'analyse', label: 'Анализ' },
     { link: 'admin', label: 'Администрирование' }
     //{ link: 'events', label: 'Журнал событий' }
   ];

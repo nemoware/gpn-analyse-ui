@@ -17,6 +17,7 @@ import {
   Validators
 } from '@root/node_modules/@angular/forms';
 import { AttributeModel } from '@app/models/attribute-model';
+import { Dictionaries } from '@app/models/dictionaries';
 @Component({
   selector: 'gpn-edit-attribute',
   templateUrl: './edit-attribute.component.html',
@@ -27,50 +28,40 @@ export class EditAttributeComponent implements OnInit {
   faTimes = faTimes;
   editForm: FormGroup;
   selectedKind: KindAttributeModel;
+  dictionaryValues: Array<{ id: string; value: string }>;
   _change = false;
   _new = false;
-  infoMessage = 'Данный фрагмент не редактируется!';
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<EditAttributeComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      editable: boolean;
-      left: number;
-      top: number;
-      kind: string;
-      display_value: string;
+      displayValue: string;
+      span: [];
       value: string;
-      documentType: KindAttributeModel[];
-      attributes: AttributeModel[];
-      indexStart: number;
-      indexEnd: number;
-      editMode: boolean;
+      kind: string;
+      atrParent: AttributeModel;
+      kinds: KindAttributeModel[];
     }
-  ) {
-    if (!this.data.editMode)
-      this.infoMessage = 'В режиме просмотра редактирование запрещено!';
-  }
+  ) {}
 
   ngOnInit() {
-    this._new = this.data.kind == null;
-    /* const rightMostPos = window.innerWidth - Number(this.data.left);
-    this.dialogRef.updatePosition({
-      top: `${this.data.top}px`,
-      right: `${rightMostPos}px`
-    });*/
+    this._new = !this.data.kind;
+    if (
+      this.data.kind &&
+      this.data.kinds.find(x => x.kind === this.data.kind).dictionaryName
+    )
+      this.dictionaryValues = Dictionaries.getDictionary(
+        this.data.kinds.find(x => x.kind === this.data.kind).dictionaryName
+      );
 
     this.editForm = this.fb.group({
-      kind: new FormControl(
-        { value: null, disabled: !this.data.editable || !this.data.editMode },
-        Validators.required
-      )
+      kind: new FormControl({ value: null }, Validators.required)
     });
+
     if (this.data.kind) {
-      this.selectedKind = this.data.documentType.find(
-        c => c.kind === this.data.kind
-      );
+      this.selectedKind = this.data.kinds.find(c => c.kind === this.data.kind);
       this.editForm.get('kind').setValue(this.selectedKind);
     }
   }
@@ -80,75 +71,43 @@ export class EditAttributeComponent implements OnInit {
   }
 
   applyChanges() {
-    const _atr = this.data.attributes.find(
-      c => c.kind === this.selectedKind.kind
-    );
-    if (_atr) {
-      if (
-        this._new &&
-        !confirm('Фрагмент текста с таким типом уже сущесвует! Заменить?')
-      )
-        return;
-      this.data.attributes = this.data.attributes.filter(
-        item => item.kind !== _atr.kind
-      );
-    }
-
-    this.data.attributes.push({
-      confidence: 1,
-      display_value: this.data.display_value,
-      kind: this.selectedKind.kind,
-      value: this.data.value,
-      span: [this.data.indexStart, this.data.indexEnd],
-      span_map: 'word',
-      parent: null
-    });
-    console.log(this.data.attributes);
     this.dialogRef.close({
-      attributes: this.data.attributes,
       kind: this.selectedKind.kind,
-      delete: _atr && this._new ? _atr.span : null
+      value: this.data.value
     });
   }
 
   deleteAtr() {
     if (confirm('Удалить данный атрибут?')) {
-      const del = this.data.attributes.find(
-        c => c.kind === this.selectedKind.kind
-      );
-      if (del) {
-        this.data.attributes = this.data.attributes.filter(
-          item => item.kind !== del.kind
-        );
-        this.dialogRef.close({
-          attributes: this.data.attributes,
-          kind: null,
-          delete: del
-        });
-      }
+      this.dialogRef.close({ delete: true });
     }
   }
 
   valid(): boolean {
     if (
-      !this.data.editMode ||
-      !this.data.editable ||
       this.data.value == null ||
       this.data.value.length === 0 ||
       !this._change
     )
       return false;
     else return this.editForm.valid;
+    return false;
   }
 
   changedKind(e) {
     this.data.value = null;
     this._change = true;
     this.selectedKind = this.editForm.get('kind').value;
+
+    if (this.selectedKind.dictionaryName)
+      this.dictionaryValues = Dictionaries.getDictionary(
+        this.selectedKind.dictionaryName
+      );
+
     if (this.selectedKind.type === 'string') {
-      this.data.value = this.data.display_value;
+      this.data.value = this.data.displayValue;
     } else if (this.selectedKind.type === 'number') {
-      const value = this.data.display_value.match(/\d+/);
+      const value = this.data.displayValue.match(/\d+/);
       if (value) this.data.value = value[0];
     }
   }

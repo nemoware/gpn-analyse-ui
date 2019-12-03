@@ -1,8 +1,7 @@
 @import '~@angular/material/theming';
 
 .view_doc {
-  height: 92%;
-  margin-left: 10px;
+  overflow-y: scroll;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -o-pre-wrap;
@@ -105,7 +104,6 @@ $org_2_base_alt: $mat-blue;
   background: mat-color($org_2_base_alt, 200);  
 }
 
- 
 
 
 // =========================
@@ -206,4 +204,15 @@ $comp_fade:0.3;
     background:white    
   }
   
+
+  font-family: 'Arial', serif;
+  //cursor: pointer;
+}
+
+.hint_pointer {
+  cursor: pointer;
+}
+
+.changed {
+  background: #f57e7e;
 }
