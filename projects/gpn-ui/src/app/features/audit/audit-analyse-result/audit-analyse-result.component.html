@@ -22,7 +22,6 @@
 </mat-tab-group>
 
 <div *ngIf="selectedPage == 0">
-  <span>ФАЙЛЫ</span>
 <div style="margin-left: 10px">
   <span> Количество: <b>{{ checkCount }} / {{  documentCount }}</b></span>
 </div>
@@ -56,7 +55,6 @@
 </div>
 
 <div *ngIf="selectedPage == 1">
-  <span>ДОКУМЕНТЫ</span>
 <mat-tree *ngIf="!loading" [dataSource]="dataSource" [treeControl]="treeControl">
 
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
@@ -98,7 +96,6 @@
 </div>
 
 <div *ngIf="selectedPage === 2">
-  <span>АУДИТ</span>
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>

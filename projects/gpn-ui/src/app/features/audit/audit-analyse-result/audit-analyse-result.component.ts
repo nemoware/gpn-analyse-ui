@@ -78,8 +78,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   treeControl;
   treeFlattener;
   dataSource;
-  selectedPage = 0;
-  maxPageIndex = 0;
+  selectedPage = -1;
+  maxPageIndex = -1;
   errorCount = 0;
   documentCount = 0;
   checkCount = 0;
@@ -260,8 +260,10 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   }
 
   changePage(e) {
-    this.selectedPage = e.index;
-    this.refreshData();
+    if (this.selectedPage !== e.index) {
+      this.selectedPage = e.index;
+      this.refreshData();
+    }
   }
 
   mouseOver(node) {
