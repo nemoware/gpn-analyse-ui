@@ -1,20 +1,12 @@
-<div class="row">
-  <div class="col">
-    <label
-        cdkDrag
-        cdkDragRootElement=".cdk-overlay-pane"
-        cdkDragHandle><b>Редактор фрагментов документа</b></label>
-  </div>
-  <div class="col-1">
-    <fa-icon [icon]="faTimes"style="alignment: center" class="close" (click)="closeForm()" matTooltip="Закрыть"></fa-icon>
-  </div>
-</div>
-<mat-divider></mat-divider>
+<h4 mat-dialog-title cdkDrag
+cdkDragRootElement=".cdk-overlay-pane"
+cdkDragHandle>Редактировать</h4>
 
-  <mat-form-field style="width: 100%; height: auto">
-    <mat-label>Фрагмент документае</mat-label>
-    <textarea matInput readonly="true" [readOnly]="true">{{data.displayValue}}</textarea>
-  </mat-form-field>
+ 
+<mat-form-field style="width: 100%; height: auto">
+  <mat-label>Фрагмент документа</mat-label>
+  <textarea matInput readonly="true" [readOnly]="true">{{data.displayValue}}</textarea>
+</mat-form-field>
 
 <div class="row">
 
@@ -60,14 +52,13 @@
 
   </div>
 </div>
-<div class="row">
-  <div class="col">
-  </div>
-  <div class="col">
-    <button  mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right; width: 100px; margin-left: 10px ">Применить</button>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Отмена</button>
     <button mat-raised-button (click)="deleteAtr()" [disabled]="_new" style="float: right; width: 100px;">Удалить</button>
-  </div>
-</div>
+    <button mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right; width: 100px; margin-left: 10px ">Применить</button>    
+</mat-dialog-actions>
+
+ 
 
 
 
