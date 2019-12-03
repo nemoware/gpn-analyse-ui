@@ -44,9 +44,10 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
     'auditEnd',
     'checkedDocumentCount',
     'endAudit',
-    'statusAudit'
+    'statusAudit',
+    'events'
   ];
-  selectedAudit: Audit;
+
   dataSource = new MatTableDataSource();
   activePageDataChunk = [];
   audits: Audit[];
@@ -55,7 +56,8 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   pageSize = 15;
   lowValue = 0;
   highValue = 15;
-  hover = '';
+  mouseOverIndex = -1;
+  delete = false;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -78,7 +80,6 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
   refreshData(filter: Array<{ name: string; value: string }> = null) {
     this.auditservice.getAudits(filter).subscribe(data => {
       this.audits = data;
-      this.selectedAudit = this.audits[0];
       this.refreshViewTable();
     });
   }
@@ -88,9 +89,6 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
     this.activePageDataChunk = this.audits.slice(0, this.pageSize);
     this.dataSource = new MatTableDataSource(this.activePageDataChunk);
     this.dataSource.sort = this.sort;
-    if (audit != null) {
-      this.selectedAudit = audit as Audit;
-    }
     this.changeDetectorRefs.detectChanges();
   }
 
@@ -108,19 +106,20 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
     });
   }
 
-  deleteAudit() {
-    if (this.selectedAudit != null) {
+  deleteAudit(element, event) {
+    event.stopPropagation();
+    if (element != null) {
       if (
         confirm(
           `Вы действительно хотите удалить "Аудит ДО от ${this.datepipe.transform(
-            this.selectedAudit.createDate,
+            element.createDate,
             'dd.MM.yyyy'
           )}"?`
         )
       ) {
-        this.auditservice.deleteAudit(this.selectedAudit._id).subscribe(
+        this.auditservice.deleteAudit(element._id).subscribe(
           data => {
-            this.audits = this.arrayRemove(this.audits, this.selectedAudit);
+            this.audits = this.arrayRemove(this.audits, element);
             this.refreshViewTable(
               this.audits.length > 0 ? this.audits[0] : null
             );
@@ -157,12 +156,6 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  selectRow(row) {
-    if (this.selectedAudit._id !== row._id) {
-      this.selectedAudit = row;
-    }
-  }
-
   valueSearch(value: string) {
     const filterVlaue = new Array<{ name: string; value: string }>();
     if (value.length > 0) {
@@ -173,19 +166,11 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
 
   openAuditResult(element) {
     if (element.status !== 'New') {
-      /*const dialogRef = this.dialog.open(AuditResultComponent, {
-        width: '80%',
-        height: '85vh',
-        data: {
-          auditId: element._id,
-          subsidiaryName: element.subsidiaryName,
-          auditStart: element.auditStart,
-          auditEnd: element.auditEnd,
-          status: element.status
-        }
-      });
-    } else if (element.status === 'Ended') {*/
       this.router.navigate(['audit/result/', element._id]);
     }
+  }
+
+  onMouseOver(index) {
+    this.mouseOverIndex = index;
   }
 }

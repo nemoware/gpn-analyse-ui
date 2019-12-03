@@ -12,4 +12,5 @@ export interface Audit {
   status: string;
   createDate: Date;
   author: { _id: string; login: string; name: string };
+  typeViewResult: number;
 }

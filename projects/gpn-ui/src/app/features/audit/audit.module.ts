@@ -39,6 +39,7 @@ import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
 import { CompetencechartsComponent } from './audit-editor/competencecharts/competencecharts.component';
 import { HighchartsChartComponent } from '@root/node_modules/highcharts-angular';
 import { AngularResizedEventModule } from 'angular-resize-event';
+import { DocumentDetailComponent } from './audit-analyse-result/details/detail/document-detail.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { AngularResizedEventModule } from 'angular-resize-event';
     DocumentDetailsComponent,
     SearchDocumentComponent,
     CompetencechartsComponent,
-    HighchartsChartComponent
+    HighchartsChartComponent,
+    DocumentDetailComponent
   ],
   imports: [
     CommonModule,

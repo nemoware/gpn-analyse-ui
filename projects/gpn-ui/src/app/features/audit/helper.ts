@@ -15,8 +15,9 @@ export class Helper {
   static parseKind(key: string) {
     const atr = { kind: null, num: null };
     let kind = key;
-    let M: string[] = key.includes('/') ? key.split('/') : key.split('_');
+    let M: string[] = key.split('/');
     kind = M[M.length - 1];
+    kind = kind.replace(new RegExp('_', 'g'), '-');
     M = kind.split('-');
     if (!isNaN(Number(M[M.length - 1]))) {
       kind = kind.substring(0, kind.lastIndexOf('-'));
