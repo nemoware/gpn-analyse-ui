@@ -260,10 +260,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   }
 
   changePage(e) {
-    if (this.selectedPage !== e.index) {
-      this.selectedPage = e.index;
-      this.refreshData();
-    }
+    this.selectedPage = e.index;
+    this.refreshData();
   }
 
   mouseOver(node) {
