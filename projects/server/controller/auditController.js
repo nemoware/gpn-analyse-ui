@@ -39,7 +39,13 @@ exports.postAudit = async (req, res) => {
 };
 
 exports.getSubsidiaries = async (req, res) => {
-  res.send(subsidiaries);
+  res.send(
+    subsidiaries.map(s => {
+      return {
+        name: `${s.legal_entity_type} "${s._id}"`
+      };
+    })
+  );
 };
 
 exports.getAuditStatuses = async (req, res) => {

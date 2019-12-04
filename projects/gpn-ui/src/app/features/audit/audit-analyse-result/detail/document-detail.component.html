@@ -1,0 +1,42 @@
+<div class="row" style="width: 100%">
+  <div class="col">
+
+    <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows class="mat-elevation-z8">
+
+      <ng-container *ngFor="let set of columns" matColumnDef="{{ set.key }}">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ set.name }} </th>
+        <td mat-cell *matCellDef="let row">
+          {{ getValue(set, row) }}
+          <div *ngIf="set.key === 'viewDetail'">
+            <button mat-icon-button (click)="selectedRow(row, $event)">
+              <fa-icon [icon]="faChevronDown" *ngIf="row._id != expandedElementId"></fa-icon>
+              <fa-icon [icon]="faChevronUp" *ngIf="row._id == expandedElementId"></fa-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let row" [attr.colspan]="documentType.columns.length">
+          <div *ngIf="row._id === expandedElementId" class="element-detail" [@detailExpand]="row._id === expandedElementId ? 'expanded' : 'collapsed'">
+            <gpn-child-detail
+              [documentType] = documentType
+              [document] = row
+            ></gpn-child-detail>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="col"></tr>
+
+      <tr mat-row *matRowDef="let row; columns: col;"
+               class="element-row"
+               (click)="openDocument(row)"></tr>
+
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" class="detail-row"></tr>
+
+    </table>
+
+
+  </div>
+</div>

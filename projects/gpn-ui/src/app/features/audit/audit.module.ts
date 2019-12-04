@@ -20,7 +20,8 @@ import {
   MAT_DATE_LOCALE,
   MatTreeModule,
   MatDialogModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatRippleModule
 } from '@root/node_modules/@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
 import { FontAwesomeModule } from '@root/node_modules/@fortawesome/angular-fontawesome';
@@ -39,7 +40,9 @@ import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
 import { CompetencechartsComponent } from './audit-editor/competencecharts/competencecharts.component';
 import { HighchartsChartComponent } from '@root/node_modules/highcharts-angular';
 import { AngularResizedEventModule } from 'angular-resize-event';
-import { DocumentDetailComponent } from './audit-analyse-result/details/detail/document-detail.component';
+import { DocumentDetailComponent } from './audit-analyse-result/detail/document-detail.component';
+import { ChildDetailComponent } from './audit-analyse-result/child-detail/child-detail.component';
+import { BrowserAnimationsModule } from '@root/node_modules/@angular/platform-browser/animations';
 
 import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
 
@@ -59,6 +62,7 @@ import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
     HighchartsChartComponent,
     DocumentDetailComponent,
     FileNamePipe, FilePathPipe
+    ChildDetailComponent
   ],
   imports: [
     CommonModule,
@@ -76,7 +80,8 @@ import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
     DragDropModule,
     NgxSpinnerModule,
     MatExpansionModule,
-    AngularResizedEventModule
+    AngularResizedEventModule,
+    MatRippleModule
   ],
   entryComponents: [
     CreateAuditComponent,

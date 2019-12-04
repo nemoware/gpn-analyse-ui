@@ -138,7 +138,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         this.auditservice.getDoumentType().subscribe(res => {
           this.documentType = res;
         });
-        this.refreshData();
+        //this.refreshData();
       });
   }
 
@@ -242,11 +242,11 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       this.treeFlattener
     );
     this.dataSource.data = this.TREE_DATA;
-    if (this.selectedPage === 0) this.treeControl.expandAll();
+    /*if (this.selectedPage === 0) this.treeControl.expandAll();
     else
       for (const n of this.treeControl.dataNodes) {
         if (n.level === 0) this.treeControl.expand(n);
-      }
+      }*/
     this.checkCount = this.documentCount - this.errorCount;
     this.changeDetectorRefs.detectChanges();
   }

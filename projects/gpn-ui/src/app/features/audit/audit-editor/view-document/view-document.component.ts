@@ -257,9 +257,18 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     const selRange = window.getSelection().getRangeAt(0);
-    const startElement = document.getElementById(
-      selRange.startContainer.parentElement.id
-    );
+    if (
+      !selRange.endContainer.parentElement.id ||
+      !selRange.startContainer.parentElement.id
+    )
+      return;
+
+    const startElement =
+      selRange.startContainer.parentElement.id !== 'view_doc'
+        ? document.getElementById(selRange.startContainer.parentElement.id)
+        : document.getElementById(
+            (selRange.startContainer.nextSibling as HTMLElement).id
+          );
     let endElement: HTMLElement = null;
 
     if (startElement.parentElement.id !== 'view_doc') {
@@ -277,6 +286,11 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       endElement = document.getElementById(
         (selRange.endContainer.previousSibling as HTMLElement).id
       );
+    }
+
+    if (endElement.parentElement.id !== startElement.parentElement.id) {
+      alert('Пересечение атрибутов не допустимо!');
+      return;
     }
 
     atr.span = [
@@ -314,6 +328,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       value: atr.value
     };
 
+    if (atrParent && !this.getKindOfAttributes(atrParent)) return;
+
     const dialogRef = this.dialog.open(EditAttributeComponent, {
       width: '50%',
       data: {
@@ -338,12 +354,15 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           newAtr.value = result.value;
           newAtr.changed = true;
 
-          if (!newAtr.key) {
-            if (atrParent) newAtr.key = atrParent.key + '/' + newAtr.kind;
-            else newAtr.key = newAtr.kind;
-          } else {
+          if (newAtr.key) {
             this.removeAttribute(atr);
           }
+
+          newAtr.key = this.getNumAttribute(
+            atrParent ? atrParent.key : null,
+            newAtr.kind
+          );
+
           this.attributes.push(newAtr);
           this.setAttribute(
             newAtr.span[0],
@@ -357,6 +376,19 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     });
+  }
+
+  getNumAttribute(parentKey: string, kind: string): string {
+    let N = 0;
+    if (parentKey) {
+      const parentKind = Helper.parseKind(parentKey).kind;
+      N = this.attributes
+        .filter(x => x.kind === parentKind)
+        .filter(x => x.kind === kind).length;
+    } else N = this.attributes.filter(x => x.kind === kind).length;
+    return (
+      (parentKey ? parentKey + '/' : '') + kind + (N > 0 ? '-' + (N + 1) : '')
+    );
   }
 
   saveChanges() {
