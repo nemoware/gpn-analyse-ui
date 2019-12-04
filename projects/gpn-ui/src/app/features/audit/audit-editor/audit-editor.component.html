@@ -1,9 +1,8 @@
-<mat-toolbar class="example-header">Header</mat-toolbar>
 <mat-sidenav-container *ngIf="document" autosize>
   
   <mat-sidenav mode="side" opened class="left_group"> 
     
-    <mat-tab-group color="accent">
+    <mat-tab-group color="accent" animationDuration="0ms" dynamicHeight='true'>
 
       <mat-tab label="Детали">
         <div class="container">
@@ -37,9 +36,8 @@
   
 
    
-
-    <div>
-
+    <mat-toolbar>
+    
       <button mat-icon-button matTooltip="Перейти в режим редактирования" (click)="editMode()" [disabled]="editmode">
         <fa-icon [icon]="faEdit"></fa-icon>
       </button>
@@ -47,7 +45,7 @@
       <button mat-icon-button matTooltip="Сохранить изменения" (click)="saveChanges()" [disabled]="!changed">
         <fa-icon [icon]="faSave"></fa-icon>
       </button>
-
+      <span class="fill-remaining-space"></span>
       <button mat-icon-button matTooltip="Обновить" (click)="refresh()">
         <fa-icon [icon]="faSyncAlt"></fa-icon>
       </button>
@@ -59,7 +57,7 @@
       <button mat-icon-button matTooltip="В конец документа" (click)="goToAttribute('foot')" style="float: right">
         <fa-icon [icon]="faChevronDown"></fa-icon>
       </button>
-    </div>
+    </mat-toolbar>
     
      
 

@@ -1,21 +1,40 @@
-<span><b>{{ document.audit.subsidiaryName }}</b> {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</span>
-<br>
-<fa-icon *ngIf="this.document.audit.status == 'InWork'" [icon]="faClock" style="float: left"></fa-icon>
-<fa-icon *ngIf="this.document.audit.status == 'Ended'" [icon]="faFlagCheckered" style="float: left"></fa-icon>
-<span style="margin-left: 10px"> Статус: {{ document.audit.status | translate}} </span>
-<mat-divider></mat-divider>
-<span><b>Файл: {{ document.filename }}</b></span>
-<mat-divider></mat-divider>
-<label>Время анализа</label><br>
+
+
+<section>
+<label>Статус</label>
+<fa-icon *ngIf="this.document.audit.status == 'InWork'" [icon]="faClock"></fa-icon>
+<fa-icon *ngIf="this.document.audit.status == 'Ended'" [icon]="faFlagCheckered" ></fa-icon>
+<span > {{ document.audit.status | translate}} </span>
+</section>
+
+<section>
+<label>файл</label>
+<span class="file-name"><span class="file-path">{{ document.filename | filePath }} </span>{{ document.filename | fileName }}</span>
+</section>
+
+<section>
+<label>Время анализа</label>
 <span>{{ document.analysis.analyze_timestamp | date :'dd.MM.yyyy HH:mm'}}</span>
-<mat-divider></mat-divider>
+</section>
+
+<section>
 <div *ngIf="document.user">
-  <label><b>Корректировка</b></label><br>
-  <label>Дата: </label> <span> {{ document.user.updateDate | date:'dd.MM.yyyy' }} </span><br>
-  <label>Пользователь: </label> <span> {{ document.user.author.login }} </span>
+  <label>Корректировка</label>
+  <span> {{ document.user.updateDate | date:'dd.MM.yyyy' }} </span><br>
+  <span> {{ document.user.author.login }} </span>
   <mat-divider></mat-divider>
 </div>
-<label><b>Связанные документы</b></label>
+</section>
+
+
+<section>
+  <label>входит в аудит</label>
+  <span>{{ document.audit.subsidiaryName }}<br> {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</span>
+</section>
+
+ 
+
+<label>Связанные документы<label>
 
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
@@ -58,3 +77,5 @@
   </mat-tree-node>
 
 </mat-tree>
+
+ 

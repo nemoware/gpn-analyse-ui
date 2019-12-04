@@ -18,6 +18,7 @@ $grid-breakpoints: (
 $success-colors: mat-palette($mat-green, 400);
 $warning-colors: mat-palette($mat-amber, 400);
 
-
+$gpn-links-color: mat-color($mat-blue, 500);
+$gpn-labels: mat-color($mat-grey, 500);
 $gpn-padding:20px;
 $gpn-padding-half: $gpn-padding/2;
