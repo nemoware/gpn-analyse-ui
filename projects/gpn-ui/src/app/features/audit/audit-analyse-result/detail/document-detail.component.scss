@@ -1,0 +1,26 @@
+.mat-table {
+  width: 100%;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  background-color: aliceblue;
+}
+
+tr.detail-row {
+  height: 0;
+}
+
+.element-row td {
+  border-bottom-width: 0;
+}
+
+.element-detail {
+  margin-left: 20px;
+  overflow: hidden;
+  cursor: default;
+}
+
+.mat-column-viewDetail {
+  max-width: 35px;
+}
