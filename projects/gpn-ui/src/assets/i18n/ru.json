@@ -1,4 +1,8 @@
 {
+  "CONTRACTs": "договоры",
+  "CHARTERs": "уставы",
+  "PROTOCOLs": "протоколы",
+
   "CONTRACT": "ДОГОВОР",
   "SUPPLEMENTARY_AGREEMENT": "ДОПОЛНИТЕЛЬНОЕ СОГЛАШЕНИЕ",
   "UNKNOWN": "НЕИЗВЕСТНЫЙ (не поддерживается)",

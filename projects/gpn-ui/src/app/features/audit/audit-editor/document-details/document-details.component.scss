@@ -11,17 +11,13 @@
   font-size: 9pt;  
 }
  
-.file-path{
-  color: $gpn-labels;
-  overflow: hidden;
-  text-overflow: ellipsis;    
-  text-align: right;
-}
 
 label{
+  margin-top: $gpn-padding/4;
+  font-weight: bold;
+  font-size: 8.5pt;
   display: block;
   text-transform: uppercase;
-  font-size: 9pt;
   color: $gpn-labels;
   &::after{
     content: ': ';
@@ -31,4 +27,12 @@ label{
 section{
   display: block;
   margin-bottom: $gpn-padding-half;
+}
+
+.mat-tree-node-root{
+  font-family: 'din';  
+  font-weight: 500;
+  font-size: 9pt;
+  color: $gpn-labels-darker;
+  text-transform: uppercase;
 }
