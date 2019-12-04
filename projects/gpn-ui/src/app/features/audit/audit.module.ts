@@ -41,6 +41,8 @@ import { HighchartsChartComponent } from '@root/node_modules/highcharts-angular'
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { DocumentDetailComponent } from './audit-analyse-result/details/detail/document-detail.component';
 
+import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
+
 @NgModule({
   declarations: [
     ListAuditComponent,
@@ -55,7 +57,8 @@ import { DocumentDetailComponent } from './audit-analyse-result/details/detail/d
     SearchDocumentComponent,
     CompetencechartsComponent,
     HighchartsChartComponent,
-    DocumentDetailComponent
+    DocumentDetailComponent,
+    FileNamePipe, FilePathPipe
   ],
   imports: [
     CommonModule,

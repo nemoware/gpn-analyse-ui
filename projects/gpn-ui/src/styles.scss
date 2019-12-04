@@ -7,11 +7,9 @@
 @import '~@angular/material/theming';
 
 @include mat-core();
-
-@import './themes/default-theme';
+ 
 @import './themes/light-theme';
-@import './themes/black-theme';
-@import './themes/nature-theme';
+
 
 @import 'styles-reset.scss-theme';
 @import './app/app/app.component.scss-theme';
@@ -59,3 +57,5 @@
 body.wait-cursor {
   cursor: progress;
 }
+
+
