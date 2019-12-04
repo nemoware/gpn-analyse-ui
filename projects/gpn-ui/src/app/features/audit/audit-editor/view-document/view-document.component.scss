@@ -25,7 +25,7 @@
 .hint_span,
 .hint {
   border-radius: 2px;
-  background: mat-color($mat-blue, 200);  
+  background: mat-color($mat-blue, 100);  
 }
 
 .unknown {
@@ -149,6 +149,15 @@ $org_2_base_alt: $mat-blue;
   }
 }
 // ------------
+
+.date{
+  background:  mat-color($mat-deep-orange, 100)
+}
+.number{
+  background:  mat-color($mat-deep-purple, 100);
+}
+
+
 
 $comp_fade:0.3;
 
