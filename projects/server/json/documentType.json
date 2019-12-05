@@ -213,8 +213,7 @@
           "RealEstate",
           "Insurance",
           "Consulting"
-        ],
-        "once": true
+        ]
       },
       {
         "kind": "constraint-max",
@@ -227,8 +226,7 @@
           "RealEstate",
           "Insurance",
           "Consulting"
-        ],
-        "once": true
+        ]
       },
       {
         "kind": "constraint",
@@ -241,8 +239,7 @@
           "RealEstate",
           "Insurance",
           "Consulting"
-        ],
-        "once": true
+        ]
       },
       {
         "kind": "value",
@@ -291,8 +288,7 @@
       {
         "kind": "sign-value-currency",
         "type": "string",
-        "parents": ["agenda-item"],
-        "once": true
+        "parents": ["agenda-item"]
       },
       {
         "kind": "sign",
