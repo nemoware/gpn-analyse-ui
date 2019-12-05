@@ -27,15 +27,9 @@ import { LinksDocumentModel } from '@app/models/links-document-model';
 })
 export class SearchDocumentComponent implements OnInit, AfterViewInit {
   faTimes = faTimes;
-  columns: string[] = ['_id', 'filename', 'documentNumber', 'documentDate'];
+  columns: string[] = ['filename', 'documentNumber', 'documentDate'];
   strDocument: string;
 
-  selectedDocument: {
-    _id: string;
-    filename: string;
-    documentNumber: string;
-    documentDate: Date;
-  };
   documents: LinksDocumentModel[];
   documentsFiltered: LinksDocumentModel[];
   dataSource = new MatTableDataSource();
@@ -67,9 +61,7 @@ export class SearchDocumentComponent implements OnInit, AfterViewInit {
   }
 
   selectRow(row) {
-    if (!this.selectedDocument || this.selectedDocument._id !== row._id) {
-      this.selectedDocument = row;
-    }
+    this.dialogRef.close(row);
   }
 
   closeForm() {
@@ -92,9 +84,5 @@ export class SearchDocumentComponent implements OnInit, AfterViewInit {
 
   filterDoc() {
     this.refreshViewTable();
-  }
-
-  save() {
-    this.dialogRef.close(this.selectedDocument);
   }
 }
