@@ -1,31 +1,27 @@
-.container {
-  margin-left: 10px;
-  position: relative;
-  min-height: 200px;
-  padding: 0;
+@import '../../../../styles-variables.scss';
+
+$header_height:64px;
+
+.left_group{
+  max-width: 350px;  
+  .container{
+    padding: $gpn-padding;
+  }
 }
 
-.left_group {
-  height: 75vh;
-  width: 15%;
-  float: left;
-  white-space: pre-wrap;
-  white-space: -moz-pre-wrap;
-  white-space: -o-pre-wrap;
-  word-wrap: break-word;
+.fixed-layout{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: $header_height;
 }
 
-.central_group {
-  height: 80vh;
-  width: 70%;
-  float: left;
+.fill-remaining-space{
+  flex: 1 1 auto;
 }
 
-.right_group {
-  height: 75vh;
-  width: 15%;
-  float: left;
-}
+ 
 
 .spinner {
   height: 200px;
@@ -40,10 +36,4 @@
   margin: auto;
 }
 
-.path {
-  stroke-dasharray: 1, 200;
-  stroke-dashoffset: 0;
-  animation: dash 1s ease-in-out infinite;
-  stroke-linecap: round;
-  stroke: #ddd;
-}
+ 

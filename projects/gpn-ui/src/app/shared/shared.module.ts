@@ -52,13 +52,7 @@ import {
   faStream,
   faBook
 } from '@fortawesome/free-solid-svg-icons';
-import {
-  faGithub,
-  faMediumM,
-  faTwitter,
-  faInstagram,
-  faYoutube
-} from '@fortawesome/free-brands-svg-icons';
+ 
 
 library.add(
   faBars,
@@ -66,12 +60,7 @@ library.add(
   faPowerOff,
   faCog,
   faRocket,
-  faPlayCircle,
-  faGithub,
-  faMediumM,
-  faTwitter,
-  faInstagram,
-  faYoutube,
+  faPlayCircle,  
   faPlus,
   faEdit,
   faTrash,

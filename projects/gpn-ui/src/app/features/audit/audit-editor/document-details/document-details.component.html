@@ -1,60 +1,84 @@
-<span><b>{{ document.audit.subsidiaryName }}</b> {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</span>
-<br>
-<fa-icon *ngIf="this.document.audit.status == 'InWork'" [icon]="faClock" style="float: left"></fa-icon>
-<fa-icon *ngIf="this.document.audit.status == 'Ended'" [icon]="faFlagCheckered" style="float: left"></fa-icon>
-<span style="margin-left: 10px"> Статус: {{ document.audit.status | translate}} </span>
-<mat-divider></mat-divider>
-<span><b>Файл: {{ document.filename }}</b></span>
-<mat-divider></mat-divider>
-<label>Время анализа</label><br>
+
+
+<section>
+<label>Статус</label>
+<fa-icon *ngIf="this.document.audit.status == 'InWork'" [icon]="faClock"></fa-icon>
+<fa-icon *ngIf="this.document.audit.status == 'Ended'" [icon]="faFlagCheckered" ></fa-icon>
+<span > {{ document.audit.status | translate}} </span>
+</section>
+
+<section>
+<label>файл</label>
+<span class="file-name"><span class="file-path">{{ document.filename | filePath }} </span>{{ document.filename | fileName }}</span>
+</section>
+
+<section>
+<label>Время анализа</label>
 <span>{{ document.analysis.analyze_timestamp | date :'dd.MM.yyyy HH:mm'}}</span>
-<mat-divider></mat-divider>
+</section>
+
+<section>
 <div *ngIf="document.user">
-  <label><b>Корректировка</b></label><br>
-  <label>Дата: </label> <span> {{ document.user.updateDate | date:'dd.MM.yyyy' }} </span><br>
-  <label>Пользователь: </label> <span> {{ document.user.author.login }} </span>
+  <label>Корректировка</label>
+  <span> {{ document.user.updateDate | date:'dd.MM.yyyy' }} </span><br>
+  <span> {{ document.user.author.login }} </span>
   <mat-divider></mat-divider>
 </div>
-<label><b>Связанные документы</b></label>
+</section>
+
+
+<section>
+  <label>входит в аудит</label>
+  <span><a href="link to audit">{{ document.audit.subsidiaryName }}<br> 
+    {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</a></span>
+</section>
+
+<mat-divider></mat-divider>
+
+<label>Связанные документы</label>
 
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-    <div style="width: 100%" >
-
-      <div class="row">
-          <div class="col">
-            {{ node.name }}
-          </div>
-          <div class="col-1">
-            <button *ngIf="node.index > 0" mat-icon-button matTooltip="Открыть документ" [disabled]="!editable">
-              <fa-icon [icon]="faEye"></fa-icon>
-            </button>
-          </div>
-          <div class="col-2">
-            <button *ngIf="node.index > 0" mat-icon-button matTooltip="Удалить из списка связанных документов" [disabled]="!editable" (click)="deleteDocument(node)">
-              <fa-icon [icon]="faTimes"></fa-icon>
-            </button>
-          </div>
+  
+    <div class="row" style="width: 100%">
+      <div class="col-10">
+        <!-- TODO: не имя файла, а название дока -->
+        <span class="file-name"><span class="file-path">{{ node.name | filePath}}</span>{{ node.name | fileName}}</span>
       </div>
-
-      <mat-divider></mat-divider>
+  
+      <div class="col-2">
+        <button style="float: right;" *ngIf="node.index > 0" mat-icon-button
+          matTooltip="Удалить из списка связанных документов" [disabled]="!editable" (click)="deleteDocument(node)">
+          <fa-icon [icon]="faTimes"></fa-icon>
+        </button>
+      </div>
     </div>
   </mat-tree-node>
 
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-    <div style="width: 100%">
-      <button mat-icon-button matTreeNodeToggle
-              [attr.aria-label]="'toggle ' + node.name">
-        <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
-        <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
-      </button>
-      {{ node.name | translate }}
-      <button mat-icon-button matTooltip="Добавить документ" [disabled]="!editable" (click)="addDocument(node)">
-        <fa-icon [icon]="faPlus"></fa-icon>
-      </button>
-      <mat-divider></mat-divider>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding role="group">
+    <mat-divider></mat-divider>
+  
+    <div class="row" style="width: 100%">
+      <div class="col-10">
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+  
+        </button> <span class="mat-tree-node-root">{{ node.name+'s' | translate }}</span>
+  
+      </div>
+  
+      <div class="col-2">
+        <button mat-icon-button matTooltip="Добавить документ" [disabled]="!editable"
+        (click)="addDocument(node)" style="float: right;">
+          <fa-icon [icon]="faPlus"></fa-icon>
+        </button>
+      </div>
     </div>
   </mat-tree-node>
 
 </mat-tree>
+
+ 

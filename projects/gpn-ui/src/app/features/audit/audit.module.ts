@@ -44,6 +44,8 @@ import { DocumentDetailComponent } from './audit-analyse-result/detail/document-
 import { ChildDetailComponent } from './audit-analyse-result/child-detail/child-detail.component';
 import { BrowserAnimationsModule } from '@root/node_modules/@angular/platform-browser/animations';
 
+import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
+
 @NgModule({
   declarations: [
     ListAuditComponent,
@@ -59,6 +61,7 @@ import { BrowserAnimationsModule } from '@root/node_modules/@angular/platform-br
     CompetencechartsComponent,
     HighchartsChartComponent,
     DocumentDetailComponent,
+    FileNamePipe, FilePathPipe,
     ChildDetailComponent
   ],
   imports: [

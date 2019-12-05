@@ -1,9 +1,11 @@
-<div class="row" *ngIf="document" style="background: white; height: 100%">
-  <div class="col-3">
-    <mat-tab-group color="accent">
+<mat-sidenav-container class="fixed-layout" *ngIf="document" autosize>
+  
+  <mat-sidenav mode="side" opened class="left_group"> 
+    
+    <mat-tab-group color="accent" animationDuration="0ms" dynamicHeight='true'>
 
       <mat-tab label="Детали">
-        <div style="margin-left: 10px">
+        <div class="container">
           <gpn-document-details
             [document] = "document"
             [editable]="editmode"
@@ -23,14 +25,19 @@
           ></gpn-tree-attributes>
         </cdk-virtual-scroll-viewport>
       </mat-tab>
-
+    
     </mat-tab-group>
-  </div>
 
-  <div class="col-9" style="border: 4px double black; display: flex;	flex-direction: column; padding-left: 0px">
+  </mat-sidenav>
+  <mat-sidenav-content>
 
-    <div>
 
+
+  
+
+   
+    <mat-toolbar>
+    
       <button mat-icon-button matTooltip="Перейти в режим редактирования" (click)="editMode()" [disabled]="editmode">
         <fa-icon [icon]="faEdit"></fa-icon>
       </button>
@@ -38,7 +45,7 @@
       <button mat-icon-button matTooltip="Сохранить изменения" (click)="saveChanges()" [disabled]="!changed">
         <fa-icon [icon]="faSave"></fa-icon>
       </button>
-
+      <span class="fill-remaining-space"></span>
       <button mat-icon-button matTooltip="Обновить" (click)="refresh()">
         <fa-icon [icon]="faSyncAlt"></fa-icon>
       </button>
@@ -50,28 +57,16 @@
       <button mat-icon-button matTooltip="В конец документа" (click)="goToAttribute('foot')" style="float: right">
         <fa-icon [icon]="faChevronDown"></fa-icon>
       </button>
-    </div>
-    <mat-divider></mat-divider>
+    </mat-toolbar>
+    
+     
 
-    <gpn-competencecharts *ngIf="document.documentType == 'CHARTER'"
+    <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
                           (goToAttribute)="goToAttribute($event)"
                           [attributes] = "attributes"></gpn-competencecharts>
+     
 
-     <!--<mat-accordion *ngIf="document.documentType == 'CHARTER'">
-       <mat-expansion-panel>
-         <mat-expansion-panel-header>
-           <mat-panel-title>
-             Компетенция
-           </mat-panel-title>
-         </mat-expansion-panel-header>
-         <gpn-competencecharts *ngIf="document.documentType == 'CHARTER'"
-                               (goToAttribute)="goToAttribute($event)"
-                               [attributes] = "attributes"></gpn-competencecharts>
-       </mat-expansion-panel>
-     </mat-accordion>-->
-
-    <div id="container_view_document" style="background: white; height: 100%; border: 2px double red;" (resized)="onResized($event)">
-      <div id="document_v" style="height: 250px; overflow-x: hidden;">
+    <div id="container_view_document">
         <gpn-view-document
         [document]="document"
         [kinds] = "documentType"
@@ -80,11 +75,12 @@
         (changeAttribute)= "changeAttribute($event)"
         (refresh)="refresh()"
       ></gpn-view-document>
-      </div>
     </div>
 
-  </div>
-</div>
+  
 
+
+</mat-sidenav-content>
+</mat-sidenav-container>
 
 

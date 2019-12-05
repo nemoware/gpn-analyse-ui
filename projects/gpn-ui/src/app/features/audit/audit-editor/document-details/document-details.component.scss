@@ -1,3 +1,38 @@
+@import '../../../../../styles-variables.scss';
+
+@import '~@angular/material/theming';
+
 .mat-tree-node {
   min-height: 25px;
+}
+
+.file-path, 
+.file-name{  
+  font-size: 9pt;  
+}
+ 
+
+label{
+  margin-top: $gpn-padding/4;
+  font-weight: bold;
+  font-size: 8.5pt;
+  display: block;
+  text-transform: uppercase;
+  color: $gpn-labels;
+  &::after{
+    content: ': ';
+  }
+}
+
+section{
+  display: block;
+  margin-bottom: $gpn-padding-half;
+}
+
+.mat-tree-node-root{
+  font-family: 'din';  
+  font-weight: 500;
+  font-size: 9pt;
+  color: $gpn-labels-darker;
+  text-transform: uppercase;
 }
