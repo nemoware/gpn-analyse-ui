@@ -171,7 +171,7 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
 
   public updateAttributes(attributes: AttributeModel[]) {
     this.attributes = attributes;
-    this.refreshData();
+    //this.refreshData();
   }
 
   sortAttributes() {

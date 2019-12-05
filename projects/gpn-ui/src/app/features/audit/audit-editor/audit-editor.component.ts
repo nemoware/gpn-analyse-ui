@@ -87,6 +87,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
 
   refresh() {
     this.refreshData(true);
+    this.changed = false;
     //
   }
 

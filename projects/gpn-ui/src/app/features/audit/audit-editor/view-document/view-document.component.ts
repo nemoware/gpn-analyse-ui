@@ -374,6 +374,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           );
           console.log(this.attributes);
         }
+        this.changeAttribute.emit(this.attributes);
       }
     });
   }
@@ -395,12 +396,14 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     const atr = {};
     this.attributes.forEach(
       item =>
-        (atr[item.kind] = {
+        (atr[item.key] = {
           confidence: item.confidence,
-          kind: item.kind,
+          kind: item.key,
           span: item.span,
           span_map: item.span_map,
-          value: item.value
+          value: item.value,
+          changed: item.changed,
+          parent: item.parent
         })
     );
 
