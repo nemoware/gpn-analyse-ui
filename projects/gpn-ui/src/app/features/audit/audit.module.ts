@@ -61,7 +61,7 @@ import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
     CompetencechartsComponent,
     HighchartsChartComponent,
     DocumentDetailComponent,
-    FileNamePipe, FilePathPipe
+    FileNamePipe, FilePathPipe,
     ChildDetailComponent
   ],
   imports: [
