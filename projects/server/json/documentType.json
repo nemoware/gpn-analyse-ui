@@ -4,68 +4,79 @@
     "attributes": [
       {
         "kind": "org-1-type",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "org-1-name",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "org-1-alias",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "org-2-type",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "org-2-name",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "org-2-alias",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "subject",
         "type": "dictionary",
-        "dictionaryName": "Subject"
+        "dictionaryName": "Subject",
+        "once": true
       },
       {
         "kind": "sign-value-currency",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "value",
         "type": "number",
         "parents": ["sign-value-currency"],
-        "show": true
+        "once": true
       },
       {
         "kind": "sign",
         "type": "dictionary",
         "dictionaryName": "Sign",
         "parents": ["sign-value-currency"],
-        "show": true
+        "once": true
       },
       {
         "kind": "currency",
         "type": "dictionary",
         "dictionaryName": "Currency",
         "parents": ["sign-value-currency"],
-        "show": true
+        "once": true
       },
       {
         "kind": "org-1-alt-name",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "org-1-type-ext",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "org-2-alt-name",
-        "type": "string"
+        "type": "string",
+        "once": true
       }
     ]
   },
@@ -86,11 +97,13 @@
     "attributes": [
       {
         "kind": "org-1-name",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "org-1-type",
-        "type": "string"
+        "type": "string",
+        "once": true
       },
       {
         "kind": "ShareholdersGeneralMeeting",
@@ -200,7 +213,8 @@
           "RealEstate",
           "Insurance",
           "Consulting"
-        ]
+        ],
+        "once": true
       },
       {
         "kind": "constraint-max",
@@ -213,7 +227,8 @@
           "RealEstate",
           "Insurance",
           "Consulting"
-        ]
+        ],
+        "once": true
       },
       {
         "kind": "constraint",
@@ -226,24 +241,28 @@
           "RealEstate",
           "Insurance",
           "Consulting"
-        ]
+        ],
+        "once": true
       },
       {
         "kind": "value",
         "type": "number",
-        "parents": ["constraint-min", "constraint-max", "constraint"]
+        "parents": ["constraint-min", "constraint-max", "constraint"],
+        "once": true
       },
       {
         "kind": "sign",
         "type": "dictionary",
         "dictionaryName": "Sign",
-        "parents": ["constraint-min", "constraint-max", "constraint"]
+        "parents": ["constraint-min", "constraint-max", "constraint"],
+        "once": true
       },
       {
         "kind": "currency",
         "type": "dictionary",
         "dictionaryName": "Currency",
-        "parents": ["constraint-min", "constraint-max", "constraint"]
+        "parents": ["constraint-min", "constraint-max", "constraint"],
+        "once": true
       }
     ]
   },
@@ -253,17 +272,17 @@
       {
         "kind": "org-1-name",
         "type": "string",
-        "show": true
+        "once": true
       },
       {
         "kind": "org-1-type",
         "type": "string",
-        "show": true
+        "once": true
       },
       {
         "kind": "org-structural-level",
         "type": "string",
-        "show": true
+        "once": true
       },
       {
         "kind": "agenda-item",
@@ -272,39 +291,28 @@
       {
         "kind": "sign-value-currency",
         "type": "string",
-        "parents": ["agenda-item"]
+        "parents": ["agenda-item"],
+        "once": true
       },
       {
         "kind": "sign",
         "type": "dictionary",
         "dictionaryName": "Sign",
-        "parents": ["sign-value-currency"]
+        "parents": ["sign-value-currency"],
+        "once": true
       },
       {
         "kind": "value",
         "type": "number",
-        "parents": ["sign-value-currency"]
+        "parents": ["sign-value-currency"],
+        "once": true
       },
       {
         "kind": "currency",
         "type": "dictionary",
         "dictionaryName": "Currency",
-        "parents": ["sign-value-currency"]
-      },
-      {
-        "kind": "contract-agent-org",
-        "type": "string",
-        "parents": ["agenda-item"]
-      },
-      {
-        "kind": "type",
-        "type": "string",
-        "parents": ["contract-agent-org"]
-      },
-      {
-        "kind": "name",
-        "type": "string",
-        "parents": ["contract-agent-org"]
+        "parents": ["sign-value-currency"],
+        "once": true
       }
     ]
   },
