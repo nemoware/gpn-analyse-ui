@@ -57,7 +57,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>наименование</th>
         <td mat-cell *matCellDef="let row">
           <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span><br>
-          {{ getAttrValue('org-1-name', row) }}
+          {{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}
         </td>
       </ng-container>
 
@@ -73,7 +73,7 @@
       <ng-container matColumnDef="org_level">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>орган управления</th>
         <td mat-cell *matCellDef="let row">          
-          {{ getAttrValue('org_structural_level', row) }}
+          {{ getAttrValue('org_structural_level', row, '⚠️ не обнаружен') }}
         </td>
       </ng-container>
 
@@ -83,7 +83,7 @@
         <td mat-cell *matCellDef="let row">
           <span class="org-alias">{{ getAttrValue('org-1-alias', row) }}</span><br>
           <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span><br>
-          {{ getAttrValue('org-1-name', row) }}          
+          {{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}          
         </td>
       </ng-container>
 
@@ -93,7 +93,7 @@
         <td mat-cell *matCellDef="let row">
           <span class="org-alias">{{ getAttrValue('org-2-alias', row) }}</span><br>
           <span class="org-type">{{ getAttrValue('org-2-type', row) }}</span><br>
-          {{ getAttrValue('org-2-name', row) }}
+          {{ getAttrValue('org-2-name', row, '⚠️ не обнаружен') }}
       
         </td>
       </ng-container>
