@@ -1,3 +1,4 @@
+@import '../../../../../styles-variables.scss';
 .mat-table {
   width: 100%;
 }
@@ -24,3 +25,40 @@ tr.detail-row {
 .mat-column-viewDetail {
   max-width: 35px;
 }
+
+
+.org-type, .small{
+  font-size: 85%;
+  color: $gpn-labels;
+}
+
+.org-alias{  
+  color: $gpn-labels;
+}
+
+.mat-column-date{
+  width: 150px;
+}
+
+.mat-column-subject{
+  width: 150px;
+}
+
+.mat-column-analyze_state{
+  width: 200px;
+}
+
+.mat-column-value{
+  text-align: right;
+}
+
+.mat-cell.mat-column-value{
+  width: 150px;
+  
+  font-family: 'din';
+  font-weight: 400;
+  font-size: 12pt;
+  padding-right: $gpn-padding;
+}
+
+

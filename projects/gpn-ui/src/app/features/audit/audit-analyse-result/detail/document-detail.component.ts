@@ -17,6 +17,15 @@ import {
   trigger
 } from '@root/node_modules/@angular/animations';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+
+
+const cols_by_type = {
+  'CONTRACT': ['date', 'number', 'value', 'org1', 'org2', 'contract_subject', 'analyze_state'],
+  'CHARTER': ['shevron','date', 'org', 'analyze_state'],
+  'PROTOCOL': ['date', 'number', 'org','org_level', 'analyze_state']
+}
+
+
 @Component({
   selector: 'gpn-document-detail',
   templateUrl: './document-detail.component.html',
@@ -43,49 +52,36 @@ export class DocumentDetailComponent implements OnInit {
     private router: Router
   ) {}
   col: string[] = [];
-  columns: any[] = [];
   dataSource: [];
   documentType: any;
   expandedElementId = '';
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
+  documentTypeName=null
+
   isExpansionDetailRow = (i: number, row: Object) => true;
 
   ngOnInit() {
+    
+
     this.dataSource = this.documents.docs;
+    this.documentTypeName=null
     if (this.documents.docs && this.documents.docs.length > 0) {
+      this.documentTypeName = this.documents.docs[0].documentType
+      this.col=cols_by_type[this.documentTypeName]
       this.documentType = ViewDetailDoc.getTypeDoc(
         this.documents.docs[0].documentType
       );
-      for (const h of this.documentType.columns) {
-        this.columns.push(h);
-        this.col.push(h.key);
-      }
     }
+
   }
 
-  getValue(col, element) {
-    let result = null;
-    for (const v of col.values) {
-      let value = null;
-      if (v.attribute) {
-        const atr = element.attributes.find(x => x.key === v.key);
-        if (atr) value = atr.value;
-      } else {
-        let atr = null;
-        if (v.key === 'documentNumber') atr = element.documentNumber;
-        else if (v.key === 'documentDate') atr = element.documentDate;
-        if (atr) value = atr;
-      }
-      if (value) {
-        if (v.dateformat) {
-          value = this.datepipe.transform(value, v.dateformat);
-        } else value = this.translate.instant(value.toString());
-        result = result != null ? result + ' ' + value : value;
-      }
-    }
-    return result;
+  getAttrValue(attrName:string, doc){
+    const atr = doc.attributes.find(x => x.key === attrName);
+    if (atr) return atr.value;
+    return null;
   }
+
 
   openDocument(element) {
     this.router.navigate(['audit/view/', element._id]);

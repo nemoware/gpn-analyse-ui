@@ -23,7 +23,7 @@ exports.getDocuments = async (req, res) => {
   try {
     let include;
     if (req.query.full === 'false') {
-      include = documentFields + `analysis.attributes`;
+      include = documentFields + `analysis.attributes\nanalysis.analyze_timestamp`;
     }
 
     let documents = await Document.find(
