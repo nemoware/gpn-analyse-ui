@@ -42,7 +42,7 @@ exports.getSubsidiaries = async (req, res) => {
   res.send(
     subsidiaries.map(s => {
       return {
-        name: `${s.legal_entity_type} "${s._id}"`
+        name: s._id
       };
     })
   );
