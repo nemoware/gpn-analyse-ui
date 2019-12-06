@@ -56,8 +56,8 @@
       <ng-container matColumnDef="org">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>наименование</th>
         <td mat-cell *matCellDef="let row">
-          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span><br>
-          {{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}
+          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span>
+          <span class="org-name">{{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}</span>
         </td>
       </ng-container>
 
@@ -80,29 +80,29 @@
       <!-- контрагент 1 -->
       <ng-container matColumnDef="org1">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>контрагент 1</th>
-        <td mat-cell *matCellDef="let row">
-          <span class="org-alias">{{ getAttrValue('org-1-alias', row) }}</span><br>
-          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span><br>
-          {{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}          
+        <td mat-cell *matCellDef="let row">          
+          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span>          
+          <span class="org-name">{{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}</span>
+          <span class="org-alias">{{ getAttrValue('org-1-alias', row) }}</span>
         </td>
       </ng-container>
 
       <!-- контрагент 2 -->
       <ng-container matColumnDef="org2">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>контрагент 2</th>
-        <td mat-cell *matCellDef="let row">
-          <span class="org-alias">{{ getAttrValue('org-2-alias', row) }}</span><br>
-          <span class="org-type">{{ getAttrValue('org-2-type', row) }}</span><br>
-          {{ getAttrValue('org-2-name', row, '⚠️ не обнаружен') }}
-      
+        <td mat-cell *matCellDef="let row">          
+          <span class="org-type">{{ getAttrValue('org-2-type', row) }}</span>                
+          <span class="org-name">{{ getAttrValue('org-2-name', row, '⚠️ не обнаружен') }}</span>
+          <span class="org-alias">{{ getAttrValue('org-2-alias', row) }}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="analyze_state">
           <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>статус</th>
           <td mat-cell *matCellDef="let doc">            
-            <span class="small">обработан: {{ doc.analyze_timestamp | date:'dd MMM yyyy' }}<br> 
-            {{ doc.analyze_timestamp | date:'HH:mm O' }}</span>
+            <span [class]="getDocStateClass(doc)"> </span>                
+            <span class="small">обработан: {{ doc.analysis.analyze_timestamp | date:'dd MMM yyyy' }}<br> 
+            {{ doc.analysis.analyze_timestamp | date:'HH:mm O' }}</span>
           </td>
         </ng-container>
       

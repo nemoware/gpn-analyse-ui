@@ -201,20 +201,18 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
           const docs = { docs: [] };
           for (const d of this.docs.filter(x => x.documentType === t)) {
             i++;
-
-            const nodeChild = {//TODO: why ?? we need to convert doc to this wtf?
-              _id: d._id,
+                         
+            const addon = {//TODO: why ?? we need to convert doc to this wtf?              
               name: d.filename,
-              index: i,
-              documentNumber: d.documentNumber,
-              documentDate: d.documentDate,
-              analyze_timestamp: d.analysis ? d.analysis.analyze_timestamp : null,
+              index: i,              
               children: [],
               childCount: 0,
               parseError: d.parseError,
               documentType: t,
               attributes: null
             };
+
+            const nodeChild = Object.assign({}, d, addon);
 
             if (this.selectedPage === 2) {
               nodeChild.attributes =

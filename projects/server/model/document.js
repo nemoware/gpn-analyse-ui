@@ -5,6 +5,7 @@ module.exports = (mongoose, Schema) => {
     filename: String,
     parse: Object,
     parserResponseCode: Number,
+    state: Number,
     analysis: {
       version: String,
       original_text: String,

@@ -11,6 +11,10 @@ parse.documentDate
 parse.documentType
 parse.documentNumber
 user
+state
+analysis.analyze_timestamp
+analysis.version
+analysis.warnings
 `;
 
 exports.getDocuments = async (req, res) => {
@@ -23,7 +27,7 @@ exports.getDocuments = async (req, res) => {
   try {
     let include;
     if (req.query.full === 'false') {
-      include = documentFields + `analysis.attributes\nanalysis.analyze_timestamp`;
+      include = documentFields + `analysis.attributes`;
     }
 
     let documents = await Document.find(
@@ -33,8 +37,10 @@ exports.getDocuments = async (req, res) => {
     );
 
     documents = documents.map(d => {
+      // TODO: remove this weirdest mapping! 
       let document = {
         filename: d.filename,
+        state:d.state,
         documentDate: d.parse.documentDate,
         documentType: d.parse.documentType,
         documentNumber: d.parse.documentNumber,
