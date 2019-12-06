@@ -34,7 +34,7 @@ interface ExampleFlatNode {
 export class ChildDetailComponent implements OnInit {
   @Input() document: any;
   @Input() documentType: any;
-  constructor(private translate: TranslateService) {}
+  constructor(private translate: TranslateService) { }
   TREE_DATA: TreeNode[];
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
@@ -42,7 +42,6 @@ export class ChildDetailComponent implements OnInit {
     node => node.level,
     node => node.expandable
   );
-
   private _transformer = (node: TreeNode, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
@@ -53,7 +52,6 @@ export class ChildDetailComponent implements OnInit {
       currency: node.currency
     };
   };
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
   treeFlattener = new MatTreeFlattener(
     this._transformer,
     node => node.level,
@@ -62,41 +60,15 @@ export class ChildDetailComponent implements OnInit {
   );
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+
   ngOnInit() {
     if (this.document) {
       this.TREE_DATA = this.documentType.children.getTreeAttributes(
         this.document.attributes
       );
 
-      /*
-      this.TREE_DATA = [
-        {
-          name: 'Fruit',
-          children: [
-            {name: 'Apple'},
-            {name: 'Banana'},
-            {name: 'Fruit loops'},
-          ]
-        }, {
-          name: 'Vegetables',
-          children: [
-            {
-              name: 'Green',
-              children: [
-                {name: 'Broccoli'},
-                {name: 'Brussel sprouts'},
-              ]
-            }, {
-              name: 'Orange',
-              children: [
-                {name: 'Pumpkins'},
-                {name: 'Carrots'},
-              ]
-            },
-          ]
-        },
-      ];
-*/
+
       this.dataSource.data = this.TREE_DATA;
     }
   }
