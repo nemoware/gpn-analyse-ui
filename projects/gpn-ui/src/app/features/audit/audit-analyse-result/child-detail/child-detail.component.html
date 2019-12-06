@@ -5,9 +5,9 @@
     <button mat-icon-button disabled></button>
       <div style="width: 100%">
         <span>{{node.name | translate}}</span>
-        <span *ngIf="node.min"> от {{node.min}} </span>
-        <span *ngIf="node.max"> до {{node.max}} </span>
-        <span *ngIf="node.currency"> {{node.currency | translate }} </span>
+        <span class="value" *ngIf="node.min"> от {{node.min | currency }} </span>
+        <span class="value" *ngIf="node.max"> до {{node.max | currency }} </span>
+        <span  *ngIf="node.currency"> {{node.currency | translate }} </span>
         <mat-divider></mat-divider>
        </div>
   </mat-tree-node>
