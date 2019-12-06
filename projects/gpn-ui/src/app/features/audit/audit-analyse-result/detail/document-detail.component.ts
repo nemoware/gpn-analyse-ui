@@ -52,7 +52,6 @@ export class DocumentDetailComponent implements OnInit {
     private router: Router
   ) {}
   col: string[] = [];
-  columns: any[] = [];
   dataSource: [];
   documentType: any;
   expandedElementId = '';
@@ -73,16 +72,8 @@ export class DocumentDetailComponent implements OnInit {
       this.documentType = ViewDetailDoc.getTypeDoc(
         this.documents.docs[0].documentType
       );
-      // for (const h of this.documentType.columns) {
-      //   this.columns.push(h);
-      // //   this.col.push(h.key);
-      // }
     }
 
-    
-    
-     
-    
   }
 
   getAttrValue(attrName:string, doc){
@@ -91,28 +82,6 @@ export class DocumentDetailComponent implements OnInit {
     return null;
   }
 
-  getValue(col, element) {
-    let result = null;
-    for (const v of col.values) {
-      let value = null;
-      if (v.attribute) {
-        const atr = element.attributes.find(x => x.key === v.key);
-        if (atr) value = atr.value;
-      } else {
-        let atr = null;
-        if (v.key === 'documentNumber') atr = element.documentNumber;
-        else if (v.key === 'documentDate') atr = element.documentDate;
-        if (atr) value = atr;
-      }
-      if (value) {
-        if (v.dateformat) {
-          value = this.datepipe.transform(value, v.dateformat);
-        } else value = this.translate.instant(value.toString());
-        result = result != null ? result + ' ' + value : value;
-      }
-    }
-    return result;
-  }
 
   openDocument(element) {
     this.router.navigate(['audit/view/', element._id]);
