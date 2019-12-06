@@ -208,7 +208,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
               index: i,
               documentNumber: d.documentNumber,
               documentDate: d.documentDate,
-              analyze_timestamp: d.analysis.analyze_timestamp,
+              analyze_timestamp: d.analysis ? d.analysis.analyze_timestamp : null,
               children: [],
               childCount: 0,
               parseError: d.parseError,
