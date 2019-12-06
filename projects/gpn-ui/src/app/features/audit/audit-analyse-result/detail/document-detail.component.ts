@@ -62,24 +62,42 @@ export class DocumentDetailComponent implements OnInit {
   isExpansionDetailRow = (i: number, row: Object) => true;
 
   ngOnInit() {
-    
 
-    this.dataSource = this.documents.docs;
-    this.documentTypeName=null
-    if (this.documents.docs && this.documents.docs.length > 0) {
-      this.documentTypeName = this.documents.docs[0].documentType
-      this.col=cols_by_type[this.documentTypeName]
+    const docs = this.documents.docs;// shortcut
+    this.dataSource = docs;
+    this.documentTypeName = null
+    if (docs && docs.length > 0) {
+      this.documentTypeName = docs[0].documentType
+
+      this.col = cols_by_type[this.documentTypeName].map(x => x)
       this.documentType = ViewDetailDoc.getTypeDoc(
-        this.documents.docs[0].documentType
+        docs[0].documentType
       );
+
+      if (this._isAllOrgsSame(docs, 'org-1-name')) {
+        const index = this.col.indexOf('org1', 0);
+        if (index > -1) {
+          this.col.splice(index, 1);
+        } 
+      }
     }
 
   }
 
-  getAttrValue(attrName:string, doc){
+  _isAllOrgsSame(docs, keyname) {
+    let val0 = this.getAttrValue(keyname, docs[0])
+    for (const doc of docs) {
+      if (val0 != this.getAttrValue(keyname, doc)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  getAttrValue(attrName:string, doc, default_value=null){
     const atr = doc.attributes.find(x => x.key === attrName);
     if (atr) return atr.value;
-    return null;
+    return default_value;
   }
 
 
