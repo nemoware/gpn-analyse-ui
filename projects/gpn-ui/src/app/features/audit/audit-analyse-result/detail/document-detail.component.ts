@@ -17,6 +17,15 @@ import {
   trigger
 } from '@root/node_modules/@angular/animations';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+
+
+const cols_by_type = {
+  'CONTRACT': ['date', 'number', 'value', 'org1', 'org2', 'contract_subject', 'analyze_state'],
+  'CHARTER': ['shevron','date', 'org', 'analyze_state'],
+  'PROTOCOL': ['date', 'number', 'org','org_level', 'analyze_state']
+}
+
+
 @Component({
   selector: 'gpn-document-detail',
   templateUrl: './document-detail.component.html',
@@ -49,19 +58,37 @@ export class DocumentDetailComponent implements OnInit {
   expandedElementId = '';
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
+  documentTypeName=null
+
   isExpansionDetailRow = (i: number, row: Object) => true;
 
   ngOnInit() {
+    
+
     this.dataSource = this.documents.docs;
+    this.documentTypeName=null
     if (this.documents.docs && this.documents.docs.length > 0) {
+      this.documentTypeName = this.documents.docs[0].documentType
+      this.col=cols_by_type[this.documentTypeName]
       this.documentType = ViewDetailDoc.getTypeDoc(
         this.documents.docs[0].documentType
       );
-      for (const h of this.documentType.columns) {
-        this.columns.push(h);
-        this.col.push(h.key);
-      }
+      // for (const h of this.documentType.columns) {
+      //   this.columns.push(h);
+      // //   this.col.push(h.key);
+      // }
     }
+
+    
+    
+     
+    
+  }
+
+  getAttrValue(attrName:string, doc){
+    const atr = doc.attributes.find(x => x.key === attrName);
+    if (atr) return atr.value;
+    return null;
   }
 
   getValue(col, element) {

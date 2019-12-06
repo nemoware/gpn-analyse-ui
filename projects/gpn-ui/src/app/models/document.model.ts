@@ -4,9 +4,9 @@ export interface Document {
   _id: string;
   auditId: string;
   filename: string;
-  documentDate: Date;
-  documentType: string;
-  documentNumber: string;
+  documentDate: Date; //TODO: deprecated, moved to attributes
+  documentType: string; 
+  documentNumber: string; //TODO: deprecated, moved to attributes
   parentId: string;
   paragraphs: [{ paragraphHeader: Object; paragraphBody: Object }];
   analysis: {

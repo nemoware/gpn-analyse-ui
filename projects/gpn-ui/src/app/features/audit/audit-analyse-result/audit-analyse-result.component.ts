@@ -202,12 +202,13 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
           for (const d of this.docs.filter(x => x.documentType === t)) {
             i++;
 
-            const nodeChild = {
+            const nodeChild = {//TODO: why ?? we need to convert doc to this wtf?
               _id: d._id,
               name: d.filename,
               index: i,
               documentNumber: d.documentNumber,
               documentDate: d.documentDate,
+              analyze_timestamp: d.analysis.analyze_timestamp,
               children: [],
               childCount: 0,
               parseError: d.parseError,
