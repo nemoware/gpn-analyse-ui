@@ -31,6 +31,7 @@ const cols_by_type = {
 
 const column_to_sorting_mapping = {
   'date': 'date',
+  'subject': 'subject',
   'number': 'number',
   'value': 'sign_value_currency/value',
   'org1': 'org-1-name',
@@ -88,15 +89,13 @@ export class DocumentDetailComponent implements OnInit {
     }
 
   ngOnInit() {
-
     const docs = this.documents.docs;// shortcut
-    // this.dataSource = new MatTableDataSource(docs);
-    this.dataSource.data = docs
-    this.dataSource.sortingDataAccessor = this._sortingDataAccessor
-    this.dataSource.sort = this.sort;
 
     this.documentTypeName = null
     if (docs && docs.length > 0) {
+      this.dataSource.sortingDataAccessor = this._sortingDataAccessor
+      this.dataSource.sort = this.sort;
+      this.dataSource.data = docs
       this.documentTypeName = docs[0].documentType
 
       this.col = cols_by_type[this.documentTypeName].map(x => x)
@@ -115,6 +114,9 @@ export class DocumentDetailComponent implements OnInit {
           this.col.splice(index, 1);
         }
       }
+    } else {
+      // no docs
+      this.dataSource.data = []
     }
 
   }
