@@ -64,6 +64,7 @@ $org_1_base_alt: $mat-pink;
 $org_2_base: $mat-indigo;
 $org_2_base_alt: $mat-blue;
 
+.contract-agent-org-1-name,
 .org-1-name {
   background: mat-color($org_1_base, 300);  
 }
@@ -72,6 +73,7 @@ $org_2_base_alt: $mat-blue;
   background: mat-color($org_1_base, 200);  
 }
 
+.contract-agent-org-1-type,
 .org-1-type {
   background: mat-color($org_1_base_alt, 200);  
 }
@@ -85,6 +87,7 @@ $org_2_base_alt: $mat-blue;
 }
 // -----
 
+.contract-agent-org-2-name,
 .org-2-name {
   background: mat-color($org_2_base, 300);  
 }
@@ -93,6 +96,7 @@ $org_2_base_alt: $mat-blue;
   background: mat-color($org_2_base, 200);  
 }
 
+.contract-agent-org-2-type,
 .org-2-type {
   background: mat-color($org_2_base_alt, 200);  
 }
