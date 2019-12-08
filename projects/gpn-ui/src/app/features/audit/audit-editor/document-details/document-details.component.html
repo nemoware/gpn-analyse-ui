@@ -21,8 +21,9 @@
 
 <section>
   <label>файл</label>
+  <a [href]='"file://"+document.audit.ftpUrl + document.filename'>
   <span class="file-name"><span class="file-path">{{ document.filename | filePath }}
-    </span>{{ document.filename | fileName }}</span>
+    </span>{{ document.filename | fileName }}</span></a>
 </section>
 
 
