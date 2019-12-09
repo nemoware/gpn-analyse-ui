@@ -38,7 +38,6 @@ import { DocumentDetailsComponent } from './audit-editor/document-details/docume
 import { SearchDocumentComponent } from './audit-editor/search-document/search-document.component';
 import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
 import { CompetencechartsComponent } from './audit-editor/competencecharts/competencecharts.component';
-import { HighchartsChartComponent } from '@root/node_modules/highcharts-angular';
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { DocumentDetailComponent } from './audit-analyse-result/detail/document-detail.component';
 import { ChildDetailComponent } from './audit-analyse-result/child-detail/child-detail.component';
@@ -58,8 +57,7 @@ import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
     EditAttributeComponent,
     DocumentDetailsComponent,
     SearchDocumentComponent,
-    CompetencechartsComponent,
-    HighchartsChartComponent,
+    CompetencechartsComponent,    
     DocumentDetailComponent,
     FileNamePipe, FilePathPipe,
     ChildDetailComponent,
