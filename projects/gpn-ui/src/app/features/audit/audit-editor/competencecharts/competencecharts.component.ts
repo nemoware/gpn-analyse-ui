@@ -43,7 +43,6 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
 
 
 
-
   getBarLeft(competence) {
 
     if ('constraint-min' in competence) {
@@ -61,12 +60,8 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
     if (('constraint-min' in competence) && ('constraint-max' in competence)) {
 
       const delta = competence['constraint-max'] - competence['constraint-min']
-      const percent = (100.0 - this.barOffsetPercent * 2) * delta / range;
+      return (100.0 - this.barOffsetPercent * 2) * delta / range;
 
-      console.log(range);
-
-      const style = percent;
-      return style
     } else return this.barOffsetPercent
   }
 
@@ -80,7 +75,11 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
         x.key.split('/')
           .map(x => x.replace(/[-_](\d){1,2}$/, '')); //trim number
 
-      console.log(pth);
+      if (pth.length < 4) {
+        console.log('sorry yeah?')
+        console.log(x)
+        return;
+      }
 
       const org_level = pth[0]
       const competence_name = pth[1]
@@ -97,7 +96,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
       const competence = competences[competence_name]
       competence[margin_] = margin_value
       competence['span'] = x.span
-      
+
       constraint_values.push(margin_value)
 
     }
@@ -116,17 +115,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
     this.prepareData()
   }
 
-  // changeHighchartsSpan(event) {
-  //   console.log(event);
-  //   console.log(event.srcElement.innerHTML);
-  //   const atr = this.attributes.find(x => x.key === event.srcElement.innerHTML);
-  //   console.log(atr);
-  //   if (atr) {
-  //     this.goToAttribute.emit('span_' + atr.span[0]);
-  //   }
-  // }
-
-  scrollToSpan(span){
+  scrollToSpan(span) {
     this.goToAttribute.emit('span_' + span[0]);
   }
 }

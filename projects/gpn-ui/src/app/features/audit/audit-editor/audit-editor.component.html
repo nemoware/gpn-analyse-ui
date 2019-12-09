@@ -60,11 +60,14 @@
     </mat-toolbar>
     
      
-
-    <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
-                          (goToAttribute)="goToAttribute($event)"
-                          [attributes] = "attributes"></gpn-competencecharts>
-     
+    <div class="chart-container" *ngIf="document.documentType == 'CHARTER' && attributes"> 
+      
+      <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
+                            (goToAttribute)="goToAttribute($event)"
+                            [attributes] = "attributes"></gpn-competencecharts>
+      
+    </div>
+    <mat-divider></mat-divider>
 
     <div id="container_view_document">
         <gpn-view-document
