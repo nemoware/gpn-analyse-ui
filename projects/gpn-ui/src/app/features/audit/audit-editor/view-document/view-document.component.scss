@@ -163,33 +163,7 @@ $org_2_base_alt: $mat-blue;
 
 
 
-$comp_fade:0.3;
 
-.Deal{  
-  background: fade-out(mat-color($mat-deep-purple, $comp_t), $comp_fade);
-}
-.Charity{
-  background: fade-out(mat-color($mat-pink, $comp_t), $comp_fade);
-}   
-.Other {
-  background: fade-out(mat-color($mat-blue-grey, $comp_t), $comp_fade);
-}  
-
-.Lawsuit{
-  background: fade-out(mat-color($mat-indigo, $comp_t), $comp_fade);
-}
-
-.RealEstate{
-  background: fade-out(mat-color($mat-brown, $comp_t), $comp_fade);
-}
-
-.Insurance{
-  background: fade-out(mat-color($mat-cyan, $comp_t), $comp_fade);
-}
-
-.Consulting{
-  background: fade-out(mat-color($mat-blue, $comp_t), $comp_fade);
-}
  
 
 // --------------
