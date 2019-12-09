@@ -43,10 +43,13 @@
   "agenda-item": "Пункт повестки дня",
 
   "Charity": "Благотворительность",
-  "Deal": "Сделка",
-  "PropertyDeal": "Сделка с имуществом",
+  "Deal": "Сделки",
   "Consulting": "Консалтинг",
-  "Other": "Другое",
+  "Other": "Прочее",
+  "Lawsuit": "Судебные разбирательства, иски",
+  "RealEstate": "Сделки с имуществом",
+  "Insurance": "Страхование",
+
   "RUB": "₽",
   "EUR": "€",
   "USD": "$",
@@ -57,8 +60,8 @@
 
   "PARSE_ERROR": "С ОШИБКАМИ",
 
-  "AllMembers": "Общее собрание Участников",
-  "ShareholdersGeneralMeeting": "Генеральное собрание акционеров",
+  "AllMembers": "Общее собрание участников",
+  "ShareholdersGeneralMeeting": "Общее собрание акционеров",
   "BoardOfDirectors": "Совет директоров",
   "CEO": "Генеральный директор",
   "competence_CEO": "Генеральный директор",
@@ -66,8 +69,7 @@
   "finance": "Финансирование",
   "deals": "Сделки",
   "court": "Суд",
-  "Lawsuit": "Судебный процесс",
-  "RealEstate": "Недвижимость",
+  
 
   "competence_CEO_court": "ГД - суд",
   "competence_CEO_court_constraint_max": "ГД : суд пороговые значения",

@@ -25,3 +25,35 @@ $gpn-labels: mat-color($mat-grey, 500);
 $gpn-labels-darker: mat-color($mat-grey, 800);
 $gpn-padding:20px;
 $gpn-padding-half: $gpn-padding/2;
+
+ 
+ 
+$comp_t: 200;
+$comp_fade:0.3;
+$competences: ( 
+  RealEstate: mat-color($mat-brown, $comp_t), 
+  Lawsuit: mat-color($mat-indigo, $comp_t),
+  Deal: mat-color($mat-deep-purple, $comp_t),
+  Charity: mat-color($mat-pink, $comp_t),
+  Other: mat-color($mat-blue-grey, $comp_t),
+  Insurance: mat-color($mat-cyan, $comp_t),
+  Consulting: mat-color($mat-blue, $comp_t)
+);
+
+@each $name, $color in $competences {
+  .#{$name}-fade-right {        
+      background: linear-gradient(to right, #{$color}, rgba(0,0,0,0))
+  }
+
+  .#{$name}-fade-left {        
+    background: linear-gradient(to left, #{$color}, rgba(0,0,0,0))
+  }
+
+  .#{$name}-solid {        
+    background: #{$color}
+  }
+
+  .#{$name} {        
+    background:fade-out( $color, $comp_fade)!important
+  }
+}
