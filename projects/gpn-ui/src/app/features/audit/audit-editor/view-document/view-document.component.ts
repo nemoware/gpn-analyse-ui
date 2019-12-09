@@ -12,13 +12,7 @@ import {
 } from '@angular/core';
 import { Document } from '@app/models/document.model';
 import { KindAttribute } from '@app/models/kind-attribute';
-import {
-  faChevronDown,
-  faChevronUp,
-  faEdit,
-  faSave,
-  faTimes
-} from '@fortawesome/free-solid-svg-icons';
+
 import { Router } from '@root/node_modules/@angular/router';
 import { MatDialog } from '@root/node_modules/@angular/material';
 import { EditAttributeComponent } from '@app/features/audit/audit-editor/edit-attribute/edit-attribute.component';
@@ -38,8 +32,7 @@ import { Helper } from '@app/features/audit/helper';
   encapsulation: ViewEncapsulation.None
 })
 export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
-  faChevronDown = faChevronDown;
-  faChevronUp = faChevronUp;
+   
 
   @Input() document: Document;
   @Input() editmode: boolean;

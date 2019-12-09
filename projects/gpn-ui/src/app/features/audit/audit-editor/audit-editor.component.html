@@ -1,31 +1,23 @@
 <mat-sidenav-container class="fixed-layout" *ngIf="document" autosize>
-  
-  <mat-sidenav mode="side" opened class="left_group"> 
-    
+
+  <mat-sidenav mode="side" opened class="left_group">
+
     <mat-tab-group color="accent" animationDuration="0ms" dynamicHeight='true'>
 
       <mat-tab label="Детали">
         <div class="container">
-          <gpn-document-details
-            [document] = "document"
-            [editable]="editmode"
-          >
+          <gpn-document-details [document]="document" [editable]="editmode">
           </gpn-document-details>
         </div>
       </mat-tab>
 
       <mat-tab label="Заголовки">
-        <cdk-virtual-scroll-viewport  style="height: 80vh" itemSize="50" >
-          <gpn-tree-attributes
-            [editmode]="editmode"
-            [attributes]="attributes"
-            [headers]="document.analysis.headers"
-            [documentType] = "documentType"
-            (goToAttribute)="goToAttribute($event)"
-          ></gpn-tree-attributes>
+        <cdk-virtual-scroll-viewport style="height: 80vh" itemSize="50">
+          <gpn-tree-attributes [editmode]="editmode" [attributes]="attributes" [headers]="document.analysis.headers"
+            [documentType]="documentType" (goToAttribute)="goToAttribute($event)"></gpn-tree-attributes>
         </cdk-virtual-scroll-viewport>
       </mat-tab>
-    
+
     </mat-tab-group>
 
   </mat-sidenav>
@@ -33,57 +25,56 @@
 
 
 
-  
 
-   
-    <mat-toolbar>
-    
-      <button mat-icon-button matTooltip="Перейти в режим редактирования" (click)="editMode()" [disabled]="editmode">
-        <fa-icon [icon]="faEdit"></fa-icon>
+    <div class="actions-container">
+      <button (click)="goToAttribute('top')" color="primary" class='floating-button' mat-mini-fab
+        matTooltip="В начало документа">
+        <mat-icon>keyboard_arrow_up</mat-icon>
       </button>
 
-      <button mat-icon-button matTooltip="Сохранить изменения" (click)="saveChanges()" [disabled]="!changed">
-        <fa-icon [icon]="faSave"></fa-icon>
-      </button>
-      <span class="fill-remaining-space"></span>
-      <button mat-icon-button matTooltip="Обновить" (click)="refresh()">
-        <fa-icon [icon]="faSyncAlt"></fa-icon>
+      <button (click)="goToAttribute('foot')" color="primary" class='floating-button' mat-mini-fab
+        matTooltip="В конец документа">
+        <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
 
-      <button mat-icon-button matTooltip="В начало документа" (click)="goToAttribute('top')" style="float: right">
-        <fa-icon [icon]="faChevronUp"></fa-icon>
+      <button (click)="saveChanges()" color="primary" class='floating-button' mat-mini-fab
+        matTooltip="Сохранить изменения">
+        <mat-icon>save_alt</mat-icon>
       </button>
 
-      <button mat-icon-button matTooltip="В конец документа" (click)="goToAttribute('foot')" style="float: right">
-        <fa-icon [icon]="faChevronDown"></fa-icon>
+      <button (click)="editMode()" class='floating-button' mat-mini-fab
+        matTooltip="Режим обучения, корректировка атрибутов">
+        <mat-icon>edit</mat-icon>
       </button>
-    </mat-toolbar>
-    
-     
-    <div class="chart-container" *ngIf="document.documentType == 'CHARTER' && attributes"> 
-      
-      <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
-                            (goToAttribute)="goToAttribute($event)"
-                            [attributes] = "attributes"></gpn-competencecharts>
-      
+
     </div>
-    <mat-divider></mat-divider>
+
+    <div class="chart-container">
+      <h3>
+        <div class="header-hat">{{getAttrValue('org-1-type')}}</div>{{getAttrValue('org-1-name')}}
+      </h3>
+      <h2>{{document.documentType | translate}}</h2>
+      <h4 *ngIf="getAttrValue('org_structural_level')">{{getAttrValue('org_structural_level')}}</h4>
+      {{getAttrValue('date') | date}}
+
+      <mat-divider></mat-divider>
+    </div>
+
+    <div class="chart-container" *ngIf="document.documentType == 'CHARTER' && attributes">
+
+      <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
+        (goToAttribute)="goToAttribute($event)" [attributes]="attributes"></gpn-competencecharts>
+      <mat-divider></mat-divider>
+    </div>
+
 
     <div id="container_view_document">
-        <gpn-view-document
-        [document]="document"
-        [kinds] = "documentType"
-        [editmode]="editmode"
-        [attributes] = "attributes"
-        (changeAttribute)= "changeAttribute($event)"
-        (refresh)="refresh()"
-      ></gpn-view-document>
+      <gpn-view-document [document]="document" [kinds]="documentType" [editmode]="editmode" [attributes]="attributes"
+        (changeAttribute)="changeAttribute($event)" (refresh)="refresh()"></gpn-view-document>
     </div>
 
-  
 
 
-</mat-sidenav-content>
+
+  </mat-sidenav-content>
 </mat-sidenav-container>
-
-

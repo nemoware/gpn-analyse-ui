@@ -6,6 +6,28 @@ $header_height:64px;
     padding: $gpn-padding;
 }
 
+h3{
+  .header-hat{
+    font-size: 80%;
+  }
+}
+
+.actions-container{
+  z-index: 100;
+  position: fixed;  
+  top: $header_height+10px;
+  right: $gpn-padding;
+
+  button{
+    margin-left:$gpn-padding/2;
+  }
+}
+
+ 
+.floating-button{
+  
+}
+
 
 .left_group{
   max-width: 350px;  
