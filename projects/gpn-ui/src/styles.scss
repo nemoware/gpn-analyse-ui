@@ -123,16 +123,11 @@ body.wait-cursor {
   src: url(./assets/2BBA50_3_0.woff) format('woff')
 }
 
-.file-name{
-   
-}
 
 .file-path{
   color: $gpn-labels;
   overflow: hidden;
-  text-overflow: ellipsis;    
-  
-  margin-right: 0.5em
+  text-overflow: ellipsis;   
 }
 
 label, h1, h2, h3, h4{

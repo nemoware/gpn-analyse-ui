@@ -33,7 +33,11 @@ tr.detail-row {
 }
 
 .org-alias{  
-  color: $gpn-labels;
+  color: $gpn-labels;  
+}
+
+.org-name{
+  display: block;
 }
 
 .mat-column-date{
@@ -41,7 +45,7 @@ tr.detail-row {
 }
 
 .mat-column-subject{
-  width: 150px;
+  width: 180px;
 }
 
 .mat-column-analyze_state{
@@ -60,5 +64,4 @@ tr.detail-row {
   font-size: 12pt;
   padding-right: $gpn-padding;
 }
-
 

@@ -1,18 +1,16 @@
-<div *ngIf="this.audit" style="margin-left: 10px">
-    <span><b>{{ audit.subsidiaryName }}</b> {{ audit.auditStart | date :'dd.MM.yyyy'}} - {{audit.auditEnd | date : 'dd.MM.yyyy'}}</span>
-    <br>
-    <fa-icon *ngIf="this.audit.status == 'InWork'" [icon]="faClock" style="float: left"></fa-icon>
-    <fa-icon *ngIf="this.audit.status == 'Ended'" [icon]="faFlagCheckered" style="float: left"></fa-icon>
-    <span style="margin-left: 10px"> Статус: {{ audit.status | translate}} </span>
-    <!--<br>
-    <div class="search-container" style="margin-left: 15px">
-      <mat-form-field appearance="legacy" >
-        <mat-label>Поиск документа</mat-label>
-        <input matInput placeholder="Поиск" style="width: 250px" (change)="valueSearch($event.target.value)">
-        <fa-icon [icon]="faSearch" matTooltip="Поиск" style="float: right"></fa-icon>
-      </mat-form-field>
-    </div>-->
-</div>
+<mat-toolbar *ngIf="this.audit">
+  <span>
+  <h2>
+      <span class="headline-date">  {{ audit.auditStart | date :'dd LLL yyyy'}} - {{audit.auditEnd | date : 'dd LLL yyyy'}}</span><br>
+      {{ audit.subsidiary.name }}
+  </h2>  
+  
+  </span>
+  <span class="fill-remaining-space"></span>
+  <span class="headline-status"><span [class]="audit.status">{{ audit.status | translate}}</span></span>
+</mat-toolbar>
+
+ 
 <mat-divider></mat-divider>
 
 <mat-tab-group color="accent" (selectedTabChange)="changePage($event)" [(selectedIndex)]="selectedPage">

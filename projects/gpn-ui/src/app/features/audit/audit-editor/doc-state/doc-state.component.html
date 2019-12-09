@@ -1,0 +1,3 @@
+<span [class]="getDocStateClass(document)"> </span>                
+            <span class="small" *ngIf="document.analysis">обработан: {{ document.analysis.analyze_timestamp | date:'dd MMM yyyy' }}<br> 
+            {{ document.analysis.analyze_timestamp | date:'HH:mm O' }}</span>

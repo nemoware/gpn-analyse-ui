@@ -42,8 +42,8 @@ import { HighchartsChartComponent } from '@root/node_modules/highcharts-angular'
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { DocumentDetailComponent } from './audit-analyse-result/detail/document-detail.component';
 import { ChildDetailComponent } from './audit-analyse-result/child-detail/child-detail.component';
-import { BrowserAnimationsModule } from '@root/node_modules/@angular/platform-browser/animations';
-
+// import { BrowserAnimationsModule } from '@root/node_modules/@angular/platform-browser/animations';
+import { DocStateComponent } from '@app/features/audit/audit-editor/doc-state/doc-state.component';
 import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
 
 @NgModule({
@@ -62,7 +62,8 @@ import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
     HighchartsChartComponent,
     DocumentDetailComponent,
     FileNamePipe, FilePathPipe,
-    ChildDetailComponent
+    ChildDetailComponent,
+    DocStateComponent
   ],
   imports: [
     CommonModule,

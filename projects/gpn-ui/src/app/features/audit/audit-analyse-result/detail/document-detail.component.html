@@ -1,7 +1,7 @@
    
   
 
-    <table mat-table [dataSource]="dataSource" matSort matSortDisableClear multiTemplateDataRows matSortActive="date" matSortDirection="desc">
+    <table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows matSortActive="date" matSortDirection="desc">
 
       
 
@@ -19,7 +19,7 @@
 
       <!-- шэврон -->
       <ng-container matColumnDef="shevron">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear></th>
+        <th mat-header-cell *matHeaderCellDef disableClear></th>
         <td mat-cell *matCellDef="let row">
           <button mat-icon-button (click)="selectedRow(row, $event)">
             <fa-icon [icon]="faChevronDown" *ngIf="row._id != expandedElementId"></fa-icon>
@@ -56,8 +56,8 @@
       <ng-container matColumnDef="org">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>наименование</th>
         <td mat-cell *matCellDef="let row">
-          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span><br>
-          {{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}
+          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span>
+          <span class="org-name">{{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}</span>
         </td>
       </ng-container>
 
@@ -80,29 +80,27 @@
       <!-- контрагент 1 -->
       <ng-container matColumnDef="org1">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>контрагент 1</th>
-        <td mat-cell *matCellDef="let row">
-          <span class="org-alias">{{ getAttrValue('org-1-alias', row) }}</span><br>
-          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span><br>
-          {{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}          
+        <td mat-cell *matCellDef="let row">          
+          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span>          
+          <span class="org-name">{{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}</span>
+          <span class="org-alias">{{ getAttrValue('org-1-alias', row) }}</span>
         </td>
       </ng-container>
 
       <!-- контрагент 2 -->
       <ng-container matColumnDef="org2">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>контрагент 2</th>
-        <td mat-cell *matCellDef="let row">
-          <span class="org-alias">{{ getAttrValue('org-2-alias', row) }}</span><br>
-          <span class="org-type">{{ getAttrValue('org-2-type', row) }}</span><br>
-          {{ getAttrValue('org-2-name', row, '⚠️ не обнаружен') }}
-      
+        <td mat-cell *matCellDef="let row">          
+          <span class="org-type">{{ getAttrValue('org-2-type', row) }}</span>                
+          <span class="org-name">{{ getAttrValue('org-2-name', row, '⚠️ не обнаружен') }}</span>
+          <span class="org-alias">{{ getAttrValue('org-2-alias', row) }}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="analyze_state">
           <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>статус</th>
-          <td mat-cell *matCellDef="let doc">            
-            <span class="small">обработан: {{ doc.analyze_timestamp | date:'dd MMM yyyy' }}<br> 
-            {{ doc.analyze_timestamp | date:'HH:mm O' }}</span>
+          <td mat-cell *matCellDef="let doc">      
+            <gpn-doc-state [document]='doc'></gpn-doc-state>                  
           </td>
         </ng-container>
       
