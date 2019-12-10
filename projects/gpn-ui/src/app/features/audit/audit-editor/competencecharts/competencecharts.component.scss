@@ -3,10 +3,7 @@
 
 $gpn-chart_bar-h: 15px;
 
-.chart-container{
-    padding: $gpn-padding;
-}
-
+ 
 .competence-table{
     width: 100%;
 
@@ -57,13 +54,7 @@ $gpn-chart_bar-h: 15px;
     text-align: right;
  }
 
-.margin-unlimited-max{
-    // background: linear-gradient(to left, rgba(0,0,0,0), lightgrey);
-}
 
-.margin-unlimited-min{
-    // background: linear-gradient(to right, rgba(0,0,0,0), lightgrey);
-}
 .competence-margins{
     cursor: pointer;
     white-space: nowrap;
