@@ -2,6 +2,7 @@ class Attribute {
   constructor(attribute) {
     this.kind = attribute.kind;
     this.type = attribute.type;
+    this.once = attribute.once;
     this.dictionaryName = attribute.dictionaryName;
     this.parents = attribute.parents;
     this.show = attribute.show;
@@ -14,6 +15,7 @@ class Attribute {
       kind: this.kind,
       type: this.type,
       show: this.show,
+      once: this.once,
       dictionaryName: this.dictionaryName
     };
 
