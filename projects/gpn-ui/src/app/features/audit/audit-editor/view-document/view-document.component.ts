@@ -170,7 +170,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     const startWord = document.getElementById('span_' + indexStart);
 
     if (indexStart !== indexEnd - 1) {
-      const endWord = document.getElementById('span_' + indexEnd);
+      const endWord = this.checkEndWord(indexEnd);
       const range = document.createRange();
       range.setStart(startWord, 0);
       range.setEnd(endWord, 0);
@@ -193,6 +193,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       if (changed) spanHint.classList.add('changed');
       span.appendChild(spanHint);
     }
+  }
+
+  checkEndWord(id: number): Node {
+    const elem = document.getElementById('span_' + id);
+    const elemPrev = document.getElementById('span_' + (id - 1));
+    if (elemPrev.innerHTML === '\n') return this.checkEndWord(id - 1);
+    else return elem;
   }
 
   removeAttribute(atr: AttributeModel) {
