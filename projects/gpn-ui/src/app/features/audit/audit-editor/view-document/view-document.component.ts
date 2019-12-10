@@ -163,6 +163,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     if (indexStart === indexEnd || !kind || kind.length === 0) return;
 
+    if (kind === 'number') {
+      const r = 0;
+    }
+
     const span = document.createElement('span');
     span.classList.add(kind);
     if (needHint) span.classList.add('hint_span');
@@ -177,7 +181,11 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       startWord.parentElement.insertBefore(span, startWord);
       span.appendChild(range.extractContents());
       range.insertNode(span);
-      if (span.previousElementSibling) span.previousElementSibling.remove();
+      if (
+        span.previousElementSibling &&
+        span.previousElementSibling.textContent === ''
+      )
+        span.previousElementSibling.remove();
       if (span.children[span.children.length - 1])
         span.children[span.children.length - 1].remove();
     } else {
@@ -221,7 +229,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getInfoAttribute(e) {
-    console.log(e);
     if (e.target.classList.contains('hint') && this.editmode) {
       const atr = this.attributes.find(
         x => x.key === e.target.parentElement.id
@@ -271,28 +278,24 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
 
     const startElement =
-      selRange.startContainer.parentElement.id !== 'view_doc'
+      selRange.startContainer.nodeValue !== ' '
         ? document.getElementById(selRange.startContainer.parentElement.id)
         : document.getElementById(
             (selRange.startContainer.nextSibling as HTMLElement).id
           );
-    let endElement: HTMLElement = null;
+
+    const endElement =
+      selRange.endContainer.nodeValue !== ' '
+        ? document.getElementById(selRange.endContainer.parentElement.id)
+        : document.getElementById(
+            (selRange.endContainer.previousSibling as HTMLElement).id
+          );
 
     if (startElement.parentElement.id !== 'view_doc') {
       atrParent = this.attributes.find(
         x => x.key === startElement.parentElement.id
       );
       if (atrParent) atr.parent = atrParent.key;
-    }
-
-    if (selRange.endContainer.parentElement.id !== 'view_doc') {
-      endElement = document.getElementById(
-        selRange.endContainer.parentElement.id
-      );
-    } else {
-      endElement = document.getElementById(
-        (selRange.endContainer.previousSibling as HTMLElement).id
-      );
     }
 
     if (endElement.parentElement.id !== startElement.parentElement.id) {

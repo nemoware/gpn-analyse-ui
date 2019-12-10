@@ -19,19 +19,19 @@
   font-size: 12pt;
   font-weight: 600;
   margin-top: $gpn-padding/2;
-  display: block;
+  //display: block;
 }
 
 .hint_span,
 .hint {
   border-radius: 2px;
-  background: mat-color($mat-blue, 100);  
+  background: mat-color($mat-blue, 100);
 }
 
 .unknown {
   background: linear-gradient(to bottom, white, lightgrey);
 }
- 
+
 .hint {
   background: white;
   border: 1px solid mat-color($mat-grey, 300);
@@ -44,18 +44,18 @@ $org_level_t: 50;
 $comp_t: 200;
 
 .ShareholdersGeneralMeeting,
-.AllMembers{
-  background: mat-color($mat-deep-orange, $org_level_t);  
+.AllMembers {
+  background: mat-color($mat-deep-orange, $org_level_t);
 }
 
-.BoardOfDirectors{
-  background: mat-color($mat-lime, $org_level_t);  
+.BoardOfDirectors {
+  background: mat-color($mat-lime, $org_level_t);
 }
-.CEO{
-  background: mat-color($mat-indigo, $org_level_t);  
+.CEO {
+  background: mat-color($mat-indigo, $org_level_t);
 }
-.BoardOfCompany{
-  background: mat-color($mat-purple, $org_level_t);  
+.BoardOfCompany {
+  background: mat-color($mat-purple, $org_level_t);
 }
 // -----------
 
@@ -66,108 +66,100 @@ $org_2_base_alt: $mat-blue;
 
 .contract-agent-org-1-name,
 .org-1-name {
-  background: mat-color($org_1_base, 300);  
+  background: mat-color($org_1_base, 300);
 }
 
 .org-1-alt-name {
-  background: mat-color($org_1_base, 200);  
+  background: mat-color($org_1_base, 200);
 }
 
 .contract-agent-org-1-type,
 .org-1-type {
-  background: mat-color($org_1_base_alt, 200);  
+  background: mat-color($org_1_base_alt, 200);
 }
 
 .org-1-type-ext {
-  background: mat-color($org_1_base_alt, 100);  
+  background: mat-color($org_1_base_alt, 100);
 }
 
 .org-1-alias {
-  background: mat-color($org_1_base_alt, 200);  
+  background: mat-color($org_1_base_alt, 200);
 }
 // -----
 
 .contract-agent-org-2-name,
 .org-2-name {
-  background: mat-color($org_2_base, 300);  
+  background: mat-color($org_2_base, 300);
 }
 
 .org-2-alt-name {
-  background: mat-color($org_2_base, 200);  
+  background: mat-color($org_2_base, 200);
 }
 
 .contract-agent-org-2-type,
 .org-2-type {
-  background: mat-color($org_2_base_alt, 200);  
+  background: mat-color($org_2_base_alt, 200);
 }
 
 .org-2-type-ext {
-  background: mat-color($org_2_base_alt, 100);  
+  background: mat-color($org_2_base_alt, 100);
 }
 
 .org-2-alias {
-  background: mat-color($org_2_base_alt, 200);  
+  background: mat-color($org_2_base_alt, 200);
 }
-
-
 
 // =========================
 .org-structural-level {
-  background: mat-color($mat-orange, 200);  
+  background: mat-color($mat-orange, 200);
 }
 
 .subject {
   background: mat-color($mat-amber, 300);
 }
 
-.value{
-  background:  mat-color($mat-teal, 300);
+.value {
+  background: mat-color($mat-teal, 300);
 }
-.currency{
-  background:  mat-color($mat-teal, 200);
+.currency {
+  background: mat-color($mat-teal, 200);
 }
-.sign{
-  background:  mat-color($mat-teal, 100);
+.sign {
+  background: mat-color($mat-teal, 100);
 }
 
+.constraint-min {
+  background: mat-color($mat-teal, 100);
 
-.constraint-min{
-  background:  mat-color($mat-teal, 100);
-
-  .value{
-    background:  mat-color($mat-teal, 300);
+  .value {
+    background: mat-color($mat-teal, 300);
   }
 }
 
-.constraint-max{
-  background:  mat-color($mat-pink, 100);
+.constraint-max {
+  background: mat-color($mat-pink, 100);
 
-  .value{
-    background:  mat-color($mat-pink, 300)!important;
+  .value {
+    background: mat-color($mat-pink, 300) !important;
   }
-  .sign{
-    background:  mat-color($mat-pink, 100)!important;
+  .sign {
+    background: mat-color($mat-pink, 100) !important;
   }
-  .currency{
-    background:  mat-color($mat-pink, 200);
+  .currency {
+    background: mat-color($mat-pink, 200);
   }
 }
 // ------------
 
-.date{
-  background:  mat-color($mat-deep-orange, 100)
+.date {
+  background: mat-color($mat-deep-orange, 100);
 }
-.number{
-  background:  mat-color($mat-deep-purple, 100);
+.number {
+  background: mat-color($mat-deep-purple, 100);
 }
-
-
-
-
- 
 
 // --------------
-.hint_span{
+.hint_span {
   padding: 2px 2px;
 }
 
@@ -176,23 +168,23 @@ $org_2_base_alt: $mat-blue;
   vertical-align: text-top;
   position: relative;
   top: -3px;
-  border:none;
+  border: none;
   background: none;
   padding: 2px 3px;
 
   font-size: 10px;
-  cursor: pointer;  
+  cursor: pointer;
   text-decoration: underline;
   font-weight: 600;
 
-  margin-left:2px;
+  margin-left: 2px;
 
-  &:hover{    
+  &:hover {
     // border:1px solid mat-color($mat-blue, 300);
     border-radius: 2px;
-    background:white    
+    background: white;
   }
-  
+
   //cursor: pointer;
 }
 
@@ -201,5 +193,5 @@ $org_2_base_alt: $mat-blue;
 }
 
 .changed {
-  background: mat-color($mat-red, 500)
+  background: mat-color($mat-red, 500);
 }
