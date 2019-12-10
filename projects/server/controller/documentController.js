@@ -3,7 +3,7 @@ const logger = require('../core/logger');
 const Document = db.Document;
 const Audit = db.Audit;
 const Link = db.Link;
-const documentTypes = require('../json/documentType');
+const DocumentType = db.DocumentType;
 const Attribute = require('../model/attribute');
 
 const documentFields = `filename
@@ -37,10 +37,10 @@ exports.getDocuments = async (req, res) => {
     );
 
     documents = documents.map(d => {
-      // TODO: remove this weirdest mapping! 
+      // TODO: remove this weirdest mapping!
       let document = {
         filename: d.filename,
-        state:d.state,
+        state: d.state,
         documentDate: d.parse.documentDate,
         documentType: d.parse.documentType,
         documentNumber: d.parse.documentNumber,
@@ -139,7 +139,9 @@ exports.getAttributes = async (req, res) => {
     return;
   }
   try {
-    const documentType = documentTypes.find(dt => dt._id === req.query.name);
+    let documentType = await DocumentType.findOne({
+      _id: req.query.name
+    }).lean();
     if (documentType) {
       let attributes = documentType.attributes.map(a => new Attribute(a));
       for (let attribute of attributes) {
@@ -163,7 +165,12 @@ exports.getAttributes = async (req, res) => {
 };
 
 exports.getDocumentTypes = async (req, res) => {
-  res.send(documentTypes);
+  try {
+    let documentTypes = await DocumentType.find();
+    res.status(200).json(documentTypes);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
 };
 
 exports.getLinks = async (req, res) => {
