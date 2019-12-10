@@ -163,10 +163,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     if (indexStart === indexEnd || !kind || kind.length === 0) return;
 
-    if (kind === 'number') {
-      const r = 0;
-    }
-
     const span = document.createElement('span');
     span.classList.add(kind);
     if (needHint) span.classList.add('hint_span');
