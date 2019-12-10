@@ -307,8 +307,21 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showAttributeInfo(atr, atrParent);
   }
 
-  getKindOfAttributes(atrParent: AttributeModel): KindAttributeModel[] {
-    if (atrParent) {
+  getKindOfAttributes(
+    atrParent: AttributeModel,
+    selectKind = ''
+  ): KindAttributeModel[] {
+    const onceAttribute = [];
+
+    if (!atrParent) {
+      this.attributes.forEach(x => {
+        const a = this.kinds.find(
+          y => y.kind === x.kind && y.kind !== selectKind
+        );
+        if (a && a.once) onceAttribute.push(a.kind);
+      });
+      return this.kinds.filter(x => !onceAttribute.includes(x.kind));
+    } else if (atrParent) {
       const parents = [];
       for (const p of atrParent.key.split('/')) {
         parents.push(Helper.parseKind(p).kind);
@@ -319,8 +332,18 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         if (atr) atr = atr.children.find(x => x.kind === p);
         else atr = this.kinds.find(x => x.kind === p);
       }
-      return atr.children;
-    } else return this.kinds;
+      if (!atr.children) return null;
+      this.attributes
+        .filter(x => x.parent === atrParent.key)
+        .forEach(x => {
+          const a = atr.children.find(
+            y => y.kind === x.kind && y.kind !== selectKind
+          );
+          if (a && a.once) onceAttribute.push(a.kind);
+        });
+
+      return atr.children.filter(x => !onceAttribute.includes(x.kind));
+    }
   }
 
   showAttributeInfo(atr: AttributeModel, atrParent: AttributeModel) {
@@ -335,7 +358,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       value: atr.value
     };
 
-    if (atrParent && !this.getKindOfAttributes(atrParent)) return;
+    const _kinds = this.getKindOfAttributes(atrParent, atr.kind);
+    if (atrParent && (!_kinds || _kinds.length === 0)) return;
 
     const dialogRef = this.dialog.open(EditAttributeComponent, {
       width: '50%',
@@ -348,7 +372,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         kind: newAtr.kind,
         key: newAtr.key,
         atrParent: atrParent,
-        kinds: this.getKindOfAttributes(atrParent)
+        kinds: _kinds
       }
     });
 

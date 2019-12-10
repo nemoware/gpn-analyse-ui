@@ -69,7 +69,9 @@
   "finance": "Финансирование",
   "deals": "Сделки",
   "court": "Суд",
-  
+
+  "number": "Номер",
+  "date": "Дата",
 
   "competence_CEO_court": "ГД - суд",
   "competence_CEO_court_constraint_max": "ГД : суд пороговые значения",
