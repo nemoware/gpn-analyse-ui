@@ -1,7 +1,7 @@
 <mat-sidenav-container class="fixed-layout" *ngIf="document" autosize>
-  
-  <mat-sidenav mode="side" opened class="left_group"> 
-    
+
+  <mat-sidenav mode="side" opened class="left_group">
+
     <mat-tab-group color="accent" animationDuration="0ms" dynamicHeight='true'>
 
       <mat-tab label="Детали">
@@ -15,17 +15,16 @@
       </mat-tab>
 
       <mat-tab label="Заголовки">
-        <cdk-virtual-scroll-viewport  style="height: 80vh" itemSize="50" >
-          <gpn-tree-attributes
-            [editmode]="editmode"
-            [attributes]="attributes"
-            [headers]="document.analysis.headers"
-            [documentType] = "documentType"
-            (goToAttribute)="goToAttribute($event)"
-          ></gpn-tree-attributes>
-        </cdk-virtual-scroll-viewport>
+        <gpn-tree-attributes
+          [editmode]="editmode"
+          [headers]="document.analysis.headers"
+          [documentType] = "documentType"
+          [normalText] = "document.analysis.normal_text"
+          [words] = "document.analysis.tokenization_maps.words"
+          (goToAttribute)="goToAttribute($event)"
+        ></gpn-tree-attributes>
       </mat-tab>
-    
+
     </mat-tab-group>
 
   </mat-sidenav>
@@ -33,11 +32,11 @@
 
 
 
-  
 
-   
+
+
     <mat-toolbar>
-    
+
       <button mat-icon-button matTooltip="Перейти в режим редактирования" (click)="editMode()" [disabled]="editmode">
         <fa-icon [icon]="faEdit"></fa-icon>
       </button>
@@ -58,14 +57,14 @@
         <fa-icon [icon]="faChevronDown"></fa-icon>
       </button>
     </mat-toolbar>
-    
-     
-    <div class="chart-container" *ngIf="document.documentType == 'CHARTER' && attributes"> 
-      
+
+
+    <div class="chart-container" *ngIf="document.documentType == 'CHARTER' && attributes">
+
       <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
                             (goToAttribute)="goToAttribute($event)"
                             [attributes] = "attributes"></gpn-competencecharts>
-      
+
     </div>
     <mat-divider></mat-divider>
 
@@ -80,7 +79,7 @@
       ></gpn-view-document>
     </div>
 
-  
+
 
 
 </mat-sidenav-content>

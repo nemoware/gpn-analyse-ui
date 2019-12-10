@@ -51,6 +51,8 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
   @Input() editmode: boolean;
   @Input() documentType: string[];
   @Output() goToAttribute = new EventEmitter<string>();
+  @Input() normalText: string;
+  @Input() words: [[number, number]];
 
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
@@ -104,7 +106,10 @@ export class TreeAttributesComponent implements OnInit, AfterViewInit {
       this.TREE_DATA.push({
         index: i++,
         value: h.value,
-        display_value: h.display_value,
+        display_value: this.normalText.slice(
+          this.words[h.span[0]][0],
+          this.words[h.span[1]][1]
+        ),
         kind: 'header',
         idWord: 'span_' + (h.span ? h.span[0] : -1)
       });
