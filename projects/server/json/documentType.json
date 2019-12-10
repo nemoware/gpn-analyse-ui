@@ -77,6 +77,16 @@
         "kind": "org-2-alt-name",
         "type": "string",
         "once": true
+      },
+      {
+        "kind": "number",
+        "type": "string",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
+        "once": true
       }
     ]
   },
@@ -103,6 +113,11 @@
       {
         "kind": "org-1-type",
         "type": "string",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
         "once": true
       },
       {
@@ -282,11 +297,76 @@
         "once": true
       },
       {
+        "kind": "date",
+        "type": "date",
+        "once": true
+      },
+      {
         "kind": "agenda-item",
         "type": "string"
       },
       {
         "kind": "sign-value-currency",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-1-name",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-1-type",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-1-type-ext",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-1-alt-name",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-2-name",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-2-type",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-2-type-ext",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-2-alt-name",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-3-name",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-3-type",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-3-type-ext",
+        "type": "string",
+        "parents": ["agenda-item"]
+      },
+      {
+        "kind": "contract-agent-org-3-alt-name",
         "type": "string",
         "parents": ["agenda-item"]
       },
