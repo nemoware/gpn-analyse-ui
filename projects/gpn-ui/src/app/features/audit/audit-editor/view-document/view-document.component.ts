@@ -291,6 +291,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
             (selRange.endContainer.previousSibling as HTMLElement).id
           );
 
+    if (!startElement || !endElement) return;
+
     if (startElement.parentElement.id !== 'view_doc') {
       atrParent = this.attributes.find(
         x => x.key === startElement.parentElement.id
