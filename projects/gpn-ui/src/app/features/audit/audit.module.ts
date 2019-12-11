@@ -43,7 +43,7 @@ import { DocumentDetailComponent } from './audit-analyse-result/detail/document-
 import { ChildDetailComponent } from './audit-analyse-result/child-detail/child-detail.component';
 // import { BrowserAnimationsModule } from '@root/node_modules/@angular/platform-browser/animations';
 import { DocStateComponent } from '@app/features/audit/audit-editor/doc-state/doc-state.component';
-import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
+import { FileNamePipe, FilePathPipe, OrgNamePipe, DocNumberPipe } from '@app/format/file-path.pipe';
 
 @NgModule({
   declarations: [
@@ -59,7 +59,7 @@ import { FileNamePipe, FilePathPipe } from '@app/format/file-path.pipe';
     SearchDocumentComponent,
     CompetencechartsComponent,    
     DocumentDetailComponent,
-    FileNamePipe, FilePathPipe,
+    FileNamePipe, FilePathPipe, OrgNamePipe, DocNumberPipe,
     ChildDetailComponent,
     DocStateComponent
   ],

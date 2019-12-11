@@ -6,10 +6,24 @@ $header_height:64px;
     padding: $gpn-padding;
 }
 
-h3{
-  .header-hat{
-    font-size: 80%;
+.text-container{
+  background: $gpn-paper-color;
+  padding: $gpn-padding;
+}
+
+
+.heder-footer,
+.header-hat{
+    margin: 0;
+    display: block;
+    font-size: 12pt;    
+    line-height: 1;
+    color: $gpn-labels-darker;
+    font-weight: normal;
   }
+
+.header-hat{
+  margin-top: 4px;
 }
 
 .actions-container{
