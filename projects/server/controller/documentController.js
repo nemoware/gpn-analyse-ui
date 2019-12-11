@@ -3,8 +3,7 @@ const logger = require('../core/logger');
 const Document = db.Document;
 const Audit = db.Audit;
 const Link = db.Link;
-const DocumentType = db.DocumentType;
-const Attribute = require('../model/attribute');
+const documentTypes = require('../json/documentType');
 
 const documentFields = `filename
 parse.documentDate
@@ -139,22 +138,13 @@ exports.getAttributes = async (req, res) => {
     return;
   }
   try {
-    let documentType = await DocumentType.findOne({
-      _id: req.query.name
-    }).lean();
+    let documentType = documentTypes.find(l => l.type === req.query.name);
     if (documentType) {
-      let attributes = documentType.attributes.map(a => new Attribute(a));
-      for (let attribute of attributes) {
-        if (attribute.parents) {
-          for (let parent of attribute.parents.map(p =>
-            attributes.find(a => a.kind === p)
-          )) {
-            parent.children.push(attribute);
-          }
-        }
-      }
+      const root = [];
+      const attributes = documentType.attributes;
+      setChildren(attributes, root);
 
-      res.send(attributes.filter(a => a.root));
+      res.send(root);
     } else {
       let err = `Can not find document type with name ${req.query.name}`;
       logger.logError(req, res, err, 404);
@@ -164,13 +154,42 @@ exports.getAttributes = async (req, res) => {
   }
 };
 
-exports.getDocumentTypes = async (req, res) => {
-  try {
-    let documentTypes = await DocumentType.find();
-    res.status(200).json(documentTypes);
-  } catch (err) {
-    logger.logError(req, res, err, 500);
+function setChildren(attributes, root) {
+  for (let attribute of attributes) {
+    if (attribute.parents && attribute.children) {
+      const level = [];
+
+      for (let parent of attribute.parents) {
+        push(level, parent);
+      }
+
+      for (let parent of level) {
+        parent.children = [];
+        setChildren(attribute.children, parent.children);
+      }
+
+      for (let child of level) {
+        root.push(child);
+      }
+    } else push(root, attribute);
   }
+}
+
+function push(array, attribute) {
+  if (typeof attribute === 'string') {
+    attribute = {
+      kind: attribute,
+      type: 'string'
+    };
+  }
+  if (!attribute.type) {
+    attribute.type = 'string';
+  }
+  array.push(attribute);
+}
+
+exports.getDocumentTypes = async (req, res) => {
+  res.send(documentTypes);
 };
 
 exports.getLinks = async (req, res) => {

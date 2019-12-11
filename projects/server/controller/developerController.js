@@ -1,7 +1,5 @@
 const db = require('../config/db.config');
 const Document = db.Document;
-const DocumentType = db.DocumentType;
-const attributes = require('../json/attribute');
 
 function getAttributeName(attribute) {
   const subAttributes = attribute.split('/');
@@ -18,7 +16,6 @@ exports.getAttributes = async (req, res) => {
   const documents = await Document.find({ 'parse.documentType': type }, null, {
     lean: true
   });
-  const sampleType = attributes.find(a => a._id === type);
   const results = [];
   for (let document of documents) {
     if (document.analysis && document.analysis.attributes) {
@@ -27,17 +24,9 @@ exports.getAttributes = async (req, res) => {
         let attributeName = getAttributeName(attribute);
         let result;
         if (results.map(a => a.kind).indexOf(attributeName) < 0) {
-          let sample;
-          if (sampleType) {
-            sample = sampleType.attributes.find(a => a.kind === attributeName);
-          }
-          if (sample) {
-            result = sample;
-          } else {
-            result = {
-              kind: attributeName
-            };
-          }
+          result = {
+            kind: attributeName
+          };
           results.push(result);
         }
 

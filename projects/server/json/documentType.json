@@ -1,0 +1,218 @@
+[
+  {
+    "type": "CONTRACT",
+    "attributes": [
+      {
+        "kind": "org-1-type",
+        "once": true
+      },
+      {
+        "kind": "org-1-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-alias",
+        "once": true
+      },
+      {
+        "kind": "org-2-type",
+        "once": true
+      },
+      {
+        "kind": "org-2-name",
+        "once": true
+      },
+      {
+        "kind": "org-2-alias",
+        "once": true
+      },
+      {
+        "kind": "org-1-alt-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-type-ext",
+        "once": true
+      },
+      {
+        "kind": "org-2-alt-name",
+        "once": true
+      },
+      {
+        "kind": "org-2-type-ext",
+        "once": true
+      },
+      {
+        "kind": "number",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
+        "once": true
+      },
+      {
+        "kind": "subject",
+        "type": "dictionary",
+        "dictionaryName": "Subject",
+        "once": true
+      },
+      {
+        "parents": [
+          {
+            "kind": "sign-value-currency",
+            "once": true
+          }
+        ],
+        "children": [
+          {
+            "kind": "value",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "sign",
+            "type": "dictionary",
+            "dictionaryName": "Sign",
+            "once": true
+          },
+          {
+            "kind": "currency",
+            "type": "dictionary",
+            "dictionaryName": "Currency",
+            "once": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "PROTOCOL",
+    "attributes": [
+      {
+        "kind": "org-1-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-type",
+        "once": true
+      },
+      {
+        "kind": "org-structural-level",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
+        "once": true
+      },
+      {
+        "parents": ["agenda-item"],
+        "children": [
+          "contract-agent-org-1-name",
+          "contract-agent-org-1-type",
+          "contract-agent-org-1-type-ext",
+          "contract-agent-org-1-alt-name",
+          "contract-agent-org-2-name",
+          "contract-agent-org-2-type",
+          "contract-agent-org-2-type-ext",
+          "contract-agent-org-2-alt-name",
+          "contract-agent-org-3-name",
+          "contract-agent-org-3-type",
+          "contract-agent-org-3-type-ext",
+          "contract-agent-org-3-alt-name",
+          {
+            "parents": ["sign-value-currency"],
+            "children": [
+              {
+                "kind": "value",
+                "type": "number",
+                "once": true
+              },
+              {
+                "kind": "sign",
+                "type": "dictionary",
+                "dictionaryName": "Sign",
+                "once": true
+              },
+              {
+                "kind": "currency",
+                "type": "dictionary",
+                "dictionaryName": "Currency",
+                "once": true
+              }
+            ]
+          },
+          {
+            "parents": ["contract-agent-org"],
+            "children": ["type", "name"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "CHARTER",
+    "attributes": [
+      {
+        "kind": "org-1-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-type",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
+        "once": true
+      },
+      {
+        "parents": [
+          "ShareholdersGeneralMeeting",
+          "BoardOfDirectors",
+          "CEO",
+          "AllMembers",
+          "BoardOfCompany"
+        ],
+        "children": [
+          {
+            "parents": [
+              "Deal",
+              "Charity",
+              "Other",
+              "Lawsuit",
+              "RealEstate",
+              "Insurance",
+              "Consulting"
+            ],
+            "children": [
+              {
+                "parents": ["constraint-min", "constraint-max", "constraint"],
+                "children": [
+                  {
+                    "kind": "value",
+                    "type": "number",
+                    "once": true
+                  },
+                  {
+                    "kind": "sign",
+                    "type": "dictionary",
+                    "dictionaryName": "Sign",
+                    "once": true
+                  },
+                  {
+                    "kind": "currency",
+                    "type": "dictionary",
+                    "dictionaryName": "Currency",
+                    "once": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
