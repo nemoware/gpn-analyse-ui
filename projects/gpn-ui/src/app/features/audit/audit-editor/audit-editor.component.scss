@@ -1,56 +1,52 @@
 @import '../../../../styles-variables.scss';
 
-$header_height:64px;
+$header_height: 64px;
 
-.chart-container{
-    padding: $gpn-padding;
+.chart-container {
+  padding: $gpn-padding;
 }
 
-.text-container{
+.text-container {
   background: $gpn-paper-color;
   padding: $gpn-padding;
 }
 
-
 .heder-footer,
-.header-hat{
-    margin: 0;
-    display: block;
-    font-size: 12pt;    
-    line-height: 1;
-    color: $gpn-labels-darker;
-    font-weight: normal;
-  }
+.header-hat {
+  margin: 0;
+  display: block;
+  font-size: 12pt;
+  line-height: 1;
+  color: $gpn-labels-darker;
+  font-weight: normal;
+}
 
-.header-hat{
+.header-hat {
   margin-top: 4px;
 }
 
-.actions-container{
+.actions-container {
   z-index: 100;
-  position: fixed;  
-  top: $header_height+10px;
+  position: fixed;
+  top: $header_height + 10px;
   right: $gpn-padding;
 
-  button{
-    margin-left:$gpn-padding/2;
+  button {
+    margin-left: $gpn-padding/2;
   }
 }
 
- 
-.floating-button{
-  
+.floating-button {
 }
 
-
-.left_group{
-  max-width: 350px;  
-  .container{
+.left_group {
+  max-width: 350px;
+  .container {
     padding: $gpn-padding;
   }
 }
 
-.fixed-layout{
+.fixed-layout {
   position: absolute;
   left: 0;
   right: 0;
@@ -58,7 +54,7 @@ $header_height:64px;
   top: $header_height;
 }
 
-.fill-remaining-space{
+.fill-remaining-space {
   flex: 1 1 auto;
 }
 
@@ -74,5 +70,3 @@ $header_height:64px;
   right: 0;
   margin: auto;
 }
-
- 

@@ -5,7 +5,7 @@ export interface Document {
   auditId: string;
   filename: string;
   documentDate: Date; //TODO: deprecated, moved to attributes
-  documentType: string; 
+  documentType: string;
   documentNumber: string; //TODO: deprecated, moved to attributes
   parentId: string;
   paragraphs: [{ paragraphHeader: Object; paragraphBody: Object }];
@@ -32,5 +32,6 @@ export interface Document {
     auditStart: Date;
     auditEnd: Date;
     status: string;
+    ftpUrl: string;
   };
 }

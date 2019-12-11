@@ -26,11 +26,9 @@ export class DocNumberPipe implements PipeTransform {
     if (!value) {
       return '';
     }
-    return '№' + value
+    return '№' + value;
   }
 }
-
-
 
 @Pipe({ name: 'orgName' })
 export class OrgNamePipe implements PipeTransform {
@@ -39,7 +37,7 @@ export class OrgNamePipe implements PipeTransform {
       return '';
     }
 
-    let ret = value
+    let ret = value;
     if (!ret.startsWith('«')) {
       ret = '«' + ret;
     }
@@ -48,6 +46,6 @@ export class OrgNamePipe implements PipeTransform {
       ret = ret + '»';
     }
 
-    return ret
+    return ret;
   }
 }

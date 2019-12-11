@@ -7,9 +7,8 @@
 @import '~@angular/material/theming';
 
 @include mat-core();
- 
-@import './themes/light-theme';
 
+@import './themes/light-theme';
 
 @import 'styles-reset.scss-theme';
 @import './app/app/app.component.scss-theme';
@@ -58,16 +57,11 @@ body.wait-cursor {
   cursor: progress;
 }
 
-
-
-
-
-
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 24px; /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -92,68 +86,68 @@ body.wait-cursor {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  
-  src: local('Material Icons'),
-    local('MaterialIcons-Regular'),    
-    url(./assets/MaterialIcons-Regular.woff) format('woff'),
-    
+
+  src: local('Material Icons'), local('MaterialIcons-Regular'),
+    url(./assets/MaterialIcons-Regular.woff) format('woff');
 }
 
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 200;
-  
-  src: url(./assets/Roboto-Regular.woff2) format('woff2'), 
+
+  src: url(./assets/Roboto-Regular.woff2) format('woff2');
 }
 
 @font-face {
   font-family: 'din';
   font-style: normal;
   font-weight: 200;
-  
-  src: url(./assets/2BBA50_2_0.woff) format('woff')        
+
+  src: url(./assets/2BBA50_2_0.woff) format('woff');
 }
 
 @font-face {
   font-family: 'din';
   font-style: normal;
   font-weight: 400;
-  
-  src: url(./assets/2BBA50_3_0.woff) format('woff')
+
+  src: url(./assets/2BBA50_3_0.woff) format('woff');
 }
 
-
-.file-path{
+.file-path {
   color: $gpn-labels;
   overflow: hidden;
-  text-overflow: ellipsis;   
+  text-overflow: ellipsis;
 }
 
-label, h1, h2, h3, h4{
-  font-family: 'din';  
+label,
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'din';
   color: $gpn-labels-darker;
 }
 
-h4{
+h4 {
   text-transform: uppercase;
   font-size: 14px;
 }
 
-
-html{
+html {
   font-family: 'din', Arial, Helvetica, sans-serif;
   font-weight: 400;
 }
 
-label{
+label {
   margin-top: $gpn-padding/4;
   font-weight: bold;
   font-size: 8.5pt;
   display: block;
   text-transform: uppercase;
   color: $gpn-labels;
-  &::after{
+  &::after {
     content: ': ';
   }
 }

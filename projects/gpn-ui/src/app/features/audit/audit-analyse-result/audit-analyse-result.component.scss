@@ -4,27 +4,26 @@
   color: $gpn-error;
 }
 
-.fill-remaining-space{
+.fill-remaining-space {
   flex: 1 1 auto;
 }
 
-.mat-toolbar{
+.mat-toolbar {
   padding: $gpn-padding;
 
-  h2{
+  h2 {
     color: mat-color($mat-blue, 700);
     padding-top: 0;
     padding-bottom: 0;
     line-height: 1.2em;
     font-family: 'din';
-    .headline-date{      
+    .headline-date {
       font-size: 14px;
       color: $gpn-labels-darker;
     }
   }
 
-  .headline-status{
+  .headline-status {
     font-size: 14px;
   }
-
 }

@@ -1,9 +1,8 @@
 export class ViewDetailDoc {
   private static typeDocs = [
- 
     {
       type: 'CHARTER',
-      
+
       children: {
         rowHead: [
           'ShareholdersGeneralMeeting',
@@ -88,8 +87,7 @@ export class ViewDetailDoc {
           return tree;
         }
       }
-    },
-     
+    }
   ];
 
   public static getTypeDoc(type: string) {
