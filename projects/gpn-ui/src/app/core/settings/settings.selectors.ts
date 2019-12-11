@@ -18,7 +18,6 @@ export const selectTheme = createSelector(
   settings => settings.theme
 );
 
-export const selectEffectiveTheme = createSelector(
-  selectTheme,
-  theme => theme.toLowerCase()
+export const selectEffectiveTheme = createSelector(selectTheme, theme =>
+  theme.toLowerCase()
 );

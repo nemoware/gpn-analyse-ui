@@ -15,7 +15,6 @@ import { AttributeModel } from '@app/models/attribute-model';
 import { Helper } from '@app/features/audit/helper';
 // import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { ResizedEvent } from 'angular-resize-event';
- 
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -95,7 +94,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
     this.router.navigate(['audit/edit/', this.document._id]);
   }
 
-  getAttrValue(attrName: string,  default_value = null) {
+  getAttrValue(attrName: string, default_value = null) {
     if (this.attributes) {
       const atr = this.attributes.find(x => x.key === attrName);
       if (atr) return atr.value;

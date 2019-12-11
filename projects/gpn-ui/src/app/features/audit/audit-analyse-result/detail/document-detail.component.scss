@@ -26,42 +26,41 @@ tr.detail-row {
   max-width: 35px;
 }
 
-
-.org-type, .small{
+.org-type,
+.small {
   font-size: 85%;
   color: $gpn-labels;
 }
 
-.org-alias{  
-  color: $gpn-labels;  
+.org-alias {
+  color: $gpn-labels;
 }
 
-.org-name{
+.org-name {
   display: block;
 }
 
-.mat-column-date{
+.mat-column-date {
   width: 150px;
 }
 
-.mat-column-subject{
+.mat-column-subject {
   width: 180px;
 }
 
-.mat-column-analyze_state{
+.mat-column-analyze_state {
   width: 200px;
 }
 
-.mat-column-value{
+.mat-column-value {
   text-align: right;
 }
 
-.mat-cell.mat-column-value{
+.mat-cell.mat-column-value {
   width: 150px;
-  
+
   font-family: 'din';
   font-weight: 400;
   font-size: 12pt;
   padding-right: $gpn-padding;
 }
-

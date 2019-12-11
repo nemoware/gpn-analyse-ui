@@ -72,7 +72,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(attributes);
     if (attributes) this.attributes = attributes;
 
-    const myObservables = Observable.create((observer: Observer<string>) => {
+    const myObservables = new Observable((observer: Observer<string>) => {
       setTimeout(() => {
         observer.next(
           this.wrapWords(

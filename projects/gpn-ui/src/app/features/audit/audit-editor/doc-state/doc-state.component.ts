@@ -1,7 +1,5 @@
-import {
-  Component,
-  Input
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Document } from '@app/models/document.model';
 
 @Component({
   selector: 'gpn-doc-state',
@@ -12,8 +10,6 @@ export class DocStateComponent {
   @Input() document: Document;
 
   getDocStateClass(doc) {
-    return 'state state-' + doc.state
+    return 'state state-' + doc.state;
   }
 }
-
-

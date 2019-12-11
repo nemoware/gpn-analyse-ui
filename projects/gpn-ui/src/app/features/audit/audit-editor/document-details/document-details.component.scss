@@ -6,20 +6,18 @@
   min-height: 25px;
 }
 
-.file-path, 
-.file-name{  
-  font-size: 9pt;  
+.file-path,
+.file-name {
+  font-size: 9pt;
 }
- 
 
-
-section{
+section {
   display: block;
   margin-bottom: $gpn-padding-half;
 }
 
-.mat-tree-node-root{
-  font-family: 'din';  
+.mat-tree-node-root {
+  font-family: 'din';
   font-weight: 500;
   font-size: 9pt;
   color: $gpn-labels-darker;

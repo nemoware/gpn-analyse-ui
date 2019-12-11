@@ -32,9 +32,9 @@ interface ExampleFlatNode {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChildDetailComponent implements OnInit {
+  constructor(private translate: TranslateService) {}
   @Input() document: any;
   @Input() documentType: any;
-  constructor(private translate: TranslateService) { }
   TREE_DATA: TreeNode[];
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
@@ -42,6 +42,7 @@ export class ChildDetailComponent implements OnInit {
     node => node.level,
     node => node.expandable
   );
+
   private _transformer = (node: TreeNode, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
@@ -52,12 +53,14 @@ export class ChildDetailComponent implements OnInit {
       currency: node.currency
     };
   };
+
   treeFlattener = new MatTreeFlattener(
     this._transformer,
     node => node.level,
     node => node.expandable,
     node => node.children
   );
+
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -67,7 +70,6 @@ export class ChildDetailComponent implements OnInit {
       this.TREE_DATA = this.documentType.children.getTreeAttributes(
         this.document.attributes
       );
-
 
       this.dataSource.data = this.TREE_DATA;
     }
