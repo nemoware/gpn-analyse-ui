@@ -86,19 +86,17 @@ exports.getAudits = async (req, res) => {
       { parserResponseCode: 200 }
     ];
     for (let audit of audits) {
-      let typeViewResult = checks.length;
+      audit.typeViewResult = checks.length;
       for (let check of checks) {
         check.auditId = audit._id;
-        let document = await Document.findOne(check);
-        if (document) {
+        if (await Document.findOne(check)) {
           break;
         }
-        typeViewResult--;
+        audit.typeViewResult--;
       }
-      audit.typeViewResult = typeViewResult;
     }
 
-    audits.sort((a, b) => b.sortDate.getTime() - a.sortDate.getTime());
+    audits.sort((a, b) => b.sortDate - a.sortDate);
 
     res.send(audits);
   } catch (err) {

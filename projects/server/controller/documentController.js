@@ -4,7 +4,6 @@ const Document = db.Document;
 const Audit = db.Audit;
 const Link = db.Link;
 const documentTypes = require('../json/documentType');
-const Attribute = require('../model/attribute');
 
 const documentFields = `filename
 parse.documentDate
@@ -37,10 +36,10 @@ exports.getDocuments = async (req, res) => {
     );
 
     documents = documents.map(d => {
-      // TODO: remove this weirdest mapping! 
+      // TODO: remove this weirdest mapping!
       let document = {
         filename: d.filename,
-        state:d.state,
+        state: d.state,
         documentDate: d.parse.documentDate,
         documentType: d.parse.documentType,
         documentNumber: d.parse.documentNumber,
@@ -139,20 +138,13 @@ exports.getAttributes = async (req, res) => {
     return;
   }
   try {
-    const documentType = documentTypes.find(dt => dt._id === req.query.name);
+    let documentType = documentTypes.find(l => l.type === req.query.name);
     if (documentType) {
-      let attributes = documentType.attributes.map(a => new Attribute(a));
-      for (let attribute of attributes) {
-        if (attribute.parents) {
-          for (let parent of attribute.parents.map(p =>
-            attributes.find(a => a.kind === p)
-          )) {
-            parent.children.push(attribute);
-          }
-        }
-      }
+      const root = [];
+      const attributes = documentType.attributes;
+      setChildren(attributes, root);
 
-      res.send(attributes.filter(a => a.root));
+      res.send(root);
     } else {
       let err = `Can not find document type with name ${req.query.name}`;
       logger.logError(req, res, err, 404);
@@ -161,6 +153,40 @@ exports.getAttributes = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+function setChildren(attributes, root) {
+  for (let attribute of attributes) {
+    if (attribute.parents && attribute.children) {
+      const level = [];
+
+      for (let parent of attribute.parents) {
+        push(level, parent);
+      }
+
+      for (let parent of level) {
+        parent.children = [];
+        setChildren(attribute.children, parent.children);
+      }
+
+      for (let child of level) {
+        root.push(child);
+      }
+    } else push(root, attribute);
+  }
+}
+
+function push(array, attribute) {
+  if (typeof attribute === 'string') {
+    attribute = {
+      kind: attribute,
+      type: 'string'
+    };
+  }
+  if (!attribute.type) {
+    attribute.type = 'string';
+  }
+  array.push(attribute);
+}
 
 exports.getDocumentTypes = async (req, res) => {
   res.send(documentTypes);
