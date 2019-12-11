@@ -13,15 +13,9 @@ import { ViewDocumentComponent } from '@app/features/audit/audit-editor/view-doc
 import { TreeAttributesComponent } from '@app/features/audit/audit-editor/tree-attributes/tree-attributes.component';
 import { AttributeModel } from '@app/models/attribute-model';
 import { Helper } from '@app/features/audit/helper';
-import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
+// import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { ResizedEvent } from 'angular-resize-event';
-import {
-  faChevronDown,
-  faChevronUp,
-  faEdit,
-  faSave,
-  faSyncAlt
-} from '@fortawesome/free-solid-svg-icons';
+ 
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -40,11 +34,6 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   @ViewChild(TreeAttributesComponent, { static: false })
   tree: TreeAttributesComponent;
   documentType: string[];
-  faChevronDown = faChevronDown;
-  faChevronUp = faChevronUp;
-  faEdit = faEdit;
-  faSave = faSave;
-  faSyncAlt = faSyncAlt;
   changed = false;
 
   constructor(
@@ -104,5 +93,13 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
 
   editMode() {
     this.router.navigate(['audit/edit/', this.document._id]);
+  }
+
+  getAttrValue(attrName: string,  default_value = null) {
+    if (this.attributes) {
+      const atr = this.attributes.find(x => x.key === attrName);
+      if (atr) return atr.value;
+    }
+    return default_value;
   }
 }

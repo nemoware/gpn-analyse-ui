@@ -6,6 +6,42 @@ $header_height:64px;
     padding: $gpn-padding;
 }
 
+.text-container{
+  background: $gpn-paper-color;
+  padding: $gpn-padding;
+}
+
+
+.heder-footer,
+.header-hat{
+    margin: 0;
+    display: block;
+    font-size: 12pt;    
+    line-height: 1;
+    color: $gpn-labels-darker;
+    font-weight: normal;
+  }
+
+.header-hat{
+  margin-top: 4px;
+}
+
+.actions-container{
+  z-index: 100;
+  position: fixed;  
+  top: $header_height+10px;
+  right: $gpn-padding;
+
+  button{
+    margin-left:$gpn-padding/2;
+  }
+}
+
+ 
+.floating-button{
+  
+}
+
 
 .left_group{
   max-width: 350px;  

@@ -12,17 +12,6 @@
 }
  
 
-label{
-  margin-top: $gpn-padding/4;
-  font-weight: bold;
-  font-size: 8.5pt;
-  display: block;
-  text-transform: uppercase;
-  color: $gpn-labels;
-  &::after{
-    content: ': ';
-  }
-}
 
 section{
   display: block;

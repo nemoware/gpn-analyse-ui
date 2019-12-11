@@ -3,12 +3,13 @@
   "CHARTERs": "уставы",
   "PROTOCOLs": "протоколы",
 
-  "CONTRACT": "ДОГОВОР",
+  "CONTRACT": "Договор",
+  "CHARTER": "Устав",
+  "PROTOCOL": "Протокол",
+
   "SUPPLEMENTARY_AGREEMENT": "ДОПОЛНИТЕЛЬНОЕ СОГЛАШЕНИЕ",
   "UNKNOWN": "НЕИЗВЕСТНЫЙ (не поддерживается)",
   "ANNEX": "ПРИЛОЖЕНИЕ",
-  "CHARTER": "УСТАВ",
-  "PROTOCOL": "ПРОТОКОЛ",
   "REGULATION": "РЕГУЛИРОВАНИЕ",
   "CHARITY_POLICY": "БЛАГОТВОРИТЕЛЬНАЯ ПОЛИТИКА",
   "ORDER": "ЗАКАЗ",

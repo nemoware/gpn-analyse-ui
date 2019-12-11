@@ -6,10 +6,7 @@
 
       <mat-tab label="Детали">
         <div class="container">
-          <gpn-document-details
-            [document] = "document"
-            [editable]="editmode"
-          >
+          <gpn-document-details [document]="document" [editable]="editmode">
           </gpn-document-details>
         </div>
       </mat-tab>
@@ -33,56 +30,74 @@
 
 
 
-
-
-    <mat-toolbar>
-
-      <button mat-icon-button matTooltip="Перейти в режим редактирования" (click)="editMode()" [disabled]="editmode">
-        <fa-icon [icon]="faEdit"></fa-icon>
+    <div class="actions-container">
+      <button (click)="goToAttribute('top')" color="primary" class='floating-button' mat-mini-fab
+        matTooltip="В начало документа">
+        <mat-icon>keyboard_arrow_up</mat-icon>
       </button>
 
-      <button mat-icon-button matTooltip="Сохранить изменения" (click)="saveChanges()" [disabled]="!changed">
-        <fa-icon [icon]="faSave"></fa-icon>
-      </button>
-      <span class="fill-remaining-space"></span>
-      <button mat-icon-button matTooltip="Обновить" (click)="refresh()">
-        <fa-icon [icon]="faSyncAlt"></fa-icon>
+      <button (click)="goToAttribute('foot')" color="primary" class='floating-button' mat-mini-fab
+        matTooltip="В конец документа">
+        <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
 
-      <button mat-icon-button matTooltip="В начало документа" (click)="goToAttribute('top')" style="float: right">
-        <fa-icon [icon]="faChevronUp"></fa-icon>
+      <button (click)="saveChanges()" color="primary" class='floating-button' mat-mini-fab
+        matTooltip="Сохранить изменения">
+        <mat-icon>save_alt</mat-icon>
       </button>
 
-      <button mat-icon-button matTooltip="В конец документа" (click)="goToAttribute('foot')" style="float: right">
-        <fa-icon [icon]="faChevronDown"></fa-icon>
+      <button (click)="editMode()" class='floating-button' mat-mini-fab
+        matTooltip="Режим обучения, корректировка атрибутов">
+        <mat-icon>edit</mat-icon>
       </button>
-    </mat-toolbar>
 
+    </div>
 
-    <div class="chart-container" *ngIf="document.documentType == 'CHARTER' && attributes">
+    <!-- HEADER -->
+    <div class="chart-container">
+      <h2>{{document.documentType|translate}} <span class="doc-number">{{getAttrValue('number')|docNumber}}</span> <span class="heder-footer">{{getAttrValue('date') | date: 'dd LLL yyyy г.'}}</span></h2>
 
-      <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
-                            (goToAttribute)="goToAttribute($event)"
-                            [attributes] = "attributes"></gpn-competencecharts>
+      <div class="row">
+        <div class="col-4">
+          <label *ngIf="getAttrValue('org-1-alias')">{{getAttrValue('org-1-alias')}}</label>
+          <h3>
+            <div class="header-hat">{{getAttrValue('org-1-type')}}</div>{{getAttrValue('org-1-name')|orgName}}
+          </h3>
+          <h4 *ngIf="getAttrValue('org_structural_level')">{{getAttrValue('org_structural_level')}}</h4>
+        </div>
+        <div class="col-4">
+          <label *ngIf="getAttrValue('org-2-alias')">{{getAttrValue('org-2-alias')}}</label>
+          <h3>
+            <div class="header-hat">{{getAttrValue('org-2-type')}}</div>{{getAttrValue('org-2-name')|orgName}}
+          </h3>
+        </div>
+      </div>
 
     </div>
     <mat-divider></mat-divider>
 
-    <div id="container_view_document">
-        <gpn-view-document
-        [document]="document"
-        [kinds] = "documentType"
-        [editmode]="editmode"
-        [attributes] = "attributes"
-        (changeAttribute)= "changeAttribute($event)"
-        (refresh)="refresh()"
-      ></gpn-view-document>
+    <ng-container *ngIf="document.documentType == 'CHARTER' && attributes">
+      <div class="chart-container">
+        <label>компетенции органов управления и пороговые суммы</label>
+        <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
+          (goToAttribute)="goToAttribute($event)" [attributes]="attributes"></gpn-competencecharts>
+      </div>
+
+      <mat-divider></mat-divider>
+    </ng-container>
+
+
+    <div class="text-container">
+      <label>текст документа</label>
+      <div id="container_view_document">
+
+        <gpn-view-document [document]="document" [kinds]="documentType" [editmode]="editmode" [attributes]="attributes"
+          (changeAttribute)="changeAttribute($event)" (refresh)="refresh()"></gpn-view-document>
+      </div>
     </div>
 
 
 
 
-</mat-sidenav-content>
+  </mat-sidenav-content>
 </mat-sidenav-container>
-
-
