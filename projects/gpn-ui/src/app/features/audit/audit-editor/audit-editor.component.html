@@ -12,10 +12,14 @@
       </mat-tab>
 
       <mat-tab label="Заголовки">
-        <cdk-virtual-scroll-viewport style="height: 80vh" itemSize="50">
-          <gpn-tree-attributes [editmode]="editmode" [attributes]="attributes" [headers]="document.analysis.headers"
-            [documentType]="documentType" (goToAttribute)="goToAttribute($event)"></gpn-tree-attributes>
-        </cdk-virtual-scroll-viewport>
+        <gpn-tree-attributes
+          [editmode]="editmode"
+          [headers]="document.analysis.headers"
+          [documentType] = "documentType"
+          [normalText] = "document.analysis.normal_text"
+          [words] = "document.analysis.tokenization_maps.words"
+          (goToAttribute)="goToAttribute($event)"
+        ></gpn-tree-attributes>
       </mat-tab>
 
     </mat-tab-group>

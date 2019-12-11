@@ -27,6 +27,7 @@ import {
   faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import { SearchDocumentComponent } from '@app/features/audit/audit-editor/search-document/search-document.component';
+import { LinksDoc } from '@app/models/links-doc';
 
 interface Node {
   _id?: string;
@@ -140,8 +141,10 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
         this.TREE_DATA.push(node);
       }
 
-      this.createEmpty('PROTOCOL', uniqueType);
-      this.createEmpty('CHARTER', uniqueType);
+      for (const type of LinksDoc.getLinksType(this.document.documentType)
+        .links) {
+        this.createEmpty(type, uniqueType);
+      }
 
       this.refreshTree();
     });

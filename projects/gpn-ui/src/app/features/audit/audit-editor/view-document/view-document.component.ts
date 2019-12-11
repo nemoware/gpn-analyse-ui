@@ -163,14 +163,18 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     const startWord = document.getElementById('span_' + indexStart);
 
     if (indexStart !== indexEnd - 1) {
-      const endWord = document.getElementById('span_' + indexEnd);
+      const endWord = this.checkEndWord(indexEnd);
       const range = document.createRange();
       range.setStart(startWord, 0);
       range.setEnd(endWord, 0);
       startWord.parentElement.insertBefore(span, startWord);
       span.appendChild(range.extractContents());
       range.insertNode(span);
-      if (span.previousElementSibling) span.previousElementSibling.remove();
+      if (
+        span.previousElementSibling &&
+        span.previousElementSibling.textContent === ''
+      )
+        span.previousElementSibling.remove();
       if (span.children[span.children.length - 1])
         span.children[span.children.length - 1].remove();
     } else {
@@ -186,6 +190,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       if (changed) spanHint.classList.add('changed');
       span.appendChild(spanHint);
     }
+  }
+
+  checkEndWord(id: number): Node {
+    const elem = document.getElementById('span_' + id);
+    const elemPrev = document.getElementById('span_' + (id - 1));
+    if (elemPrev.innerHTML === '\n') return this.checkEndWord(id - 1);
+    else return elem;
   }
 
   removeAttribute(atr: AttributeModel) {
@@ -207,7 +218,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getInfoAttribute(e) {
-    console.log(e);
     if (e.target.classList.contains('hint') && this.editmode) {
       const atr = this.attributes.find(
         x => x.key === e.target.parentElement.id
@@ -257,28 +267,26 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
 
     const startElement =
-      selRange.startContainer.parentElement.id !== 'view_doc'
+      selRange.startContainer.nodeValue !== ' '
         ? document.getElementById(selRange.startContainer.parentElement.id)
         : document.getElementById(
             (selRange.startContainer.nextSibling as HTMLElement).id
           );
-    let endElement: HTMLElement = null;
+
+    const endElement =
+      selRange.endContainer.nodeValue !== ' '
+        ? document.getElementById(selRange.endContainer.parentElement.id)
+        : document.getElementById(
+            (selRange.endContainer.previousSibling as HTMLElement).id
+          );
+
+    if (!startElement || !endElement) return;
 
     if (startElement.parentElement.id !== 'view_doc') {
       atrParent = this.attributes.find(
         x => x.key === startElement.parentElement.id
       );
       if (atrParent) atr.parent = atrParent.key;
-    }
-
-    if (selRange.endContainer.parentElement.id !== 'view_doc') {
-      endElement = document.getElementById(
-        selRange.endContainer.parentElement.id
-      );
-    } else {
-      endElement = document.getElementById(
-        (selRange.endContainer.previousSibling as HTMLElement).id
-      );
     }
 
     if (endElement.parentElement.id !== startElement.parentElement.id) {
@@ -293,8 +301,21 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showAttributeInfo(atr, atrParent);
   }
 
-  getKindOfAttributes(atrParent: AttributeModel): KindAttributeModel[] {
-    if (atrParent) {
+  getKindOfAttributes(
+    atrParent: AttributeModel,
+    selectKind = ''
+  ): KindAttributeModel[] {
+    const onceAttribute = [];
+
+    if (!atrParent) {
+      this.attributes.forEach(x => {
+        const a = this.kinds.find(
+          y => y.kind === x.kind && y.kind !== selectKind
+        );
+        if (a && a.once) onceAttribute.push(a.kind);
+      });
+      return this.kinds.filter(x => !onceAttribute.includes(x.kind));
+    } else if (atrParent) {
       const parents = [];
       for (const p of atrParent.key.split('/')) {
         parents.push(Helper.parseKind(p).kind);
@@ -305,8 +326,18 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         if (atr) atr = atr.children.find(x => x.kind === p);
         else atr = this.kinds.find(x => x.kind === p);
       }
-      return atr.children;
-    } else return this.kinds;
+      if (!atr.children) return null;
+      this.attributes
+        .filter(x => x.parent === atrParent.key)
+        .forEach(x => {
+          const a = atr.children.find(
+            y => y.kind === x.kind && y.kind !== selectKind
+          );
+          if (a && a.once) onceAttribute.push(a.kind);
+        });
+
+      return atr.children.filter(x => !onceAttribute.includes(x.kind));
+    }
   }
 
   showAttributeInfo(atr: AttributeModel, atrParent: AttributeModel) {
@@ -321,7 +352,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       value: atr.value
     };
 
-    if (atrParent && !this.getKindOfAttributes(atrParent)) return;
+    const _kinds = this.getKindOfAttributes(atrParent, atr.kind);
+    if (atrParent && (!_kinds || _kinds.length === 0)) return;
 
     const dialogRef = this.dialog.open(EditAttributeComponent, {
       width: '50%',
@@ -334,7 +366,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         kind: newAtr.kind,
         key: newAtr.key,
         atrParent: atrParent,
-        kinds: this.getKindOfAttributes(atrParent)
+        kinds: _kinds
       }
     });
 

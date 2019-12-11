@@ -3,5 +3,6 @@ export interface KindAttributeModel {
   type: string;
   dictionaryName?: string;
   children?: KindAttributeModel[];
-  show?: true;
+  show?: boolean;
+  once?: boolean;
 }
