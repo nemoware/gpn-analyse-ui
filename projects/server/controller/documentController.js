@@ -188,10 +188,6 @@ function push(array, attribute) {
   array.push(attribute);
 }
 
-exports.getDocumentTypes = async (req, res) => {
-  res.send(documentTypes);
-};
-
 exports.getLinks = async (req, res) => {
   if (!req.query.documentId) {
     let err = `Can not get links for document because documentId is null`;

@@ -73,14 +73,6 @@ export class AuditService {
     return this.http.get<Document>(`${api}/document`, { params: httpParams });
   }
 
-  public getDoumentType(id?: string): Observable<DocumentTypeModel[]> {
-    let httpParams = new HttpParams();
-    if (id) httpParams = httpParams.append('id', id);
-    return this.http.get<DocumentTypeModel[]>(`${api}/documentTypes`, {
-      params: httpParams
-    });
-  }
-
   public getDoumentTypeAtr(name: string): Observable<KindAttributeModel[]> {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('name', name);

@@ -29,7 +29,6 @@ import { Helper } from '@app/features/audit/helper';
 import { Audit } from '@app/models/audit.model';
 
 import { FileModel } from '@app/models/file-model';
-import { DocumentTypeModel } from '@app/models/document-type-model';
 
 interface Node {
   _id?: string;
@@ -85,7 +84,6 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   checkCount = 0;
   files: FileModel[];
   loading = false;
-  documentType: DocumentTypeModel[];
   mouseOverID = '';
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
@@ -135,10 +133,6 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         this.audit = data[0];
         this.maxPageIndex = this.audit.typeViewResult;
         this.selectedPage = this.audit.typeViewResult;
-        this.auditservice.getDoumentType().subscribe(res => {
-          this.documentType = res;
-        });
-        //this.refreshData();
       });
   }
 
@@ -201,10 +195,11 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
           const docs = { docs: [] };
           for (const d of this.docs.filter(x => x.documentType === t)) {
             i++;
-                         
-            const addon = {//TODO: why ?? we need to convert doc to this wtf?              
+
+            const addon = {
+              //TODO: why ?? we need to convert doc to this wtf?
               name: d.filename,
-              index: i,              
+              index: i,
               children: [],
               childCount: 0,
               parseError: d.parseError,
