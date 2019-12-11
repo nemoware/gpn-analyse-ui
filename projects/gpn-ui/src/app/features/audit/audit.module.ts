@@ -43,7 +43,13 @@ import { DocumentDetailComponent } from './audit-analyse-result/detail/document-
 import { ChildDetailComponent } from './audit-analyse-result/child-detail/child-detail.component';
 // import { BrowserAnimationsModule } from '@root/node_modules/@angular/platform-browser/animations';
 import { DocStateComponent } from '@app/features/audit/audit-editor/doc-state/doc-state.component';
-import { FileNamePipe, FilePathPipe, OrgNamePipe, DocNumberPipe } from '@app/format/file-path.pipe';
+import {
+  FileNamePipe,
+  FilePathPipe,
+  OrgNamePipe,
+  DocNumberPipe
+} from '@app/format/file-path.pipe';
+import { ViolationsAuditComponent } from './audit-analyse-result/violations-audit/violations-audit.component';
 
 @NgModule({
   declarations: [
@@ -57,11 +63,15 @@ import { FileNamePipe, FilePathPipe, OrgNamePipe, DocNumberPipe } from '@app/for
     EditAttributeComponent,
     DocumentDetailsComponent,
     SearchDocumentComponent,
-    CompetencechartsComponent,    
+    CompetencechartsComponent,
     DocumentDetailComponent,
-    FileNamePipe, FilePathPipe, OrgNamePipe, DocNumberPipe,
+    FileNamePipe,
+    FilePathPipe,
+    OrgNamePipe,
+    DocNumberPipe,
     ChildDetailComponent,
-    DocStateComponent
+    DocStateComponent,
+    ViolationsAuditComponent
   ],
   imports: [
     CommonModule,

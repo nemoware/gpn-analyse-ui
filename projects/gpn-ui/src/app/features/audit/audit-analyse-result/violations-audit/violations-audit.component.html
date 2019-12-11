@@ -1,0 +1,52 @@
+<table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows matSortActive="date" matSortDirection="desc">
+
+  <!-- Документ -->
+  <ng-container matColumnDef="document">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Документ, имеющий нарушение</th>
+    <td mat-cell *matCellDef="let row">
+      <span class="doc_type">{{ row.document.documentType | translate }}</span>
+      <span class="number">{{ row.document.number  }} {{ row.document.date | date:'dd.MM.yyyy'}}</span>
+    </td>
+  </ng-container>
+
+  <!-- Учредительный док. -->
+  <ng-container matColumnDef="constituent">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Учредительный документ</th>
+    <td mat-cell *matCellDef="let row">
+      <span class="doc_type">{{ row.founding_document.documentType | translate }}</span>
+      <span class="number">{{ row.founding_document.number  }} {{ row.document.date | date:'dd.MM.yyyy'}}</span>
+      <span class="attribute">{{ row.reference.attribute | translate }}</span>
+    </td>
+  </ng-container>
+
+  <!-- Подпункт, пункт, статья -->
+  <ng-container matColumnDef="item" >
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Подпункт, пункт, статья</th>
+    <td mat-cell *matCellDef="let row">
+    </td>
+  </ng-container>
+
+  <!-- Нарушение -->
+  <ng-container matColumnDef="violation">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Нарушение</th>
+    <td mat-cell *matCellDef="let row">
+      <span class="number">{{ row.vilation_type | translate  }}</span>
+    </td>
+  </ng-container>
+
+  <!-- Основание -->
+  <ng-container matColumnDef="base">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Основание нарушения</th>
+    <td mat-cell *matCellDef="let row">
+      <span class="doc_type">{{ row.reference.documentType | translate }}</span>
+      <span class="number">{{ row.reference.number  }} {{ row.document.date | date:'dd.MM.yyyy'}}</span>
+      <span class="attribute">{{ row.reference.attribute | translate }}</span>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="col"></tr>
+
+  <tr mat-row *matRowDef="let row; columns: col;"
+      class="element-row"></tr>
+
+</table>

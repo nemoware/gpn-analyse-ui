@@ -1,0 +1,20 @@
+@import '../../../../../styles-variables.scss';
+
+.mat-table {
+  width: 100%;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  background-color: aliceblue;
+}
+
+.doc_type {
+  display: block;
+}
+
+.number,
+.attribute {
+  font-size: 85%;
+  color: $gpn-labels;
+}

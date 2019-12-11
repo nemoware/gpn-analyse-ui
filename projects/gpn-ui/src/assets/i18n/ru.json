@@ -74,21 +74,8 @@
   "number": "Номер",
   "date": "Дата",
 
-  "competence_CEO_court": "ГД - суд",
-  "competence_CEO_court_constraint_max": "ГД : суд пороговые значения",
-  "competence_CEO_court_constraint_max_sign": "ГД порог для суда",
-  "competence_CEO_court_constraint_max_value": "ГД сумма для суд",
-  "competence_CEO_court_constraint_max_currency": "ГД валюта для суд",
-
-  "competence_CEO_finance": "ГД - финансирование",
-  "competence_CEO_finance_constraint_max": "ГД : финансирование пороговые значения",
-  "competence_CEO_finance_constraint_max_sign": "ГД порог для финансирования",
-  "competence_CEO_finance_constraint_max_value": "ГД сумма для финансирования",
-  "competence_CEO_finance_constraint_max_currency": "ГД валюта для финансирования",
-
-  "competence_CEO_deals": "ГД - сделка",
-  "competence_CEO_deals_constraint_max": "ГД : сделка пороговые значения",
-  "competence_CEO_deals_constraint_max_sign": "ГД порог для сделки",
-  "competence_CEO_deals_constraint_max_value": "ГД сумма для сделки",
-  "competence_CEO_deals_constraint_max_currency": "ГД валюта для сделки"
+  "protocol_not_found": "Протокол не найден",
+  "charter_not_found": "Устав не найден",
+  "contract_value_great_than_protocol_value": "Стоимость контракта больше значения в протоколе",
+  "contract_date_less_than_protocol_date": "Стоимость контракта меньше значения в протоколе"
 }

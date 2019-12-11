@@ -2,13 +2,13 @@
 @import '../../../../../styles-variables';
 
 .view_doc {
-  overflow-y: scroll;
+  //overflow-y: scroll;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
   font-size: 11pt;
-  font-family: Arial, Helvetica, sans-serif;  
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .headline {

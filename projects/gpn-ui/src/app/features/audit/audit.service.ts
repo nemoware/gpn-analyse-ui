@@ -7,8 +7,8 @@ import { Subsidiary } from '@app/models/subsidiary.model';
 import { Document } from '@app/models/document.model';
 import { KindAttributeModel } from '@app/models/kind-attribute-model';
 import { FileModel } from '@app/models/file-model';
-import { DocumentTypeModel } from '@app/models/document-type-model';
 import { LinksDocumentModel } from '@app/models/links-document-model';
+import { ViolationModel } from '@app/models/violation-model';
 
 const api = '/api';
 
@@ -124,5 +124,12 @@ export class AuditService {
   public deleteLinks(id: string) {
     const urlParams = new HttpParams().set('id', id.toString());
     return this.http.delete(`${api}/link`, { params: urlParams });
+  }
+
+  public getViolations(id: string): Observable<Array<ViolationModel>> {
+    const urlParams = new HttpParams().set('id', id.toString());
+    return this.http.get<Array<ViolationModel>>(`${api}/violations`, {
+      params: urlParams
+    });
   }
 }
