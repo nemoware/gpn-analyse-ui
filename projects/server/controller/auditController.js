@@ -223,3 +223,59 @@ exports.parse = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+exports.getViolations = async (req, res) => {
+  if (!req.query.id) {
+    return res.status(400).send('Required parameter `id` is not passed');
+  }
+
+  const audit = await Audit.findById(req.query.id, `violations`).lean();
+  const violations = audit.violations;
+
+  if (!violations) {
+    return res.send([]);
+  }
+
+  for (let violation of violations) {
+    if (violation.document) {
+      await setDocumentData(violation.document);
+    }
+
+    if (violation.founding_document) {
+      await setDocumentData(violation.founding_document);
+    }
+
+    if (violation.reference) {
+      await setDocumentData(violation.reference);
+    }
+  }
+  res.send(violations);
+};
+
+async function setDocumentData(violationDocument) {
+  let document = await Document.findById(
+    violationDocument.id,
+    `filename analysis.attributes parse`
+  ).lean();
+  if (document) {
+    if (violationDocument.attribute) {
+      violationDocument.attributeValue =
+        document.analysis.attributes[violationDocument.attribute].value;
+    }
+
+    if (document.analysis.attributes.date) {
+      violationDocument.date = document.analysis.attributes.date.value;
+    } else if (document.parse.documentDate) {
+      violationDocument.date = document.parse.documentDate;
+    }
+
+    if (document.analysis.attributes.number) {
+      violationDocument.number = document.analysis.attributes.number.value;
+    } else if (document.parse.documentNumber) {
+      violationDocument.date = document.parse.documentNumber;
+    }
+
+    violationDocument.type = document.parse.documentType;
+    violationDocument.name = document.filename;
+  }
+}
