@@ -32,8 +32,6 @@ import { Helper } from '@app/features/audit/helper';
   encapsulation: ViewEncapsulation.None
 })
 export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
-   
-
   @Input() document: Document;
   @Input() editmode: boolean;
   @Input() kinds: KindAttributeModel[];
@@ -143,7 +141,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         '</span>' +
         result.slice(words[i][1]);
     }
-    return result;
+    return '<span id="top"></span>' + result + '<span id ="foot"></span>';
   }
 
   setAttribute(

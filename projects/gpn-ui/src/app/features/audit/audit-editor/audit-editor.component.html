@@ -41,12 +41,12 @@
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
 
-      <button (click)="saveChanges()" color="primary" class='floating-button' mat-mini-fab
+      <button (click)="saveChanges()" color="primary" class='floating-button' mat-mini-fab [disabled]="!editmode"
         matTooltip="Сохранить изменения">
         <mat-icon>save_alt</mat-icon>
       </button>
 
-      <button (click)="editMode()" class='floating-button' mat-mini-fab
+      <button (click)="editMode()" class='floating-button' mat-mini-fab [disabled]="editmode"
         matTooltip="Режим обучения, корректировка атрибутов">
         <mat-icon>edit</mat-icon>
       </button>
