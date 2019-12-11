@@ -1,21 +1,22 @@
-<table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows matSortActive="date" matSortDirection="desc">
+<table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows matSortActive="document" matSortDirection="desc">
 
   <!-- Документ -->
   <ng-container matColumnDef="document">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Документ, имеющий нарушение</th>
     <td mat-cell *matCellDef="let row">
-      <span class="doc_type">{{ row.document.documentType | translate }}</span>
-      <span class="number">{{ row.document.number  }} {{ row.document.date | date:'dd.MM.yyyy'}}</span>
+      <span class="doc_type">{{ row.document.type | translate }}</span>
+      <span class="number"> №{{ row.document.number  }} от {{ row.document.date | date}}</span>
     </td>
   </ng-container>
 
   <!-- Учредительный док. -->
-  <ng-container matColumnDef="constituent">
+  <ng-container matColumnDef="founding_document">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Учредительный документ</th>
     <td mat-cell *matCellDef="let row">
-      <span class="doc_type">{{ row.founding_document.documentType | translate }}</span>
-      <span class="number">{{ row.founding_document.number  }} {{ row.document.date | date:'dd.MM.yyyy'}}</span>
-      <span class="attribute">{{ row.reference.attribute | translate }}</span>
+      <div *ngIf="row.founding_document">
+        <span class="doc_type">{{ row.founding_document.type | translate }}</span>
+        <span class="number"> №{{ row.founding_document.number  }} от {{ row.founding_document.date | date}}</span>
+      </div>
     </td>
   </ng-container>
 
@@ -27,10 +28,10 @@
   </ng-container>
 
   <!-- Нарушение -->
-  <ng-container matColumnDef="violation">
+  <ng-container matColumnDef="violation_type">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Нарушение</th>
     <td mat-cell *matCellDef="let row">
-      <span class="number">{{ row.vilation_type | translate  }}</span>
+      <span>{{ row.violation_type | translate  }}</span>
     </td>
   </ng-container>
 
@@ -38,9 +39,10 @@
   <ng-container matColumnDef="base">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Основание нарушения</th>
     <td mat-cell *matCellDef="let row">
-      <span class="doc_type">{{ row.reference.documentType | translate }}</span>
-      <span class="number">{{ row.reference.number  }} {{ row.document.date | date:'dd.MM.yyyy'}}</span>
-      <span class="attribute">{{ row.reference.attribute | translate }}</span>
+      <div *ngIf="row.reference">
+        <span class="doc_type">{{ row.reference.type | translate }}</span>
+        <span class="number"> №{{ row.reference.number  }} от {{ row.reference.date | date}}</span>
+      </div>
     </td>
   </ng-container>
 
