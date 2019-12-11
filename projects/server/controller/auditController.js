@@ -272,7 +272,7 @@ async function setDocumentData(violationDocument) {
     if (document.analysis.attributes.number) {
       violationDocument.number = document.analysis.attributes.number.value;
     } else if (document.parse.documentNumber) {
-      violationDocument.date = document.parse.documentNumber;
+      violationDocument.number = document.parse.documentNumber;
     }
 
     violationDocument.type = document.parse.documentType;
