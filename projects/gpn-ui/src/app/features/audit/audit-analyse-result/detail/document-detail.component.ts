@@ -148,7 +148,10 @@ export class DocumentDetailComponent implements OnInit {
   }
 
   openDocument(element) {
-    this.router.navigate(['audit/view/', element._id]);
+    window.open(
+      window.location.origin + '/#/audit/view/' + element._id,
+      '_blank'
+    );
   }
 
   selectedRow(value, event) {

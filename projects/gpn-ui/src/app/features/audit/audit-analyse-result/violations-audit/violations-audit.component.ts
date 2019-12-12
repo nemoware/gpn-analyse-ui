@@ -12,12 +12,22 @@ import {
 } from '@root/node_modules/@angular/material';
 import { AuditService } from '@app/features/audit/audit.service';
 import { ViolationModel } from '@app/models/violation-model';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger
+} from '@root/node_modules/@angular/animations';
 
 @Component({
   selector: 'gpn-violations-audit',
   templateUrl: './violations-audit.component.html',
   styleUrls: ['./violations-audit.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('detailExpand', [state('expanded', style({ height: '*' }))])
+  ]
 })
 export class ViolationsAuditComponent implements OnInit {
   col: string[] = [

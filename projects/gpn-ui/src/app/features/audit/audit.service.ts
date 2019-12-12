@@ -132,4 +132,11 @@ export class AuditService {
       params: urlParams
     });
   }
+
+  public postApprove(id: string): Observable<any> {
+    const urlParams = new HttpParams().set('id', id.toString());
+    return this.http.get<Array<ViolationModel>>(`${api}/approve`, {
+      params: urlParams
+    });
+  }
 }
