@@ -91,11 +91,16 @@ exports.getDocument = async (req, res) => {
         document.documentNumber = document.parse.documentNumber;
         document.audit = audit;
         delete document.parse;
-        //delete document.auditId;
 
         if (document.user) {
           delete document.analysis.attributes;
         }
+
+        document.wrappedText = wrapWords(
+          document.analysis.tokenization_maps.words,
+          document.analysis.normal_text
+        );
+
         res.status(200).json(document);
       } else {
         let err = `Can not find audit with id ${document.auditId}`;
@@ -109,6 +114,20 @@ exports.getDocument = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+function wrapWords(words, normal_text) {
+  let result = normal_text;
+  for (let i = words.length - 1; i >= 0; i--) {
+    const word = normal_text.slice(words[i][0], words[i][1]);
+    result =
+      result.slice(0, words[i][0]) +
+      `<span id="span_${i}" >` +
+      word +
+      '</span>' +
+      result.slice(words[i][1]);
+  }
+  return '<span id="top"></span>' + result + '<span id ="foot"></span>';
+}
 
 exports.updateDocument = async (req, res) => {
   let document = await Document.findOne({ _id: req.query._id });
