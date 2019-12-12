@@ -271,7 +271,9 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       const approve = this.auditservice
         .postApprove(this.IdAudit)
         .subscribe(data => {
+          this.audit.status = 'Approved';
           approve.unsubscribe();
+          this.changeDetectorRefs.detectChanges();
         });
     }
   }

@@ -18,7 +18,9 @@
   "New": "Новый",
   "Loading": "Загрузка",
   "InWork": "В работе",
-  "Finalizing": "Завершен",
+  "Finalizing": "Подготовка заключения",
+  "Done": "Завершен",
+  "Approved": "Подтвержден",
   "LoadingFailed": "Ошибка загрузки",
 
   "ATTRIBUTES": "АТРИБУТЫ",

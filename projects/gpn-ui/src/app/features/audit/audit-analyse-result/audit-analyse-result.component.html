@@ -9,7 +9,7 @@
   </span>
   <span class="fill-remaining-space"></span>
   <span class="headline-status"><span [class]="audit.status">{{ audit.status | translate}}</span></span>
-  <button *ngIf="audit.status === 'Finalizing'" mat-raised-button color="accent" class="approve" (click)="approveAudit()"> Подтвердить </button>
+  <button [disabled] = "audit.status !== 'Done'" mat-raised-button color="accent" class="approve" (click)="approveAudit()"> Подтвердить </button>
 </mat-toolbar>
 
 <mat-tab-group color="accent" (selectedTabChange)="changePage($event)" [(selectedIndex)]="selectedPage">

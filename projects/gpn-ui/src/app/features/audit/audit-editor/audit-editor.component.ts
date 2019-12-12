@@ -4,7 +4,8 @@ import {
   ChangeDetectionStrategy,
   AfterViewInit,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  Input
 } from '@angular/core';
 import { AuditService } from '@app/features/audit/audit.service';
 import { ActivatedRoute, Router } from '@root/node_modules/@angular/router';
