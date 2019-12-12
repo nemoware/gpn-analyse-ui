@@ -279,3 +279,29 @@ async function setDocumentData(violationDocument) {
     violationDocument.name = document.filename;
   }
 }
+
+exports.approve = async (req, res) => {
+  const id = req.body.id;
+  if (!id) {
+    return res.status(400).send(`Required parameter 'id' is not passed`);
+  }
+
+  try {
+    const audit = await Audit.findById(id);
+    if (!audit) {
+      return res.status(404).send(`No audit found with id = ${id}`);
+    }
+
+    if (audit.status !== 'Done') {
+      return res
+        .status(400)
+        .send(`Cannot approve audit with status = ${audit.status}`);
+    }
+
+    audit.status = 'Approved';
+    await audit.save();
+    res.end();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
