@@ -24,6 +24,7 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 const cols_by_type = {
   CONTRACT: [
+    'star',
     'date',
     'number',
     'value',
@@ -32,8 +33,8 @@ const cols_by_type = {
     'contract_subject',
     'analyze_state'
   ],
-  CHARTER: ['shevron', 'date', 'org', 'analyze_state'],
-  PROTOCOL: ['date', 'org', 'org_level', 'analyze_state']
+  CHARTER: ['star', 'shevron', 'date', 'org', 'analyze_state'],
+  PROTOCOL: ['star', 'date', 'org', 'org_level', 'analyze_state']
 };
 
 const column_to_sorting_mapping = {
@@ -156,4 +157,6 @@ export class DocumentDetailComponent implements OnInit {
       value._id !== this.expandedElementId ? value._id : '-1';
     event.stopPropagation();
   }
+
+  starDoc(a,b){}
 }

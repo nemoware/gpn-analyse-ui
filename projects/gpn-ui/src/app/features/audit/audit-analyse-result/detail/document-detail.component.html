@@ -17,6 +17,17 @@
       </ng-container>
 
 
+      <!-- star -->
+      <ng-container matColumnDef="star">
+        <th mat-header-cell *matHeaderCellDef disableClear></th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="starDoc(row, $event)">            
+            <mat-icon *ngIf="row.starred">star</mat-icon>
+            <mat-icon *ngIf="!row.starred">star_border</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
       <!-- шэврон -->
       <ng-container matColumnDef="shevron">
         <th mat-header-cell *matHeaderCellDef disableClear></th>
