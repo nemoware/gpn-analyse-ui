@@ -10,5 +10,6 @@ router.delete('/audit', controller.deleteAudit);
 router.get('/files', controller.getFiles);
 router.put('/parse', controller.parse);
 router.get('/violations', controller.getViolations);
+router.post('/approve', controller.approve);
 
 module.exports = router;
