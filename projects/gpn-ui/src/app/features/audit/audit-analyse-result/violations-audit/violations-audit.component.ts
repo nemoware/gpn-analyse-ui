@@ -19,6 +19,8 @@ import {
   transition,
   trigger
 } from '@root/node_modules/@angular/animations';
+import { Helper } from '@app/features/audit/helper';
+import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 
 @Component({
   selector: 'gpn-violations-audit',
@@ -33,9 +35,9 @@ export class ViolationsAuditComponent implements OnInit {
   col: string[] = [
     'document',
     'founding_document',
-    'item',
+    'reference',
     'violation_type',
-    'base'
+    'violation_reason'
   ];
   dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
   violations: ViolationModel[];
@@ -44,7 +46,8 @@ export class ViolationsAuditComponent implements OnInit {
   @Input() idAudit: string;
   constructor(
     private auditservice: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef
+    private changeDetectorRefs: ChangeDetectorRef,
+    private translate: TranslateService
   ) {}
 
   _sortingDataAccessor: (data, sortHeaderId: string) => string | number = (
@@ -65,7 +68,7 @@ export class ViolationsAuditComponent implements OnInit {
       case 'founding_document': {
         return data.founding_document ? data.founding_document.type : 'null';
       }
-      case 'base': {
+      case 'violation_reason': {
         return data.reference ? data.reference.type : 'null';
       }
     }
@@ -76,7 +79,30 @@ export class ViolationsAuditComponent implements OnInit {
       this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
       this.dataSource.sort = this.sort;
       this.dataSource.data = data;
+      console.log(data);
       this.changeDetectorRefs.detectChanges();
     });
+  }
+
+  getKindAttribute(key: string) {
+    const atr = Helper.parseKind(key);
+    return atr.kind;
+  }
+
+  getViolation(row) {
+    if (
+      Object.prototype.toString.call(row.violation_type) === '[object String]'
+    )
+      return this.translate.instant(row.violation_type);
+    else {
+      return this.translate.instant(row.violation_type.type);
+      const type = this.translate.instant(row.violation_type.type);
+      const org_structural_level = row.violation_type.org_structural_level
+        ? this.translate.instant(row.violation_type.org_structural_level)
+        : '';
+      const subject = row.violation_type.subject
+        ? this.translate.instant(row.violation_type.subject)
+        : '';
+    }
   }
 }
