@@ -75,6 +75,7 @@ exports.getAudits = async (req, res) => {
     let audits = await Audit.find(where, null, { lean: true });
 
     audits = audits.map(a => {
+      a.subsidiaryName = a.subsidiary.name;
       a.sortDate = new Date(
         Math.max(a.createDate.getTime(), a.auditEnd.getTime())
       );

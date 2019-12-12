@@ -18,3 +18,10 @@
   cursor: pointer;
   background-color: aliceblue;
 }
+
+div.btn-group {
+  display: none;
+}
+.mat-row:hover .btn-group {
+  display: inline-block;
+}

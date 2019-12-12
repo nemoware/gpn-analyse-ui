@@ -18,7 +18,9 @@
   "New": "Новый",
   "Loading": "Загрузка",
   "InWork": "В работе",
-  "Ended": "Завершен",
+  "Finalizing": "Подготовка заключения",
+  "Done": "Завершен",
+  "Approved": "Подтвержден",
   "LoadingFailed": "Ошибка загрузки",
 
   "ATTRIBUTES": "АТРИБУТЫ",
@@ -27,6 +29,7 @@
   "subject": "Предмет",
   "value": "Сумма",
   "sign-value-currency": "Сумма договора",
+  "sign_value_currency": "Сумма договора",
   "org-1-name": "Наименование 1",
   "org-1-alt-name": "Альт. наимен. 1",
   "org-1-alias": "Псевдоним 1",
@@ -76,6 +79,6 @@
 
   "protocol_not_found": "Протокол не найден",
   "charter_not_found": "Устав не найден",
-  "contract_value_great_than_protocol_value": "Стоимость контракта больше значения в протоколе",
+  "contract_value_great_than_protocol_value": "Стоимость договора больше значения в протоколе",
   "contract_date_less_than_protocol_date": "Дата договора меньше даты в протоколе"
 }

@@ -5,7 +5,6 @@
 }
 
 .mat-row:hover {
-  cursor: pointer;
   background-color: aliceblue;
 }
 
@@ -17,4 +16,19 @@
 .attribute {
   font-size: 85%;
   color: $gpn-labels;
+}
+
+.reference {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+td.mat-cell {
+  border-bottom-style: none;
+}
+
+.mat-row:nth-child(even) {
+  border-bottom: 1px solid lightgrey;
 }
