@@ -52,7 +52,7 @@
          <span *ngIf="row.violation_reason.contract.value">, цена сделки - {{row.violation_reason.contract.value | currency : row.violation_reason.contract.currency}}</span>
        </div>
        <div *ngIf="row.violation_reason.protocol">
-         <b>Протокол</b> <span>{{row.violation_reason.protocol.org_structural_level | translate}}</span> от <span>{{row.violation_reason.protocol.date | date}}</span>
+         <b>Протокол</b> <span> {{row.violation_reason.protocol.org_structural_level | translate}}</span> от <span>{{row.violation_reason.protocol.date | date}}</span>
          <span *ngIf="row.violation_reason.protocol.value">, сумма - {{row.violation_reason.protocol.value | currency : row.violation_reason.protocol.currency}}</span>
        </div>
        <div *ngIf="row.violation_reason.charters">
