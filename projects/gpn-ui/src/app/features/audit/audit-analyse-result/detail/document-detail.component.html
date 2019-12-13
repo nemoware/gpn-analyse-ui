@@ -68,7 +68,7 @@
   <ng-container matColumnDef="org_level">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>орган управления</th>
     <td mat-cell *matCellDef="let row">
-      {{ getAttrValue('org_structural_level', row, '⚠️ не обнаружен') }}
+      {{ getAttrValue('org_structural_level', row, '⚠️ не обнаружен') | translate}}
     </td>
   </ng-container>
 

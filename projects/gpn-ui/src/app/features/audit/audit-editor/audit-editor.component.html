@@ -63,7 +63,7 @@
           <h3>
             <div class="header-hat">{{getAttrValue('org-1-type')}}</div>{{getAttrValue('org-1-name')|orgName}}
           </h3>
-          <h4 *ngIf="getAttrValue('org_structural_level')">{{getAttrValue('org_structural_level')}}</h4>
+          <h4 *ngIf="getAttrValue('org_structural_level')">{{getAttrValue('org_structural_level') | translate}}</h4>
         </div>
         <div class="col-4">
           <label *ngIf="getAttrValue('org-2-alias')">{{getAttrValue('org-2-alias')}}</label>
