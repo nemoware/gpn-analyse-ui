@@ -35,6 +35,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   tree: TreeAttributesComponent;
   documentType: string[];
   changed = false;
+  selectedAttribute: string;
 
   constructor(
     private router: Router,
@@ -46,6 +47,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.IdDocument = this.activatedRoute.snapshot.paramMap.get('id');
     this.editmode = this.activatedRoute.snapshot.data['editmode'];
+    this.selectedAttribute = this.activatedRoute.snapshot.queryParams.attribute;
   }
 
   ngAfterViewInit(): void {

@@ -4,8 +4,8 @@
   <ng-container matColumnDef="document">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Документ, имеющий нарушение</th>
     <td mat-cell *matCellDef="let row">
-     <span class="doc_type">{{ row.document.type | translate }}</span>
-     <span class="number"> №{{ row.document.number  }}</span>
+     <span class="doc_type reference" (click)="openDocument(row.document.id)">{{ row.document.type | translate }}</span>
+     <span class="number"> № {{ row.document.number  }}</span>
    </td>
  </ng-container>
 
@@ -23,7 +23,9 @@
   <ng-container matColumnDef="reference">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Подпункт, пункт, статья</th>
     <td mat-cell *matCellDef="let row">
-      <span class="reference" *ngIf="row.reference && row.reference.attribute">{{ getKindAttribute(row.reference.attribute) | translate  }}</span>
+      <span class="reference" *ngIf="row.reference && row.reference.text" (click)="openDocument(row.reference.id, row.reference.attribute)">
+        {{ row.reference.text  }}
+      </span>
    </td>
  </ng-container>
 
@@ -36,6 +38,13 @@
         Отсутствует одобрение <span>{{row.violation_type.org_structural_level | translate}}</span> на совершение сделок
         <span>{{row.violation_type.subject | translate}} </span>
         <span>{{row.violation_type.value | currency : row.violation_type.currency}} </span>
+        <span>{{row.violation_type.value | currency : row.violation_type.currency}} </span>
+        <div>
+          <span *ngIf="row.violation_type.min"> Пороговый минимуам: {{row.violation_type.min.value | currency : row.violation_type.min.currency}} </span>
+        </div>
+        <div>
+          <span *ngIf="row.violation_type.max"> Пороговый максимум: {{row.violation_type.max.value | currency : row.violation_type.max.currency}} </span>
+        </div>
       </div>
    </td>
  </ng-container>
@@ -56,10 +65,7 @@
          <span *ngIf="row.violation_reason.protocol.value">, сумма - {{row.violation_reason.protocol.value | currency : row.violation_reason.protocol.currency}}</span>
        </div>
        <div *ngIf="row.violation_reason.charters">
-         <b>Договор</b> № <span>{{row.violation_reason.number}}</span> от <span>{{row.violation_reason.date | date}}</span>
-         <div>
-           <span *ngFor="let item of row.violation_reason.charters"> <b>Устав</b> от {{ item.date | date }}</span>
-         </div>
+         <span *ngFor="let item of row.violation_reason.charters"> <b>Устав</b> от {{ item.date | date }}</span>
        </div>
      </div>
    </td>

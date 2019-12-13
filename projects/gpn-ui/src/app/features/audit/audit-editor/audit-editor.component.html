@@ -92,6 +92,7 @@
       <div id="container_view_document">
 
         <gpn-view-document [document]="document" [kinds]="documentType" [editmode]="editmode" [attributes]="attributes"
+                           [selectedAttribute] = "selectedAttribute"
           (changeAttribute)="changeAttribute($event)" (refresh)="refresh()"></gpn-view-document>
       </div>
     </div>

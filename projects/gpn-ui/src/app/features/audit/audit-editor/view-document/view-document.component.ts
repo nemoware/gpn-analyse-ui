@@ -32,6 +32,7 @@ import { Helper } from '@app/features/audit/helper';
   encapsulation: ViewEncapsulation.None
 })
 export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() selectedAttribute: string;
   @Input() document: Document;
   @Input() editmode: boolean;
   @Input() kinds: KindAttributeModel[];
@@ -69,7 +70,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   refreshView(attributes?: Array<AttributeModel>) {
     this.spinner.show();
-    console.log(attributes);
     if (attributes) this.attributes = attributes;
 
     const myObservables = new Observable((observer: Observer<string>) => {
@@ -119,6 +119,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.spinner.hide();
+
+        if (this.selectedAttribute) {
+          this.goToAttribute(this.selectedAttribute);
+        }
       },
       (error: string) => {
         console.log('FAILURE RESPONSE: ', error);

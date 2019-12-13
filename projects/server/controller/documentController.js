@@ -95,11 +95,11 @@ exports.getDocument = async (req, res) => {
         if (document.user) {
           delete document.analysis.attributes;
         }
-
+        /*
         document.wrappedText = wrapWords(
           document.analysis.tokenization_maps.words,
           document.analysis.normal_text
-        );
+        );*/
 
         res.status(200).json(document);
       } else {

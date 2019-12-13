@@ -16,9 +16,11 @@
 .attribute {
   font-size: 85%;
   color: $gpn-labels;
+  background: none;
 }
 
 .reference {
+  color: $gpn-links-color;
   cursor: pointer;
   &:hover {
     text-decoration: underline;
@@ -28,11 +30,6 @@
 .mat-column-violation_reason {
   width: 30%;
 }
-/*
-td.mat-cell {
-  border-bottom-style: none;
+.mat-column-violation_type {
+  width: 30%;
 }
-
-.mat-row:nth-child(even) {
-  border-bottom: 1px solid lightgrey;
-}*/
