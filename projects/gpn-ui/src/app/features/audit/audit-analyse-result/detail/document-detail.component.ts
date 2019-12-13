@@ -3,7 +3,8 @@ import {
   ViewChild,
   OnInit,
   ChangeDetectionStrategy,
-  Input
+  Input,
+  ChangeDetectorRef
 } from '@angular/core';
 import { Document } from '@app/models/document.model';
 import { ViewDetailDoc } from '@app/models/view.detail.doc';
@@ -21,9 +22,11 @@ import {
   trigger
 } from '@root/node_modules/@angular/animations';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { AuditService } from '@app/features/audit/audit.service';
 
 const cols_by_type = {
   CONTRACT: [
+    'star',
     'date',
     'number',
     'value',
@@ -33,8 +36,8 @@ const cols_by_type = {
     'spacer',
     'analyze_state'
   ],
-  CHARTER: ['shevron', 'date', 'org', 'spacer', 'analyze_state'],
-  PROTOCOL: ['date', 'org', 'org_level', 'spacer', 'analyze_state']
+  CHARTER: ['star', 'shevron', 'date', 'org', 'analyze_state'],
+  PROTOCOL: ['star', 'date', 'org', 'org_level', 'analyze_state']
 };
 
 const column_to_sorting_mapping = {
@@ -75,12 +78,15 @@ export class DocumentDetailComponent implements OnInit {
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   documentTypeName = null;
+  focusedId: string;
 
   constructor(
     private translate: TranslateService,
     public datepipe: DatePipe,
-    private router: Router
-  ) { }
+    private router: Router,
+    private auditservice: AuditService,
+    private changeDetectorRefs: ChangeDetectorRef
+  ) {}
 
   isExpansionDetailRow = (i: number, row: Object) => true;
 
@@ -159,5 +165,23 @@ export class DocumentDetailComponent implements OnInit {
     this.expandedElementId =
       value._id !== this.expandedElementId ? value._id : '-1';
     event.stopPropagation();
+  }
+
+  starDoc(a, event) {
+    event.stopPropagation();
+    if (a.starred) {
+      this.auditservice.deleteStart(a._id).subscribe(data => {
+        a.starred = false;
+      });
+    } else {
+      this.auditservice.postStar(a._id).subscribe(data => {
+        a.starred = true;
+      });
+    }
+    this.changeDetectorRefs.detectChanges();
+  }
+
+  focusedDoc(id) {
+    this.focusedId = id;
   }
 }
