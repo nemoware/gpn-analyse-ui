@@ -5,7 +5,7 @@ module.exports = (mongoose, Schema) => {
     roles: [
       { _id: Number, name: String, description: String, appPage: String }
     ],
-    stars: [ObjectId]
+    stars: [{ documentId: ObjectId, auditId: ObjectId }]
   });
 
   return mongoose.model('user', userSchema);

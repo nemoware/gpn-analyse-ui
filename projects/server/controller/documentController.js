@@ -56,6 +56,20 @@ exports.getDocuments = async (req, res) => {
       return document;
     });
 
+    const user = await User.findById(req.session.message._id);
+    const stars = Array.from(user.stars).filter(
+      s => s.auditId.toString() === req.query.auditId
+    );
+
+    for (let star of stars) {
+      const document = documents.find(
+        d => d._id.toString() === star.documentId.toString()
+      );
+      if (document) {
+        document.starred = true;
+      }
+    }
+
     res.status(200).json(documents);
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -315,8 +329,11 @@ exports.addStar = async (req, res) => {
     const user = await User.findById(req.session.message._id);
     const document = await Document.findById(id);
 
-    if (document && document.parserResponseCode === 200) {
-      user.stars.push(id);
+    if (document && user.stars && !user.stars.find(s => s.documentId)) {
+      user.stars.push({
+        documentId: id,
+        auditId: document.auditId
+      });
       await user.save();
     }
 
@@ -335,11 +352,12 @@ exports.deleteStar = async (req, res) => {
   try {
     const user = await User.findById(req.session.message._id);
 
-    let index = user.stars.indexOf(id);
-    while (index >= 0) {
+    let index = user.stars.map(s => s.documentId).indexOf(id);
+
+    if (index >= 0) {
       user.stars.splice(index, 1);
-      index = user.stars.indexOf(id);
     }
+
     await user.save();
 
     res.end();
