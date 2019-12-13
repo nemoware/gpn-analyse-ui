@@ -140,4 +140,20 @@ export class AuditService {
       { responseType: 'text' as 'json' }
     );
   }
+
+  deleteStart(id: string) {
+    const urlParams = new HttpParams().set('id', id.toString());
+    return this.http.delete(`${api}/star`, {
+      params: urlParams,
+      responseType: 'text' as 'json'
+    });
+  }
+
+  public postStar(id: string): Observable<Subsidiary> {
+    return this.http.post<Subsidiary>(
+      `${api}/star`,
+      { id: id },
+      { responseType: 'text' as 'json' }
+    );
+  }
 }

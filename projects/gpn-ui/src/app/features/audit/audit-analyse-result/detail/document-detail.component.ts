@@ -21,6 +21,7 @@ import {
   trigger
 } from '@root/node_modules/@angular/animations';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { AuditService } from '@app/features/audit/audit.service';
 
 const cols_by_type = {
   CONTRACT: [
@@ -76,11 +77,13 @@ export class DocumentDetailComponent implements OnInit {
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   documentTypeName = null;
+  focusedId: string;
 
   constructor(
     private translate: TranslateService,
     public datepipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private auditservice: AuditService
   ) {}
 
   isExpansionDetailRow = (i: number, row: Object) => true;
@@ -162,5 +165,20 @@ export class DocumentDetailComponent implements OnInit {
     event.stopPropagation();
   }
 
-  starDoc(a, b) {}
+  starDoc(a, event) {
+    event.stopPropagation();
+    if (a.starred) {
+      //this.auditservice.deleteStart(a._id).subscribe( data => {
+      a.starred = false;
+      //});
+    } else {
+      //this.auditservice.postStar(a._id).subscribe( data => {
+      a.starred = true;
+      //});
+    }
+  }
+
+  focusedDoc(id) {
+    this.focusedId = id;
+  }
 }
