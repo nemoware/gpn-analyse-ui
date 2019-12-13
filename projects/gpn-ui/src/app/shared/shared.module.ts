@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // MatSortModule
+import {MatBadgeModule} from '@angular/material/badge';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -83,7 +84,7 @@ library.add(
   imports: [
     CommonModule,
     FormsModule,
-
+    MatBadgeModule,
     MatSortModule,
     MatButtonModule,
     MatToolbarModule,
@@ -134,6 +135,7 @@ library.add(
     MatSliderModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatBadgeModule,
     MatPaginatorModule,
 
     FontAwesomeModule
