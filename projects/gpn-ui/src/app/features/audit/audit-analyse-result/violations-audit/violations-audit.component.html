@@ -35,16 +35,13 @@
     <td mat-cell *matCellDef="let row">
       <span> <b> {{ getViolation(row) }}</b> </span>
       <div *ngIf="row.violation_type.type">
-        Отсутствует одобрение <span>{{row.violation_type.org_structural_level | translate}}</span> на совершение сделок
+        Отсутствует одобрение <span>{{row.violation_type.org_structural_level | translate}}</span> на совершение
         <span>{{row.violation_type.subject | translate}} </span>
-        <span>{{row.violation_type.value | currency : row.violation_type.currency}} </span>
-        <span>{{row.violation_type.value | currency : row.violation_type.currency}} </span>
-        <div>
-          <span *ngIf="row.violation_type.min"> Пороговый минимуам: {{row.violation_type.min.value | currency : row.violation_type.min.currency}} </span>
-        </div>
-        <div>
-          <span *ngIf="row.violation_type.max"> Пороговый максимум: {{row.violation_type.max.value | currency : row.violation_type.max.currency}} </span>
-        </div>
+        <span *ngIf="row.violation_type.min || row.violation_type.max"> на сумму,
+          <span *ngIf="row.violation_type.min"> превыщающих {{row.violation_type.min.value | currency : row.violation_type.min.currency}} </span>
+          <span *ngIf="row.violation_type.min && row.violation_type.max"> и </span>
+          <span *ngIf="row.violation_type.max"> не превыщающих {{row.violation_type.min.value | currency : row.violation_type.min.currency}} </span>
+        </span>
       </div>
    </td>
  </ng-container>
