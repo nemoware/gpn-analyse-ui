@@ -76,11 +76,12 @@ export class ViolationsAuditComponent implements OnInit {
 
   ngOnInit() {
     this.auditservice.getViolations(this.idAudit).subscribe(data => {
-      this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
-      this.dataSource.sort = this.sort;
-      this.dataSource.data = data;
-      console.log(data);
-      this.changeDetectorRefs.detectChanges();
+      if (data) {
+        this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
+        this.dataSource.sort = this.sort;
+        this.dataSource.data = data;
+        this.changeDetectorRefs.detectChanges();
+      }
     });
   }
 

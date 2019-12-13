@@ -27,6 +27,8 @@ export interface ViolationModel {
     protocol: {
       org_structural_level: string;
       date: Date;
+      value: string;
+      currency: string;
     };
   };
 }

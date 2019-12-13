@@ -240,7 +240,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     const element = document.getElementById(id);
     if (element != null)
       element.scrollIntoView({
-        block: 'start',
+        block: 'center',
         behavior: 'smooth'
       });
   }
