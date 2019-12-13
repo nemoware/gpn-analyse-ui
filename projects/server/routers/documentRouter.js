@@ -4,12 +4,20 @@ const router = express.Router();
 const controller = require('../controller/documentController');
 router.get('/documents', controller.getDocuments);
 router.get('/documentsByType', controller.getDocumentsByType);
-router.get('/document', controller.getDocument);
-router.put('/document', controller.updateDocument);
+router
+  .route('/document')
+  .get(controller.getDocument)
+  .put(controller.updateDocument);
 router.get('/attributes', controller.getAttributes);
 router.get('/links', controller.getLinks);
-router.post('/link', controller.postLink);
-router.put('/link', controller.updateLink);
-router.delete('/link', controller.deleteLink);
+router
+  .route('/link')
+  .post(controller.postLink)
+  .put(controller.updateLink)
+  .delete(controller.deleteLink);
+router
+  .route('/star')
+  .post(controller.addStar)
+  .delete(controller.deleteStar);
 
 module.exports = router;

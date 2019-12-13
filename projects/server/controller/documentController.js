@@ -3,6 +3,7 @@ const logger = require('../core/logger');
 const Document = db.Document;
 const Audit = db.Audit;
 const Link = db.Link;
+const User = db.User;
 const attribute = require('../core/attribute');
 
 const documentFields = `filename
@@ -299,6 +300,49 @@ exports.getDocumentsByType = async (req, res) => {
     });
 
     res.status(200).json(documents);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.addStar = async (req, res) => {
+  const id = req.body.id;
+  if (!id) {
+    return res.status(400).send(`Required parameter 'id' is not passed`);
+  }
+
+  try {
+    const user = await User.findById(req.session.message._id);
+    const document = await Document.findById(id);
+
+    if (document && document.parserResponseCode === 200) {
+      user.stars.push(id);
+      await user.save();
+    }
+
+    res.end();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.deleteStar = async (req, res) => {
+  const id = req.query.id;
+  if (!id) {
+    return res.status(400).send(`Required parameter 'id' is not passed`);
+  }
+
+  try {
+    const user = await User.findById(req.session.message._id);
+
+    let index = user.stars.indexOf(id);
+    while (index >= 0) {
+      user.stars.splice(index, 1);
+      index = user.stars.indexOf(id);
+    }
+    await user.save();
+
+    res.end();
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
