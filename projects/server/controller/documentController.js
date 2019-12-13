@@ -165,6 +165,7 @@ exports.updateDocument = async (req, res) => {
 
   document.user.author = req.session.message;
   document.user.updateDate = new Date();
+  document.user.analyze_timestamp = document.analysis.analyze_timestamp;
 
   try {
     await document.save();
