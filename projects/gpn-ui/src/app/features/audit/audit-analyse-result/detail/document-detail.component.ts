@@ -30,10 +30,11 @@ const cols_by_type = {
     'org1',
     'org2',
     'contract_subject',
+    'spacer',
     'analyze_state'
   ],
-  CHARTER: ['shevron', 'date', 'org', 'analyze_state'],
-  PROTOCOL: ['date', 'org', 'org_level', 'analyze_state']
+  CHARTER: ['shevron', 'date', 'org', 'spacer', 'analyze_state'],
+  PROTOCOL: ['date', 'org', 'org_level', 'spacer', 'analyze_state']
 };
 
 const column_to_sorting_mapping = {
@@ -79,7 +80,7 @@ export class DocumentDetailComponent implements OnInit {
     private translate: TranslateService,
     public datepipe: DatePipe,
     private router: Router
-  ) {}
+  ) { }
 
   isExpansionDetailRow = (i: number, row: Object) => true;
 
