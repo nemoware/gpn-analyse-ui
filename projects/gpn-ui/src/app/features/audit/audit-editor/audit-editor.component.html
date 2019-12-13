@@ -41,12 +41,12 @@
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
 
-      <button (click)="saveChanges()" color="primary" class='floating-button' mat-mini-fab [disabled]="!editmode"
+      <button (click)="saveChanges()" color="primary" class='floating-button' mat-mini-fab [disabled]="!editmode || document.statusAudit === 'Approved'"
         matTooltip="Сохранить изменения">
         <mat-icon>save_alt</mat-icon>
       </button>
 
-      <button (click)="editMode()" class='floating-button' mat-mini-fab [disabled]="editmode"
+      <button (click)="editMode()" class='floating-button' mat-mini-fab [disabled]="editmode || document.statusAudit === 'Approved'"
         matTooltip="Режим обучения, корректировка атрибутов">
         <mat-icon>edit</mat-icon>
       </button>
@@ -92,6 +92,7 @@
       <div id="container_view_document">
 
         <gpn-view-document [document]="document" [kinds]="documentType" [editmode]="editmode" [attributes]="attributes"
+                           [selectedAttribute] = "selectedAttribute"
           (changeAttribute)="changeAttribute($event)" (refresh)="refresh()"></gpn-view-document>
       </div>
     </div>

@@ -1,4 +1,7 @@
 @import '../../../../../styles-variables.scss';
+
+$icon-column-width: 48px;
+
 .mat-table {
   width: 100%;
 }
@@ -40,6 +43,11 @@ tr.detail-row {
   display: block;
 }
 
+.mat-column-shevron {
+  width: $icon-column-width;
+  padding: 0 !important;
+}
+
 .mat-column-date {
   width: 150px;
 }
@@ -54,7 +62,7 @@ tr.detail-row {
 
 .mat-column-star {
   width: 48px;
-  padding-left: 0!important;
+  padding-left: 0 !important;
   padding-right: 0;
 }
 

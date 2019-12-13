@@ -55,8 +55,9 @@ export class AppComponent implements OnInit {
   ) {
     translate.addLangs(['en', 'ru']);
     translate.setDefaultLang('ru');
-    const browserLang = translate.getBrowserLang();
-    translate.use(browserLang.match(/en|ru/) ? browserLang : 'en');
+    //const browserLang = translate.getBrowserLang();
+    //translate.use(browserLang.match(/en|ru/) ? browserLang : 'en');
+    translate.use('ru');
   }
 
   private static isIEorEdgeOrSafari() {

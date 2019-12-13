@@ -6,7 +6,7 @@
 const packageJson = require('@root/package.json');
 
 export const environment = {
-  appName: 'ГПН - Вибраниум',
+  appName: 'Система поддержки принятия решений',
   envName: 'DEV',
   production: false,
   test: false,

@@ -12,6 +12,7 @@ module.exports = (mongoose, Schema) => {
       checkedDocumentCount: Number,
       status: String,
       createDate: Date,
+      violations: [Object],
       author: { _id: ObjectId, login: String }
     },
     { toJSON: { virtuals: true } }

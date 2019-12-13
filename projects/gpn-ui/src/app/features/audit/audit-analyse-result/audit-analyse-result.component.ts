@@ -261,4 +261,20 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   mouseOver(node) {
     this.mouseOverID = node._id;
   }
+
+  approveAudit() {
+    if (
+      confirm(
+        'Вы действительно хотите подтвердить аудит? После подтверждения режим обучения и корректировки атрибутов будет недоступен!'
+      )
+    ) {
+      const approve = this.auditservice
+        .postApprove(this.IdAudit)
+        .subscribe(data => {
+          this.audit.status = 'Approved';
+          approve.unsubscribe();
+          this.changeDetectorRefs.detectChanges();
+        });
+    }
+  }
 }

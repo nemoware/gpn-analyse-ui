@@ -5,7 +5,6 @@
 }
 
 .mat-row:hover {
-  cursor: pointer;
   background-color: aliceblue;
 }
 
@@ -17,4 +16,20 @@
 .attribute {
   font-size: 85%;
   color: $gpn-labels;
+  background: none;
+}
+
+.reference {
+  color: $gpn-links-color;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.mat-column-violation_reason {
+  width: 30%;
+}
+.mat-column-violation_type {
+  width: 30%;
 }

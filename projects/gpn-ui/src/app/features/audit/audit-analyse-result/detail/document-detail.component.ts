@@ -31,6 +31,7 @@ const cols_by_type = {
     'org1',
     'org2',
     'contract_subject',
+    'spacer',
     'analyze_state'
   ],
   CHARTER: ['star', 'shevron', 'date', 'org', 'analyze_state'],
@@ -149,7 +150,10 @@ export class DocumentDetailComponent implements OnInit {
   }
 
   openDocument(element) {
-    this.router.navigate(['audit/view/', element._id]);
+    window.open(
+      window.location.origin + '/#/audit/view/' + element._id,
+      '_blank'
+    );
   }
 
   selectedRow(value, event) {
@@ -158,5 +162,5 @@ export class DocumentDetailComponent implements OnInit {
     event.stopPropagation();
   }
 
-  starDoc(a,b){}
+  starDoc(a, b) {}
 }

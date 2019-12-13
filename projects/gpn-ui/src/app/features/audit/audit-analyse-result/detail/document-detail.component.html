@@ -1,20 +1,15 @@
-   
-  
+<table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows matSortActive="date" matSortDirection="desc">
 
-    <table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows matSortActive="date" matSortDirection="desc">
 
-      
 
-      <ng-container matColumnDef="expandedDetail">
-        <td mat-cell *matCellDef="let row" [attr.colspan]="col.length">
-          <div *ngIf="row._id === expandedElementId" class="element-detail" [@detailExpand]="row._id === expandedElementId ? 'expanded' : 'collapsed'">
-            <gpn-child-detail
-              [documentType] = documentType
-              [document] = row
-            ></gpn-child-detail>
-          </div>
-        </td>
-      </ng-container>
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let row" [attr.colspan]="col.length">
+      <div *ngIf="row._id === expandedElementId" class="element-detail"
+        [@detailExpand]="row._id === expandedElementId ? 'expanded' : 'collapsed'">
+        <gpn-child-detail [documentType]=documentType [document]=row></gpn-child-detail>
+      </div>
+    </td>
+  </ng-container>
 
 
       <!-- star -->
@@ -39,91 +34,94 @@
         </td>
       </ng-container>
 
-      <!-- value -->
-      <ng-container matColumnDef="value">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>сумма договора</th>
-          <td mat-cell *matCellDef="let row">
-              {{ getAttrValue('sign_value_currency/value', row) | currency:getAttrValue('sign_value_currency/currency', row)}}
-          </td>
-        </ng-container>
+  <!-- value -->
+  <ng-container matColumnDef="value">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>сумма договора</th>
+    <td mat-cell *matCellDef="let row">
+      {{ getAttrValue('sign_value_currency/value', row) | currency:getAttrValue('sign_value_currency/currency', row)}}
+    </td>
+  </ng-container>
 
-      <!-- НОМЕР -->
-      <ng-container matColumnDef="number">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>номер</th>
-        <td mat-cell *matCellDef="let row">
-          {{ getAttrValue('number', row) }}
-        </td>
-      </ng-container>
-      
-      <!-- ДАТА -->
-      <ng-container matColumnDef="date" >
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>дата</th>
-        <td mat-cell *matCellDef="let row">
-          {{ getAttrValue('date', row) | date}}
-        </td>
-      </ng-container>
-      
-      <!-- ОРГ -->
-      <ng-container matColumnDef="org">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>наименование</th>
-        <td mat-cell *matCellDef="let row">
-          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span>
-          <span class="org-name">{{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}</span>
-        </td>
-      </ng-container>
+  <!-- НОМЕР -->
+  <ng-container matColumnDef="number">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>номер</th>
+    <td mat-cell *matCellDef="let row">
+      {{ getAttrValue('number', row) }}
+    </td>
+  </ng-container>
 
-      <!-- ПРЕДМЕТ -->
-      <ng-container matColumnDef="contract_subject">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>предмет договора</th>
-        <td mat-cell *matCellDef="let row">          
-          {{ getAttrValue('subject', row) | translate}}
-        </td>
-      </ng-container>
+  <!-- ДАТА -->
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>дата</th>
+    <td mat-cell *matCellDef="let row">
+      {{ getAttrValue('date', row) | date}}
+    </td>
+  </ng-container>
 
-      <!-- org_structural_level -->
-      <ng-container matColumnDef="org_level">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>орган управления</th>
-        <td mat-cell *matCellDef="let row">          
-          {{ getAttrValue('org_structural_level', row, '⚠️ не обнаружен') }}
-        </td>
-      </ng-container>
+  <!-- ОРГ -->
+  <ng-container matColumnDef="org">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>наименование</th>
+    <td mat-cell *matCellDef="let row">
+      <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span>
+      <span class="org-name">{{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}</span>
+    </td>
+  </ng-container>
 
-      <!-- контрагент 1 -->
-      <ng-container matColumnDef="org1">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>контрагент 1</th>
-        <td mat-cell *matCellDef="let row">          
-          <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span>          
-          <span class="org-name">{{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}</span>
-          <span class="org-alias">{{ getAttrValue('org-1-alias', row) }}</span>
-        </td>
-      </ng-container>
+  <!-- ПРЕДМЕТ -->
+  <ng-container matColumnDef="contract_subject">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>предмет договора</th>
+    <td mat-cell *matCellDef="let row">
+      {{ getAttrValue('subject', row) | translate}}
+    </td>
+  </ng-container>
 
-      <!-- контрагент 2 -->
-      <ng-container matColumnDef="org2">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>контрагент 2</th>
-        <td mat-cell *matCellDef="let row">          
-          <span class="org-type">{{ getAttrValue('org-2-type', row) }}</span>                
-          <span class="org-name">{{ getAttrValue('org-2-name', row, '⚠️ не обнаружен') }}</span>
-          <span class="org-alias">{{ getAttrValue('org-2-alias', row) }}</span>
-        </td>
-      </ng-container>
+  <!-- org_structural_level -->
+  <ng-container matColumnDef="org_level">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>орган управления</th>
+    <td mat-cell *matCellDef="let row">
+      {{ getAttrValue('org_structural_level', row, '⚠️ не обнаружен') }}
+    </td>
+  </ng-container>
 
-      <ng-container matColumnDef="analyze_state">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>статус</th>
-          <td mat-cell *matCellDef="let doc">      
-            <gpn-doc-state [document]='doc'></gpn-doc-state>                  
-          </td>
-        </ng-container>
-      
+  <!-- контрагент 1 -->
+  <ng-container matColumnDef="org1">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>контрагент 1</th>
+    <td mat-cell *matCellDef="let row">
+      <span class="org-type">{{ getAttrValue('org-1-type', row) }}</span>
+      <span class="org-name">{{ getAttrValue('org-1-name', row, '⚠️ не обнаружен') }}</span>
+      <span class="org-alias">{{ getAttrValue('org-1-alias', row) }}</span>
+    </td>
+  </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="col"></tr>
+  <!-- контрагент 2 -->
+  <ng-container matColumnDef="org2">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>контрагент 2</th>
+    <td mat-cell *matCellDef="let row">
+      <span class="org-type">{{ getAttrValue('org-2-type', row) }}</span>
+      <span class="org-name">{{ getAttrValue('org-2-name', row, '⚠️ не обнаружен') }}</span>
+      <span class="org-alias">{{ getAttrValue('org-2-alias', row) }}</span>
+    </td>
+  </ng-container>
 
-      <tr mat-row *matRowDef="let row; columns: col;"
-               class="element-row"
-               (click)="openDocument(row)"></tr>
-
-      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" class="detail-row"></tr>
-
-    </table>
+  <ng-container matColumnDef="analyze_state">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>статус</th>
+    <td mat-cell *matCellDef="let doc">
+      <gpn-doc-state [document]='doc'></gpn-doc-state>
+    </td>
+  </ng-container>
 
 
+  <ng-container matColumnDef="spacer">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear></th>
+    <td mat-cell *matCellDef="let doc">      
+    </td>
+  </ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="col"></tr>
+
+  <tr mat-row *matRowDef="let row; columns: col;" class="element-row" (click)="openDocument(row)"></tr>
+
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" class="detail-row"></tr>
+
+</table>

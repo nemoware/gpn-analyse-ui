@@ -3,7 +3,7 @@ const logger = require('../core/logger');
 const Document = db.Document;
 const Audit = db.Audit;
 const Link = db.Link;
-const documentTypes = require('../json/documentType');
+const attribute = require('../core/attribute');
 
 const documentFields = `filename
 parse.documentDate
@@ -85,17 +85,22 @@ exports.getDocument = async (req, res) => {
       if (audit) {
         audit.subsidiaryName = audit.subsidiary.name;
         delete audit.subsidiary;
-
+        document.statusAudit = audit.status;
         document.documentDate = document.parse.documentDate;
         document.documentType = document.parse.documentType;
         document.documentNumber = document.parse.documentNumber;
         document.audit = audit;
         delete document.parse;
-        //delete document.auditId;
 
         if (document.user) {
           delete document.analysis.attributes;
         }
+        /*
+        document.wrappedText = wrapWords(
+          document.analysis.tokenization_maps.words,
+          document.analysis.normal_text
+        );*/
+
         res.status(200).json(document);
       } else {
         let err = `Can not find audit with id ${document.auditId}`;
@@ -110,15 +115,39 @@ exports.getDocument = async (req, res) => {
   }
 };
 
+function wrapWords(words, normal_text) {
+  let result = normal_text;
+  for (let i = words.length - 1; i >= 0; i--) {
+    const word = normal_text.slice(words[i][0], words[i][1]);
+    result =
+      result.slice(0, words[i][0]) +
+      `<span id="span_${i}" >` +
+      word +
+      '</span>' +
+      result.slice(words[i][1]);
+  }
+  return '<span id="top"></span>' + result + '<span id ="foot"></span>';
+}
+
 exports.updateDocument = async (req, res) => {
   let document = await Document.findOne({ _id: req.query._id });
   if (!document) {
-    let err = 'Document not found';
-    logger.logError(req, res, err, 404);
-    return;
+    return logger.logError(req, res, 'Document not found', 404);
   }
 
-  document.user.attributes = req.body.user;
+  if (req.body.user) {
+    const user = req.body.user;
+    document.user.attributes = {};
+    const attributes = attribute.getAttributeList(document.parse.documentType);
+    for (let key in user) {
+      const attribute = attributes.find(a => a.kind === key);
+      if (attribute && attribute.type === 'date') {
+        user[key].value = new Date(user[key].value);
+      }
+      document.user.attributes[key] = user[key];
+    }
+  }
+
   document.user.author = req.session.message;
   document.user.updateDate = new Date();
 
@@ -137,56 +166,15 @@ exports.getAttributes = async (req, res) => {
     logger.logError(req, res, err, 400);
     return;
   }
-  try {
-    let documentType = documentTypes.find(l => l.type === req.query.name);
-    if (documentType) {
-      const root = [];
-      const attributes = documentType.attributes;
-      setChildren(attributes, root);
 
-      res.send(root);
-    } else {
-      let err = `Can not find document type with name ${req.query.name}`;
-      logger.logError(req, res, err, 404);
-    }
-  } catch (err) {
-    logger.logError(req, res, err, 500);
+  const attributes = attribute.getAttributeTree(req.query.name);
+  if (attributes) {
+    res.send(attributes);
+  } else {
+    let err = `Can not find document type with name ${req.query.name}`;
+    logger.logError(req, res, err, 404);
   }
 };
-
-function setChildren(attributes, root) {
-  for (let attribute of attributes) {
-    if (attribute.parents && attribute.children) {
-      const level = [];
-
-      for (let parent of attribute.parents) {
-        push(level, parent);
-      }
-
-      for (let parent of level) {
-        parent.children = [];
-        setChildren(attribute.children, parent.children);
-      }
-
-      for (let child of level) {
-        root.push(child);
-      }
-    } else push(root, attribute);
-  }
-}
-
-function push(array, attribute) {
-  if (typeof attribute === 'string') {
-    attribute = {
-      kind: attribute,
-      type: 'string'
-    };
-  }
-  if (!attribute.type) {
-    attribute.type = 'string';
-  }
-  array.push(attribute);
-}
 
 exports.getLinks = async (req, res) => {
   if (!req.query.documentId) {

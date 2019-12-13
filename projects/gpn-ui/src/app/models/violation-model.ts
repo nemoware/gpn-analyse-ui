@@ -1,26 +1,34 @@
 export interface ViolationModel {
   document: {
     id: string;
-    attribute: string;
-    attributeValue: string;
-    date: Date;
     number: string;
     type: string;
-    name: string;
   };
   founding_document: {
     id: string;
     date: Date;
-    type: string;
-    name: string;
   };
   reference: {
     id: string;
     attribute: string;
-    attributeValue: string;
-    date: string;
-    type: string;
-    name: string;
+    text: string;
   };
-  violation_type: string;
+  violation_type: any;
+  violation_reason: {
+    charters: [{ id: string; date: Date }];
+    contract: {
+      id: string;
+      number: string;
+      type: string;
+      date: Date;
+      org_type: string;
+      org_name: string;
+    };
+    protocol: {
+      org_structural_level: string;
+      date: Date;
+      value: string;
+      currency: string;
+    };
+  };
 }

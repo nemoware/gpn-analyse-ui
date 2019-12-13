@@ -34,4 +34,5 @@ export interface Document {
     status: string;
     ftpUrl: string;
   };
+  statusAudit: string;
 }

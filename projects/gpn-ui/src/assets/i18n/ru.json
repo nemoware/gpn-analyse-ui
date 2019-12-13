@@ -18,7 +18,9 @@
   "New": "Новый",
   "Loading": "Загрузка",
   "InWork": "В работе",
-  "Ended": "Завершен",
+  "Finalizing": "Подготовка заключения",
+  "Done": "Завершен",
+  "Approved": "Подтвержден",
   "LoadingFailed": "Ошибка загрузки",
 
   "ATTRIBUTES": "АТРИБУТЫ",
@@ -27,14 +29,15 @@
   "subject": "Предмет",
   "value": "Сумма",
   "sign-value-currency": "Сумма договора",
-  "org-1-name": "Наименование 1",
-  "org-1-alt-name": "Альт. наимен. 1",
-  "org-1-alias": "Псевдоним 1",
-  "org-1-type": "Форма собственности 1",
-  "org-2-name": "Наименование 2",
-  "org-2-alt-name": "Альт. наимен. 2",
-  "org-2-alias": "Псевдоним 2",
-  "org-2-type": "Форма собственности 2",
+  "sign_value_currency": "Сумма договора",
+  "org-1-name": "Наименование ДО",
+  "org-1-alt-name": "Альт. наимен. ДО",
+  "org-1-alias": "Псевдоним ДО",
+  "org-1-type": "Форма собственности ДО",
+  "org-2-name": "Наименование контрагента",
+  "org-2-alt-name": "Альт. наимен. контрагента",
+  "org-2-alias": "Псевдоним контрагента",
+  "org-2-type": "Форма собственности контрагента",
   "currency": "Валюта",
   "sign": "Знак",
   "org_structural_level": "Структурный уровень",
@@ -76,6 +79,6 @@
 
   "protocol_not_found": "Протокол не найден",
   "charter_not_found": "Устав не найден",
-  "contract_value_great_than_protocol_value": "Стоимость контракта больше значения в протоколе",
-  "contract_date_less_than_protocol_date": "Стоимость контракта меньше значения в протоколе"
+  "contract_value_great_than_protocol_value": "Стоимость договора больше значения в протоколе",
+  "contract_date_less_than_protocol_date": "Дата договора предшествует дате в протоколе"
 }

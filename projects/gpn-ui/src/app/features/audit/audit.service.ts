@@ -132,4 +132,12 @@ export class AuditService {
       params: urlParams
     });
   }
+
+  public postApprove(id: string): Observable<any> {
+    return this.http.post<Array<ViolationModel>>(
+      `${api}/approve`,
+      { id: id },
+      { responseType: 'text' as 'json' }
+    );
+  }
 }

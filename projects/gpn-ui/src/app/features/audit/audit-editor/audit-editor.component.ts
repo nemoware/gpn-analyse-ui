@@ -4,7 +4,8 @@ import {
   ChangeDetectionStrategy,
   AfterViewInit,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  Input
 } from '@angular/core';
 import { AuditService } from '@app/features/audit/audit.service';
 import { ActivatedRoute, Router } from '@root/node_modules/@angular/router';
@@ -34,6 +35,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   tree: TreeAttributesComponent;
   documentType: string[];
   changed = false;
+  selectedAttribute: string;
 
   constructor(
     private router: Router,
@@ -45,6 +47,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.IdDocument = this.activatedRoute.snapshot.paramMap.get('id');
     this.editmode = this.activatedRoute.snapshot.data['editmode'];
+    this.selectedAttribute = this.activatedRoute.snapshot.queryParams.attribute;
   }
 
   ngAfterViewInit(): void {
