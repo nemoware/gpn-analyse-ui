@@ -3,6 +3,7 @@ const logger = require('../core/logger');
 const Document = db.Document;
 const Audit = db.Audit;
 const Link = db.Link;
+const User = db.User;
 const attribute = require('../core/attribute');
 
 const documentFields = `filename
@@ -54,6 +55,20 @@ exports.getDocuments = async (req, res) => {
       }
       return document;
     });
+
+    const user = await User.findById(req.session.message._id);
+    const stars = Array.from(user.stars).filter(
+      s => s.auditId.toString() === req.query.auditId
+    );
+
+    for (let star of stars) {
+      const document = documents.find(
+        d => d._id.toString() === star.documentId.toString()
+      );
+      if (document) {
+        document.starred = true;
+      }
+    }
 
     res.status(200).json(documents);
   } catch (err) {
@@ -299,6 +314,53 @@ exports.getDocumentsByType = async (req, res) => {
     });
 
     res.status(200).json(documents);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.addStar = async (req, res) => {
+  const id = req.body.id;
+  if (!id) {
+    return res.status(400).send(`Required parameter 'id' is not passed`);
+  }
+
+  try {
+    const user = await User.findById(req.session.message._id);
+    const document = await Document.findById(id);
+
+    if (document && user.stars && !user.stars.find(s => s.documentId === id)) {
+      user.stars.push({
+        documentId: id,
+        auditId: document.auditId
+      });
+      await user.save();
+    }
+
+    res.end();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.deleteStar = async (req, res) => {
+  const id = req.query.id;
+  if (!id) {
+    return res.status(400).send(`Required parameter 'id' is not passed`);
+  }
+
+  try {
+    const user = await User.findById(req.session.message._id);
+
+    let index = user.stars.map(s => s.documentId).indexOf(id);
+
+    if (index >= 0) {
+      user.stars.splice(index, 1);
+    }
+
+    await user.save();
+
+    res.end();
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

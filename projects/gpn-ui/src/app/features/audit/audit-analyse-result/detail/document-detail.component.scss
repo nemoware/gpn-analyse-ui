@@ -1,6 +1,6 @@
 @import '../../../../../styles-variables.scss';
 
-$icon-column-width:48px;
+$icon-column-width: 48px;
 
 .mat-table {
   width: 100%;
@@ -16,7 +16,7 @@ tr.detail-row {
 }
 
 .element-row td {
-  border-bottom-width: 0;
+  border: none;
 }
 
 .element-detail {
@@ -43,9 +43,9 @@ tr.detail-row {
   display: block;
 }
 
-.mat-column-shevron{
+.mat-column-shevron {
   width: $icon-column-width;
-  padding: 0!important;
+  padding: 0 !important;
 }
 
 .mat-column-date {
@@ -58,6 +58,12 @@ tr.detail-row {
 
 .mat-column-analyze_state {
   width: 200px;
+}
+
+.mat-column-star {
+  width: 48px;
+  padding-left: 0 !important;
+  padding-right: 0;
 }
 
 .mat-column-value {

@@ -35,4 +35,5 @@ export interface Document {
     ftpUrl: string;
   };
   statusAudit: string;
+  starred: boolean;
 }

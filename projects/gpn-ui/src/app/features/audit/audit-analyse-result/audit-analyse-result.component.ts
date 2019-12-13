@@ -204,7 +204,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
               childCount: 0,
               parseError: d.parseError,
               documentType: t,
-              attributes: null
+              attributes: null,
+              starred: d.starred
             };
 
             const nodeChild = Object.assign({}, d, addon);
