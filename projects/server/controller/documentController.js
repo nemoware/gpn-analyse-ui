@@ -329,7 +329,7 @@ exports.addStar = async (req, res) => {
     const user = await User.findById(req.session.message._id);
     const document = await Document.findById(id);
 
-    if (document && user.stars && !user.stars.find(s => s.documentId)) {
+    if (document && user.stars && !user.stars.find(s => s.documentId === id)) {
       user.stars.push({
         documentId: id,
         auditId: document.auditId

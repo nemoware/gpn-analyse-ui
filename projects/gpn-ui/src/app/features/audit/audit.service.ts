@@ -149,8 +149,8 @@ export class AuditService {
     });
   }
 
-  public postStar(id: string): Observable<Subsidiary> {
-    return this.http.post<Subsidiary>(
+  public postStar(id: string) {
+    return this.http.post(
       `${api}/star`,
       { id: id },
       { responseType: 'text' as 'json' }
