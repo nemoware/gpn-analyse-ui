@@ -80,5 +80,12 @@
   "protocol_not_found": "Протокол не найден",
   "charter_not_found": "Устав не найден",
   "contract_value_great_than_protocol_value": "Стоимость договора больше значения в протоколе",
-  "contract_date_less_than_protocol_date": "Дата договора предшествует дате в протоколе"
+  "contract_date_less_than_protocol_date": "Дата договора предшествует дате в протоколе",
+
+
+
+  
+
+  "number_not_found":"Номер документа не обнаружен",
+  "date_not_found":"Дата документа не обнаружена"
 }

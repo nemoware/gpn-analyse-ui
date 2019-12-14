@@ -29,6 +29,8 @@ tr.detail-row {
   max-width: 35px;
 }
 
+
+
 .org-type,
 .small {
   font-size: 85%;
@@ -47,6 +49,18 @@ tr.detail-row {
   width: $icon-column-width;
   padding: 0 !important;
 }
+.mat-column-warnings{
+  width: $icon-column-width;
+  padding: 0 !important;
+  text-align: center;
+}
+
+.mat-column-star {
+  width: $icon-column-width;
+  padding-left: 0 !important;
+  padding-right: 0;
+}
+
 
 .mat-column-date {
   width: 150px;
@@ -60,11 +74,7 @@ tr.detail-row {
   width: 200px;
 }
 
-.mat-column-star {
-  width: 48px;
-  padding-left: 0 !important;
-  padding-right: 0;
-}
+
 
 .mat-column-value {
   text-align: right;

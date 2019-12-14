@@ -34,10 +34,11 @@ const cols_by_type = {
     'org2',
     'contract_subject',
     'spacer',
+    'warnings',
     'analyze_state'
   ],
-  CHARTER: ['star', 'shevron', 'date', 'org', 'analyze_state'],
-  PROTOCOL: ['star', 'date', 'org', 'org_level', 'analyze_state']
+  CHARTER: ['star', 'shevron', 'date', 'org', 'warnings', 'analyze_state'],
+  PROTOCOL: ['star', 'date', 'org', 'org_level', 'warnings', 'analyze_state']
 };
 
 const column_to_sorting_mapping = {
@@ -99,8 +100,18 @@ export class DocumentDetailComponent implements OnInit {
       const res = this.getAttrValue(attr, data);
       return res;
     }
+    if ('warnings' == sortHeaderId){
+      if(data.analysis && data.analysis.warnings)
+        return data.analysis.warnings.length;
+      else
+        return 0;
+    }
     return -1;
   };
+
+  hasWarnings(document): boolean {
+    return document.analysis && document.analysis.warnings && document.analysis.warnings.length > 0;
+  }
 
   ngOnInit() {
     const docs = this.documents.docs; // shortcut
