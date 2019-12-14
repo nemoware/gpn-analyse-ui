@@ -142,10 +142,6 @@
                 "once": true
               }
             ]
-          },
-          {
-            "parents": ["contract-agent-org"],
-            "children": ["type", "name"]
           }
         ]
       }
