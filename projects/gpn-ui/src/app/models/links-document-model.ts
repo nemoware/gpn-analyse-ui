@@ -5,4 +5,5 @@ export interface LinksDocumentModel {
   documentType: string;
   documentNumber: string;
   linkId: string;
+  attributes: any[];
 }

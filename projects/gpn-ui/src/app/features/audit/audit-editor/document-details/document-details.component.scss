@@ -23,3 +23,15 @@ section {
   color: $gpn-labels-darker;
   text-transform: uppercase;
 }
+
+.delete {
+  cursor: pointer;
+}
+
+.reference {
+  color: $gpn-links-color;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}

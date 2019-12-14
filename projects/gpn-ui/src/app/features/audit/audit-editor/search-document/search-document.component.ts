@@ -17,6 +17,12 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Audit } from '@app/models/audit.model';
 import { AuditService } from '@app/features/audit/audit.service';
 import { LinksDocumentModel } from '@app/models/links-document-model';
+import { Helper } from '@app/features/audit/helper';
+const cols_by_type = {
+  CONTRACT: ['date', 'number', 'value', 'org1', 'org2', 'contract_subject'],
+  CHARTER: ['date', 'org'],
+  PROTOCOL: ['date', 'org', 'org_level']
+};
 
 @Component({
   selector: 'gpn-search-document',
@@ -27,7 +33,7 @@ import { LinksDocumentModel } from '@app/models/links-document-model';
 })
 export class SearchDocumentComponent implements OnInit, AfterViewInit {
   faTimes = faTimes;
-  columns: string[] = ['filename', 'documentNumber', 'documentDate'];
+  columns: string[];
   strDocument: string;
 
   documents: LinksDocumentModel[];
@@ -49,11 +55,17 @@ export class SearchDocumentComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {}
 
-  refreshViewTable() {
-    if (this.strDocument && this.strDocument.length > 0)
-      this.documentsFiltered = this.documents.filter(x =>
-        x.filename.toUpperCase().includes(this.strDocument.toUpperCase())
-      );
+  refreshViewTable(value?: string) {
+    if (value)
+      this.documentsFiltered = this.documents.filter(x => {
+        const names = x.attributes.filter(a =>
+          a.kind.toString().match(/(org-\d+(\.\d)*-name)/i)
+        );
+        const n = names.find(y =>
+          y.value.toUpperCase().includes(value.toUpperCase())
+        );
+        return !!n;
+      });
     else this.documentsFiltered = this.documents;
     this.dataSource = new MatTableDataSource(this.documentsFiltered);
     this.dataSource.sort = this.sort;
@@ -69,6 +81,7 @@ export class SearchDocumentComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.columns = cols_by_type[this.data.type].map(x => x);
     this.auditservice
       .getDocumentsByType(this.data.auditId, this.data.type)
       .subscribe(data => {
@@ -78,11 +91,22 @@ export class SearchDocumentComponent implements OnInit, AfterViewInit {
             x => !this.data.Docs.includes(x._id)
           );
         }
+        this.documents.map(
+          x => (x.attributes = Helper.json2array(x.attributes))
+        );
         this.refreshViewTable();
       });
   }
 
-  filterDoc() {
-    this.refreshViewTable();
+  filterDoc(value) {
+    this.refreshViewTable(value);
+  }
+
+  getAttrValue(attrName: string, doc, default_value = null) {
+    if (doc && doc.attributes) {
+      const atr = doc.attributes.find(x => x.key === attrName);
+      if (atr) return atr.value;
+    }
+    return default_value;
   }
 }

@@ -35,17 +35,15 @@
 
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
 
-    <div class="row" style="width: 100%">
-      <div class="col-10">
-        <!-- TODO: не имя файла, а название дока -->
-        <span class="file-name"><span class="file-path">{{ node.name | filePath}}</span>{{ node.name | fileName}}</span>
+    <div class="row" style="width: 100%" (mouseenter)="focusedDoc(node._id)" (mouseleave)="focusedDoc(null)">
+      <div class="col-10" (click)="openDocument(node)" [ngClass]="{reference: node.index > 0}">
+          <span *ngIf="node.documentNumber">№{{ node.documentNumber}}</span> <span *ngIf="node.documentDate"> от {{node.documentDate | date}}</span>
       </div>
 
       <div class="col-2">
-        <button style="float: right;" *ngIf="node.index > 0" mat-icon-button
-          matTooltip="Удалить из списка связанных документов" [disabled]="!editable" (click)="deleteDocument(node)">
-          <fa-icon [icon]="faTimes"></fa-icon>
-        </button>
+        <fa-icon class="delete" [icon]="faTimes" *ngIf="editable && node.index > 0" matTooltip="Удалить из списка связанных документов" (click)="deleteDocument(node)"
+                 [ngStyle]="{'display': focusedId === node._id ? 'inline-block' : 'none'}"
+        ></fa-icon>
       </div>
     </div>
   </mat-tree-node>

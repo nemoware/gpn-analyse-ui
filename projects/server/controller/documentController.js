@@ -100,7 +100,7 @@ exports.getDocument = async (req, res) => {
       if (audit) {
         audit.subsidiaryName = audit.subsidiary.name;
         delete audit.subsidiary;
-        document.statusAudit = audit.status;        
+        document.statusAudit = audit.status;
         document.documentDate = document.parse.documentDate;
         document.documentType = document.parse.documentType;
         document.documentNumber = document.parse.documentNumber;
@@ -300,7 +300,9 @@ exports.getDocumentsByType = async (req, res) => {
       },
       `parse.documentDate
     filename
-    parse.documentNumber`,
+    parse.documentNumber
+    analysis.attributes
+    `,
       { lean: true }
     );
 
@@ -310,6 +312,7 @@ exports.getDocumentsByType = async (req, res) => {
         documentDate: d.parse.documentDate,
         documentType: d.parse.documentType,
         documentNumber: d.parse.documentNumber,
+        attributes: d.analysis.attributes,
         _id: d._id
       };
     });
