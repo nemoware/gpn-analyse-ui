@@ -37,7 +37,7 @@ const cols_by_type = {
     'warnings',
     'analyze_state'
   ],
-  CHARTER: ['star', 'shevron', 'date', 'org', 'warnings', 'analyze_state'],
+  CHARTER: ['star', 'date', 'shevron', 'org', 'warnings', 'analyze_state'],
   PROTOCOL: ['star', 'date', 'org', 'org_level', 'warnings', 'analyze_state']
 };
 
@@ -100,17 +100,20 @@ export class DocumentDetailComponent implements OnInit {
       const res = this.getAttrValue(attr, data);
       return res;
     }
-    if ('warnings' == sortHeaderId){
-      if(data.analysis && data.analysis.warnings)
+    if ('warnings' == sortHeaderId) {
+      if (data.analysis && data.analysis.warnings)
         return data.analysis.warnings.length;
-      else
-        return 0;
+      else return 0;
     }
     return -1;
   };
 
   hasWarnings(document): boolean {
-    return document.analysis && document.analysis.warnings && document.analysis.warnings.length > 0;
+    return (
+      document.analysis &&
+      document.analysis.warnings &&
+      document.analysis.warnings.length > 0
+    );
   }
 
   ngOnInit() {
