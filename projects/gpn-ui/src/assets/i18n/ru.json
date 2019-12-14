@@ -87,5 +87,12 @@
   
 
   "number_not_found":"Номер документа не обнаружен",
-  "date_not_found":"Дата документа не обнаружена"
+  "date_not_found":"Дата документа не обнаружена",
+  "org_name_not_found": "Наименование компании не найдено",
+  "org_type_not_found" :"Форма собственности не выявлена",
+  "org_struct_level_not_found":"Орган управления не выявлен",
+  "value_section_not_found":"Раздел о стоимости договора не обнаружен",
+  "contract_value_not_found" : "Стоимость договора не найдена",
+  "subject_section_not_found" :"Раздел о предмете договора не обнаружен",
+  "contract_subject_not_found":"Предмет договора не выявлен"
 }
