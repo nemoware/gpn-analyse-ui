@@ -100,7 +100,7 @@ exports.getDocument = async (req, res) => {
       if (audit) {
         audit.subsidiaryName = audit.subsidiary.name;
         delete audit.subsidiary;
-        document.statusAudit = audit.status;
+        document.statusAudit = audit.status;        
         document.documentDate = document.parse.documentDate;
         document.documentType = document.parse.documentType;
         document.documentNumber = document.parse.documentNumber;

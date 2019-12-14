@@ -74,6 +74,13 @@
       </div>
 
     </div>
+
+    <div *ngIf="hasWarnings()" class="balloon warnings">
+      <div *ngFor="let warning of document.analysis.warnings" class='warning'>
+        {{ warning.code | translate }}
+      </div>
+    </div>
+
     <mat-divider></mat-divider>
 
     <ng-container *ngIf="document.documentType == 'CHARTER' && attributes">

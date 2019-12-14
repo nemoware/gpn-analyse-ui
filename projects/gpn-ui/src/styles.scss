@@ -151,3 +151,21 @@ label {
     content: ': ';
   }
 }
+
+.balloon{
+  margin: $gpn-padding;
+  padding: $gpn-padding/2;
+  border-radius: $gpn-padding/2;
+}
+
+.warnings{
+  background: fade-out($gpn-warning, 0.9);
+}
+
+.warning{
+  color: $gpn-warning;
+  display: block;
+  &::before{
+    content: '⚠️';
+  }
+}
