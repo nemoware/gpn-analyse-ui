@@ -91,11 +91,15 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         else view_doc.insertAdjacentHTML('afterbegin', response);
         customSubscrition.unsubscribe();
 
-        /*let i = 0;
-        view_doc.querySelectorAll(':scope >*').forEach(x => x.id = (i++).toString());*/
-
         for (const atr of this.document.analysis.headers) {
-          this.setAttribute(atr.span[0], atr.span[1], 'headline', false);
+          for (let i = atr.span[0]; i < atr.span[1]; i++) {
+            const head = document.getElementById('span_' + i);
+            if (head.innerHTML === '\n') {
+              head.insertAdjacentHTML('beforebegin', '<br>');
+            } else if (head) head.classList.add('headline');
+            if (i === atr.span[0] && i !== 0)
+              head.insertAdjacentHTML('beforebegin', '<br>');
+          }
         }
 
         const sortedAttributes = this.attributes.sort((a, b) => {

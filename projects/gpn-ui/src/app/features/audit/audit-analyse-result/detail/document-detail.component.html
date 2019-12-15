@@ -4,7 +4,7 @@
 
   <ng-container matColumnDef="expandedDetail">
     <td mat-cell *matCellDef="let row" [attr.colspan]="col.length">
-      <div *ngIf="row._id === expandedElementId" class="element-detail"
+      <div style="margin-left: 200px" *ngIf="row._id === expandedElementId" class="element-detail"
         [@detailExpand]="row._id === expandedElementId ? 'expanded' : 'collapsed'">
         <gpn-child-detail [documentType]=documentType [document]=row></gpn-child-detail>
       </div>

@@ -1,3 +1,5 @@
+@import '../../../../../styles-variables.scss';
+
 .close {
   position: absolute;
   top: 0;
@@ -12,4 +14,18 @@
 .mat-row:hover {
   cursor: pointer;
   background-color: aliceblue;
+}
+
+.org-type,
+.small {
+  font-size: 85%;
+  color: $gpn-labels;
+}
+
+.org-alias {
+  color: $gpn-labels;
+}
+
+.org-name {
+  display: block;
 }

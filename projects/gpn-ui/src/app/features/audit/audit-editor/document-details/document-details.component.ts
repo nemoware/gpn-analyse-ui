@@ -60,14 +60,9 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
   @Input() document: Document;
   @Input() editable: boolean;
 
-  faClock = faClock;
-  faFlagCheckered = faFlagCheckered;
-  faChevronDown = faChevronDown;
-  faChevronUp = faChevronUp;
-  faSearch = faSearch;
-  faEye = faEye;
   faTimes = faTimes;
   faPlus = faPlus;
+  focusedId = '';
 
   TREE_DATA: Node[] = [];
   treeControl;
@@ -84,7 +79,9 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
       index: node.index,
       type: node.type,
       _id: node._id,
-      linkId: node.linkId
+      linkId: node.linkId,
+      documentNumber: node.documentNumber,
+      documentDate: node.documentDate
     };
   };
 
@@ -188,8 +185,8 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
       x => x._id
     );
     const dialogRef = this.dialog.open(SearchDocumentComponent, {
-      width: '800px',
-      height: '85%',
+      width: node.type === 'CONTRACT' ? '90%' : '50%',
+      height: '90%',
       data: {
         auditId: this.document.auditId,
         type: node.type,
@@ -215,5 +212,14 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
         this.refreshData();
       });
     }
+  }
+
+  openDocument(node) {
+    if (node.index === 0) return;
+    window.open(window.location.origin + '/#/audit/view/' + node._id, '_blank');
+  }
+
+  focusedDoc(id) {
+    this.focusedId = id;
   }
 }
