@@ -51,6 +51,7 @@
   "Consulting": "Консалтинг",
   "Other": "Прочее",
   "Lawsuit": "Судебные разбирательства, иски",
+  "PropertyDeal": "Сделки с имуществом",
   "RealEstate": "Сделки с имуществом",
   "Insurance": "Страхование",
 
@@ -82,21 +83,16 @@
   "contract_value_great_than_protocol_value": "Стоимость договора больше значения в протоколе",
   "contract_date_less_than_protocol_date": "Дата договора предшествует дате в протоколе",
 
-
-
-  
-
-  "number_not_found":"Номер документа не обнаружен",
-  "date_not_found":"Дата документа не обнаружена",
+  "number_not_found": "Номер документа не обнаружен",
+  "date_not_found": "Дата документа не обнаружена",
   "org_name_not_found": "Наименование компании не найдено",
-  "org_type_not_found" :"Форма собственности не выявлена",
-  "org_struct_level_not_found":"Орган управления не выявлен",
-  "value_section_not_found":"Раздел о стоимости договора не обнаружен",
-  "contract_value_not_found" : "Стоимость договора не найдена",
-  "subject_section_not_found" :"Раздел о предмете договора не обнаружен",
-  "contract_subject_not_found":"Предмет договора не выявлен",
+  "org_type_not_found": "Форма собственности не выявлена",
+  "org_struct_level_not_found": "Орган управления не выявлен",
+  "value_section_not_found": "Раздел о стоимости договора не обнаружен",
+  "contract_value_not_found": "Стоимость договора не найдена",
+  "subject_section_not_found": "Раздел о предмете договора не обнаружен",
+  "contract_subject_not_found": "Предмет договора не выявлен",
 
-  "protocol_agenda_not_found":"Не обнаружен вопрос повестки дня",
-  "boring_agenda_questions":"Вопрос повестки дня не связать с договором"
-
+  "protocol_agenda_not_found": "Не обнаружен вопрос повестки дня",
+  "boring_agenda_questions": "Вопрос повестки дня не связать с договором"
 }
