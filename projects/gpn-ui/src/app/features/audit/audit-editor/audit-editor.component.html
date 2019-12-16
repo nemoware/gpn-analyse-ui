@@ -77,7 +77,7 @@
 
     <div *ngIf="hasWarnings()" class="balloon warnings">
       <div *ngFor="let warning of document.analysis.warnings" class='warning'>
-        {{ warning.code | translate }}
+        {{ warning.code | translate }} <span class="warning-comment">{{ warning.comment }}</span>
       </div>
     </div>
 

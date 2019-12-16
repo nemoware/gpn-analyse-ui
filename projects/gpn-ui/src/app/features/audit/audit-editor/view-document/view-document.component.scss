@@ -22,7 +22,7 @@
 .hint_span,
 .hint {
   border-radius: 2px;
-  background: mat-color($mat-blue, 100);
+  background: fade-out(mat-color($mat-blue, 100), 0.3) ;
 }
 
 .unknown {
@@ -155,6 +155,11 @@ $org_2_base_alt: $mat-blue;
   background: mat-color($mat-deep-purple, 100);
 }
 
+.agenda-item {
+  background: mat-color($mat-lime, 100);
+}
+
+
 // --------------
 .hint_span {
   padding: 2px 2px;
@@ -167,7 +172,7 @@ $org_2_base_alt: $mat-blue;
   top: -3px;
   border: none;
   background: none;
-  padding: 2px 3px;
+  padding: 2px 3px; 
 
   font-size: 10px;
   cursor: pointer;

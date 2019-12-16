@@ -70,3 +70,11 @@ $header_height: 64px;
   right: 0;
   margin: auto;
 }
+
+
+.warning-comment{
+  font-size: 85%;
+  display: inline-block;
+  margin-left: 2em;
+  color: $gpn-labels-darker;
+}
