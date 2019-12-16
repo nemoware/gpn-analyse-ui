@@ -40,7 +40,7 @@
         <span *ngIf="row.violation_type.min || row.violation_type.max"> на сумму,
           <span *ngIf="row.violation_type.min"> превыщающих {{row.violation_type.min.value | currency : row.violation_type.min.currency}} </span>
           <span *ngIf="row.violation_type.min && row.violation_type.max"> и </span>
-          <span *ngIf="row.violation_type.max"> не превыщающих {{row.violation_type.min.value | currency : row.violation_type.min.currency}} </span>
+          <span *ngIf="row.violation_type.max"> не превыщающих {{row.violation_type.max.value | currency : row.violation_type.max.currency}} </span>
         </span>
       </div>
    </td>
