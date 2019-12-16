@@ -166,9 +166,15 @@ exports.updateDocument = async (req, res) => {
   document.user.author = req.session.message;
   document.user.updateDate = new Date();
   document.user.analyze_timestamp = document.analysis.analyze_timestamp;
+  document.state = 5;
 
   try {
     await document.save();
+
+    const audit = await Audit.findById(document.auditId);
+    audit.status = 'InWork';
+    await audit.save();
+
     logger.log(req, res, 'Изменение документа');
     res.status(200).json(document);
   } catch (err) {
