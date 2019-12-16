@@ -10,7 +10,7 @@ export class Dictionaries {
     },
     {
       id: 'Subject',
-      values: [{ id: 'Charity' }, { id: 'Deal' }, { id: 'PropertyDeal' }]
+      values: [{ id: 'Charity' }, { id: 'Deal' }, { id: 'RealEstate' }]
     },
     { id: 'Currency', values: [{ id: 'RUB' }, { id: 'EUR' }, { id: 'USD' }] }
   ];
