@@ -25,14 +25,14 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
   valuesRange = [0, 1];
   barOffsetPercent = 18;
 
-  constructor(private translate: TranslateService) {}
+  constructor(private translate: TranslateService) { }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
-  getBarStyle(competenceKey, competence) {
-    if (!('constraint-min' in competence)) return `${competenceKey}-fade-left`;
+  getBarStyle(competenceKey, competence) {    
 
     if (!('constraint-max' in competence)) return `${competenceKey}-fade-right`;
+    if (!('constraint-min' in competence)) return `${competenceKey}-fade-left`;
 
     return `${competenceKey}-solid`;
   }
@@ -44,7 +44,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
         this.barOffsetPercent +
         ((100.0 - this.barOffsetPercent * 2) *
           (competence['constraint-min'] - this.valuesRange[0])) /
-          range;
+        range;
 
       return percent_start;
     }
@@ -53,6 +53,10 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
 
   getBarWidth(competence) {
     const range = this.valuesRange[1] - this.valuesRange[0];
+
+    if ( !('constraint-min' in competence) && !('constraint-max' in competence) ) {
+      return 100.0 - this.barOffsetPercent * 2
+    }
 
     if ('constraint-min' in competence && 'constraint-max' in competence) {
       const delta = competence['constraint-max'] - competence['constraint-min'];
@@ -64,40 +68,71 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
     const constraintsTree = {};
     const constraint_values = [];
 
-    const toTree = x => {
-      console.log(x);
-      const pth: Array<string> = x.key
+
+    const keyToPieces = key => {
+      const pth: Array<string> = key
         .split('/')
         .map(y => y.replace(/[-_](\d){1,2}$/, '')); //trim number
+      return pth
+    }
 
-      if (pth.length < 4) {
-        console.log('sorry yeah?');
-        console.log(x);
-        return;
-      }
+    const toTree = xx => {
+      console.log(xx);
 
-      const org_level = pth[0];
-      const competence_name = pth[1];
-      const margin_ = pth[2];
-      const margin_value = Number(x.value);
+      for (const x of xx) {
 
-      if (!(org_level in constraintsTree)) {
-        constraintsTree[org_level] = {};
-      }
-      const competences = constraintsTree[org_level];
-      if (!(competence_name in competences)) {
-        competences[competence_name] = {};
-      }
-      const competence = competences[competence_name];
-      competence[margin_] = margin_value;
-      competence['span'] = x.span;
+        const pth = keyToPieces(x.key)
 
-      constraint_values.push(margin_value);
-    };
+        const org_level = pth[0];
+        const competence_name = pth[1];
 
-    this.attributes
-      .filter(x => x.kind === 'value') //TODO: mind currency
-      .forEach(x => toTree(x));
+        if (!(org_level in constraintsTree)) {
+          constraintsTree[org_level] = {};
+        }
+        const competences = constraintsTree[org_level];
+        if (!(competence_name in competences)) {
+          competences[competence_name] = {};
+        }
+        const competence = competences[competence_name];
+        competence['span'] = x.span;
+        if (pth.length = 4) {
+          const margin_ = pth[2];
+          if ('value' === x.kind) {
+            const margin_value = Number(x.value);
+            competence[margin_] = margin_value;
+            constraint_values.push(margin_value);
+
+          }
+          else if ('currency' === x.kind) {
+            competence['currency'] = x.value;
+          }
+
+        }
+
+      };
+    }
+
+
+    const isConstraint = x => {
+      const p = x.key ? x.key.split('/').pop() : null
+      return p === 'constraint-min' || p === 'constraint-max'
+    }
+
+    const collectChildrenOf = parent => {
+      return this.attributes.filter(x => x.parent === parent.key)
+    }
+
+    const constraints = this.attributes
+      .filter(isConstraint)
+
+    for (const c of constraints) {
+      console.log(c);
+      const children = collectChildrenOf(c);
+      toTree(children)
+    }
+
+    this.attributes.filter(a => a.kind === 'Charity').forEach(a => toTree([a]))
+
 
     this.constraintsTree = constraintsTree;
     this.constraint_values = constraint_values;
