@@ -111,14 +111,10 @@ export class AuditService {
     });
   }
 
-  public postLinks(link: {
-    fromId: string;
-    toId: string;
-  }): Observable<{ _id: string; fromId: string; toId: string }> {
-    return this.http.post<{ _id: string; fromId: string; toId: string }>(
-      `${api}/link`,
-      link
-    );
+  public postLinks(link: { fromId: string; toId: string }): Observable<any> {
+    return this.http.post(`${api}/link`, link, {
+      responseType: 'text' as 'json'
+    });
   }
 
   public deleteLinks(fromId: string, toId: string) {

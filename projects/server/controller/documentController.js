@@ -377,7 +377,7 @@ exports.getDocumentsByType = async (req, res) => {
         documentDate: d.parse.documentDate,
         documentType: d.parse.documentType,
         documentNumber: d.parse.documentNumber,
-        attributes: d.analysis.attributes,
+        attributes: (d.analysis && d.analysis.attributes) || {},
         _id: d._id
       };
     });

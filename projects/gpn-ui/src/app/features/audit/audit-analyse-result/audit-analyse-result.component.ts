@@ -214,7 +214,9 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
               nodeChild.attributes =
                 d.user != null
                   ? Helper.json2array(d.user.attributes)
-                  : Helper.json2array(d.analysis.attributes);
+                  : d.analysis && d.analysis.attributes
+                  ? Helper.json2array(d.analysis.attributes)
+                  : [];
               docs.docs.push(nodeChild);
             } else node.children.push(nodeChild);
           }
