@@ -114,7 +114,6 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
         }
         return a;
       }, []);
-
       for (const t of uniqueType) {
         let i = 0;
         const node = { name: t, children: [], childCount: 0, type: t };
@@ -208,9 +207,11 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
     if (
       confirm('Вы действительно изъять данный документ из списка связанных?')
     ) {
-      this.auditservice.deleteLinks(node.linkId).subscribe(data => {
-        this.refreshData();
-      });
+      this.auditservice
+        .deleteLinks(this.document._id, node.linkId)
+        .subscribe(data => {
+          this.refreshData();
+        });
     }
   }
 

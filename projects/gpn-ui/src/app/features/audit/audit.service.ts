@@ -121,8 +121,10 @@ export class AuditService {
     );
   }
 
-  public deleteLinks(id: string) {
-    const urlParams = new HttpParams().set('id', id.toString());
+  public deleteLinks(fromId: string, toId: string) {
+    let urlParams = new HttpParams();
+    urlParams = urlParams.append('fromId', fromId);
+    urlParams = urlParams.append('toId', toId);
     return this.http.delete(`${api}/link`, { params: urlParams });
   }
 
