@@ -30,13 +30,7 @@ exports.getDocuments = async (req, res) => {
     }
 
     let documents = await Document.find(
-      {
-        auditId: req.query.auditId,
-        parserResponseCode: 200,
-        'parse.documentType': {
-          $in: ['CONTRACT', 'PROTOCOL', 'CHARTER']
-        }
-      },
+      { auditId: req.query.auditId, parserResponseCode: 200 },
       include,
       { lean: true }
     );
