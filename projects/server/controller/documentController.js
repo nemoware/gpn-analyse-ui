@@ -330,7 +330,7 @@ exports.deleteLink = async (req, res) => {
           links: {
             $or: [
               { toId, fromId },
-              { toId: fromId, fromId: toid }
+              { toId: fromId, fromId: toId }
             ]
           }
         }
