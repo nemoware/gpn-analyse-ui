@@ -10,7 +10,8 @@ const name = dbConfig.name;
 mongoose
   .connect(`mongodb://${host}:${port}/${name}`, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   })
   .then(() => {
     info('on');
@@ -39,6 +40,5 @@ db.User = require('../model/user')(mongoose, Schema);
 db.Log = require('../model/log')(mongoose, Schema);
 db.EventType = require('../model/eventType')(mongoose, Schema);
 db.Document = require('../model/document')(mongoose, Schema);
-db.Link = require('../model/link')(mongoose, Schema);
 
 module.exports = db;
