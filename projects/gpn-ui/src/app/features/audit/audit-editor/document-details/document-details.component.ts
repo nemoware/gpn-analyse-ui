@@ -208,7 +208,7 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
       confirm('Вы действительно изъять данный документ из списка связанных?')
     ) {
       this.auditservice
-        .deleteLinks(this.document._id, node.linkId)
+        .deleteLinks(this.document._id, node._id)
         .subscribe(data => {
           this.refreshData();
         });
