@@ -38,6 +38,23 @@
   "org-2-alt-name": "Краткое наименование контрагента",
   "org-2-alias": "Псевдоним контрагента",
   "org-2-type": "Форма собственности контрагента",
+
+  "contract-agent-org-1-name": "Наименование ДО",
+  "contract-agent-org-1-alt-name": "Краткое наименование ДО",
+  "contract-agent-org-1-alias": "Псевдоним ДО",
+  "contract-agent-org-1-type": "Форма собственности ДО",
+
+  "contract-agent-org-2-name": "Наименование контрагента",
+  "contract-agent-org-2-alt-name": "Краткое наименование контрагента",
+  "contract-agent-org-2-alias": "Псевдоним контрагента",
+  "contract-agent-org-2-type": "Форма собственности контрагента",
+
+  "contract-agent-org-3-name": "Наименование контрагента",
+  "contract-agent-org-3-alt-name": "Краткое наименование контрагента",
+  "contract-agent-org-3-alias": "Псевдоним контрагента",
+  "contract-agent-org-3-type": "Форма собственности контрагента",
+
+
   "currency": "Валюта",
   "sign": "Знак",
   "org_structural_level": "Структурный уровень",
