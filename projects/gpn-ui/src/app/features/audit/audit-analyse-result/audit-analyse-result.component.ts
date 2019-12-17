@@ -53,6 +53,8 @@ interface ExampleFlatNode {
   level: number;
 }
 
+const orderTypes = ['CHARTER', 'CONTRACT', 'PROTOCOL'];
+
 @Component({
   selector: 'gpn-audit-analyse-result',
   templateUrl: './audit-analyse-result.component.html',
@@ -182,14 +184,14 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
           );
         }
 
-        const uniqueType = this.docs.reduce(function(a, d) {
+        /*const uniqueType = this.docs.reduce(function(a, d) {
           if (a.indexOf(d.documentType) === -1) {
             a.push(d.documentType);
           }
           return a;
-        }, []);
+        }, []);*/
 
-        for (const t of uniqueType) {
+        for (const t of orderTypes) {
           let i = 0;
           const node = { name: t, children: [], childCount: 0 };
           const docs = { docs: [] };
@@ -225,7 +227,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
             node.children.push(docs);
             node.childCount = docs.docs.length;
           } else node.childCount = node.children.length;
-          this.TREE_DATA.push(node);
+
+          if (docs.docs.length > 0) this.TREE_DATA.push(node);
         }
         this.refreshTree();
       });
