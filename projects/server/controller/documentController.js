@@ -225,6 +225,10 @@ exports.getLinks = async (req, res) => {
       .send(`Audit with id = '${document.auditId}' not found`);
 
   try {
+    if (!audit.links) {
+      return res.send([]);
+    }
+
     let ids = audit.links
       .filter(l => l.fromId.toString() === documentId)
       .map(l => l.toId)
@@ -263,6 +267,10 @@ exports.postLink = async (req, res) => {
     const linkInfo = await getLinkInfo(fromId, toId);
     if (linkInfo.error) return res.status(400).send(linkInfo.error);
     const audit = linkInfo.audit;
+
+    if (!audit.links) {
+      audit.links = [];
+    }
 
     audit.links.push(req.body);
     await Audit.updateOne(audit);
