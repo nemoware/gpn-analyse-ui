@@ -28,6 +28,8 @@ exports.getAttributeTree = function(documentTypeName) {
     setChildren(attributes, result);
     return result;
   }
+
+  return [];
 };
 
 function getAttributes(documentTypeName) {
