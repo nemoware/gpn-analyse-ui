@@ -2,7 +2,6 @@ const db = require('../config/db.config');
 const logger = require('../core/logger');
 const Document = db.Document;
 const Audit = db.Audit;
-const Link = db.Link;
 const User = db.User;
 const attribute = require('../core/attribute');
 
@@ -199,85 +198,122 @@ exports.getAttributes = async (req, res) => {
 };
 
 exports.getLinks = async (req, res) => {
-  if (!req.query.documentId) {
+  const documentId = req.query.documentId;
+
+  if (!documentId) {
     let err = `Can not get links for document because documentId is null`;
     logger.logError(req, res, err, 400);
     return;
   }
 
-  const documentId = req.query.documentId;
+  const document = await Document.findById(documentId).lean();
+  if (!document)
+    return res.status(404).send(`Document with id = '${documentId}' not found`);
+
+  const audit = await Audit.findById(document.auditId).lean();
+  if (!audit)
+    return res
+      .status(500)
+      .send(`Audit with id = '${document.auditId}' not found`);
 
   try {
-    let linksFrom = await Link.find({ fromId: documentId }, `toId`, {
-      lean: true
-    });
-    let linksTo = await Link.find({ toId: documentId }, `fromId`, {
-      lean: true
-    });
+    let ids = audit.links
+      .filter(l => l.fromId.toString() === documentId)
+      .map(l => l.toId)
+      .concat(
+        audit.links
+          .filter(l => l.toId.toString() === documentId)
+          .map(l => l.fromId)
+      );
 
-    let links = linksFrom.concat(linksTo);
+    const documents = await Document.find(
+      {
+        _id: { $in: ids },
+        parserResponseCode: 200
+      },
+      `filename parse.documentDate parse.documentType parse.documentNumber`,
+      { lean: true }
+    );
 
-    let documents = [];
-    for (let link of links) {
-      let documentId = link.toId ? link.toId : link.fromId;
-      let document = await Document.findOne(
-        {
-          _id: documentId,
-          parserResponseCode: 200
-        },
-        `filename parse.documentDate parse.documentType parse.documentNumber`
-      ).lean();
-
-      document.documentDate = document.parse.documentDate;
-      document.documentType = document.parse.documentType;
-      document.documentNumber = document.parse.documentNumber;
-      document.linkId = link._id;
-      delete document.parse;
-
-      documents.push(document);
-    }
-
-    res.status(200).json(documents);
+    res.status(200).json(
+      documents.map(d => {
+        for (let key in d.parse) d[key] = d.parse[key];
+        delete d.parse;
+        return d;
+      })
+    );
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
 };
 
 exports.postLink = async (req, res) => {
+  const fromId = req.body.fromId;
+  const toId = req.body.toId;
+
   try {
-    let link = new Link(req.body);
-    await link.save();
-    res.status(201).json(link);
+    const linkInfo = await getLinkInfo(fromId, toId);
+    if (linkInfo.error) return res.status(400).send(linkInfo.error);
+    const audit = linkInfo.audit;
+
+    audit.links.push(req.body);
+    await Audit.updateOne(audit);
+    res.sendStatus(201);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
 };
 
-exports.updateLink = async (req, res) => {
-  let link = await Link.findOne({ _id: req.body._id });
-  if (!link) {
-    let err = 'Link not found';
-    logger.logError(req, res, err, 404);
-    return;
+async function getLinkInfo(fromId, toId) {
+  if (!fromId || !toId) {
+    return {
+      error: `One of required parameters 'toId' or 'fromId' is not passed`
+    };
   }
 
-  try {
-    await Link.replaceOne({ _id: link._id }, req.body);
-    res.status(200).send();
-  } catch (err) {
-    logger.logError(req, res, err, 500);
+  const document1 = await Document.findById(fromId).lean();
+  const document2 = await Document.findById(toId).lean();
+
+  if (
+    !document1 ||
+    !document2 ||
+    document1.auditId.toString() !== document2.auditId.toString()
+  ) {
+    return {
+      error:
+        'One of documents is not found or documents belong to different audits'
+    };
   }
-};
+
+  const audit = await Audit.findById(document1.auditId).lean();
+
+  if (!audit) {
+    return {
+      error: 'Audit not found'
+    };
+  }
+
+  return { audit };
+}
 
 exports.deleteLink = async (req, res) => {
-  if (!req.query.id) {
-    let msg = 'Cannot delete link because id is null';
-    logger.logError(req, res, msg, 400);
-    return;
-  }
+  const fromId = req.query.fromId;
+  const toId = req.query.toId;
 
   try {
-    await Link.deleteOne({ _id: req.query.id });
+    const linkInfo = await getLinkInfo(fromId, toId);
+    if (linkInfo.error) return res.status(400).send(linkInfo.error);
+    const audit = linkInfo.audit;
+
+    await Audit.findOneAndUpdate(
+      {
+        _id: audit._id
+      },
+      {
+        $pull: { links: { toId, fromId } }
+      }
+    );
+
     res.status(200).send();
   } catch (err) {
     logger.logError(req, res, err, 500);

@@ -13,7 +13,6 @@ router.get('/links', controller.getLinks);
 router
   .route('/link')
   .post(controller.postLink)
-  .put(controller.updateLink)
   .delete(controller.deleteLink);
 router
   .route('/star')
