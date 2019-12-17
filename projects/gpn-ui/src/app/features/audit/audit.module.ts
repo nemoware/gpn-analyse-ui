@@ -50,6 +50,7 @@ import {
   DocNumberPipe
 } from '@app/format/file-path.pipe';
 import { ViolationsAuditComponent } from './audit-analyse-result/violations-audit/violations-audit.component';
+import { MaskDateDirective } from './create-audit/mask-date.directive';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { ViolationsAuditComponent } from './audit-analyse-result/violations-audi
     DocNumberPipe,
     ChildDetailComponent,
     DocStateComponent,
-    ViolationsAuditComponent
+    ViolationsAuditComponent,
+    MaskDateDirective
   ],
   imports: [
     CommonModule,

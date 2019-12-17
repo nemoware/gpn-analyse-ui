@@ -181,4 +181,11 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
       this._auditStart <= this._auditEnd
     );
   }
+
+  changeDate(event) {
+    const d = event.target.value.replace('_', '0').split('.');
+    if (event.target.id === '_auditStart')
+      this._auditStart = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
+    else this._auditEnd = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
+  }
 }

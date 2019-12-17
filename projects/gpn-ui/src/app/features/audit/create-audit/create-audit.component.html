@@ -26,8 +26,9 @@
     <span style="font-weight: bold">Диапазон дат документов</span>
   <form [formGroup]="auditForm">
     <mat-form-field>
-      <input matInput [matDatepicker]="auditStart" placeholder="Начало диапазона" [(ngModel)]="_auditStart"
-           formControlName='auditStart' [errorStateMatcher]="errorMatcher" readonly = "true"
+      <input id="_auditStart"
+        matInput [matDatepicker]="auditStart" placeholder="Начало диапазона" [(ngModel)]="_auditStart"
+           formControlName='auditStart' [errorStateMatcher]="errorMatcher" gpnMaskDate (change)="changeDate($event)"
       >
       <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
       <mat-datepicker #auditStart></mat-datepicker>
@@ -35,8 +36,8 @@
     <br>
 
     <mat-form-field>
-      <input matInput [matDatepicker]="auditEnd" placeholder="Конец диапазона" [(ngModel)]="_auditEnd"
-           formControlName='auditEnd' [errorStateMatcher]="errorMatcher" readonly = "true"
+      <input id="_auditEnd" matInput [matDatepicker]="auditEnd" placeholder="Конец диапазона" [(ngModel)]="_auditEnd"
+           formControlName='auditEnd' [errorStateMatcher]="errorMatcher" gpnMaskDate (change)="changeDate($event)"
       >
       <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
       <mat-datepicker #auditEnd></mat-datepicker>
