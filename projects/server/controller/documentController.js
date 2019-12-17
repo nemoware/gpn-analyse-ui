@@ -155,9 +155,17 @@ exports.updateDocument = async (req, res) => {
     const attributes = attribute.getAttributeList(document.parse.documentType);
     for (let key in user) {
       const attribute = attributes.find(a => a.kind === key);
-      if (attribute && attribute.type === 'date') {
-        user[key].value = new Date(user[key].value);
+      if (attribute) {
+        switch (attribute.type) {
+          case 'date':
+            user[key].value = new Date(user[key].value);
+            break;
+          case 'number':
+            user[key].value = +user[key].value;
+            break;
+        }
       }
+
       document.user.attributes[key] = user[key];
     }
   }
