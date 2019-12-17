@@ -86,14 +86,24 @@ exports.getAudits = async (req, res) => {
       { 'analysis.attributes': { $exists: true } },
       { parserResponseCode: 200 }
     ];
-    for (let audit of audits) {
-      audit.typeViewResult = checks.length;
-      for (let check of checks) {
-        check.auditId = audit._id;
-        if (await Document.findOne(check)) {
-          break;
+
+    if (
+      req.query.id &&
+      audits[0] &&
+      audits[0].violations &&
+      audits[0].violations.length > 0
+    ) {
+      audits[0].typeViewResult = 3;
+    } else {
+      for (let audit of audits) {
+        audit.typeViewResult = checks.length;
+        for (let check of checks) {
+          check.auditId = audit._id;
+          if (await Document.findOne(check)) {
+            break;
+          }
+          audit.typeViewResult--;
         }
-        audit.typeViewResult--;
       }
     }
 
