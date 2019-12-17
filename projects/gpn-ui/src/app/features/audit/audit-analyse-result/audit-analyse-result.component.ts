@@ -183,15 +183,16 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
             x => x.analysis != null || x.user != null
           );
         }
-
-        /*const uniqueType = this.docs.reduce(function(a, d) {
-          if (a.indexOf(d.documentType) === -1) {
-            a.push(d.documentType);
-          }
-          return a;
-        }, []);*/
-
-        for (const t of orderTypes) {
+        const uniqueType =
+          this.selectedPage === 2
+            ? orderTypes
+            : this.docs.reduce(function(a, d) {
+                if (a.indexOf(d.documentType) === -1) {
+                  a.push(d.documentType);
+                }
+                return a;
+              }, []);
+        for (const t of uniqueType) {
           let i = 0;
           const node = { name: t, children: [], childCount: 0 };
           const docs = { docs: [] };
@@ -228,7 +229,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
             node.childCount = docs.docs.length;
           } else node.childCount = node.children.length;
 
-          if (docs.docs.length > 0) this.TREE_DATA.push(node);
+          if (this.selectedPage !== 2 || docs.docs.length > 0)
+            this.TREE_DATA.push(node);
         }
         this.refreshTree();
       });
