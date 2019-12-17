@@ -90,8 +90,7 @@ exports.getAudits = async (req, res) => {
     if (
       req.query.id &&
       audits[0] &&
-      audits[0].violations &&
-      audits[0].violations.length > 0
+      ['Finalizing', 'Done', 'Approved'].includes(audits[0].status)
     ) {
       audits[0].typeViewResult = 3;
     } else {
