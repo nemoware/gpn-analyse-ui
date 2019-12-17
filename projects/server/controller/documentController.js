@@ -273,7 +273,7 @@ exports.postLink = async (req, res) => {
     }
 
     audit.links.push(req.body);
-    await Audit.updateOne(audit);
+    await Audit.findOneAndUpdate({ _id: audit._id }, { links: audit.links });
     res.sendStatus(201);
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -326,7 +326,14 @@ exports.deleteLink = async (req, res) => {
         _id: audit._id
       },
       {
-        $pull: { links: { toId, fromId } }
+        $pull: {
+          links: {
+            $or: [
+              { toId, fromId },
+              { toId: fromId, fromId: toid }
+            ]
+          }
+        }
       }
     );
 
