@@ -246,7 +246,7 @@ exports.getViolations = async (req, res) => {
     let documents = await Document.find(
       {
         auditId: req.query.id,
-        analysis: { $exists: true },
+        'analysis.warnings': { $exists: true },
         parserResponseCode: 200,
         $where: 'this.analysis.warnings.length > 0'
       },
