@@ -70,6 +70,7 @@ const column_to_sorting_mapping = {
 })
 export class DocumentDetailComponent implements OnInit {
   @Input() documents: any;
+  @Input() subsidiaryName: string;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   header: string;
   col: string[] = [];
@@ -147,13 +148,14 @@ export class DocumentDetailComponent implements OnInit {
   }
 
   _isAllOrgsSame(docs, keyname: string): boolean {
-    const val0 = this.getAttrValue(keyname, docs[0]); //TODO: replace with audit subsidiary name
-    for (const doc of docs) {
-      if (val0 !== this.getAttrValue(keyname, doc)) {
-        return false;
+    let res = true;
+    docs.forEach(doc => {
+      if (this.subsidiaryName !== this.getAttrValue(keyname, doc)) {
+        res = false;
+        return;
       }
-    }
-    return true;
+    });
+    return res;
   }
 
   getAttrValue(attrName: string, doc, default_value = null) {
