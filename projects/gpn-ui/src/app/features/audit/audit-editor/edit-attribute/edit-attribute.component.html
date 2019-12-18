@@ -22,7 +22,7 @@
       </form>
     </div>
 
-  <div class="col" *ngIf="selectedKind" [ngSwitch]="selectedKind.type">
+  <div class="col" *ngIf="selectedKind && !selectedKind.hideValue" [ngSwitch]="selectedKind.type">
 
     <ng-container *ngSwitchCase="'number'">
       <mat-form-field>

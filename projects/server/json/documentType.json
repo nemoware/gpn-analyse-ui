@@ -99,6 +99,8 @@
       },
       {
         "kind": "org-structural-level",
+        "type": "dictionary",
+        "dictionaryName": "StructuralLevel",
         "once": true
       },
       {
@@ -161,22 +163,22 @@
       },
       {
         "parents": [
-          "ShareholdersGeneralMeeting",
-          "BoardOfDirectors",
-          "CEO",
-          "AllMembers",
-          "BoardOfCompany"
+          { "kind": "ShareholdersGeneralMeeting", "hideValue": true },
+          { "kind": "BoardOfDirectors", "hideValue": true },
+          { "kind": "CEO", "hideValue": true },
+          { "kind": "AllMembers", "hideValue": true },
+          { "kind": "BoardOfCompany", "hideValue": true }
         ],
         "children": [
           {
             "parents": [
-              "Deal",
-              "Charity",
-              "Other",
-              "Lawsuit",
-              "RealEstate",
-              "Insurance",
-              "Consulting"
+              { "kind": "Deal", "hideValue": true },
+              { "kind": "Charity", "hideValue": true },
+              { "kind": "Other", "hideValue": true },
+              { "kind": "Lawsuit", "hideValue": true },
+              { "kind": "RealEstate", "hideValue": true },
+              { "kind": "Insurance", "hideValue": true },
+              { "kind": "Consulting", "hideValue": true }
             ],
             "children": [
               {

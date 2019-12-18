@@ -5,4 +5,5 @@ export interface KindAttributeModel {
   children?: KindAttributeModel[];
   show?: boolean;
   once?: boolean;
+  hideValue?: boolean;
 }

@@ -54,7 +54,6 @@
   "contract-agent-org-3-alias": "Псевдоним контрагента",
   "contract-agent-org-3-type": "Форма собственности контрагента",
 
-
   "currency": "Валюта",
   "sign": "Знак",
   "org_structural_level": "Структурный уровень",
@@ -67,7 +66,7 @@
   "Deal": "Сделки",
   "Consulting": "Консалтинг",
   "Other": "Прочее",
-  "Lawsuit": "Судебные разбирательства, иски",
+  "Lawsuit": "Судебные издержки",
   "RealEstate": "Сделки с имуществом",
   "Insurance": "Страхование",
 
@@ -84,6 +83,7 @@
   "AllMembers": "Общее собрание участников",
   "ShareholdersGeneralMeeting": "Общее собрание акционеров",
   "BoardOfDirectors": "Совет директоров",
+  "BoardOfCompany": "Правление общества",
   "CEO": "Генеральный директор",
   "competence_CEO": "Генеральный директор",
 
