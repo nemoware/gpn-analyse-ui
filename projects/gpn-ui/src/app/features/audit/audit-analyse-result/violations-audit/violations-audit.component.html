@@ -43,6 +43,11 @@
           <span *ngIf="row.violation_type.max"> не превыщающих {{row.violation_type.max.value | currency : row.violation_type.max.currency}} </span>
         </span>
       </div>
+
+      <div *ngIf="row.document.warnings">
+        <span class='warning'><b>В результате выполненного анализа в документах были определены не все атрибуты</b></span>
+        <li *ngFor="let w of row.document.warnings"> {{w.code | translate}}</li>
+      </div>
    </td>
  </ng-container>
 

@@ -25,7 +25,8 @@ module.exports = (mongoose, Schema) => {
           confidence: Number,
           display_value: String
         }
-      ]
+      ],
+      warnings: [{ code: String }]
     },
     user: {
       attributes: Object,
