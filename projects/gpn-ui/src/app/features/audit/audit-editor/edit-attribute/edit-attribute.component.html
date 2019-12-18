@@ -2,7 +2,7 @@
   cdkDragRootElement=".cdk-overlay-pane"
   cdkDragHandle>Редактировать</h4>
 
-<mat-form-field style="width: 100%; height: auto">
+<mat-form-field style="height: auto">
   <mat-label>Фрагмент документа</mat-label>
   <textarea matInput readonly="true" [readOnly]="true">{{data.displayValue}}</textarea>
 </mat-form-field>
@@ -11,7 +11,7 @@
 
     <div class="col">
       <form [formGroup]="editForm">
-        <mat-form-field style="width: 100%">
+        <mat-form-field>
           <mat-label>Тип фрагмента</mat-label>
             <mat-select (selectionChange)="changedKind($event)" formControlName = "kind">
             <mat-option *ngFor="let type of data.kinds" [value]="type">
@@ -25,21 +25,35 @@
   <div class="col" *ngIf="selectedKind" [ngSwitch]="selectedKind.type">
 
     <ng-container *ngSwitchCase="'number'">
-      <mat-form-field style="width: 100%">
+      <mat-form-field>
         <mat-label>Значение</mat-label>
         <input (change)="change($event)" type="number" class="form-control" matInput placeholder="Значение" [(ngModel)]="data.value">
       </mat-form-field>
     </ng-container>
 
+    <ng-container *ngSwitchCase="'date'">
+
+      <mat-form-field>
+        <input id="stringDate"
+               matInput [matDatepicker]="auditStart" placeholder="Значение" [(ngModel)]="data.value"
+               gpnMaskDate (change)="change($event)"
+               (dateChange)="changeDate($event)"
+        >
+        <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
+        <mat-datepicker #auditStart></mat-datepicker>
+      </mat-form-field>
+
+    </ng-container>
+
     <ng-container *ngSwitchCase="'string'">
-      <mat-form-field style="width: 100%;">
+      <mat-form-field>
         <mat-label>Значение</mat-label>
         <textarea (change)="change($event)" matInput style="height: 22px" [(ngModel)]="data.value"></textarea>
       </mat-form-field>
     </ng-container>
 
     <ng-container *ngSwitchCase="'dictionary'">
-      <mat-form-field style="width: 100%">
+      <mat-form-field>
         <mat-label>Значение</mat-label>
         <mat-select (selectionChange)="change($event)" [(ngModel)]="data.value">
           <mat-option *ngFor="let _value of dictionaryValues" [value]="_value.id">
@@ -54,10 +68,10 @@
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Отмена</button>
     <button mat-raised-button (click)="deleteAtr()" [disabled]="_new" style="float: right; width: 100px;">Удалить</button>
-    <button mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right; width: 100px; margin-left: 10px ">Применить</button>    
+    <button mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right; width: 100px; margin-left: 10px ">Применить</button>
 </mat-dialog-actions>
 
- 
+
 
 
 

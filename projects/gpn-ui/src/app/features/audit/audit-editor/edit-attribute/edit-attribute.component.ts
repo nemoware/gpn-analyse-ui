@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
+  MatDatepickerInputEvent,
   MatDialogRef
 } from '@root/node_modules/@angular/material';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -114,5 +115,21 @@ export class EditAttributeComponent implements OnInit {
 
   change(e) {
     this._change = true;
+    if (e.target && e.target.id === 'stringDate') {
+      this.setDateValue(e.target.value);
+    }
+  }
+
+  changeDate(e) {
+    if (e.value) {
+      this._change = true;
+      this.setDateValue(this.data.value.toLocaleString().split(',')[0]);
+    }
+  }
+
+  setDateValue(value: string) {
+    const d = value.replace('_', '0').split('.');
+    this.data.value = `${d[2]}-${d[1]}-${d[0]}T00:00:00.000Z`;
+    console.log(this.data.value);
   }
 }
