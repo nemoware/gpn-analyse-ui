@@ -1,8 +1,17 @@
+@import '../../../../../styles-variables.scss';
 .mat-tree-node {
   min-height: 30px;
 }
 
 .link_tag {
-  text-decoration: underline;
+  white-space: nowrap;
+  color: $gpn-links-color;
   cursor: pointer;
+
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &:hover{
+    color: $gpn-links-color-hover;
+  }
 }

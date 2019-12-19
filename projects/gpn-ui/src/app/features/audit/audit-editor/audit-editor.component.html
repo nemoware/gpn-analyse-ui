@@ -11,15 +11,17 @@
         </div>
       </mat-tab>
 
-      <mat-tab label="Заголовки">
-        <gpn-tree-attributes
-          [editmode]="editmode"
-          [headers]="document.analysis.headers"
-          [documentType] = "documentType"
-          [normalText] = "document.analysis.normal_text"
-          [words] = "document.analysis.tokenization_maps.words"
-          (goToAttribute)="goToAttribute($event)"
-        ></gpn-tree-attributes>
+      <mat-tab label="Оглавление">
+        <div class="container">
+          <gpn-tree-attributes
+            [editmode]="editmode"
+            [headers]="document.analysis.headers"
+            [documentType] = "documentType"
+            [normalText] = "document.analysis.normal_text"
+            [words] = "document.analysis.tokenization_maps.words"
+            (goToAttribute)="goToAttribute($event)"
+          ></gpn-tree-attributes>
+        </div>
       </mat-tab>
 
     </mat-tab-group>
