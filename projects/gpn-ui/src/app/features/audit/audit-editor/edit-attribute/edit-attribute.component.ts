@@ -32,7 +32,7 @@ export class EditAttributeComponent implements OnInit {
   dictionaryValues: Array<{ id: string; value: string }>;
   _change = false;
   _new = false;
-
+  readOnly = false;
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<EditAttributeComponent>,
@@ -51,6 +51,7 @@ export class EditAttributeComponent implements OnInit {
     this._new = !this.data.kind;
     if (
       this.data.kind &&
+      this.data.kinds.find(x => x.kind === this.data.kind) &&
       this.data.kinds.find(x => x.kind === this.data.kind).dictionaryName
     )
       this.dictionaryValues = Dictionaries.getDictionary(
@@ -63,7 +64,9 @@ export class EditAttributeComponent implements OnInit {
 
     if (this.data.kind) {
       this.selectedKind = this.data.kinds.find(c => c.kind === this.data.kind);
-      this.editForm.get('kind').setValue(this.selectedKind);
+      if (this.selectedKind)
+        this.editForm.get('kind').setValue(this.selectedKind);
+      else this.readOnly = true;
     }
   }
 
