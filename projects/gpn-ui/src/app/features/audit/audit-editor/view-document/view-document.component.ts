@@ -320,7 +320,11 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         );
         if (a && a.once) onceAttribute.push(a.kind);
       });
-      return this.kinds.filter(x => !onceAttribute.includes(x.kind));
+      return this.kinds.filter(
+        x =>
+          !onceAttribute.includes(x.kind) &&
+          ((x.hide && selectKind === x.kind) || !x.hide)
+      );
     } else if (atrParent) {
       const parents = [];
       for (const p of atrParent.key.split('/')) {

@@ -6,4 +6,5 @@ export interface KindAttributeModel {
   show?: boolean;
   once?: boolean;
   hideValue?: boolean;
+  hide?: boolean;
 }

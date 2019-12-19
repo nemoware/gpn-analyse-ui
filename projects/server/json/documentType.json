@@ -32,7 +32,8 @@
       },
       {
         "kind": "org-1-type-ext",
-        "once": true
+        "once": true,
+        "hide": true
       },
       {
         "kind": "org-2-alt-name",
@@ -40,7 +41,8 @@
       },
       {
         "kind": "org-2-type-ext",
-        "once": true
+        "once": true,
+        "hide": true
       },
       {
         "kind": "number",
