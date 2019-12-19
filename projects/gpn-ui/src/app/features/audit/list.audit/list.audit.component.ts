@@ -95,7 +95,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit {
 
   createAudit() {
     const dialogRef = this.dialog.open(CreateAuditComponent, {
-      width: '400px',
+      width: '500px',
       data: {}
     });
     dialogRef.afterClosed().subscribe(result => {
