@@ -68,7 +68,7 @@
 <mat-dialog-actions align="end">
     <span *ngIf="readOnly" class="readonly">Атрибут закрыт на редактирование!</span>
     <button mat-button mat-dialog-close>Отмена</button>
-    <button mat-raised-button (click)="deleteAtr()" [disabled]="_new" style="float: right; width: 100px;">Удалить</button>
+    <button mat-raised-button (click)="deleteAtr()" [disabled]="_new || readOnly" style="float: right; width: 100px;">Удалить</button>
     <button mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right; width: 100px; margin-left: 10px ">Применить</button>
 </mat-dialog-actions>
 
