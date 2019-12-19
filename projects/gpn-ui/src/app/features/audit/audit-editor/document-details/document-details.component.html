@@ -1,12 +1,12 @@
 <section>
-  <label>Статус</label>
+  <label class='field-label'>Статус</label>
   <gpn-doc-state [document]='document'></gpn-doc-state>
 </section>
 
 
 <section *ngIf="document.user">
   <mat-divider></mat-divider>
-  <label>Корректировка</label>
+  <label class='field-label'>Корректировка</label>
   <span> {{ document.user.updateDate | date:'dd.MM.yyyy' }} </span><br>
   <span> {{ document.user.author.login }} </span>
 </section>
@@ -14,13 +14,13 @@
 <mat-divider></mat-divider>
 
 <section>
-  <label>входит в аудит</label>
+  <label class='field-label'>входит в аудит</label>
   <span><a href="link to audit">{{ document.audit.subsidiaryName }}<br>
       {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</a></span>
 </section>
 
 <section>
-  <label>файл</label>
+  <label class='field-label'>файл</label>
   <a [href]='"file://"+document.audit.ftpUrl + document.filename'>
   <span class="file-name"><span class="file-path">{{ document.filename | filePath }}
     </span>{{ document.filename | fileName }}</span></a>
@@ -29,7 +29,7 @@
 
 <mat-divider></mat-divider>
 
-<label>Связанные документы</label>
+<label class='field-label'>Связанные документы</label>
 
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 

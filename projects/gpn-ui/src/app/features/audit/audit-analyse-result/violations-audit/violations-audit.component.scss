@@ -23,7 +23,7 @@
   color: $gpn-links-color;
   cursor: pointer;
   &:hover {
-    text-decoration: underline;
+    color: $gpn-links-color-hover;
   }
 }
 
@@ -32,4 +32,5 @@
 }
 .mat-column-violation_type {
   width: 30%;
+  padding: 0 $gpn-padding-half;
 }

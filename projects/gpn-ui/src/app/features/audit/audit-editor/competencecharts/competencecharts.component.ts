@@ -55,7 +55,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
     const range = this.valuesRange[1] - this.valuesRange[0];
 
     if ( !('constraint-min' in competence) && !('constraint-max' in competence) ) {
-      return 100.0 - this.barOffsetPercent * 2
+      return 100.0 - this.barOffsetPercent * 2 //whole width
     }
 
     if ('constraint-min' in competence && 'constraint-max' in competence) {
