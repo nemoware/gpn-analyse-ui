@@ -29,7 +29,26 @@ exports.getApplicationUsers = async (req, res) => {
 exports.getGroupUsers = async (req, res) => {
   try {
     let users = await adAuth.getGroupUsers();
-    res.status(200).json(users);
+    if (req.query.value) {
+      const filter = req.query.value.toLowerCase().trim();
+      let names = users.filter(
+        u =>
+          ~u.displayName
+            .toLowerCase()
+            .trim()
+            .indexOf(filter)
+      );
+      let logins = users.filter(
+        u =>
+          ~u.sAMAccountName
+            .toLowerCase()
+            .trim()
+            .indexOf(filter)
+      );
+      const set = new Set(names.concat(logins));
+      users = Array.from(set);
+    }
+    res.status(200).json(Array.from(users));
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
