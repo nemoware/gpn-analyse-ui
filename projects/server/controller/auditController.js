@@ -9,7 +9,7 @@ const parser = require('../parser/auditParser');
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
   audit.status = 'New';
-  audit.author = req.session.message;
+  audit.author = res.locals.user;
 
   try {
     await fs.access(audit.ftpUrl);

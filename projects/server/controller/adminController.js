@@ -55,7 +55,7 @@ exports.getGroupUsers = async (req, res) => {
 };
 
 exports.getUserInfo = async (req, res) => {
-  const user = req.session.message;
+  const user = res.locals.user;
   user.name = await getUserName(user.login);
   logger.log(req, res, 'Вход в приложение');
   res.status(200).json(user);

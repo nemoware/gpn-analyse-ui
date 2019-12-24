@@ -2,8 +2,6 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
-const uuid = require('uuid');
-const session = require('express-session');
 const parser = require('./parser/auditParser');
 
 const appConfig = require('./config/app.config');
@@ -37,55 +35,25 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(
-  session({
-    genid: req => {
-      return uuid();
-    },
-    secret: 'there_is_need_secret_word',
-    key: 'express.sid',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      expires: 60000
-    }
-  })
-);
-
 app.use(async function(req, res, next) {
-  let login;
-  let checked = false;
+  let ADUser = await adAuth.getUser(req, res);
 
-  if (!req.session.message) {
-    try {
-      let user = await adAuth.getUser(req, res);
-      if (user) {
-        login = user.sAMAccountName;
-      }
-    } catch (err) {
-      console.log('Rejected: ' + err);
-    }
-  } else {
-    checked = true;
-  }
-
-  if (login) {
-    try {
-      let user = await dbAuth.getUser(login);
-      checked = !!user;
-      req.session.message = user;
-    } catch (err) {
-      console.log('Rejected: ' + err);
-    }
-  }
-
-  if (checked) {
-    next();
-  } else {
+  if (!ADUser) {
     res.status(401).sendFile('error.html', {
       root: path.join(__dirname, './file/')
     });
   }
+
+  let user = await dbAuth.getUser(ADUser.sAMAccountName);
+
+  if (!user) {
+    res.status(401).sendFile('error.html', {
+      root: path.join(__dirname, './file/')
+    });
+  }
+
+  res.locals.user = user;
+  next();
 });
 
 app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));

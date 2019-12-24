@@ -55,8 +55,7 @@ exports.getDocuments = async (req, res) => {
       return document;
     });
 
-    const user = await User.findById(req.session.message._id);
-    const stars = Array.from(user.stars).filter(
+    const stars = Array.from(res.locals.user.stars).filter(
       s => s.auditId.toString() === req.query.auditId
     );
 
@@ -170,7 +169,7 @@ exports.updateDocument = async (req, res) => {
     }
   }
 
-  document.user.author = req.session.message;
+  document.user.author = res.locals.user;
   document.user.updateDate = new Date();
   document.user.analyze_timestamp = document.analysis.analyze_timestamp;
   document.state = 5;
@@ -395,7 +394,7 @@ exports.addStar = async (req, res) => {
   }
 
   try {
-    const user = await User.findById(req.session.message._id);
+    const user = await User.findById(res.locals.user._id);
     const document = await Document.findById(id);
 
     if (document && user.stars && !user.stars.find(s => s.documentId === id)) {
@@ -419,7 +418,7 @@ exports.deleteStar = async (req, res) => {
   }
 
   try {
-    const user = await User.findById(req.session.message._id);
+    const user = await User.findById(res.locals.user._id);
 
     let index = user.stars.map(s => s.documentId).indexOf(id);
 
