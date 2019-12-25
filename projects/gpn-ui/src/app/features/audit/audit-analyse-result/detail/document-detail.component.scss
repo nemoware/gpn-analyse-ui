@@ -29,8 +29,6 @@ tr.detail-row {
   max-width: 35px;
 }
 
-
-
 .org-type,
 .small {
   font-size: 85%;
@@ -49,7 +47,7 @@ tr.detail-row {
   width: $icon-column-width;
   padding: 0 !important;
 }
-.mat-column-warnings{
+.mat-column-warnings {
   width: $icon-column-width;
   padding: 0 !important;
   text-align: center;
@@ -60,7 +58,6 @@ tr.detail-row {
   padding-left: 0 !important;
   padding-right: 0;
 }
-
 
 .mat-column-date {
   width: 150px;
@@ -73,8 +70,6 @@ tr.detail-row {
 .mat-column-analyze_state {
   width: 200px;
 }
-
-
 
 .mat-column-value {
   text-align: right;

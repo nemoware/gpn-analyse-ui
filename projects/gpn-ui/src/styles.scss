@@ -142,11 +142,10 @@ html {
 
 label {
   margin-top: $gpn-padding/4;
-  font-weight: bold;  
-  display: block; 
-  color: $gpn-labels;  
+  font-weight: bold;
+  display: block;
+  color: $gpn-labels;
 }
-
 
 label.field-label {
   margin-top: $gpn-padding/4;
@@ -160,21 +159,20 @@ label.field-label {
   }
 }
 
-
-.balloon{
+.balloon {
   margin: $gpn-padding;
   padding: $gpn-padding/2;
   border-radius: $gpn-padding/2;
 }
 
-.warnings{
+.warnings {
   background: fade-out($gpn-warning, 0.9);
 }
 
-.warning{
+.warning {
   color: $gpn-warning;
   display: block;
-  &::before{
+  &::before {
     content: '⚠️';
   }
 }

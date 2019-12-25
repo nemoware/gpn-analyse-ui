@@ -6,7 +6,6 @@ import {
   Input,
   ChangeDetectorRef
 } from '@angular/core';
-import { Document } from '@app/models/document.model';
 import { ViewDetailDoc } from '@app/models/view.detail.doc';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { DatePipe } from '@root/node_modules/@angular/common';
@@ -84,13 +83,12 @@ export class DocumentDetailComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    public datepipe: DatePipe,
     private router: Router,
-    private auditservice: AuditService,
+    private auditService: AuditService,
     private changeDetectorRefs: ChangeDetectorRef
   ) {}
 
-  isExpansionDetailRow = (i: number, row: Object) => true;
+  isExpansionDetailRow = () => true;
 
   _sortingDataAccessor: (data, sortHeaderId: string) => string | number = (
     data,
@@ -98,10 +96,9 @@ export class DocumentDetailComponent implements OnInit {
   ): string | number => {
     if (sortHeaderId in column_to_sorting_mapping) {
       const attr = column_to_sorting_mapping[sortHeaderId];
-      const res = this.getAttrValue(attr, data);
-      return res;
+      return this.getAttrValue(attr, data);
     }
-    if ('warnings' == sortHeaderId) {
+    if ('warnings' === sortHeaderId) {
       if (data.analysis && data.analysis.warnings)
         return data.analysis.warnings.length;
       else return 0;
@@ -166,10 +163,6 @@ export class DocumentDetailComponent implements OnInit {
     return default_value;
   }
 
-  getDocStateClass(doc) {
-    return 'state state-' + doc.state;
-  }
-
   openDocument(element) {
     window.open(
       window.location.origin + '/#/audit/view/' + element._id,
@@ -186,11 +179,11 @@ export class DocumentDetailComponent implements OnInit {
   starDoc(a, event) {
     event.stopPropagation();
     if (a.starred) {
-      this.auditservice.deleteStart(a._id).subscribe(data => {
+      this.auditService.deleteStart(a._id).subscribe(() => {
         a.starred = false;
       });
     } else {
-      this.auditservice.postStar(a._id).subscribe(data => {
+      this.auditService.postStar(a._id).subscribe(() => {
         a.starred = true;
       });
     }
