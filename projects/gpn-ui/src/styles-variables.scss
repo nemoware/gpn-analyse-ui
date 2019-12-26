@@ -41,13 +41,10 @@ $competences: (
   Charity: mat-color($mat-blue-grey, $comp_t),
   Other: mat-color($mat-blue-grey, $comp_t),
   Loans: mat-color($mat-green, $comp_t),
-  // = 7,
-  'Сделки с займами/кредитами' Insurance: mat-color($mat-cyan, $comp_t),
+  Insurance: mat-color($mat-cyan, $comp_t),
   Consulting: mat-color($mat-blue, $comp_t),
   RentingOut: mat-color($mat-pink, $comp_t),
-  // = 8,
-  'Передача в аренду' Renting: mat-color($mat-orange, $comp_t) / / = 9,
-  'Получение в аренду недвижимого имущества'
+  Renting: mat-color($mat-orange, $comp_t)
 );
 
 @each $name, $color in $competences {
