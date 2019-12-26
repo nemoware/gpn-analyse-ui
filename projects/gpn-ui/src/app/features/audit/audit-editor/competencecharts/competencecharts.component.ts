@@ -114,7 +114,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
 
 
     const isConstraint = x => {
-      const p = x.key ? x.key.split('/').pop() : null
+      const p = x.kind
       return p === 'constraint-min' || p === 'constraint-max'
     }
 
@@ -131,7 +131,9 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
       toTree(children)
     }
 
-    this.attributes.filter(a => a.kind === 'Charity').forEach(a => toTree([a]))
+    //TODO: get rid of this list, this is very temporal solution
+    const deal_kinds=['Deal','BigDeal','Charity','Lawsuit', 'RealEstate', 'Loans', 'Insurance', 'Consulting', 'RentingOut', 'Renting']
+    this.attributes.filter(a => deal_kinds.includes(a.kind)).forEach(a => toTree([a])) //TODO: fix it
 
 
     this.constraintsTree = constraintsTree;

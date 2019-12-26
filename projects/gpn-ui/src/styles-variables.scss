@@ -31,16 +31,24 @@ $gpn-padding-half: $gpn-padding/2;
 
 $gpn-paper-color: #f3f1ec; //  color for the doc text background, aslo for quotes
 
+
+
+
+
 $comp_t: 200;
 $comp_fade: 0.3;
 $competences: (
-  RealEstate: mat-color($mat-brown, $comp_t),
+  RealEstate: mat-color($mat-red, $comp_t),
   Lawsuit: mat-color($mat-indigo, $comp_t),
-  Deal: mat-color($mat-deep-purple, $comp_t),
-  Charity: mat-color($mat-pink, $comp_t),
+  Deal: mat-color($mat-deep-purple, 100),
+  BigDeal: mat-color($mat-deep-purple, 200),  
+  Charity: mat-color($mat-blue-grey, $comp_t),
   Other: mat-color($mat-blue-grey, $comp_t),
+  Loans: mat-color($mat-green, $comp_t) ,//= 7, 'Сделки с займами/кредитами'
   Insurance: mat-color($mat-cyan, $comp_t),
-  Consulting: mat-color($mat-blue, $comp_t)
+  Consulting: mat-color($mat-blue, $comp_t),
+  RentingOut: mat-color($mat-pink, $comp_t), //= 8, 'Передача в аренду'
+  Renting : mat-color($mat-orange, $comp_t)//= 9, 'Получение в аренду недвижимого имущества'
 );
 
 @each $name, $color in $competences {
