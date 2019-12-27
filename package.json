@@ -74,7 +74,7 @@
     "hammerjs": "^2.0.8",
     "kerberos": "^1.1.3",
     "mongoose": "^5.8.3",
-    "ngx-mat-select-search": "^1.8.0",
+    "ngx-mat-select-search": "^2.1.0",
     "ngx-spinner": "^8.0.3",
     "request": "^2.88.0",
     "rxjs": "~6.5.0",
