@@ -4,7 +4,7 @@
     "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
-    "comment-format": [true, "check-space"],
+    "comment-format": [true],
     "deprecation": {
       "severity": "warn"
     },
@@ -13,17 +13,6 @@
     "interface-over-type-literal": true,
     "label-position": true,
     "member-access": false,
-    "member-ordering": [
-      true,
-      {
-        "order": [
-          "static-field",
-          "instance-field",
-          "static-method",
-          "instance-method"
-        ]
-      }
-    ],
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [true, "debug", "info", "time", "timeEnd", "trace"],
@@ -62,7 +51,6 @@
     "no-output-on-prefix": true,
     "no-input-rename": true,
     "no-output-rename": true,
-    "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true

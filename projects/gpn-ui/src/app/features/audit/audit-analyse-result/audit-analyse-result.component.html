@@ -1,0 +1,133 @@
+<div style="position: fixed; z-index: 10; width: 100%">
+<mat-toolbar *ngIf="this.audit">
+  <span>
+  <h2>
+      <span class="headline-date">  {{ audit.auditStart | date :'dd LLL yyyy'}} - {{audit.auditEnd | date : 'dd LLL yyyy'}}</span><br>
+      {{ audit.subsidiary.name }}
+  </h2>
+
+  </span>
+  <span class="fill-remaining-space"></span>
+  <span class="headline-status"><span [class]="audit.status">{{ audit.status | translate}}</span></span>
+  <button [disabled] = "audit.status !== 'Done'" mat-raised-button color="accent" class="approve" (click)="approveAudit()"> Подтвердить </button>
+</mat-toolbar>
+
+<mat-tab-group color="accent" (selectedTabChange)="changePage($event)" [(selectedIndex)]="selectedPage">
+  <mat-tab label="Файлы"></mat-tab>
+  <mat-tab label="Документы" [disabled]="maxPageIndex < 1"></mat-tab>
+  <mat-tab label="Анализ" [disabled]="maxPageIndex < 2"></mat-tab>
+  <mat-tab label="Нарушения" [disabled]="maxPageIndex < 3"></mat-tab>
+</mat-tab-group>
+
+</div>
+
+<div style="margin-top: 110px">
+
+  <div *ngIf="selectedPage == 0">
+    <div style="margin-left: 10px">
+      <span> Количество: <b>{{ checkCount }} / {{  documentCount }}</b></span>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-tree *ngIf="!loading" [dataSource]="dataSource" [treeControl]="treeControl">
+
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <div style="width: 100%">
+          <fa-icon style="margin-left: 15px" [icon]="faFile"></fa-icon>
+          <span style="margin-left: 15px" [ngClass]="{errorFile: node.error != null}"> {{ node.name }} </span>
+          <mat-divider></mat-divider>
+        </div>
+      </mat-tree-node>
+
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <div style="width: 100%">
+          <div class="row">
+            <div class="col">
+              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                <fa-icon [icon]="faFolder" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
+                <fa-icon [icon]="faFolderOpen" *ngIf="treeControl.isExpanded(node)"></fa-icon>
+              </button>
+              {{ node.name }} {{ '(' + node.childCount + ')' }}
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </mat-tree-node>
+
+    </mat-tree>
+  </div>
+
+  <div *ngIf="selectedPage == 1">
+    <mat-tree *ngIf="!loading" [dataSource]="dataSource" [treeControl]="treeControl">
+
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <div style="width: 100%">
+          <div class="row">
+            <div class="col">
+              {{ node.name }}
+            </div>
+            <div class="col col-lg-2"> {{node.documentNumber}} </div>
+            <div class="col col-lg-3"> {{node.documentDate | date:'d MMMM yyyy'}} </div>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </mat-tree-node>
+
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <div style="width: 100%">
+          <div class="row">
+            <div class="col">
+              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
+                <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
+              </button>
+              <span [ngStyle]="{'color': node.name === 'UNKNOWN' ? 'red' : 'black'}">
+                {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
+              </span>
+              <button mat-icon-button *ngIf="node.level === 1" matTooltip="Просмотр" (click)="openEditor(node)">
+                <fa-icon [icon]="faEye"></fa-icon>
+              </button>
+            </div>
+            <div class="col col-lg-2"> {{ node.documentNumber }} </div>
+            <div class="col col-lg-3"> {{ node.documentDate | date }} </div>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </mat-tree-node>
+
+    </mat-tree>
+  </div>
+
+  <div *ngIf="selectedPage === 2">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <gpn-document-detail
+          [documents]="node"
+          [subsidiaryName]="audit.subsidiaryName"
+          style="width: 100%"></gpn-document-detail>
+      </mat-tree-node>
+
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <div style="width: 100%">
+          <div class="row">
+            <div class="col">
+              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
+                <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
+              </button>
+              {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </mat-tree-node>
+
+    </mat-tree>
+  </div>
+
+  <div *ngIf="selectedPage === 3">
+    <gpn-violations-audit [idAudit]="IdAudit"></gpn-violations-audit>
+  </div>
+</div>
+
+

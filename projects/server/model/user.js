@@ -1,20 +1,11 @@
 module.exports = (mongoose, Schema) => {
-  let userSchema = new Schema(
-    {
-      login: String,
-      roles: [
-        { _id: Number, name: String, description: String, appPage: String }
-      ]
-    },
-    { toJSON: { virtuals: true } }
-  );
-
-  userSchema.virtual('roleString').get(function() {
-    let roles = [];
-    for (let role of this.roles) {
-      roles.push(role.name);
-    }
-    return roles.join(', ');
+  const ObjectId = Schema.Types.ObjectId;
+  let userSchema = new Schema({
+    login: String,
+    roles: [
+      { _id: Number, name: String, description: String, appPage: String }
+    ],
+    stars: [{ documentId: ObjectId, auditId: ObjectId }]
   });
 
   return mongoose.model('user', userSchema);

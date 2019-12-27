@@ -10,9 +10,16 @@ module.exports = (mongoose, Schema) => {
       auditStart: Date,
       auditEnd: Date,
       checkedDocumentCount: Number,
-      status: { _id: Number, name: String },
+      status: String,
       createDate: Date,
-      author: { _id: ObjectId, login: String }
+      violations: [Object],
+      author: { _id: ObjectId, login: String },
+      links: [
+        {
+          fromId: ObjectId,
+          toId: ObjectId
+        }
+      ]
     },
     { toJSON: { virtuals: true } }
   );

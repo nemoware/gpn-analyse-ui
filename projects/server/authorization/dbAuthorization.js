@@ -1,14 +1,23 @@
+const roles = require('../json/role');
 const db = require('../config/db.config');
 const User = db.User;
 
-exports.checkLogin = async login => {
-  return new Promise(async (resolve, reject) => {
-    console.log(`check login ${login}`);
-    let user = await User.findOne({ login: login });
-    if (user) {
-      resolve(true);
-    } else {
-      resolve(false);
-    }
-  });
+exports.getUser = async login => {
+  let count = await User.countDocuments();
+
+  let user;
+  if (!count) {
+    let role = roles.find(r => r.name === 'RAdmin');
+    user = new User({
+      login: login,
+      roles: [role]
+    });
+    await user.save();
+  }
+
+  if (!user) {
+    user = await User.findOne({ login: login });
+  }
+
+  return user.toObject();
 };

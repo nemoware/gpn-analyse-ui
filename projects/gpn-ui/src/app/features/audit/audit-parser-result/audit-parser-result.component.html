@@ -1,0 +1,56 @@
+<div class="dialog">
+<div class="row">
+  <div class="col">
+    <span><b>{{ data.subsidiaryName }}</b> {{ data.auditStart | date :'dd.MM.yyyy'}} - {{data.auditEnd | date : 'dd.MM.yyyy'}}</span>
+    <br>
+    <fa-icon [icon]="faClock" style="float: left"></fa-icon>
+    <span style="margin-left: 10px"> Статус: {{ data.status | translate}} </span>
+    <!--<br>
+    <div class="search-container" style="margin-left: 15px">
+      <mat-form-field appearance="legacy" >
+        <mat-label>Поиск документа</mat-label>
+        <input matInput placeholder="Поиск" style="width: 250px" (change)="valueSearch($event.target.value)">
+        <fa-icon [icon]="faSearch" matTooltip="Поиск" style="float: right"></fa-icon>
+      </mat-form-field>
+    </div>-->
+  </div>
+  <div class="col">
+    <fa-icon [icon]="faTimes"style="alignment: center" class="close" (click)="closeForm()" matTooltip="Закрыть"></fa-icon>
+  </div>
+</div>
+  <mat-divider></mat-divider>
+</div>
+
+<cdk-virtual-scroll-viewport itemSize="1" style="height: 90%;">
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <div style="width: 100%" >
+    <div class="row">
+      <div class="col col-lg-1"> {{node.index}}  </div>
+      <div class="col"> {{node.name}} </div>
+      <div class="col col-lg-2"> {{node.documentNumber}} </div>
+      <div class="col col-lg-3"> {{node.documentDate | date:'d MMMM yyyy'}} </div>
+    </div>
+      <mat-divider></mat-divider>
+    </div>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <div style="width: 100%">
+      <button mat-icon-button matTreeNodeToggle
+              [attr.aria-label]="'toggle ' + node.name">
+        <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
+        <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
+      </button>
+      {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
+      <mat-divider></mat-divider>
+    </div>
+  </mat-tree-node>
+
+</mat-tree>
+
+</cdk-virtual-scroll-viewport>
+
+

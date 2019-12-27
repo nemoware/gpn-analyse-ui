@@ -66,7 +66,7 @@ export {
     environment.production
       ? []
       : StoreDevtoolsModule.instrument({
-          name: 'Слава ГПН!'
+          name: 'Корпоративный аудит ДО'
         })
   ],
   declarations: [],

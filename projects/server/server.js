@@ -2,8 +2,7 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
-const uuid = require('uuid');
-const session = require('express-session');
+const parser = require('./parser/auditParser');
 
 const appConfig = require('./config/app.config');
 
@@ -26,7 +25,6 @@ if (appConfig.ad.on) {
 const adAuth = appConfig.ad.auth;
 
 const dbAuth = require('./authorization/dbAuthorization');
-const routes = require('./route/routes');
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
 
@@ -37,61 +35,45 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(
-  session({
-    genid: req => {
-      return uuid();
-    },
-    secret: 'there_is_need_secret_word',
-    key: 'express.sid',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      expires: 60000
-    }
-  })
-);
-
 app.use(async function(req, res, next) {
-  let login = '';
-  let checked = false;
+  let ADUser = await adAuth.getUser(req, res);
 
-  if (!req.session.message) {
-    try {
-      let user = await adAuth.getUser(req, res);
-      if (user) {
-        login = user.sAMAccountName;
-      }
-    } catch (err) {
-      console.log('Rejected: ' + err);
-    }
-  }
-
-  if (login) {
-    try {
-      checked = await dbAuth.checkLogin(login);
-      if (checked) req.session.message = login;
-    } catch (err) {
-      console.log('Rejected: ' + error);
-    }
-  } else {
-    checked = true;
-  }
-
-  if (checked) {
-    next();
-  } else {
-    res.sendFile('index.html', {
-      root: path.join(__dirname, './')
+  if (!ADUser) {
+    res.status(401).sendFile('error.html', {
+      root: path.join(__dirname, './file/')
     });
   }
+
+  let user = await dbAuth.getUser(ADUser.sAMAccountName);
+
+  if (!user) {
+    res.status(401).sendFile('error.html', {
+      root: path.join(__dirname, './file/')
+    });
+  }
+
+  res.locals.user = user;
+  next();
 });
 
 app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
 
 app.use('/', express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
 
-app.use('/api', routes);
+const adminRouter = require('./routers/adminRouter');
+app.use('/api', adminRouter);
+
+const auditRouter = require('./routers/auditRouter');
+app.use('/api', auditRouter);
+
+const developerRouter = require('./routers/developerRouter');
+app.use('/api', developerRouter);
+
+const documentRouter = require('./routers/documentRouter');
+app.use('/api', documentRouter);
+
+const eventRouter = require('./routers/eventRouter');
+app.use('/api', eventRouter);
 
 app.listen(port, err => {
   if (err) {
@@ -99,5 +81,9 @@ app.listen(port, err => {
     return;
   }
 
-  console.log(`App listening on port ${port}`);
+  console.log(`App is listening on port ${port}`);
+  console.log();
+
+  parser.test();
+  adAuthorization.test();
 });

@@ -1,0 +1,79 @@
+@import '../../../../styles-variables.scss';
+
+$header_height: 64px;
+
+.chart-container {
+  padding: $gpn-padding;
+}
+
+.text-container {
+  background: $gpn-paper-color;
+  padding: $gpn-padding;
+}
+
+.heder-footer,
+.header-hat {
+  margin: 0;
+  display: block;
+  font-size: 12pt;
+  line-height: 1;
+  color: $gpn-labels-darker;
+  font-weight: normal;
+}
+
+.header-hat {
+  margin-top: 4px;
+}
+
+.actions-container {
+  z-index: 10;
+  position: fixed;
+  top: $header_height + 10px;
+  right: $gpn-padding;
+
+  button {
+    margin-left: $gpn-padding/2;
+  }
+}
+
+.floating-button {
+}
+
+.left_group {
+  max-width: 350px;
+  .container {
+    padding: $gpn-padding;
+  }
+}
+
+.fixed-layout {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: $header_height;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.spinner {
+  height: 200px;
+  width: 200px;
+  animation: rotate 2s linear infinite;
+  transform-origin: center center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.warning-comment {
+  font-size: 85%;
+  display: inline-block;
+  margin-left: 2em;
+  color: $gpn-labels-darker;
+}

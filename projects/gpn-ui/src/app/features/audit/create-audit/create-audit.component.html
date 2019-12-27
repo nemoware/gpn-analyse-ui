@@ -22,12 +22,13 @@
   </mat-form-field>
   <br>
 
-  <div class="container mat-elevation-z2">
-    <span style="font-weight: bold">Диапазон дат документов</span>
+  <section style="padding-top: 2em;">
+    <label class='field-label'>Диапазон дат документов</label>
   <form [formGroup]="auditForm">
     <mat-form-field>
-      <input matInput [matDatepicker]="auditStart" placeholder="Начало диапазона" [(ngModel)]="_auditStart"
-           formControlName='auditStart' [errorStateMatcher]="errorMatcher" readonly = "true"
+      <input id="_auditStart"
+        matInput [matDatepicker]="auditStart" placeholder="Начало диапазона" [(ngModel)]="_auditStart"
+           formControlName='auditStart' [errorStateMatcher]="errorMatcher" gpnMaskDate (change)="changeDate($event)"
       >
       <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
       <mat-datepicker #auditStart></mat-datepicker>
@@ -35,8 +36,8 @@
     <br>
 
     <mat-form-field>
-      <input matInput [matDatepicker]="auditEnd" placeholder="Конец диапазона" [(ngModel)]="_auditEnd"
-           formControlName='auditEnd' [errorStateMatcher]="errorMatcher" readonly = "true"
+      <input id="_auditEnd" matInput [matDatepicker]="auditEnd" placeholder="Конец диапазона" [(ngModel)]="_auditEnd"
+           formControlName='auditEnd' [errorStateMatcher]="errorMatcher" gpnMaskDate (change)="changeDate($event)"
       >
       <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
       <mat-datepicker #auditEnd></mat-datepicker>
@@ -45,7 +46,7 @@
       </mat-error>
     </mat-form-field>
   </form>
-  </div>
+  </section>
 
   <br>
   <div class="row">
@@ -53,7 +54,7 @@
       <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
     </div>
     <div class="col">
-      <button mat-raised-button color="accent" (click)="CreateAudit()" [disabled]="!valid()">Сохранить</button>
+      <button mat-raised-button color="accent" (click)="CreateAudit()" [disabled]="!valid()">Новое задание на аудит</button>
     </div>
   </div>
 

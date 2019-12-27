@@ -3,8 +3,7 @@
   <mat-sidenav-container>
 
     <mat-sidenav #sidenav mode="push">
-      <div class="branding"><img [src]="logo" />
-        <span>{{ 'gpn.title.short'  }}</span></div>
+      <div class="branding"><img [src]="logo" /></div>
       <mat-nav-list>
         <a mat-list-item *ngFor="let item of navigationSideMenu" (click)="sidenav.close()" [routerLink]="[item.link]"
           routerLinkActive="active">
@@ -24,9 +23,8 @@
 
           <span routerLink="" class="branding spacer center d-inline d-sm-none">
             <img [src]="logo" width='253' /></span>
-          <span routerLink="" class="branding spacer center d-none d-sm-inline d-md-none"><img [src]="logo" /> {{
-            'gpn.title.short'   }}</span>
-          <span routerLink="" class="branding spacer d-none d-md-inline"><img [src]="logo" /> Система поддержки принятия решений</span>
+          <span routerLink="" class="branding spacer center d-none d-sm-inline d-md-none"><img [src]="logo" /></span>
+          <span routerLink="" class="branding spacer d-none d-md-inline"><img [src]="logo" /> Корпоративный аудит ДО</span>
 
           <span class="d-none d-md-inline" *ngIf="loadedUser">
             <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
@@ -50,23 +48,16 @@
             </ol>
           </mat-menu>
 
+          <!--
           <button mat-icon-button routerLink="settings" class="d-none d-sm-inline">
             <fa-icon icon="cog"></fa-icon>
-          </button>
-
-
+          </button> -->
 
         </mat-toolbar>
       </div>
 
       <div class="content" >
         <router-outlet #o="outlet"></router-outlet>
-      </div>
-
-      <div class="footer">
-        <div class="row">
-          <span class="year"> {{ year }}</span>
-        </div>
       </div>
 
     </div>

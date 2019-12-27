@@ -1,39 +1,24 @@
-const fs = require('fs');
 const appConfig = require('../config/app.config');
+const users = require('../json/fakeUser');
 
 exports.getUser = async (req, res) => {
-  return new Promise((resolve, reject) => {
-    fs.readFile('./json/fakeUser.json', 'utf8', async (err, data) => {
-      if (err) throw err;
-      let users = JSON.parse(data);
-      for (let user of users) {
-        if (user.sAMAccountName === appConfig.ad.login) {
-          resolve(user);
-          return;
-        }
-      }
-    });
-  });
+  for (let user of users) {
+    if (user.sAMAccountName === appConfig.ad.login) {
+      return user;
+    }
+  }
+
+  throw `There is no user with login ${appConfig.ad.login} in AD`;
 };
 
-exports.getUserName = login => {
-  return new Promise((resolve, reject) => {
-    fs.readFile('./json/fakeUser.json', 'utf8', (err, data) => {
-      if (err) throw err;
-      let users = JSON.parse(data);
-      for (let user of users) {
-        if (user.sAMAccountName === login) {
-          resolve(user.displayName);
-        }
-      }
-    });
-  });
+exports.getUserName = async login => {
+  for (let user of users) {
+    if (user.sAMAccountName === login) {
+      return user.displayName;
+    }
+  }
 };
 
 exports.getGroupUsers = async () => {
-  return new Promise((resolve, reject) => {
-    fs.readFile('./json/fakeUser.json', 'utf8', function(err, contents) {
-      resolve(JSON.parse(contents));
-    });
-  });
+  return users;
 };

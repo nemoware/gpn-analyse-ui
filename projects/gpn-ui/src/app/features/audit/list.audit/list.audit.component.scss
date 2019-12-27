@@ -9,3 +9,19 @@
 .mat-table {
   width: 100%;
 }
+
+.link_tag {
+  cursor: pointer;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  background-color: aliceblue;
+}
+
+div.btn-group {
+  display: none;
+}
+.mat-row:hover .btn-group {
+  display: inline-block;
+}

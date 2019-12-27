@@ -1,0 +1,73 @@
+<section>
+  <label class='field-label'>Статус</label>
+  <gpn-doc-state [document]='document'></gpn-doc-state>
+</section>
+
+
+<section *ngIf="document.user">
+  <mat-divider></mat-divider>
+  <label class='field-label'>Корректировка</label>
+  <span> {{ document.user.updateDate | date:'dd.MM.yyyy' }} </span><br>
+  <span> {{ document.user.author.login }} </span>
+</section>
+
+<mat-divider></mat-divider>
+
+<section>
+  <label class='field-label'>входит в аудит</label>
+  <span><a href="link to audit">{{ document.audit.subsidiaryName }}<br>
+      {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</a></span>
+</section>
+
+<section>
+  <label class='field-label'>файл</label>
+  <a [href]='"file://"+document.audit.ftpUrl + document.filename'>
+  <span class="file-name"><span class="file-path">{{ document.filename | filePath }}
+    </span>{{ document.filename | fileName }}</span></a>
+</section>
+
+
+<mat-divider></mat-divider>
+
+<label class='field-label'>Связанные документы</label>
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+
+    <div class="row" style="width: 100%" (mouseenter)="focusedDoc(node._id)" (mouseleave)="focusedDoc(null)">
+      <div class="col-10" (click)="openDocument(node)" [ngClass]="{reference: node.index > 0}">
+          <span *ngIf="node.documentNumber">№{{ node.documentNumber}}</span> <span *ngIf="node.documentDate"> от {{node.documentDate | date}}</span>
+      </div>
+
+      <div class="col-2">
+        <fa-icon class="delete" [icon]="faTimes" *ngIf="editable && node.index > 0" matTooltip="Удалить из списка связанных документов" (click)="deleteDocument(node)"
+                 [ngStyle]="{'display': focusedId === node._id ? 'inline-block' : 'none'}"
+        ></fa-icon>
+      </div>
+    </div>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding role="group">
+    <mat-divider></mat-divider>
+
+    <div class="row" style="width: 100%">
+      <div class="col-10">
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button> <span class="mat-tree-node-root">{{ node.name+'s' | translate }}</span>
+
+      </div>
+
+      <div class="col-2">
+        <button mat-icon-button matTooltip="Добавить документ" [disabled]="!editable" (click)="addDocument(node)"
+          style="float: right;">
+          <fa-icon [icon]="faPlus"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </mat-tree-node>
+
+</mat-tree>

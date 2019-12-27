@@ -1,0 +1,105 @@
+<table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows matSortActive="document" matSortDirection="desc">
+
+  <!-- Документ -->
+  <ng-container matColumnDef="document">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Документ, имеющий нарушение</th>
+    <td mat-cell *matCellDef="let row">
+     <span class="doc_type reference" (click)="openDocument(row.document.id)">{{ row.document.type | translate }}</span>
+     <span class="number"> № {{ row.document.number  }}</span>
+   </td>
+ </ng-container>
+
+ <!-- Учредительный док. -->
+  <ng-container matColumnDef="founding_document">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Учредительный документ</th>
+    <td mat-cell *matCellDef="let row">
+     <div *ngIf="row.founding_document">
+       <span class="doc_type">Устав в редакции от {{ row.founding_document.date | date}}</span>
+     </div>
+   </td>
+ </ng-container>
+
+ <!-- Пункт -->
+  <ng-container matColumnDef="reference">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Подпункт, пункт, статья</th>
+    <td mat-cell *matCellDef="let row">
+      <span class="reference" *ngIf="row.reference && row.reference.text" (click)="openDocument(row.reference.id, row.reference.attribute)">
+        {{ row.reference.text  }}
+      </span>
+   </td>
+ </ng-container>
+
+ <!-- Нарушение -->
+  <ng-container matColumnDef="violation_type">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Нарушение</th>
+    <td mat-cell *matCellDef="let row">
+      <div *ngIf="row.violation_type">
+        <span> <b> {{ getViolation(row) }}</b> </span>
+        <div *ngIf="row.violation_type.type">
+          Отсутствует одобрение <span>{{row.violation_type.org_structural_level | translate}}</span> на совершение
+          <span>{{row.violation_type.subject | translate}} </span>
+          <span *ngIf="row.violation_type.min || row.violation_type.max"> на сумму,
+            <span *ngIf="row.violation_type.min"> превыщающих {{row.violation_type.min.value | currency : row.violation_type.min.currency}} </span>
+            <span *ngIf="row.violation_type.min && row.violation_type.max"> и </span>
+            <span *ngIf="row.violation_type.max"> не превыщающих {{row.violation_type.max.value | currency : row.violation_type.max.currency}} </span>
+          </span>
+        </div>
+      </div>
+
+      <div *ngIf="row.document.warnings">
+        <span class='warning'><b>В результате выполненного анализа в документах были определены не все атрибуты</b></span>
+        <li *ngFor="let w of row.document.warnings"> {{w.code | translate}}</li>
+      </div>
+   </td>
+ </ng-container>
+
+ <!-- Основание -->
+  <ng-container matColumnDef="violation_reason">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Основание нарушения</th>
+    <td mat-cell *matCellDef="let row">
+
+     <div *ngIf="row.violation_reason">
+       <div *ngIf="row.violation_reason.contract">
+         <b>Договор</b> № <span>{{row.violation_reason.contract.number}}</span> от <span>{{row.violation_reason.contract.date | date}}</span> c
+         <span>{{row.violation_reason.contract.org_type}} {{row.violation_reason.contract.org_name}}</span>
+         <span *ngIf="row.violation_reason.contract.value">, цена сделки - {{row.violation_reason.contract.value | currency : row.violation_reason.contract.currency}}</span>
+       </div>
+       <div *ngIf="row.violation_reason.protocol">
+         <b>Протокол</b> <span> {{row.violation_reason.protocol.org_structural_level | translate}}</span> от <span>{{row.violation_reason.protocol.date | date}}</span>
+         <span *ngIf="row.violation_reason.protocol.value">, сумма - {{row.violation_reason.protocol.value | currency : row.violation_reason.protocol.currency}}</span>
+       </div>
+       <div *ngIf="row.violation_reason.charters">
+         <span *ngFor="let item of row.violation_reason.charters"> <b>Устав</b> от {{ item.date | date }}</span>
+       </div>
+     </div>
+   </td>
+ </ng-container>
+
+ <!--
+ <ng-container matColumnDef="expandedDetail">
+   <td mat-cell *matCellDef="let row" [attr.colspan]="col.length">
+     <div class="element-detail" [@detailExpand]="'expanded'">
+       <div *ngIf="row.document && row.document.attribute">
+         <span class="attribute">Фрагмент нарушения</span>
+         <span class="reference">
+           {{ row.document.attribute | translate }}: {{ row.document.attributeValue }}
+         </span>
+       </div>
+       <div *ngIf="row.reference && row.reference.attribute">
+         <span class="attribute">Фрагмент основания</span>
+         <span class="reference">
+           {{row.reference.attribute | translate}}: {{ row.reference.attributeValue }}
+         </span>
+       </div>
+     </div>
+   </td>
+ </ng-container> -->
+
+  <tr mat-header-row *matHeaderRowDef="col"></tr>
+
+  <tr mat-row *matRowDef="let row; columns: col;" class="element-row"></tr>
+  <!--
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail'];" class="detail-row"></tr>
+  -->
+
+</table>

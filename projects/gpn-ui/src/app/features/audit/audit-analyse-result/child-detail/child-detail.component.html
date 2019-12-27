@@ -1,0 +1,25 @@
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <!-- This is the tree node template for leaf nodes -->
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <!-- use a disabled button to provide padding for tree leaf -->
+    <button mat-icon-button disabled></button>
+      <div style="width: 100%">
+        <span>{{node.name | translate}}</span>
+        <span class="value" *ngIf="node.min"> от {{node.min | currency: node.currency }} </span>
+        <span class="value" *ngIf="node.max"> до {{node.max | currency: node.currency }} </span>
+        <mat-divider></mat-divider>
+       </div>
+  </mat-tree-node>
+  <!-- This is the tree node template for expandable nodes -->
+  <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+    <div style="width: 100%">
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      {{node.name | translate}}
+      <mat-divider></mat-divider>
+    </div>
+  </mat-tree-node>
+</mat-tree>

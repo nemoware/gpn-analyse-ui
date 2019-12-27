@@ -16,6 +16,8 @@ import {
   selectEffectiveTheme
 } from '@core/core.module';
 import { AuthorizationData } from '@core/authorization/authorization.data';
+import { TranslateService } from '@root/node_modules/@ngx-translate/core';
+import { Dictionaries } from '@app/models/dictionaries';
 
 @Component({
   selector: 'gpn-root',
@@ -31,10 +33,10 @@ export class AppComponent implements OnInit {
   logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
     { link: 'audit', label: 'Аудит' },
-    { link: 'dash', label: 'Дэшборд' },
-    { link: 'analyse', label: 'Анализ' },
-    { link: 'admin', label: 'Администрирование' },
-    { link: 'events', label: 'Журнал событий' }
+    // { link: 'dash', label: 'Дэшборд' },
+    // { link: 'analyse', label: 'Анализ' },
+    { link: 'admin', label: 'Администрирование' }
+    //{ link: 'events', label: 'Журнал событий' }
   ];
 
   navigationSideMenu = [
@@ -48,8 +50,15 @@ export class AppComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private storageService: LocalStorageService,
-    private authorizationData: AuthorizationData
-  ) {}
+    private authorizationData: AuthorizationData,
+    public translate: TranslateService
+  ) {
+    translate.addLangs(['en', 'ru']);
+    translate.setDefaultLang('ru');
+    //const browserLang = translate.getBrowserLang();
+    //translate.use(browserLang.match(/en|ru/) ? browserLang : 'en');
+    translate.use('ru');
+  }
 
   private static isIEorEdgeOrSafari() {
     return ['ie', 'edge', 'safari'].includes(browser().name);
