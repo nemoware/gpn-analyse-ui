@@ -1,0 +1,62 @@
+<div class="container">
+
+  <h4>Новое задание на аудит</h4>
+    <mat-form-field>
+      <mat-select [formControl]="subsidiaryCtrl" placeholder="Выбрать Дочернее Общество" #selectSubsidiary>
+        <mat-option>
+          <ngx-mat-select-search [formControl]="subsidiaryFilterCtrl"
+                                 [placeholderLabel]="'Поиск дочернего общества...'"
+                                 [noEntriesFoundLabel]="'Дочернее общество не найдено'"
+          >
+            <fa-icon ngxMatSelectSearchClear [icon]="faTimes" matTooltip="Очистить поиск"></fa-icon>
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let subsidiary of filteredSubsidiaries | async" [value]="subsidiary">
+          {{subsidiary.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Путь к файлам (FTP URL)" [(ngModel)]="_ftpUrl">
+  </mat-form-field>
+  <br>
+
+  <section style="padding-top: 2em;">
+    <label class='field-label'>Диапазон дат документов</label>
+  <form [formGroup]="auditForm">
+    <mat-form-field>
+      <input id="_auditStart"
+        matInput [matDatepicker]="auditStart" placeholder="Начало диапазона" [(ngModel)]="_auditStart"
+           formControlName='auditStart' [errorStateMatcher]="errorMatcher" gpnMaskDate (change)="changeDate($event)"
+      >
+      <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
+      <mat-datepicker #auditStart></mat-datepicker>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field>
+      <input id="_auditEnd" matInput [matDatepicker]="auditEnd" placeholder="Конец диапазона" [(ngModel)]="_auditEnd"
+           formControlName='auditEnd' [errorStateMatcher]="errorMatcher" gpnMaskDate (change)="changeDate($event)"
+      >
+      <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
+      <mat-datepicker #auditEnd></mat-datepicker>
+      <mat-error *ngIf="auditForm.hasError('invalidDate')">
+        Проверьте корректность введенных дат!
+      </mat-error>
+    </mat-form-field>
+  </form>
+  </section>
+
+  <br>
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+    </div>
+    <div class="col">
+      <button mat-raised-button color="accent" (click)="CreateAudit()" [disabled]="!valid()">Новое задание на аудит</button>
+    </div>
+  </div>
+
+</div>
+

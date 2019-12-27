@@ -1,4 +1,4 @@
-<nav mat-tab-nav-bar class="d-none d-sm-flex" [backgroundColor]="primary"  color="accent">
+<nav mat-tab-nav-bar class="d-none d-sm-flex" [backgroundColor]="'primary'"  color="accent">
   <a mat-tab-link *ngFor="let e of analyse" [routerLink]="e.link" routerLinkActive #rla="routerLinkActive" 
     [active]="rla.isActive" [disabled]="e.auth && !(isAuthenticated$ | async)">
     {{ e.label  | uppercase}}

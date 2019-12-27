@@ -1,10 +1,10 @@
 import { initialState, settingsReducer } from './settings.reducer';
 
 import {
-  actionSettingsChangeAnimationsElements,
+  /*actionSettingsChangeAnimationsElements,
   actionSettingsChangeAnimationsPage,
-  actionSettingsChangeAnimationsPageDisabled,
- 
+  actionSettingsChangeAnimationsPageDisabled,*/
+
   actionSettingsChangeStickyHeader,
   actionSettingsChangeTheme
 } from './settings.actions';
@@ -16,14 +16,12 @@ describe('SettingsReducer', () => {
     expect(state).toBe(initialState);
   });
 
-  
-
   it('should update theme', () => {
     const action = actionSettingsChangeTheme({ theme: 'dark' });
     const state = settingsReducer(undefined, action);
     expect(state.theme).toEqual('dark');
   });
-
+  /*
   it('should update pageAnimations', () => {
     const action = actionSettingsChangeAnimationsPage({
       pageAnimations: false
@@ -48,8 +46,8 @@ describe('SettingsReducer', () => {
     const state = settingsReducer(undefined, action);
     expect(state.elementsAnimations).toEqual(false);
   });
+*/
 
-  
   it('should update stickyHeader', () => {
     const action = actionSettingsChangeStickyHeader({
       stickyHeader: false
@@ -57,6 +55,4 @@ describe('SettingsReducer', () => {
     const state = settingsReducer(undefined, action);
     expect(state.stickyHeader).toEqual(false);
   });
-
-  
 });

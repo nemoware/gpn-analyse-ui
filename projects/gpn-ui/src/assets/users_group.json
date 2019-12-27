@@ -1,0 +1,26 @@
+[
+  {
+    "sAMAccountName": "AccountName#1",
+    "displayName": "displayName#1"
+  },
+  {
+    "sAMAccountName": "AccountName#2",
+    "displayName": "displayName#2"
+  },
+  {
+    "sAMAccountName": "AccountName#3",
+    "displayName": "displayName#3"
+  },
+  {
+    "sAMAccountName": "AccountName#4",
+    "displayName": "displayName#4"
+  },
+  {
+    "sAMAccountName": "AccountName#5",
+    "displayName": "displayName#5"
+  },
+  {
+    "sAMAccountName": "AccountName#6",
+    "displayName": "displayName#6"
+  }
+]

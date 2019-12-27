@@ -12,7 +12,6 @@ import {
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
- 
 
 import { environment } from '@environments/environment';
 
@@ -27,14 +26,14 @@ import { selectIsAuthenticated, selectAuth } from './auth/auth.selectors';
 import { authLogin, authLogout } from './auth/auth.actions';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { TitleService } from './title/title.service';
- 
+
 import { AppErrorHandler } from './error-handler/app-error-handler.service';
 import { CustomSerializer } from './router/custom-serializer';
 import { LocalStorageService } from './local-storage/local-storage.service';
 import { HttpErrorInterceptor } from './http-interceptors/http-error.interceptor';
 import { NotificationService } from './notifications/notification.service';
 import { SettingsEffects } from './settings/settings.effects';
-import {  
+import {
   selectEffectiveTheme,
   selectSettingsStickyHeader
 } from './settings/settings.selectors';
@@ -44,19 +43,15 @@ export {
   selectAuth,
   authLogin,
   authLogout,
-  
   AppState,
   LocalStorageService,
   selectIsAuthenticated,
-   
   AuthGuardService,
   selectRouterState,
   NotificationService,
-  selectEffectiveTheme,  
+  selectEffectiveTheme,
   selectSettingsStickyHeader
 };
-
- 
 
 @NgModule({
   imports: [
@@ -67,17 +62,12 @@ export {
     // ngrx
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreRouterConnectingModule.forRoot(),
-    EffectsModule.forRoot([
-      AuthEffects,
-      SettingsEffects 
-    ]),
+    EffectsModule.forRoot([AuthEffects, SettingsEffects]),
     environment.production
       ? []
       : StoreDevtoolsModule.instrument({
-          name: 'Слава ГПН!'
-        }),
-
- 
+          name: 'Корпоративный аудит ДО'
+        })
   ],
   declarations: [],
   providers: [

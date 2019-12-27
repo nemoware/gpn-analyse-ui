@@ -1,0 +1,31 @@
+@import '../../../../../styles-variables.scss';
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(0%, -100%);
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  background-color: aliceblue;
+}
+
+.org-type,
+.small {
+  font-size: 85%;
+  color: $gpn-labels;
+}
+
+.org-alias {
+  color: $gpn-labels;
+}
+
+.org-name {
+  display: block;
+}

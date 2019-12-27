@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { selectIsAuthenticated } from '@core/core.module';
 
 import { State } from '../analyse.state';
- 
+
 @Component({
   selector: 'gpn-analyse',
   templateUrl: './analyse.component.html',
@@ -22,7 +22,7 @@ export class AnalyseComponent implements OnInit {
     { link: 'authenticated', label: 'Нечто еще', auth: true }
   ];
 
-  constructor(private store: Store<State>) { }
+  constructor(private store: Store<State>) {}
 
   ngOnInit(): void {
     this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));

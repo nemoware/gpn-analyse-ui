@@ -1,6 +1,5 @@
 import { AppState } from '@core/core.module';
 
-
 export interface SettingsState {
   theme: string;
   stickyHeader: boolean;

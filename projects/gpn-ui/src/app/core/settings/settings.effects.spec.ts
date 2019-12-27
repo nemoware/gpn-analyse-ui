@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 
 import {
-  AnimationsService,
+  // AnimationsService,
   AppState,
   LocalStorageService,
   TitleService
@@ -26,7 +26,7 @@ describe('SettingsEffects', () => {
   let localStorageService: jasmine.SpyObj<LocalStorageService>;
   let overlayContainer: jasmine.SpyObj<OverlayContainer>;
   let titleService: jasmine.SpyObj<TitleService>;
-  let animationsService: jasmine.SpyObj<AnimationsService>;
+  // let animationsService: jasmine.SpyObj<AnimationsService>;
   let translateService: jasmine.SpyObj<TranslateService>;
   let store: jasmine.SpyObj<Store<AppState>>;
 
@@ -46,9 +46,9 @@ describe('SettingsEffects', () => {
       'getContainerElement'
     ]);
     titleService = jasmine.createSpyObj('TitleService', ['setTitle']);
-    animationsService = jasmine.createSpyObj('AnimationsService', [
+    /* animationsService = jasmine.createSpyObj('AnimationsService', [
       'updateRouteAnimationType'
-    ]);
+    ]); */
     translateService = jasmine.createSpyObj('TranslateService', ['use']);
     store = jasmine.createSpyObj('store', ['pipe']);
   });
@@ -62,9 +62,9 @@ describe('SettingsEffects', () => {
         router,
         overlayContainer,
         localStorageService,
-        titleService,
-        animationsService,
-        translateService
+        titleService
+        /*animationsService,
+        translateService*/
       );
       const metadata = getEffectsMetadata(effect);
 
@@ -77,15 +77,15 @@ describe('SettingsEffects', () => {
       const { cold } = helpers;
 
       const settings: SettingsState = {
-        language: 'en',
+        /*language: 'en',
         pageAnimations: true,
-        elementsAnimations: true,
+        elementsAnimations: true,*/
         theme: 'default',
-        nightTheme: 'default',
-        autoNightMode: false,
-        stickyHeader: false,
-        pageAnimationsDisabled: true,
-        hour: 12
+        /*nightTheme: 'default',
+        autoNightMode: false,*/
+        stickyHeader: false
+        /*pageAnimationsDisabled: true,
+        hour: 12*/
       };
       store.pipe.and.returnValue(of(settings));
       const persistAction = actionSettingsChangeTheme({ theme: 'DEFAULT' });
@@ -97,9 +97,9 @@ describe('SettingsEffects', () => {
         router,
         overlayContainer,
         localStorageService,
-        titleService,
-        animationsService,
-        translateService
+        titleService
+        /*animationsService,
+        translateService*/
       );
 
       effect.persistSettings.subscribe(() => {

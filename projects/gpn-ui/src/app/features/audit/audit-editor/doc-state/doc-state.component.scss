@@ -1,0 +1,43 @@
+@import '../../../../../styles-variables.scss';
+
+@import '~@angular/material/theming';
+
+.state {
+  display: block;
+}
+
+.state-2 {
+  color: mat-color($mat-deep-purple, 500);
+  &::after {
+    content: 'Ожидает анализа';
+  }
+}
+
+.state-12 {
+  color: mat-color($mat-orange, 500);
+  &::after {
+    content: 'не анализирован';
+  }
+}
+
+.state-15 {
+  color: mat-color($mat-teal, 500);
+  &::after {
+    content: 'Анализ завершен';
+  }
+}
+
+.state-1,
+.state-0,
+.state-5,
+.state-null {
+  color: mat-color($mat-indigo, 500);
+  &::after {
+    content: 'Загружен, ожидает анализа';
+  }
+}
+
+.small {
+  font-size: 85%;
+  color: $gpn-labels;
+}

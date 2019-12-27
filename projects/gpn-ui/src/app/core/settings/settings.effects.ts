@@ -15,16 +15,14 @@ import {
 
 import { selectSettingsState } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
- 
+
 import { TitleService } from '@core/title/title.service';
 
-import { 
-  actionSettingsChangeTheme,
-  actionSettingsChangeStickyHeader 
-} from './settings.actions';
 import {
-  selectEffectiveTheme 
-} from './settings.selectors';
+  actionSettingsChangeTheme,
+  actionSettingsChangeStickyHeader
+} from './settings.actions';
+import { selectEffectiveTheme } from './settings.selectors';
 import { State } from './settings.model';
 
 export const SETTINGS_KEY = 'SETTINGS';
@@ -39,18 +37,13 @@ export class SettingsEffects {
     private router: Router,
     private overlayContainer: OverlayContainer,
     private localStorageService: LocalStorageService,
-    private titleService: TitleService 
+    private titleService: TitleService
   ) {}
-
- 
 
   persistSettings = createEffect(
     () =>
       this.actions$.pipe(
-        ofType( 
-          actionSettingsChangeStickyHeader,
-          actionSettingsChangeTheme
-        ),
+        ofType(actionSettingsChangeStickyHeader, actionSettingsChangeTheme),
         withLatestFrom(this.store.pipe(select(selectSettingsState))),
         tap(([action, settings]) =>
           this.localStorageService.setItem(SETTINGS_KEY, settings)
@@ -58,8 +51,6 @@ export class SettingsEffects {
       ),
     { dispatch: false }
   );
-
-   
 
   updateTheme = createEffect(
     () =>
@@ -80,17 +71,13 @@ export class SettingsEffects {
     { dispatch: false }
   );
 
-   
-
   setTitle = createEffect(
     () =>
       merge(
         this.router.events.pipe(filter(event => event instanceof ActivationEnd))
       ).pipe(
         tap(() => {
-          this.titleService.setTitle(
-            this.router.routerState.snapshot.root
-          );
+          this.titleService.setTitle(this.router.routerState.snapshot.root);
         })
       ),
     { dispatch: false }

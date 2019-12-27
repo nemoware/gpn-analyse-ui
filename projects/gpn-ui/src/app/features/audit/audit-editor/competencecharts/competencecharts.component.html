@@ -1,0 +1,26 @@
+<!-- test: http://localhost:4200/#/audit/view/5de8a3fe1b3453848224a9dc -->
+<table class='competence-table'>
+  <ng-container *ngFor="let org_level of this.constraintsTree | keyvalue">
+    <tr>
+      <td style="text-align: right;">
+        <h4>{{org_level.key | translate}}</h4>
+      </td>
+      <td></td>
+    </tr>
+
+    <tr *ngFor="let competence of org_level.value | keyvalue" class="competence-row">
+      <td class='competence'>
+        <a (click)='scrollToSpan(competence.value.span)'>{{competence.key | translate}}</a>
+      </td>
+
+      <td class="competence-margins">
+        <span class='constraint-min' (click)='scrollToSpan(competence.value.span)'
+          [style.width.%]="getBarLeft(competence.value)">&nbsp;{{competence.value['constraint-min'] | currency: competence.value['currency'] : 'symbol' : '1.0-0'}}</span><span
+          [style.width.%]="getBarWidth(competence.value)"
+          [class]="getBarStyle(competence.key, competence.value) + ' constraint-bar'"></span><span
+          class='constraint-max'
+          [style.width.%]='barOffsetPercent'>{{competence.value['constraint-max'] | currency: 'RUB' : 'symbol' : '1.0-0'}}</span>
+      </td>
+    </tr>
+  </ng-container>
+</table>

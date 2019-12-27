@@ -1,0 +1,113 @@
+<mat-sidenav-container class="fixed-layout" *ngIf="document" autosize>
+
+  <mat-sidenav mode="side" opened class="left_group">
+
+    <mat-tab-group color="accent" animationDuration="0ms" dynamicHeight='true'>
+
+      <mat-tab label="Детали">
+        <div class="container">
+          <gpn-document-details [document]="document" [editable]="editmode">
+          </gpn-document-details>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Оглавление">
+        <div class="container">
+          <gpn-tree-attributes
+            [editmode]="editmode"
+            [headers]="document.analysis.headers"
+            [documentType] = "documentType"
+            [normalText] = "document.analysis.normal_text"
+            [words] = "document.analysis.tokenization_maps.words"
+            (goToAttribute)="goToAttribute($event)"
+          ></gpn-tree-attributes>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </mat-sidenav>
+  <mat-sidenav-content>
+
+
+
+
+    <div class="actions-container">
+      <button (click)="goToAttribute('top')" color="primary" class='floating-button' mat-mini-fab
+        matTooltip="В начало документа">
+        <mat-icon>keyboard_arrow_up</mat-icon>
+      </button>
+
+      <button (click)="goToAttribute('foot')" color="primary" class='floating-button' mat-mini-fab
+        matTooltip="В конец документа">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+
+      <button (click)="saveChanges()" color="primary" class='floating-button' mat-mini-fab [disabled]="!editmode || document.statusAudit === 'Approved'"
+        matTooltip="Сохранить изменения">
+        <mat-icon>save_alt</mat-icon>
+      </button>
+
+      <button (click)="editMode()" class='floating-button' mat-mini-fab [disabled]="editmode || document.statusAudit === 'Approved'"
+        matTooltip="Режим обучения, корректировка атрибутов">
+        <mat-icon>edit</mat-icon>
+      </button>
+
+    </div>
+
+    <!-- HEADER -->
+    <div class="chart-container">
+      <h2>{{document.documentType|translate}} <span class="doc-number">{{getAttrValue('number')|docNumber}}</span> <span class="heder-footer">{{getAttrValue('date') | date: 'dd LLL yyyy г.'}}</span></h2>
+
+      <div class="row">
+        <div class="col-4">
+          <label *ngIf="getAttrValue('org-1-alias')">{{getAttrValue('org-1-alias')}}</label>
+          <h3>
+            <div class="header-hat">{{getAttrValue('org-1-type')}}</div>{{getAttrValue('org-1-name')|orgName}}
+          </h3>
+          <h4 *ngIf="getAttrValue('org_structural_level')">{{getAttrValue('org_structural_level') | translate}}</h4>
+        </div>
+        <div class="col-4">
+          <label *ngIf="getAttrValue('org-2-alias')">{{getAttrValue('org-2-alias')}}</label>
+          <h3>
+            <div class="header-hat">{{getAttrValue('org-2-type')}}</div>{{getAttrValue('org-2-name')|orgName}}
+          </h3>
+        </div>
+      </div>
+
+    </div>
+
+    <div *ngIf="hasWarnings()" class="balloon warnings">
+      <div *ngFor="let warning of document.analysis.warnings" class='warning'>
+        {{ warning.code | translate }} <span class="warning-comment">{{ warning.comment }}</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <ng-container *ngIf="document.documentType == 'CHARTER' && attributes">
+      <div class="chart-container">
+        <label>компетенции органов управления и пороговые суммы</label>
+        <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
+          (goToAttribute)="goToAttribute($event)" [attributes]="attributes"></gpn-competencecharts>
+      </div>
+
+      <mat-divider></mat-divider>
+    </ng-container>
+
+
+    <div class="text-container">
+      <label>текст документа</label>
+      <div id="container_view_document">
+
+        <gpn-view-document [document]="document" [kinds]="documentType" [editmode]="editmode" [attributes]="attributes"
+                           [selectedAttribute] = "selectedAttribute"
+          (changeAttribute)="changeAttribute($event)" (refresh)="refresh()"></gpn-view-document>
+      </div>
+    </div>
+
+
+
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

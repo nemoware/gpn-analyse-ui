@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "1",
+    "name": "RAudit",
+    "description": "Role #1 - Audit",
+    "app_page": "audit"
+  },
+  {
+    "_id": "2",
+    "name": "RAnalyse",
+    "description": "Role #2 - Analyse",
+    "app_page": "analyse"
+  },
+  {
+    "_id": "3",
+    "name": "RAdmin",
+    "description": "Role #3 - Admin",
+    "app_page": "admin"
+  },
+  {
+    "_id": "4",
+    "name": "REvents",
+    "description": "Role #4 - Events",
+    "app_page": "event"
+  }
+]

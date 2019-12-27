@@ -4,34 +4,41 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { environment as env } from '@environments/environment';
+import { HideDirective } from '../core/authorization/hide.directive';
 
- 
 import {
   authLogin,
-  authLogout,  
+  authLogout,
   AppState,
   LocalStorageService,
   selectIsAuthenticated,
   selectSettingsStickyHeader,
   selectEffectiveTheme
 } from '@core/core.module';
- 
+import { AuthorizationData } from '@core/authorization/authorization.data';
+import { TranslateService } from '@root/node_modules/@ngx-translate/core';
+import { Dictionaries } from '@app/models/dictionaries';
+
 @Component({
   selector: 'gpn-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'] 
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   isProd = env.production;
   envName = env.envName;
   version = env.versions.app;
+  loadedUser = false;
   year = new Date().getFullYear();
-  logo = require('@assets/new_logo_text_ru.svg');   
+  logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
-    { link: 'dash', label: 'Дэшборд' },
-    { link: 'analyse', label: 'Анализ' }
+    { link: 'audit', label: 'Аудит' },
+    // { link: 'dash', label: 'Дэшборд' },
+    // { link: 'analyse', label: 'Анализ' },
+    { link: 'admin', label: 'Администрирование' }
+    //{ link: 'events', label: 'Журнал событий' }
   ];
-  
+
   navigationSideMenu = [
     ...this.navigation,
     { link: 'settings', label: 'Настройки' }
@@ -39,12 +46,19 @@ export class AppComponent implements OnInit {
 
   isAuthenticated$: Observable<boolean>;
   stickyHeader$: Observable<boolean>;
-  theme$: Observable<string>;
 
   constructor(
     private store: Store<AppState>,
-    private storageService: LocalStorageService
-  ) {}
+    private storageService: LocalStorageService,
+    private authorizationData: AuthorizationData,
+    public translate: TranslateService
+  ) {
+    translate.addLangs(['en', 'ru']);
+    translate.setDefaultLang('ru');
+    //const browserLang = translate.getBrowserLang();
+    //translate.use(browserLang.match(/en|ru/) ? browserLang : 'en');
+    translate.use('ru');
+  }
 
   private static isIEorEdgeOrSafari() {
     return ['ie', 'edge', 'safari'].includes(browser().name);
@@ -52,20 +66,22 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.storageService.testLocalStorage();
-    
-
     this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));
-    this.theme$ = this.store.pipe(select(selectEffectiveTheme));
+    this.authorizationData.getUserInfo().subscribe(value => {
+      if (value) this.loadedUser = true;
+    });
   }
 
-  onLoginClick() {
-    this.store.dispatch(authLogin());
+  getNameUser() {
+    if (this.authorizationData.userInfo)
+      return this.authorizationData.userInfo.name;
+    else return '';
   }
 
-  onLogoutClick() {
-    this.store.dispatch(authLogout());
+  getRolesUser() {
+    if (this.authorizationData.userInfo)
+      return this.authorizationData.userInfo.roles;
+    else return [];
   }
-
- 
 }

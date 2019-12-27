@@ -1,0 +1,122 @@
+{
+  "CONTRACTs": "договоры",
+  "CHARTERs": "уставы",
+  "PROTOCOLs": "протоколы",
+
+  "CONTRACT": "Договор",
+  "CHARTER": "Устав",
+  "PROTOCOL": "Протокол",
+
+  "SUPPLEMENTARY_AGREEMENT": "Дополнительное соглашение",
+  "UNKNOWN": "Неизвестный (не поддерживается)",
+  "ANNEX": "Приложение",
+  "REGULATION": "Регулирование",
+  "CHARITY_POLICY": "Благотворительная политика",
+  "ORDER": "Заказ",
+  "WORK_PLAN": "План работы",
+
+  "New": "Новый",
+  "Loading": "Загрузка",
+  "InWork": "В работе",
+  "Finalizing": "Подготовка заключения",
+  "Done": "Завершен",
+  "Approved": "Подтвержден",
+  "LoadingFailed": "Ошибка загрузки",
+
+  "ATTRIBUTES": "АТРИБУТЫ",
+  "HEADERS": "ЗАГОЛОВКИ",
+
+  "subject": "Предмет",
+  "value": "Сумма",
+  "sign-value-currency": "Сумма договора",
+  "sign_value_currency": "Сумма договора",
+  "org-1-name": "Наименование ДО",
+  "org-1-alt-name": "Краткое наименование ДО",
+  "org-1-alias": "Псевдоним ДО",
+  "org-1-type": "Форма собственности ДО",
+  "org-1-type-ext": "Уточнение формы собственности ДО",
+
+  "org-2-name": "Наименование контрагента",
+  "org-2-alt-name": "Краткое наименование контрагента",
+  "org-2-alias": "Псевдоним контрагента",
+  "org-2-type": "Форма собственности контрагента",
+  "org-2-type-ext": "Уточнение формы собственности контрагента",
+
+  "contract-agent-org-1-name": "Наименование ДО",
+  "contract-agent-org-1-alt-name": "Краткое наименование ДО",
+  "contract-agent-org-1-alias": "Псевдоним ДО",
+  "contract-agent-org-1-type": "Форма собственности ДО",
+
+  "contract-agent-org-2-name": "Наименование контрагента",
+  "contract-agent-org-2-alt-name": "Краткое наименование контрагента",
+  "contract-agent-org-2-alias": "Псевдоним контрагента",
+  "contract-agent-org-2-type": "Форма собственности контрагента",
+
+  "contract-agent-org-3-name": "Наименование контрагента",
+  "contract-agent-org-3-alt-name": "Краткое наименование контрагента",
+  "contract-agent-org-3-alias": "Псевдоним контрагента",
+  "contract-agent-org-3-type": "Форма собственности контрагента",
+
+  "currency": "Валюта",
+  "sign": "Знак",
+  "org_structural_level": "Структурный уровень",
+  "org-structural-level": "Структурный уровень",
+  "constraint-min": "Порог мин.",
+  "constraint-max": "Порог макс.",
+  "agenda-item": "Пункт повестки дня",
+
+  "Charity": "Благотворительность",
+  "Deal": "Сделки",
+  "BigDeal": "Крупная сделка",
+  "Consulting": "Консалтинг",
+  "Other": "Прочее",
+  "Lawsuit": "Судебные издержки",
+  "RealEstate": "Сделки с имуществом",
+  "Insurance": "Страхование",
+  "Renting": "Получение в аренду недвижимого имущества",
+  "RentingOut": "Передача в аренду",
+  "Loans": "Сделки с займами/кредитами",
+
+  "RUB": "₽",
+  "EUR": "€",
+  "USD": "$",
+
+  "Less": "Меньше",
+  "Equally": "Равно",
+  "More": "Больше",
+
+  "PARSE_ERROR": "С ОШИБКАМИ",
+
+  "AllMembers": "Общее собрание участников",
+  "ShareholdersGeneralMeeting": "Общее собрание акционеров",
+  "BoardOfDirectors": "Совет директоров",
+  "BoardOfCompany": "Правление общества",
+  "CEO": "Генеральный директор",
+  "competence_CEO": "Генеральный директор",
+
+  "finance": "Финансирование",
+  "deals": "Сделки",
+  "court": "Суд",
+
+  "number": "Номер",
+  "date": "Дата",
+
+  "protocol_not_found": "Протокол не найден",
+  "charter_not_found": "Устав не найден",
+  "contract_value_great_than_protocol_value": "Стоимость договора больше значения в протоколе",
+  "contract_date_less_than_protocol_date": "Дата договора предшествует дате в протоколе",
+
+  "number_not_found": "Номер документа не обнаружен",
+  "date_not_found": "Дата документа не обнаружена",
+  "org_name_not_found": "Наименование компании не найдено",
+  "org_type_not_found": "Форма собственности не выявлена",
+  "org_struct_level_not_found": "Орган управления не выявлен",
+  "value_section_not_found": "Раздел о стоимости договора не обнаружен",
+  "contract_value_not_found": "Стоимость договора не найдена",
+  "subject_section_not_found": "Раздел о предмете договора не обнаружен",
+  "contract_subject_not_found": "Предмет договора не выявлен",
+  "contract_subject_section_not_found": "Раздел предмета договора не обнаружен",
+
+  "protocol_agenda_not_found": "Не обнаружен вопрос повестки дня",
+  "boring_agenda_questions": "Вопрос повестки дня не связать с договором"
+}

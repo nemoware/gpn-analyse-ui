@@ -1,1210 +1,1210 @@
 [
-    {
-        "filemtime": 1554131144.866334,
-        "short_filename": "Устав 2.docx",
-        "len": 52472,
-        "filename": "/Users/artem/work/nemo/goil/IN/Устав 2.docx",
-        "checksum": -7811076208327191734,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555431678.7092235,
-        "short_filename": "Устав - ГПН-Транспорт_ГОСА-2018.docx",
-        "len": 51806,
-        "filename": "/Users/artem/work/nemo/goil/IN/Устав - ГПН-Транспорт_ГОСА-2018.docx",
-        "checksum": -2513726906716432398,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550803258.0,
-        "short_filename": "Положение о филиале АО.docx",
-        "len": 8441,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Положение о филиале АО.docx",
-        "checksum": -5560616076102385783,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550804412.0,
-        "short_filename": "Изменения в Положение о филиале АО.docx",
-        "len": 1000,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Изменения в Положение о филиале АО.docx",
-        "checksum": -3577430927388930112,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550738912.0,
-        "short_filename": "Договор_ООО Зодчий_25 млн.$.docx",
-        "len": 128827,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/3 пп. 39 п. 19.1_сделка 25 млн. $ США/Договор_ООО Зодчий_25 млн.$.docx",
-        "checksum": -8132978789253179270,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1553487982.0,
-        "short_filename": "6.1.1(a) Project Tri-Neft - Sunrise Charter.docx",
-        "len": 197825,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/org.charter/6.1.1(a) Project Tri-Neft - Sunrise Charter.docx",
-        "checksum": -3610627322554857017,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550804462.0,
-        "short_filename": "Проект договора Пур адм.docx",
-        "len": 5663,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/2 пп. 38 п. 19.1_пожертвование/Проект договора Пур адм.docx",
-        "checksum": 3547318997228924362,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805594.0,
-        "short_filename": "Договор 8.docx",
-        "len": 10391,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 8.docx",
-        "checksum": -1342070554183842024,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461610.0,
-        "short_filename": "Протокол СД ГПН-Транспорт орг структура.docx",
-        "len": 2595,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол СД ГПН-Транспорт орг структура.docx",
-        "checksum": -2867393083199836209,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461432.0,
-        "short_filename": "Протокол ЗСД_ГПН-Транспорт.docx",
-        "len": 2436,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ЗСД_ГПН-Транспорт.docx",
-        "checksum": 5004428731650436858,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805450.0,
-        "short_filename": "Договор 4.docx",
-        "len": 10773,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 4.docx",
-        "checksum": -4705652318148823049,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805482.0,
-        "short_filename": "Договор 5.docx",
-        "len": 5779,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 5.docx",
-        "checksum": -1137358745340162485,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805630.0,
-        "short_filename": "ДОГОВОР 9.docx",
-        "len": 18904,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/ДОГОВОР 9.docx",
-        "checksum": -8552180183228545265,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805312.0,
-        "short_filename": "Договор 2.docx",
-        "len": 13422,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 2.docx",
-        "checksum": 149225597096228956,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461804.0,
-        "short_filename": "Протокол СД ГПН-Транспорт УПЦ.docx",
-        "len": 2346,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол СД ГПН-Транспорт УПЦ.docx",
-        "checksum": 2181730991500152220,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805742.0,
-        "short_filename": "Протокол ЗСД_ГПН-Транспорт смена.docx",
-        "len": 3068,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ЗСД_ГПН-Транспорт смена.docx",
-        "checksum": -6479399049216989041,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805398.0,
-        "short_filename": "Договор 3.docx",
-        "len": 10119,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 3.docx",
-        "checksum": 223646067328999333,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461104.0,
-        "short_filename": "Протокол ГПН-Транспорт 24.04.18.docx",
-        "len": 2798,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ГПН-Транспорт 24.04.18.docx",
-        "checksum": -5036878264686793351,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461762.0,
-        "short_filename": "Протокол СД ГПН-Транспорт упц 1ч+план.docx",
-        "len": 4346,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол СД ГПН-Транспорт упц 1ч+план.docx",
-        "checksum": 9124498986190214182,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461562.0,
-        "short_filename": "Протокол СД ГПН-Транспорт ГО.docx",
-        "len": 3294,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол СД ГПН-Транспорт ГО.docx",
-        "checksum": 368197568562013227,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550462072.0,
-        "short_filename": "Устав - ГПН-Транспорт_ГОСА-2018.docx",
-        "len": 51806,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Устав - ГПН-Транспорт_ГОСА-2018.docx",
-        "checksum": -2513726906716432398,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460554.0,
-        "short_filename": "Протокол ГПН-Транспорт 26.02.2019.docx",
-        "len": 1990,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ГПН-Транспорт 26.02.2019.docx",
-        "checksum": -7509815264338943109,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461922.0,
-        "short_filename": "Приложение 1 Договор_ГПН-Транспорт.docx",
-        "len": 44551,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Приложение 1 Договор_ГПН-Транспорт.docx",
-        "checksum": -6897857100950495178,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805512.0,
-        "short_filename": "Договор 6.docx",
-        "len": 5747,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 6.docx",
-        "checksum": -236772593442934468,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805162.0,
-        "short_filename": "Договор1.docx",
-        "len": 16160,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор1.docx",
-        "checksum": -8473080805510085263,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460778.0,
-        "short_filename": "Протокол ГПН-Транспорт 26.10.17.docx",
-        "len": 3444,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ГПН-Транспорт 26.10.17.docx",
-        "checksum": -2773308397373775745,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805558.0,
-        "short_filename": "договор 7.docx",
-        "len": 7042,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/договор 7.docx",
-        "checksum": 4771196475338506551,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550804590.0,
-        "short_filename": "Протокол СД_Половинная НБ и АЗС.docx",
-        "len": 4220,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Новосиб/Протокол СД_Половинная НБ и АЗС.docx",
-        "checksum": 8604811616379669245,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550804480.0,
-        "short_filename": "ДКП Половинной НБ и АЗС.docx",
-        "len": 16294,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Новосиб/ДКП Половинной НБ и АЗС.docx",
-        "checksum": -2003876036386393825,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550563860.0,
-        "short_filename": "2. Протокол заочного СД ГПН-РП.docx",
-        "len": 2495,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/2. Протокол заочного СД ГПН-РП.docx",
-        "checksum": -8523083825873897654,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550563860.0,
-        "short_filename": "1. Протокол заочного СД ГПН-РП_ДС банк.docx",
-        "len": 9151,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/1. Протокол заочного СД ГПН-РП_ДС банк.docx",
-        "checksum": -1763534706254623319,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806540.0,
-        "short_filename": "Договор выполнения работ_Петров.docx",
-        "len": 28060,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Договор выполнения работ_Петров.docx",
-        "checksum": 8588946110323077061,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806180.0,
-        "short_filename": "1. Доп. соглашение к Договору_фин.docx",
-        "len": 4629,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/1. Доп. соглашение к Договору_фин.docx",
-        "checksum": 8714719952197506456,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550560842.0,
-        "short_filename": "Договор аренды.docx",
-        "len": 24338,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Договор аренды.docx",
-        "checksum": 3408097449687574800,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550565646.0,
-        "short_filename": "Договор Формула.docx",
-        "len": 43059,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Договор Формула.docx",
-        "checksum": -8190215294646292112,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806310.0,
-        "short_filename": "Commercial Refuelling in Europe 2017 (ред 8.).docx",
-        "len": 7631,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Commercial Refuelling in Europe 2017 (ред 8.).docx",
-        "checksum": 894762787393474397,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806216.0,
-        "short_filename": "2. Договор по благ-ти Радуга.docx",
-        "len": 2907,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/2. Договор по благ-ти Радуга.docx",
-        "checksum": 3696531868793206813,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1533791716.0,
-        "short_filename": "Устав_Рег. продажи авг 2018.docx",
-        "len": 57020,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Устав_Рег. продажи авг 2018.docx",
-        "checksum": 5826024134378915114,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806454.0,
-        "short_filename": "дкп нефтебазы 1.docx",
-        "len": 11365,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/дкп нефтебазы 1.docx",
-        "checksum": 4333667798281947660,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550565690.0,
-        "short_filename": "ДОГОВОР_Детский дом.docx",
-        "len": 3530,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/ДОГОВОР_Детский дом.docx",
-        "checksum": 9104671149246462073,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550625346.0,
-        "short_filename": "7. Протокол заочного СД ГПН-РП БГ.docx",
-        "len": 10158,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/7. Протокол заочного СД ГПН-РП БГ.docx",
-        "checksum": 8327602332939812814,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550570152.0,
-        "short_filename": "3. Протокол заочного СД ГПН-РП.docx",
-        "len": 2343,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/3. Протокол заочного СД ГПН-РП.docx",
-        "checksum": -4094466172043567582,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550625504.0,
-        "short_filename": "3. Договор Олимп.docx",
-        "len": 4728,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/3. Договор Олимп.docx",
-        "checksum": -9153253576661079830,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550807168.0,
-        "short_filename": "5. договор Залога.docx",
-        "len": 19419,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/5. договор Залога.docx",
-        "checksum": -6286466080145135503,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550807242.0,
-        "short_filename": "5. Протокол заочного СД ГПН-РП.docx",
-        "len": 6665,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/5. Протокол заочного СД ГПН-РП.docx",
-        "checksum": -819726312780049702,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550807020.0,
-        "short_filename": "4. Договор Собственник.docx",
-        "len": 37731,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/4. Договор Собственник.docx",
-        "checksum": 1047358163911664031,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1533791716.0,
-        "short_filename": "Устав_Рег. продажи авг 2018.docx",
-        "len": 57020,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/Устав_Рег. продажи авг 2018.docx",
-        "checksum": 5826024134378915114,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550577544.0,
-        "short_filename": "6. Протокол заочного СД ГПН-РП.docx",
-        "len": 3587,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/6. Протокол заочного СД ГПН-РП.docx",
-        "checksum": 26497126518478145,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550807516.0,
-        "short_filename": "6. ДОГОВОР аренда.docx",
-        "len": 17841,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/6. ДОГОВОР аренда.docx",
-        "checksum": 2935060001683516333,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550807002.0,
-        "short_filename": "4. Протокол заочного СД ГПН-РП.docx",
-        "len": 4235,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/4. Протокол заочного СД ГПН-РП.docx",
-        "checksum": -9127439967011569116,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554955974.0,
-        "short_filename": "МНГ4 Проект договора МНГ благотворительность.docx",
-        "len": 4479,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ4 Проект договора МНГ благотворительность.docx",
-        "checksum": 8973264825394469556,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554955348.0,
-        "short_filename": "ЕЮ Протокол заочного СД (крупн).docx",
-        "len": 3045,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ Протокол заочного СД (крупн).docx",
-        "checksum": -6354114266999965192,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554957982.0,
-        "short_filename": "ЕЮ2 Договор пожертвования (получатель).docx",
-        "len": 4545,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ2 Договор пожертвования (получатель).docx",
-        "checksum": 4477395056172965889,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554956972.0,
-        "short_filename": "МНГ1 Договор купли-продажи АЗС № 24.docx",
-        "len": 12060,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ1 Договор купли-продажи АЗС № 24.docx",
-        "checksum": -2345825901735895671,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554957338.0,
-        "short_filename": "МНГ1 Протокол МНГ_продажа АЗС.docx",
-        "len": 3960,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ1 Протокол МНГ_продажа АЗС.docx",
-        "checksum": 8516460235628748490,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554956276.0,
-        "short_filename": "МНГ2 ДС к Договору МНГ к-п.docx",
-        "len": 1632,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ2 ДС к Договору МНГ к-п.docx",
-        "checksum": -2092173392968175288,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554956612.0,
-        "short_filename": "МНГ3 Договор МНГ Пожертвование.docx",
-        "len": 11789,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ3 Договор МНГ Пожертвование.docx",
-        "checksum": -1019349718213896626,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554957828.0,
-        "short_filename": "ЕЮ2 Протокол заочного СД_благотворительность.docx",
-        "len": 1834,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ2 Протокол заочного СД_благотворительность.docx",
-        "checksum": 1633827727894636980,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1553488350.0,
-        "short_filename": "ЕЮ Устав.docx",
-        "len": 149039,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ Устав.docx",
-        "checksum": -1938105572060511536,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554957738.0,
-        "short_filename": "ЕЮ2 Договор пожертвования (одаряемый).docx",
-        "len": 4539,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ2 Договор пожертвования (одаряемый).docx",
-        "checksum": -403479450714408830,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554961448.0,
-        "short_filename": "МНГ Устав.docx",
-        "len": 71981,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ Устав.docx",
-        "checksum": 8371670314288502529,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554371302.0,
-        "short_filename": "2. Договор_благотворительность_неверный.docx",
-        "len": 4700,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/2. Договор_благотворительность_неверный.docx",
-        "checksum": -3863523774352653729,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1551427080.0,
-        "short_filename": "1. Протокол_благотворительность_верный.docx",
-        "len": 2343,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/1. Протокол_благотворительность_верный.docx",
-        "checksum": -4094466172043567582,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554374072.0,
-        "short_filename": "4. Договор купли-продажи_неверный.docx",
-        "len": 16569,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/4. Договор купли-продажи_неверный.docx",
-        "checksum": 4856654505509500650,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554374038.0,
-        "short_filename": "4. Протокол купли-продажи_неверный.docx",
-        "len": 3908,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/4. Протокол купли-продажи_неверный.docx",
-        "checksum": -2125411076830925299,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554373824.0,
-        "short_filename": "3. Договор купли-продажи_верный.docx",
-        "len": 11022,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/3. Договор купли-продажи_верный.docx",
-        "checksum": 7108855742760666478,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554374036.0,
-        "short_filename": "5. ДОГОВОР_благотворительность_неверный.docx",
-        "len": 3529,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/5. ДОГОВОР_благотворительность_неверный.docx",
-        "checksum": -4786849745344116828,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1551427080.0,
-        "short_filename": "Устав_Рег. продажи авг 2018.docx",
-        "len": 57020,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/Устав_Рег. продажи авг 2018.docx",
-        "checksum": 5826024134378915114,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1551427080.0,
-        "short_filename": "1. Договор_благотворительность_верный.docx",
-        "len": 4728,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/1. Договор_благотворительность_верный.docx",
-        "checksum": -9153253576661079830,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460920.0,
-        "short_filename": "Договор 8.docx",
-        "len": 11166,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 8.docx",
-        "checksum": -1991234887222968811,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461610.0,
-        "short_filename": "Протокол СД ГПН-Транспорт орг структура.docx",
-        "len": 2595,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД ГПН-Транспорт орг структура.docx",
-        "checksum": -2867393083199836209,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461432.0,
-        "short_filename": "Протокол ЗСД_ГПН-Транспорт.docx",
-        "len": 2436,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ЗСД_ГПН-Транспорт.docx",
-        "checksum": 5004428731650436858,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460444.0,
-        "short_filename": "Договор 4.docx",
-        "len": 11595,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 4.docx",
-        "checksum": 1056845012465925054,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460560.0,
-        "short_filename": "Договор 5.docx",
-        "len": 6604,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 5.docx",
-        "checksum": -797551671207959002,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461092.0,
-        "short_filename": "ДОГОВОР 9.docx",
-        "len": 20034,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/ДОГОВОР 9.docx",
-        "checksum": 6271571753930457994,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460072.0,
-        "short_filename": "Договор 2.docx",
-        "len": 15381,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 2.docx",
-        "checksum": -4015255971387023853,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461804.0,
-        "short_filename": "Протокол СД ГПН-Транспорт УПЦ.docx",
-        "len": 2346,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД ГПН-Транспорт УПЦ.docx",
-        "checksum": 2181730991500152220,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461070.0,
-        "short_filename": "Протокол ЗСД_ГПН-Транспорт смена.docx",
-        "len": 3188,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ЗСД_ГПН-Транспорт смена.docx",
-        "checksum": -603880645851134759,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460238.0,
-        "short_filename": "Договор 3.docx",
-        "len": 11371,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 3.docx",
-        "checksum": -3209381593697221862,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461104.0,
-        "short_filename": "Протокол ГПН-Транспорт 24.04.18.docx",
-        "len": 2798,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ГПН-Транспорт 24.04.18.docx",
-        "checksum": -5036878264686793351,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550467306.0,
-        "short_filename": "Протокол СД_Половинная НБ и АЗС-59.docx",
-        "len": 15106,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД_Половинная НБ и АЗС-59.docx",
-        "checksum": 2974510501290093054,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461762.0,
-        "short_filename": "Протокол СД ГПН-Транспорт упц 1ч+план.docx",
-        "len": 4346,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД ГПН-Транспорт упц 1ч+план.docx",
-        "checksum": 9124498986190214182,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461562.0,
-        "short_filename": "Протокол СД ГПН-Транспорт ГО.docx",
-        "len": 3294,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД ГПН-Транспорт ГО.docx",
-        "checksum": 368197568562013227,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550462072.0,
-        "short_filename": "Устав - ГПН-Транспорт_ГОСА-2018.docx",
-        "len": 51806,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Устав - ГПН-Транспорт_ГОСА-2018.docx",
-        "checksum": -2513726906716432398,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550467266.0,
-        "short_filename": "ДКП Половинной НБ и АЗС59.docx",
-        "len": 28476,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/ДКП Половинной НБ и АЗС59.docx",
-        "checksum": 2304923110446042373,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460554.0,
-        "short_filename": "Протокол ГПН-Транспорт 26.02.2019.docx",
-        "len": 1990,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ГПН-Транспорт 26.02.2019.docx",
-        "checksum": -7509815264338943109,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550461922.0,
-        "short_filename": "Приложение 1 Договор_ГПН-Транспорт.docx",
-        "len": 44551,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Приложение 1 Договор_ГПН-Транспорт.docx",
-        "checksum": -6897857100950495178,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460628.0,
-        "short_filename": "Договор 6.docx",
-        "len": 7004,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 6.docx",
-        "checksum": 1799958607033043663,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550459996.0,
-        "short_filename": "Договор1.docx",
-        "len": 17237,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор1.docx",
-        "checksum": -2789371361005764349,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460778.0,
-        "short_filename": "Протокол ГПН-Транспорт 26.10.17.docx",
-        "len": 3444,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ГПН-Транспорт 26.10.17.docx",
-        "checksum": -2773308397373775745,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550460710.0,
-        "short_filename": "договор 7.docx",
-        "len": 8013,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/договор 7.docx",
-        "checksum": -8151535954605469957,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1562145670.0,
-        "short_filename": "Договор выполнения работ_Петров.docx",
-        "len": 27888,
-        "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Договор выполнения работ_Петров.docx",
-        "checksum": -2529798262184227735,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1562145714.0,
-        "short_filename": "Договор аренды.docx",
-        "len": 24319,
-        "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Договор аренды.docx",
-        "checksum": -3775460457355011982,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1562145892.0,
-        "short_filename": "Договор Формула.docx",
-        "len": 42964,
-        "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Договор Формула.docx",
-        "checksum": 1938421908739637119,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555577212.0,
-        "short_filename": "МНПЗ Устав.docx",
-        "len": 47033,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ Устав.docx",
-        "checksum": 2365933262535088423,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555644794.0,
-        "short_filename": "ГПН 1 Протокол СД (к-п недвиж Н).docx",
-        "len": 4131,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 1 Протокол СД (к-п недвиж Н).docx",
-        "checksum": -4085113851051709649,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555642932.0,
-        "short_filename": "МНПЗ 1 Договор целевого пожертвования ДО ГПН - ФОНД 2019_Умножая таланты_.docx",
-        "len": 4728,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 1 Договор целевого пожертвования ДО ГПН - ФОНД 2019_Умножая таланты_.docx",
-        "checksum": -2382831340841208193,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555644590.0,
-        "short_filename": "ГПН 1 договор к-п Н.docx",
-        "len": 8782,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 1 договор к-п Н.docx",
-        "checksum": -7531808729415015280,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555643254.0,
-        "short_filename": "МНПЗ 2 Договор купли-продажи недвижимого имущества.docx",
-        "len": 19498,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 2 Договор купли-продажи недвижимого имущества.docx",
-        "checksum": -7982548981934290617,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555643784.0,
-        "short_filename": "МНПЗ 3 Протокол_дарение ДС №135.docx",
-        "len": 4818,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 3 Протокол_дарение ДС №135.docx",
-        "checksum": -2046660319974319403,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1552443918.0,
-        "short_filename": "ГПН Устав.docx",
-        "len": 52465,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН Устав.docx",
-        "checksum": 8911210423550101226,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555578072.0,
-        "short_filename": "яМессояха Устава.docx",
-        "len": 71134,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/яМессояха Устава.docx",
-        "checksum": 5337526653326974453,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555644752.0,
-        "short_filename": "ГПН 2 Протокол СД (к-п недвиж НПр).docx",
-        "len": 3671,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 2 Протокол СД (к-п недвиж НПр).docx",
-        "checksum": -486324017310067408,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555644904.0,
-        "short_filename": "ГПН 3 Протокол заочного СД (пожертвование).docx",
-        "len": 3722,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 3 Протокол заочного СД (пожертвование).docx",
-        "checksum": -4999759900502994514,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555317264.0,
-        "short_filename": "яМессояха Договор безвозмездного пользования неж. помещ..docx",
-        "len": 7594,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/яМессояха Договор безвозмездного пользования неж. помещ..docx",
-        "checksum": 3581879164764133416,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555644660.0,
-        "short_filename": "ГПН 2 договор к-п НПр.docx",
-        "len": 8561,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 2 договор к-п НПр.docx",
-        "checksum": 2249745661370686032,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550201105.489862,
-        "short_filename": "20150515dogusl.doc",
-        "len": 8188,
-        "filename": "/Users/artem/work/nemo/goil/IN/20150515dogusl.doc",
-        "checksum": -6828589638192197174,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554131144.326687,
-        "short_filename": "Устав ООО.doc",
-        "len": 58487,
-        "filename": "/Users/artem/work/nemo/goil/IN/Устав ООО.doc",
-        "checksum": 2857686587467279037,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550803430.0,
-        "short_filename": "Протокол_МНГ_изм. в положение о филиале.doc",
-        "len": 3128,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Протокол_МНГ_изм. в положение о филиале.doc",
-        "checksum": -4892530913623105424,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550803866.0,
-        "short_filename": "Протокол_МНГ_ликв. филиала.doc",
-        "len": 3110,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Протокол_МНГ_ликв. филиала.doc",
-        "checksum": -1511719674812227932,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550743526.0,
-        "short_filename": "Протокол_МНГ_созд. филиала.doc",
-        "len": 4308,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Протокол_МНГ_созд. филиала.doc",
-        "checksum": -4697414126465635687,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550803748.0,
-        "short_filename": "Протокол_МНГ_прекр. полном. директора филиала.doc",
-        "len": 3186,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Протокол_МНГ_прекр. полном. директора филиала.doc",
-        "checksum": 555321068177223720,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550807176.0,
-        "short_filename": "Протокол_МНГ_ООО Зодчий.doc",
-        "len": 5829,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/3 пп. 39 п. 19.1_сделка 25 млн. $ США/Протокол_МНГ_ООО Зодчий.doc",
-        "checksum": -6614986843238323483,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1553487942.0,
-        "short_filename": "Устав_ООО ЮП ГПЗ_ред 5.doc",
-        "len": 84108,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/org.charter/Устав_ООО ЮП ГПЗ_ред 5.doc",
-        "checksum": -8983614120905279881,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1553488010.0,
-        "short_filename": "Новая редакция Устава.doc",
-        "len": 48492,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/org.charter/Новая редакция Устава.doc",
-        "checksum": 6061487049173478172,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806930.0,
-        "short_filename": "Протокол_МНГ_пожертв. Пур адм.doc",
-        "len": 5025,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/2 пп. 38 п. 19.1_пожертвование/Протокол_МНГ_пожертв. Пур адм.doc",
-        "checksum": -3943381613784409064,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550807550.0,
-        "short_filename": "Договор хранения нефти_ХранТрансНефть.doc",
-        "len": 28559,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/5 пп. 43 п.19.1_сделки с нефтью/Договор хранения нефти_ХранТрансНефть.doc",
-        "checksum": -7665188232087768733,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550807710.0,
-        "short_filename": "Протокол_МНГ_ХранТрансНефть.doc",
-        "len": 9598,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/5 пп. 43 п.19.1_сделки с нефтью/Протокол_МНГ_ХранТрансНефть.doc",
-        "checksum": -5095668543123873902,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550469424.0,
-        "short_filename": "Устав ГПН-Новосибирск (НБ)_с СД.doc",
-        "len": 58433,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Новосиб/Устав ГПН-Новосибирск (НБ)_с СД.doc",
-        "checksum": 6585877161330692439,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806044.0,
-        "short_filename": "Проект договора ООО Чудеса.doc",
-        "len": 11330,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Проект договора ООО Чудеса.doc",
-        "checksum": -2474000485013624140,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550548760.0,
-        "short_filename": "Протокол_ГПН-КП_БГ Открытие.doc",
-        "len": 5420,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Протокол_ГПН-КП_БГ Открытие.doc",
-        "checksum": -3655812872317971723,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805954.0,
-        "short_filename": "Проект договора ООО Зеленые.doc",
-        "len": 11831,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Проект договора ООО Зеленые.doc",
-        "checksum": 4882662019268011986,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550805922.0,
-        "short_filename": "Доп.согл3 Доверие.doc",
-        "len": 4994,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Доп.согл3 Доверие.doc",
-        "checksum": -5315189403982784023,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550548760.0,
-        "short_filename": "Протокол_ГПН-КП_Зеленые.doc",
-        "len": 3696,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Протокол_ГПН-КП_Зеленые.doc",
-        "checksum": -6326168410665146544,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550548760.0,
-        "short_filename": "Протокол_ГПН-КП_БГ Доверие.doc",
-        "len": 8409,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Протокол_ГПН-КП_БГ Доверие.doc",
-        "checksum": 742979161333047041,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806108.0,
-        "short_filename": "Соглашение БГ Открытие.doc",
-        "len": 39013,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Соглашение БГ Открытие.doc",
-        "checksum": -2459695774598569233,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550548760.0,
-        "short_filename": "Устав ГПН-КП_ГОСУ-2018_сентябрь end.doc",
-        "len": 59812,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Устав ГПН-КП_ГОСУ-2018_сентябрь end.doc",
-        "checksum": 2823079319729531699,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550548760.0,
-        "short_filename": "Протокол_ГПН-КП_Чудеса.doc",
-        "len": 3670,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Протокол_ГПН-КП_Чудеса.doc",
-        "checksum": -414414529652480637,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550565690.0,
-        "short_filename": "Протокол_ГПН-КП_Формула.doc",
-        "len": 4098,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_Формула.doc",
-        "checksum": -6411720846085902609,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550565690.0,
-        "short_filename": "Протокол_ГПН-КП_отчет.doc",
-        "len": 4648,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_отчет.doc",
-        "checksum": 6854754079973181537,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550565690.0,
-        "short_filename": "Протокол_ГПН-КП_аренда офиса.doc",
-        "len": 4579,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_аренда офиса.doc",
-        "checksum": -7291729154963664545,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550565690.0,
-        "short_filename": "Протокол_ГПН-КП_Детский.doc",
-        "len": 3572,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_Детский.doc",
-        "checksum": -7751445643350452864,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806696.0,
-        "short_filename": "Протокол_ООО Вектор продажа недвиж.doc",
-        "len": 7981,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ООО Вектор продажа недвиж.doc",
-        "checksum": -2083287979228845079,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550565690.0,
-        "short_filename": "Протокол_ГПН-КП_SS Петров.doc",
-        "len": 4401,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_SS Петров.doc",
-        "checksum": -8065627454295235698,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550626124.0,
-        "short_filename": "7. Соглашение БГ Газпромнефть-Региональные продажи.doc",
-        "len": 47387,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/7. Соглашение БГ Газпромнефть-Региональные продажи.doc",
-        "checksum": 2696757246801275095,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550806852.0,
-        "short_filename": "Протокол_МНГ_Парацельс.doc",
-        "len": 7537,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/4 пп. 36 п. 19.1_купля-продажа НИ/Протокол_МНГ_Парацельс.doc",
-        "checksum": -3119571602318734614,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550740674.0,
-        "short_filename": "Договор купли-продажи_ООО Парацельс.doc",
-        "len": 16810,
-        "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/4 пп. 36 п. 19.1_купля-продажа НИ/Договор купли-продажи_ООО Парацельс.doc",
-        "checksum": 4213204483680132842,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554956478.0,
-        "short_filename": "МНГ2 Протокол МНГ сделка выше 25 млн.руб.doc",
-        "len": 3235,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ2 Протокол МНГ сделка выше 25 млн.руб.doc",
-        "checksum": 8551702048310101315,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554956128.0,
-        "short_filename": "МНГ4 Протокол_МНГ_пожертв..doc",
-        "len": 3139,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ4 Протокол_МНГ_пожертв..doc",
-        "checksum": 8993023410513446181,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554955616.0,
-        "short_filename": "ЕЮ Договор Купля-продажа.doc",
-        "len": 5984,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ Договор Купля-продажа.doc",
-        "checksum": 7017994511445604452,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554956708.0,
-        "short_filename": "МНГ3 Протокол_ГПН-МНПЗ благотвор.doc",
-        "len": 3052,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ3 Протокол_ГПН-МНПЗ благотвор.doc",
-        "checksum": 6164338116787343970,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554374076.0,
-        "short_filename": "3. Протокол купли-продажи_верный.doc",
-        "len": 8151,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/3. Протокол купли-продажи_верный.doc",
-        "checksum": -2336196051946683461,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1554374034.0,
-        "short_filename": "5. Протокол_благотворительность_неверный.doc",
-        "len": 3562,
-        "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/5. Протокол_благотворительность_неверный.doc",
-        "checksum": 4021176473834100840,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1550469406.0,
-        "short_filename": "Устав ГПН-Новосибирск (НБ)_с СД.doc",
-        "len": 58433,
-        "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Устав ГПН-Новосибирск (НБ)_с СД.doc",
-        "checksum": 6585877161330692439,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1562146130.0,
-        "short_filename": "Протокол_ГПН-КП_Формула.doc",
-        "len": 4022,
-        "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Протокол_ГПН-КП_Формула.doc",
-        "checksum": 1633008791931808666,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1562145994.0,
-        "short_filename": "Протокол_ГПН-КП_аренда офиса.doc",
-        "len": 4280,
-        "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Протокол_ГПН-КП_аренда офиса.doc",
-        "checksum": 8149881286313032636,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1562146084.0,
-        "short_filename": "Протокол_ГПН-КП_SS Петров.doc",
-        "len": 4088,
-        "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Протокол_ГПН-КП_SS Петров.doc",
-        "checksum": -2780218840109228360,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555643706.0,
-        "short_filename": "МНПЗ 3 Протокол_МНГ_дарение ДС №135.doc",
-        "len": 3221,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 3 Протокол_МНГ_дарение ДС №135.doc",
-        "checksum": -889460588741259840,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555644920.0,
-        "short_filename": "ГПН 3 Договор пожертвования 21.02.2019.doc",
-        "len": 7200,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 3 Договор пожертвования 21.02.2019.doc",
-        "checksum": 2209509876374593254,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555573380.0,
-        "short_filename": "МНПЗ 1 Протокол_ГПН-МНПЗ благотвор.doc",
-        "len": 4486,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 1 Протокол_ГПН-МНПЗ благотвор.doc",
-        "checksum": 3554292541738317554,
-        "analyse": {}
-    },
-    {
-        "filemtime": 1555643260.0,
-        "short_filename": "МНПЗ 2 Протокол_ГПН-МНПЗ продажа недв.doc",
-        "len": 4712,
-        "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 2 Протокол_ГПН-МНПЗ продажа недв.doc",
-        "checksum": 7344458945719413997,
-        "analyse": {}
-    }
+  {
+    "filemtime": 1554131144.866334,
+    "short_filename": "Устав 2.docx",
+    "len": 52472,
+    "filename": "/Users/artem/work/nemo/goil/IN/Устав 2.docx",
+    "checksum": -7811076208327191734,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555431678.7092235,
+    "short_filename": "Устав - ГПН-Транспорт_ГОСА-2018.docx",
+    "len": 51806,
+    "filename": "/Users/artem/work/nemo/goil/IN/Устав - ГПН-Транспорт_ГОСА-2018.docx",
+    "checksum": -2513726906716432398,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550803258.0,
+    "short_filename": "Положение о филиале АО.docx",
+    "len": 8441,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Положение о филиале АО.docx",
+    "checksum": -5560616076102385783,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550804412.0,
+    "short_filename": "Изменения в Положение о филиале АО.docx",
+    "len": 1000,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Изменения в Положение о филиале АО.docx",
+    "checksum": -3577430927388930112,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550738912.0,
+    "short_filename": "Договор_ООО Зодчий_25 млн.$.docx",
+    "len": 128827,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/3 пп. 39 п. 19.1_сделка 25 млн. $ США/Договор_ООО Зодчий_25 млн.$.docx",
+    "checksum": -8132978789253179270,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1553487982.0,
+    "short_filename": "6.1.1(a) Project Tri-Neft - Sunrise Charter.docx",
+    "len": 197825,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/org.charter/6.1.1(a) Project Tri-Neft - Sunrise Charter.docx",
+    "checksum": -3610627322554857017,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550804462.0,
+    "short_filename": "Проект договора Пур адм.docx",
+    "len": 5663,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/2 пп. 38 п. 19.1_пожертвование/Проект договора Пур адм.docx",
+    "checksum": 3547318997228924362,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805594.0,
+    "short_filename": "Договор 8.docx",
+    "len": 10391,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 8.docx",
+    "checksum": -1342070554183842024,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461610.0,
+    "short_filename": "Протокол СД ГПН-Транспорт орг структура.docx",
+    "len": 2595,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол СД ГПН-Транспорт орг структура.docx",
+    "checksum": -2867393083199836209,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461432.0,
+    "short_filename": "Протокол ЗСД_ГПН-Транспорт.docx",
+    "len": 2436,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ЗСД_ГПН-Транспорт.docx",
+    "checksum": 5004428731650436858,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805450.0,
+    "short_filename": "Договор 4.docx",
+    "len": 10773,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 4.docx",
+    "checksum": -4705652318148823049,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805482.0,
+    "short_filename": "Договор 5.docx",
+    "len": 5779,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 5.docx",
+    "checksum": -1137358745340162485,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805630.0,
+    "short_filename": "ДОГОВОР 9.docx",
+    "len": 18904,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/ДОГОВОР 9.docx",
+    "checksum": -8552180183228545265,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805312.0,
+    "short_filename": "Договор 2.docx",
+    "len": 13422,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 2.docx",
+    "checksum": 149225597096228956,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461804.0,
+    "short_filename": "Протокол СД ГПН-Транспорт УПЦ.docx",
+    "len": 2346,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол СД ГПН-Транспорт УПЦ.docx",
+    "checksum": 2181730991500152220,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805742.0,
+    "short_filename": "Протокол ЗСД_ГПН-Транспорт смена.docx",
+    "len": 3068,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ЗСД_ГПН-Транспорт смена.docx",
+    "checksum": -6479399049216989041,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805398.0,
+    "short_filename": "Договор 3.docx",
+    "len": 10119,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 3.docx",
+    "checksum": 223646067328999333,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461104.0,
+    "short_filename": "Протокол ГПН-Транспорт 24.04.18.docx",
+    "len": 2798,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ГПН-Транспорт 24.04.18.docx",
+    "checksum": -5036878264686793351,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461762.0,
+    "short_filename": "Протокол СД ГПН-Транспорт упц 1ч+план.docx",
+    "len": 4346,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол СД ГПН-Транспорт упц 1ч+план.docx",
+    "checksum": 9124498986190214182,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461562.0,
+    "short_filename": "Протокол СД ГПН-Транспорт ГО.docx",
+    "len": 3294,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол СД ГПН-Транспорт ГО.docx",
+    "checksum": 368197568562013227,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550462072.0,
+    "short_filename": "Устав - ГПН-Транспорт_ГОСА-2018.docx",
+    "len": 51806,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Устав - ГПН-Транспорт_ГОСА-2018.docx",
+    "checksum": -2513726906716432398,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460554.0,
+    "short_filename": "Протокол ГПН-Транспорт 26.02.2019.docx",
+    "len": 1990,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ГПН-Транспорт 26.02.2019.docx",
+    "checksum": -7509815264338943109,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461922.0,
+    "short_filename": "Приложение 1 Договор_ГПН-Транспорт.docx",
+    "len": 44551,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Приложение 1 Договор_ГПН-Транспорт.docx",
+    "checksum": -6897857100950495178,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805512.0,
+    "short_filename": "Договор 6.docx",
+    "len": 5747,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор 6.docx",
+    "checksum": -236772593442934468,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805162.0,
+    "short_filename": "Договор1.docx",
+    "len": 16160,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Договор1.docx",
+    "checksum": -8473080805510085263,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460778.0,
+    "short_filename": "Протокол ГПН-Транспорт 26.10.17.docx",
+    "len": 3444,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/Протокол ГПН-Транспорт 26.10.17.docx",
+    "checksum": -2773308397373775745,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805558.0,
+    "short_filename": "договор 7.docx",
+    "len": 7042,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Транспорт/договор 7.docx",
+    "checksum": 4771196475338506551,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550804590.0,
+    "short_filename": "Протокол СД_Половинная НБ и АЗС.docx",
+    "len": 4220,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Новосиб/Протокол СД_Половинная НБ и АЗС.docx",
+    "checksum": 8604811616379669245,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550804480.0,
+    "short_filename": "ДКП Половинной НБ и АЗС.docx",
+    "len": 16294,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Новосиб/ДКП Половинной НБ и АЗС.docx",
+    "checksum": -2003876036386393825,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550563860.0,
+    "short_filename": "2. Протокол заочного СД ГПН-РП.docx",
+    "len": 2495,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/2. Протокол заочного СД ГПН-РП.docx",
+    "checksum": -8523083825873897654,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550563860.0,
+    "short_filename": "1. Протокол заочного СД ГПН-РП_ДС банк.docx",
+    "len": 9151,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/1. Протокол заочного СД ГПН-РП_ДС банк.docx",
+    "checksum": -1763534706254623319,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806540.0,
+    "short_filename": "Договор выполнения работ_Петров.docx",
+    "len": 28060,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Договор выполнения работ_Петров.docx",
+    "checksum": 8588946110323077061,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806180.0,
+    "short_filename": "1. Доп. соглашение к Договору_фин.docx",
+    "len": 4629,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/1. Доп. соглашение к Договору_фин.docx",
+    "checksum": 8714719952197506456,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550560842.0,
+    "short_filename": "Договор аренды.docx",
+    "len": 24338,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Договор аренды.docx",
+    "checksum": 3408097449687574800,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550565646.0,
+    "short_filename": "Договор Формула.docx",
+    "len": 43059,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Договор Формула.docx",
+    "checksum": -8190215294646292112,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806310.0,
+    "short_filename": "Commercial Refuelling in Europe 2017 (ред 8.).docx",
+    "len": 7631,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Commercial Refuelling in Europe 2017 (ред 8.).docx",
+    "checksum": 894762787393474397,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806216.0,
+    "short_filename": "2. Договор по благ-ти Радуга.docx",
+    "len": 2907,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/2. Договор по благ-ти Радуга.docx",
+    "checksum": 3696531868793206813,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1533791716.0,
+    "short_filename": "Устав_Рег. продажи авг 2018.docx",
+    "len": 57020,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Устав_Рег. продажи авг 2018.docx",
+    "checksum": 5826024134378915114,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806454.0,
+    "short_filename": "дкп нефтебазы 1.docx",
+    "len": 11365,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/дкп нефтебазы 1.docx",
+    "checksum": 4333667798281947660,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550565690.0,
+    "short_filename": "ДОГОВОР_Детский дом.docx",
+    "len": 3530,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/ДОГОВОР_Детский дом.docx",
+    "checksum": 9104671149246462073,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550625346.0,
+    "short_filename": "7. Протокол заочного СД ГПН-РП БГ.docx",
+    "len": 10158,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/7. Протокол заочного СД ГПН-РП БГ.docx",
+    "checksum": 8327602332939812814,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550570152.0,
+    "short_filename": "3. Протокол заочного СД ГПН-РП.docx",
+    "len": 2343,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/3. Протокол заочного СД ГПН-РП.docx",
+    "checksum": -4094466172043567582,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550625504.0,
+    "short_filename": "3. Договор Олимп.docx",
+    "len": 4728,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/3. Договор Олимп.docx",
+    "checksum": -9153253576661079830,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550807168.0,
+    "short_filename": "5. договор Залога.docx",
+    "len": 19419,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/5. договор Залога.docx",
+    "checksum": -6286466080145135503,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550807242.0,
+    "short_filename": "5. Протокол заочного СД ГПН-РП.docx",
+    "len": 6665,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/5. Протокол заочного СД ГПН-РП.docx",
+    "checksum": -819726312780049702,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550807020.0,
+    "short_filename": "4. Договор Собственник.docx",
+    "len": 37731,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/4. Договор Собственник.docx",
+    "checksum": 1047358163911664031,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1533791716.0,
+    "short_filename": "Устав_Рег. продажи авг 2018.docx",
+    "len": 57020,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/Устав_Рег. продажи авг 2018.docx",
+    "checksum": 5826024134378915114,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550577544.0,
+    "short_filename": "6. Протокол заочного СД ГПН-РП.docx",
+    "len": 3587,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/6. Протокол заочного СД ГПН-РП.docx",
+    "checksum": 26497126518478145,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550807516.0,
+    "short_filename": "6. ДОГОВОР аренда.docx",
+    "len": 17841,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/6. ДОГОВОР аренда.docx",
+    "checksum": 2935060001683516333,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550807002.0,
+    "short_filename": "4. Протокол заочного СД ГПН-РП.docx",
+    "len": 4235,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/4. Протокол заочного СД ГПН-РП.docx",
+    "checksum": -9127439967011569116,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554955974.0,
+    "short_filename": "МНГ4 Проект договора МНГ благотворительность.docx",
+    "len": 4479,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ4 Проект договора МНГ благотворительность.docx",
+    "checksum": 8973264825394469556,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554955348.0,
+    "short_filename": "ЕЮ Протокол заочного СД (крупн).docx",
+    "len": 3045,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ Протокол заочного СД (крупн).docx",
+    "checksum": -6354114266999965192,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554957982.0,
+    "short_filename": "ЕЮ2 Договор пожертвования (получатель).docx",
+    "len": 4545,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ2 Договор пожертвования (получатель).docx",
+    "checksum": 4477395056172965889,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554956972.0,
+    "short_filename": "МНГ1 Договор купли-продажи АЗС № 24.docx",
+    "len": 12060,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ1 Договор купли-продажи АЗС № 24.docx",
+    "checksum": -2345825901735895671,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554957338.0,
+    "short_filename": "МНГ1 Протокол МНГ_продажа АЗС.docx",
+    "len": 3960,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ1 Протокол МНГ_продажа АЗС.docx",
+    "checksum": 8516460235628748490,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554956276.0,
+    "short_filename": "МНГ2 ДС к Договору МНГ к-п.docx",
+    "len": 1632,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ2 ДС к Договору МНГ к-п.docx",
+    "checksum": -2092173392968175288,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554956612.0,
+    "short_filename": "МНГ3 Договор МНГ Пожертвование.docx",
+    "len": 11789,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ3 Договор МНГ Пожертвование.docx",
+    "checksum": -1019349718213896626,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554957828.0,
+    "short_filename": "ЕЮ2 Протокол заочного СД_благотворительность.docx",
+    "len": 1834,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ2 Протокол заочного СД_благотворительность.docx",
+    "checksum": 1633827727894636980,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1553488350.0,
+    "short_filename": "ЕЮ Устав.docx",
+    "len": 149039,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ Устав.docx",
+    "checksum": -1938105572060511536,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554957738.0,
+    "short_filename": "ЕЮ2 Договор пожертвования (одаряемый).docx",
+    "len": 4539,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ2 Договор пожертвования (одаряемый).docx",
+    "checksum": -403479450714408830,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554961448.0,
+    "short_filename": "МНГ Устав.docx",
+    "len": 71981,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ Устав.docx",
+    "checksum": 8371670314288502529,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554371302.0,
+    "short_filename": "2. Договор_благотворительность_неверный.docx",
+    "len": 4700,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/2. Договор_благотворительность_неверный.docx",
+    "checksum": -3863523774352653729,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1551427080.0,
+    "short_filename": "1. Протокол_благотворительность_верный.docx",
+    "len": 2343,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/1. Протокол_благотворительность_верный.docx",
+    "checksum": -4094466172043567582,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554374072.0,
+    "short_filename": "4. Договор купли-продажи_неверный.docx",
+    "len": 16569,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/4. Договор купли-продажи_неверный.docx",
+    "checksum": 4856654505509500650,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554374038.0,
+    "short_filename": "4. Протокол купли-продажи_неверный.docx",
+    "len": 3908,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/4. Протокол купли-продажи_неверный.docx",
+    "checksum": -2125411076830925299,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554373824.0,
+    "short_filename": "3. Договор купли-продажи_верный.docx",
+    "len": 11022,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/3. Договор купли-продажи_верный.docx",
+    "checksum": 7108855742760666478,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554374036.0,
+    "short_filename": "5. ДОГОВОР_благотворительность_неверный.docx",
+    "len": 3529,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/5. ДОГОВОР_благотворительность_неверный.docx",
+    "checksum": -4786849745344116828,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1551427080.0,
+    "short_filename": "Устав_Рег. продажи авг 2018.docx",
+    "len": 57020,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/Устав_Рег. продажи авг 2018.docx",
+    "checksum": 5826024134378915114,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1551427080.0,
+    "short_filename": "1. Договор_благотворительность_верный.docx",
+    "len": 4728,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/1. Договор_благотворительность_верный.docx",
+    "checksum": -9153253576661079830,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460920.0,
+    "short_filename": "Договор 8.docx",
+    "len": 11166,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 8.docx",
+    "checksum": -1991234887222968811,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461610.0,
+    "short_filename": "Протокол СД ГПН-Транспорт орг структура.docx",
+    "len": 2595,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД ГПН-Транспорт орг структура.docx",
+    "checksum": -2867393083199836209,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461432.0,
+    "short_filename": "Протокол ЗСД_ГПН-Транспорт.docx",
+    "len": 2436,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ЗСД_ГПН-Транспорт.docx",
+    "checksum": 5004428731650436858,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460444.0,
+    "short_filename": "Договор 4.docx",
+    "len": 11595,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 4.docx",
+    "checksum": 1056845012465925054,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460560.0,
+    "short_filename": "Договор 5.docx",
+    "len": 6604,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 5.docx",
+    "checksum": -797551671207959002,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461092.0,
+    "short_filename": "ДОГОВОР 9.docx",
+    "len": 20034,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/ДОГОВОР 9.docx",
+    "checksum": 6271571753930457994,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460072.0,
+    "short_filename": "Договор 2.docx",
+    "len": 15381,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 2.docx",
+    "checksum": -4015255971387023853,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461804.0,
+    "short_filename": "Протокол СД ГПН-Транспорт УПЦ.docx",
+    "len": 2346,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД ГПН-Транспорт УПЦ.docx",
+    "checksum": 2181730991500152220,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461070.0,
+    "short_filename": "Протокол ЗСД_ГПН-Транспорт смена.docx",
+    "len": 3188,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ЗСД_ГПН-Транспорт смена.docx",
+    "checksum": -603880645851134759,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460238.0,
+    "short_filename": "Договор 3.docx",
+    "len": 11371,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 3.docx",
+    "checksum": -3209381593697221862,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461104.0,
+    "short_filename": "Протокол ГПН-Транспорт 24.04.18.docx",
+    "len": 2798,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ГПН-Транспорт 24.04.18.docx",
+    "checksum": -5036878264686793351,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550467306.0,
+    "short_filename": "Протокол СД_Половинная НБ и АЗС-59.docx",
+    "len": 15106,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД_Половинная НБ и АЗС-59.docx",
+    "checksum": 2974510501290093054,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461762.0,
+    "short_filename": "Протокол СД ГПН-Транспорт упц 1ч+план.docx",
+    "len": 4346,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД ГПН-Транспорт упц 1ч+план.docx",
+    "checksum": 9124498986190214182,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461562.0,
+    "short_filename": "Протокол СД ГПН-Транспорт ГО.docx",
+    "len": 3294,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол СД ГПН-Транспорт ГО.docx",
+    "checksum": 368197568562013227,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550462072.0,
+    "short_filename": "Устав - ГПН-Транспорт_ГОСА-2018.docx",
+    "len": 51806,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Устав - ГПН-Транспорт_ГОСА-2018.docx",
+    "checksum": -2513726906716432398,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550467266.0,
+    "short_filename": "ДКП Половинной НБ и АЗС59.docx",
+    "len": 28476,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/ДКП Половинной НБ и АЗС59.docx",
+    "checksum": 2304923110446042373,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460554.0,
+    "short_filename": "Протокол ГПН-Транспорт 26.02.2019.docx",
+    "len": 1990,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ГПН-Транспорт 26.02.2019.docx",
+    "checksum": -7509815264338943109,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550461922.0,
+    "short_filename": "Приложение 1 Договор_ГПН-Транспорт.docx",
+    "len": 44551,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Приложение 1 Договор_ГПН-Транспорт.docx",
+    "checksum": -6897857100950495178,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460628.0,
+    "short_filename": "Договор 6.docx",
+    "len": 7004,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор 6.docx",
+    "checksum": 1799958607033043663,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550459996.0,
+    "short_filename": "Договор1.docx",
+    "len": 17237,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Договор1.docx",
+    "checksum": -2789371361005764349,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460778.0,
+    "short_filename": "Протокол ГПН-Транспорт 26.10.17.docx",
+    "len": 3444,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Протокол ГПН-Транспорт 26.10.17.docx",
+    "checksum": -2773308397373775745,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550460710.0,
+    "short_filename": "договор 7.docx",
+    "len": 8013,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/договор 7.docx",
+    "checksum": -8151535954605469957,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1562145670.0,
+    "short_filename": "Договор выполнения работ_Петров.docx",
+    "len": 27888,
+    "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Договор выполнения работ_Петров.docx",
+    "checksum": -2529798262184227735,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1562145714.0,
+    "short_filename": "Договор аренды.docx",
+    "len": 24319,
+    "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Договор аренды.docx",
+    "checksum": -3775460457355011982,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1562145892.0,
+    "short_filename": "Договор Формула.docx",
+    "len": 42964,
+    "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Договор Формула.docx",
+    "checksum": 1938421908739637119,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555577212.0,
+    "short_filename": "МНПЗ Устав.docx",
+    "len": 47033,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ Устав.docx",
+    "checksum": 2365933262535088423,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555644794.0,
+    "short_filename": "ГПН 1 Протокол СД (к-п недвиж Н).docx",
+    "len": 4131,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 1 Протокол СД (к-п недвиж Н).docx",
+    "checksum": -4085113851051709649,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555642932.0,
+    "short_filename": "МНПЗ 1 Договор целевого пожертвования ДО ГПН - ФОНД 2019_Умножая таланты_.docx",
+    "len": 4728,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 1 Договор целевого пожертвования ДО ГПН - ФОНД 2019_Умножая таланты_.docx",
+    "checksum": -2382831340841208193,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555644590.0,
+    "short_filename": "ГПН 1 договор к-п Н.docx",
+    "len": 8782,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 1 договор к-п Н.docx",
+    "checksum": -7531808729415015280,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555643254.0,
+    "short_filename": "МНПЗ 2 Договор купли-продажи недвижимого имущества.docx",
+    "len": 19498,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 2 Договор купли-продажи недвижимого имущества.docx",
+    "checksum": -7982548981934290617,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555643784.0,
+    "short_filename": "МНПЗ 3 Протокол_дарение ДС №135.docx",
+    "len": 4818,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 3 Протокол_дарение ДС №135.docx",
+    "checksum": -2046660319974319403,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1552443918.0,
+    "short_filename": "ГПН Устав.docx",
+    "len": 52465,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН Устав.docx",
+    "checksum": 8911210423550101226,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555578072.0,
+    "short_filename": "яМессояха Устава.docx",
+    "len": 71134,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/яМессояха Устава.docx",
+    "checksum": 5337526653326974453,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555644752.0,
+    "short_filename": "ГПН 2 Протокол СД (к-п недвиж НПр).docx",
+    "len": 3671,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 2 Протокол СД (к-п недвиж НПр).docx",
+    "checksum": -486324017310067408,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555644904.0,
+    "short_filename": "ГПН 3 Протокол заочного СД (пожертвование).docx",
+    "len": 3722,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 3 Протокол заочного СД (пожертвование).docx",
+    "checksum": -4999759900502994514,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555317264.0,
+    "short_filename": "яМессояха Договор безвозмездного пользования неж. помещ..docx",
+    "len": 7594,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/яМессояха Договор безвозмездного пользования неж. помещ..docx",
+    "checksum": 3581879164764133416,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555644660.0,
+    "short_filename": "ГПН 2 договор к-п НПр.docx",
+    "len": 8561,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 2 договор к-п НПр.docx",
+    "checksum": 2249745661370686032,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550201105.489862,
+    "short_filename": "20150515dogusl.doc",
+    "len": 8188,
+    "filename": "/Users/artem/work/nemo/goil/IN/20150515dogusl.doc",
+    "checksum": -6828589638192197174,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554131144.326687,
+    "short_filename": "Устав ООО.doc",
+    "len": 58487,
+    "filename": "/Users/artem/work/nemo/goil/IN/Устав ООО.doc",
+    "checksum": 2857686587467279037,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550803430.0,
+    "short_filename": "Протокол_МНГ_изм. в положение о филиале.doc",
+    "len": 3128,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Протокол_МНГ_изм. в положение о филиале.doc",
+    "checksum": -4892530913623105424,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550803866.0,
+    "short_filename": "Протокол_МНГ_ликв. филиала.doc",
+    "len": 3110,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Протокол_МНГ_ликв. филиала.doc",
+    "checksum": -1511719674812227932,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550743526.0,
+    "short_filename": "Протокол_МНГ_созд. филиала.doc",
+    "len": 4308,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Протокол_МНГ_созд. филиала.doc",
+    "checksum": -4697414126465635687,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550803748.0,
+    "short_filename": "Протокол_МНГ_прекр. полном. директора филиала.doc",
+    "len": 3186,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/1 пп. 34 п. 19.1_филиалы/Протокол_МНГ_прекр. полном. директора филиала.doc",
+    "checksum": 555321068177223720,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550807176.0,
+    "short_filename": "Протокол_МНГ_ООО Зодчий.doc",
+    "len": 5829,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/3 пп. 39 п. 19.1_сделка 25 млн. $ США/Протокол_МНГ_ООО Зодчий.doc",
+    "checksum": -6614986843238323483,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1553487942.0,
+    "short_filename": "Устав_ООО ЮП ГПЗ_ред 5.doc",
+    "len": 84108,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/org.charter/Устав_ООО ЮП ГПЗ_ред 5.doc",
+    "checksum": -8983614120905279881,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1553488010.0,
+    "short_filename": "Новая редакция Устава.doc",
+    "len": 48492,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/org.charter/Новая редакция Устава.doc",
+    "checksum": 6061487049173478172,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806930.0,
+    "short_filename": "Протокол_МНГ_пожертв. Пур адм.doc",
+    "len": 5025,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/2 пп. 38 п. 19.1_пожертвование/Протокол_МНГ_пожертв. Пур адм.doc",
+    "checksum": -3943381613784409064,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550807550.0,
+    "short_filename": "Договор хранения нефти_ХранТрансНефть.doc",
+    "len": 28559,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/5 пп. 43 п.19.1_сделки с нефтью/Договор хранения нефти_ХранТрансНефть.doc",
+    "checksum": -7665188232087768733,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550807710.0,
+    "short_filename": "Протокол_МНГ_ХранТрансНефть.doc",
+    "len": 9598,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/5 пп. 43 п.19.1_сделки с нефтью/Протокол_МНГ_ХранТрансНефть.doc",
+    "checksum": -5095668543123873902,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550469424.0,
+    "short_filename": "Устав ГПН-Новосибирск (НБ)_с СД.doc",
+    "len": 58433,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/Новосиб/Устав ГПН-Новосибирск (НБ)_с СД.doc",
+    "checksum": 6585877161330692439,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806044.0,
+    "short_filename": "Проект договора ООО Чудеса.doc",
+    "len": 11330,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Проект договора ООО Чудеса.doc",
+    "checksum": -2474000485013624140,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550548760.0,
+    "short_filename": "Протокол_ГПН-КП_БГ Открытие.doc",
+    "len": 5420,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Протокол_ГПН-КП_БГ Открытие.doc",
+    "checksum": -3655812872317971723,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805954.0,
+    "short_filename": "Проект договора ООО Зеленые.doc",
+    "len": 11831,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Проект договора ООО Зеленые.doc",
+    "checksum": 4882662019268011986,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550805922.0,
+    "short_filename": "Доп.согл3 Доверие.doc",
+    "len": 4994,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Доп.согл3 Доверие.doc",
+    "checksum": -5315189403982784023,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550548760.0,
+    "short_filename": "Протокол_ГПН-КП_Зеленые.doc",
+    "len": 3696,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Протокол_ГПН-КП_Зеленые.doc",
+    "checksum": -6326168410665146544,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550548760.0,
+    "short_filename": "Протокол_ГПН-КП_БГ Доверие.doc",
+    "len": 8409,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Протокол_ГПН-КП_БГ Доверие.doc",
+    "checksum": 742979161333047041,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806108.0,
+    "short_filename": "Соглашение БГ Открытие.doc",
+    "len": 39013,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Соглашение БГ Открытие.doc",
+    "checksum": -2459695774598569233,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550548760.0,
+    "short_filename": "Устав ГПН-КП_ГОСУ-2018_сентябрь end.doc",
+    "len": 59812,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Устав ГПН-КП_ГОСУ-2018_сентябрь end.doc",
+    "checksum": 2823079319729531699,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550548760.0,
+    "short_filename": "Протокол_ГПН-КП_Чудеса.doc",
+    "len": 3670,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/КП/Протокол_ГПН-КП_Чудеса.doc",
+    "checksum": -414414529652480637,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550565690.0,
+    "short_filename": "Протокол_ГПН-КП_Формула.doc",
+    "len": 4098,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_Формула.doc",
+    "checksum": -6411720846085902609,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550565690.0,
+    "short_filename": "Протокол_ГПН-КП_отчет.doc",
+    "len": 4648,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_отчет.doc",
+    "checksum": 6854754079973181537,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550565690.0,
+    "short_filename": "Протокол_ГПН-КП_аренда офиса.doc",
+    "len": 4579,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_аренда офиса.doc",
+    "checksum": -7291729154963664545,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550565690.0,
+    "short_filename": "Протокол_ГПН-КП_Детский.doc",
+    "len": 3572,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_Детский.doc",
+    "checksum": -7751445643350452864,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806696.0,
+    "short_filename": "Протокол_ООО Вектор продажа недвиж.doc",
+    "len": 7981,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ООО Вектор продажа недвиж.doc",
+    "checksum": -2083287979228845079,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550565690.0,
+    "short_filename": "Протокол_ГПН-КП_SS Петров.doc",
+    "len": 4401,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП/Протокол_ГПН-КП_SS Петров.doc",
+    "checksum": -8065627454295235698,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550626124.0,
+    "short_filename": "7. Соглашение БГ Газпромнефть-Региональные продажи.doc",
+    "len": 47387,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/АУДИТ ДО/РП2/7. Соглашение БГ Газпромнефть-Региональные продажи.doc",
+    "checksum": 2696757246801275095,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550806852.0,
+    "short_filename": "Протокол_МНГ_Парацельс.doc",
+    "len": 7537,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/4 пп. 36 п. 19.1_купля-продажа НИ/Протокол_МНГ_Парацельс.doc",
+    "checksum": -3119571602318734614,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550740674.0,
+    "short_filename": "Договор купли-продажи_ООО Парацельс.doc",
+    "len": 16810,
+    "filename": "/Users/artem/work/nemo/goil/IN/dataset.2/4 пп. 36 п. 19.1_купля-продажа НИ/Договор купли-продажи_ООО Парацельс.doc",
+    "checksum": 4213204483680132842,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554956478.0,
+    "short_filename": "МНГ2 Протокол МНГ сделка выше 25 млн.руб.doc",
+    "len": 3235,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ2 Протокол МНГ сделка выше 25 млн.руб.doc",
+    "checksum": 8551702048310101315,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554956128.0,
+    "short_filename": "МНГ4 Протокол_МНГ_пожертв..doc",
+    "len": 3139,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ4 Протокол_МНГ_пожертв..doc",
+    "checksum": 8993023410513446181,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554955616.0,
+    "short_filename": "ЕЮ Договор Купля-продажа.doc",
+    "len": 5984,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/ЕЮ Договор Купля-продажа.doc",
+    "checksum": 7017994511445604452,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554956708.0,
+    "short_filename": "МНГ3 Протокол_ГПН-МНПЗ благотвор.doc",
+    "len": 3052,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4/МНГ3 Протокол_ГПН-МНПЗ благотвор.doc",
+    "checksum": 6164338116787343970,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554374076.0,
+    "short_filename": "3. Протокол купли-продажи_верный.doc",
+    "len": 8151,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/3. Протокол купли-продажи_верный.doc",
+    "checksum": -2336196051946683461,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1554374034.0,
+    "short_filename": "5. Протокол_благотворительность_неверный.doc",
+    "len": 3562,
+    "filename": "/Users/artem/work/nemo/goil/IN/Контрольный сет_РП/5. Протокол_благотворительность_неверный.doc",
+    "checksum": 4021176473834100840,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1550469406.0,
+    "short_filename": "Устав ГПН-Новосибирск (НБ)_с СД.doc",
+    "len": 58433,
+    "filename": "/Users/artem/work/nemo/goil/IN/gzp.audit 2/Устав ГПН-Новосибирск (НБ)_с СД.doc",
+    "checksum": 6585877161330692439,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1562146130.0,
+    "short_filename": "Протокол_ГПН-КП_Формула.doc",
+    "len": 4022,
+    "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Протокол_ГПН-КП_Формула.doc",
+    "checksum": 1633008791931808666,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1562145994.0,
+    "short_filename": "Протокол_ГПН-КП_аренда офиса.doc",
+    "len": 4280,
+    "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Протокол_ГПН-КП_аренда офиса.doc",
+    "checksum": 8149881286313032636,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1562146084.0,
+    "short_filename": "Протокол_ГПН-КП_SS Петров.doc",
+    "len": 4088,
+    "filename": "/Users/artem/work/nemo/goil/IN/Другие договоры/Протокол_ГПН-КП_SS Петров.doc",
+    "checksum": -2780218840109228360,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555643706.0,
+    "short_filename": "МНПЗ 3 Протокол_МНГ_дарение ДС №135.doc",
+    "len": 3221,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 3 Протокол_МНГ_дарение ДС №135.doc",
+    "checksum": -889460588741259840,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555644920.0,
+    "short_filename": "ГПН 3 Договор пожертвования 21.02.2019.doc",
+    "len": 7200,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/ГПН 3 Договор пожертвования 21.02.2019.doc",
+    "checksum": 2209509876374593254,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555573380.0,
+    "short_filename": "МНПЗ 1 Протокол_ГПН-МНПЗ благотвор.doc",
+    "len": 4486,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 1 Протокол_ГПН-МНПЗ благотвор.doc",
+    "checksum": 3554292541738317554,
+    "analyse": {}
+  },
+  {
+    "filemtime": 1555643260.0,
+    "short_filename": "МНПЗ 2 Протокол_ГПН-МНПЗ продажа недв.doc",
+    "len": 4712,
+    "filename": "/Users/artem/work/nemo/goil/IN/spin4.again/МНПЗ 2 Протокол_ГПН-МНПЗ продажа недв.doc",
+    "checksum": 7344458945719413997,
+    "analyse": {}
+  }
 ]
