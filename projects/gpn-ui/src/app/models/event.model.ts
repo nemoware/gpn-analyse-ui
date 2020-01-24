@@ -7,3 +7,8 @@ export interface EventApp {
   };
   date: Date;
 }
+
+export interface DataSourceEvent {
+  count: number;
+  items: EventApp[];
+}
