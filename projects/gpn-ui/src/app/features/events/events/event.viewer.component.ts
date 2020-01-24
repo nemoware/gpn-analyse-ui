@@ -34,10 +34,11 @@ export class EventViewerComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  defPageSize = 15;
+  defPageSize = 20;
   dataSource: EventDataSource;
   displayedColumns: string[] = ['time', 'login', 'name'];
   eventsType = [];
+  _filterValue: [];
 
   ngOnInit() {
     this.dataSource = new EventDataSource(this.eventviewerservice);
@@ -57,9 +58,9 @@ export class EventViewerComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  loadEventsPage(filter = []) {
+  loadEventsPage() {
     this.dataSource.loadEvents(
-      filter,
+      this._filterValue,
       this.sort.active,
       this.sort.direction,
       this.paginator.pageIndex,
@@ -68,7 +69,8 @@ export class EventViewerComponent implements OnInit, AfterViewInit {
   }
 
   onApplyFilter(filterVlaue) {
+    this._filterValue = filterVlaue;
     this.paginator.pageIndex = 0;
-    this.loadEventsPage(filterVlaue);
+    this.loadEventsPage();
   }
 }
