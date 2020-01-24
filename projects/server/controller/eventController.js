@@ -13,19 +13,19 @@ exports.getEventTypes = async (req, res) => {
 
 exports.getLogs = async (req, res) => {
   try {
+    const count = await Log.countDocuments();
+
     let sort;
     if (req.query.sort) {
-      sort = {
-        [req.query.sort]: req.query.desc === 'true' ? -1 : 1
-      };
+      sort = { [req.query.sort]: req.query.desc === 'true' ? -1 : 1 };
     }
 
-    const logs = await Log.find().setOptions({
+    const items = await Log.find().setOptions({
       skip: +req.query.skip,
       limit: +req.query.take,
       sort
     });
-    res.status(200).json(logs);
+    res.status(200).json({ count, items });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
