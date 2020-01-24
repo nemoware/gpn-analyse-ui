@@ -4,7 +4,8 @@ import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import {
   catchError,
   finalize
-} from '@root/node_modules/rxjs/internal/operators';
+  // tslint:disable-next-line:import-blacklist
+} from 'rxjs/operators';
 
 export class EventDataSource implements DataSource<any> {
   private eventsSubject = new BehaviorSubject<any[]>([]);
