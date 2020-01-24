@@ -39,7 +39,6 @@ export class EventDataSource implements DataSource<any> {
         finalize(() => this.loadingSubject.next(false))
       )
       .subscribe(data => {
-        console.log(data);
         // @ts-ignore
         this.totalCount = data.count;
         // @ts-ignore
