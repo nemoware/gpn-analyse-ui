@@ -1,5 +1,4 @@
-const EventType = require('../config/db.config').EventType;
-const Log = require('../config/db.config').Log;
+const { EventType, Log } = require('../config/db.config');
 const logger = require('../core/logger');
 
 exports.getEventTypes = async (req, res) => {
@@ -13,19 +12,49 @@ exports.getEventTypes = async (req, res) => {
 
 exports.getLogs = async (req, res) => {
   try {
-    const count = await Log.countDocuments();
-
     let sort;
-    if (req.query.sort) {
-      sort = { [req.query.sort]: req.query.desc === 'true' ? -1 : 1 };
+    if (req.query.column) {
+      sort = { [req.query.column]: req.query.sort === 'asc' ? 1 : -1 };
     }
 
-    const items = await Log.find().setOptions({
+    const where = {};
+
+    const eventType = req.query.eventType;
+    const dateTo = req.query.dateTo;
+    const dateFrom = req.query.dateFrom;
+
+    if (eventType) {
+      where['eventType._id'] = { $in: eventType.split(',') };
+    }
+
+    where.login = {
+      $regex: `.*${req.query.login || ''}.*`,
+      $options: 'i'
+    };
+
+    if (dateTo) {
+      where.time = { $lte: dateTo };
+    }
+
+    if (dateFrom) {
+      where.time = { $gte: dateFrom };
+    }
+
+    const count = await Log.countDocuments(where);
+    let items = await Log.find(where, '-_id -__v', { lean: true }).setOptions({
       skip: +req.query.skip,
       limit: +req.query.take,
       sort
     });
-    res.status(200).json({ count, items });
+
+    items = items.map(i => {
+      i.eventTypeName = i.eventType.name;
+      i.eventTypeId = i.eventType._id;
+      delete i.eventType;
+      return i;
+    });
+
+    res.send({ count, items });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
