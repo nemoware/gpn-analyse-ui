@@ -14,7 +14,10 @@ exports.getLogs = async (req, res) => {
   try {
     let sort;
     if (req.query.column) {
-      sort = { [req.query.column]: req.query.sort === 'asc' ? 1 : -1 };
+      sort = {
+        [req.query.column === 'name' ? 'eventType.name' : req.query.column]:
+          req.query.sort === 'asc' ? 1 : -1
+      };
     }
 
     const where = [];
