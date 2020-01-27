@@ -14,34 +14,43 @@ exports.getLogs = async (req, res) => {
   try {
     let sort;
     if (req.query.column) {
-      sort = { [req.query.column]: req.query.sort === 'asc' ? 1 : -1 };
+      sort = {
+        [req.query.column === 'name' ? 'eventType.name' : req.query.column]:
+          req.query.sort === 'asc' ? 1 : -1
+      };
     }
 
-    const where = {};
+    const where = [];
 
     const eventType = req.query.eventType;
-    const dateTo = req.query.dateTo;
+    let dateTo = req.query.dateTo;
     const dateFrom = req.query.dateFrom;
 
     if (eventType) {
-      where['eventType._id'] = { $in: eventType.split(',') };
+      where.push({ 'eventType._id': { $in: eventType.split(',') } });
     }
 
-    where.login = {
-      $regex: `.*${req.query.login || ''}.*`,
-      $options: 'i'
-    };
+    where.push({
+      login: {
+        $regex: `.*${req.query.login || ''}.*`,
+        $options: 'i'
+      }
+    });
 
     if (dateTo) {
-      where.time = { $lte: dateTo };
+      dateTo = toDate(dateTo);
+      dateTo.setDate(dateTo.getDate() + 1);
+      where.push({ time: { $lt: dateTo } });
     }
 
     if (dateFrom) {
-      where.time = { $gte: dateFrom };
+      where.push({ time: { $gte: toDate(dateFrom) } });
     }
 
-    const count = await Log.countDocuments(where);
-    let items = await Log.find(where, '-_id -__v', { lean: true }).setOptions({
+    const count = await Log.countDocuments({ $and: where });
+    let items = await Log.find({ $and: where }, '-_id -__v', {
+      lean: true
+    }).setOptions({
       skip: +req.query.skip,
       limit: +req.query.take,
       sort
@@ -64,3 +73,8 @@ exports.postError = async (req, res) => {
   await logger.logError(req, res, req.body.text, 0, true);
   res.status(201).send();
 };
+
+function toDate(s) {
+  const parts = s.split('.');
+  return new Date(parts[2], parts[1] - 1, parts[0]);
+}

@@ -8,15 +8,10 @@ import {
 } from '@angular/core';
 
 import { EventViewerService } from '@app/features/events/event.viewer.service';
-import {
-  MatPaginator,
-  MatSort,
-  MatTableDataSource
-} from '@root/node_modules/@angular/material';
-import { EventApp } from '@app/models/event.model';
+import { MatPaginator, MatSort } from '@root/node_modules/@angular/material';
 import { EventDataSource } from '@app/features/events/event-data-source';
-import { tap } from '@root/node_modules/rxjs/internal/operators';
-import { fromEvent, merge } from '@root/node_modules/rxjs';
+import { tap } from 'rxjs/operators';
+import { merge } from '@root/node_modules/rxjs';
 
 @Component({
   selector: 'gpn-event.viewer',
@@ -26,10 +21,8 @@ import { fromEvent, merge } from '@root/node_modules/rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventViewerComponent implements OnInit, AfterViewInit {
-  constructor(
-    private eventviewerservice: EventViewerService,
-    private changeDetectorRefs: ChangeDetectorRef
-  ) {}
+  constructor(private eventviewerservice: EventViewerService) {}
+
   count = 0;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
