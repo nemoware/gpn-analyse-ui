@@ -107,8 +107,14 @@ exports.updateUser = async (req, res) => {
     return;
   }
 
-  user.roles = req.body.roles;
+  const userRoles = req.body.roles;
+  if (userRoles.find(r => +r._id === 3) && userRoles.length > 1) {
+    return res
+      .status(400)
+      .send('User with administrator privileges cannot view events or audits');
+  }
 
+  user.roles = userRoles;
   try {
     await user.save();
 
