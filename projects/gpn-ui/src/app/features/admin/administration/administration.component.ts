@@ -89,10 +89,10 @@ export class AdministrationComponent implements OnInit {
 
   openDialogRoles(user: UserInfo): void {
     this.statusMessage = '';
-    const A: string[] = [];
-    for (const role of user.roles) A.push(role._id.toString());
+    const A = [];
+    user.roles.forEach(x => A.push(x._id));
     const dialogRef = this.dialog.open(DialogRoleComponent, {
-      width: '400px',
+      width: '500px',
       data: {
         roles: this.roles,
         user_role: A
