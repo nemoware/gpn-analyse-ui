@@ -38,7 +38,7 @@ export class DialogRoleComponent implements OnInit {
   Apply() {
     const listRoles: Array<RoleInfo> = [];
     for (const s of this.data.roles.filter(x =>
-      this._selectedRole.includes(x._id)
+      this._selectedRole.includes(Number(x._id))
     )) {
       listRoles.push({
         _id: s._id,
@@ -55,22 +55,22 @@ export class DialogRoleComponent implements OnInit {
   }
 
   selectedRole(id) {
-    return this._selectedRole.includes(id);
+    return this._selectedRole.includes(Number(id));
   }
 
   selectionChange(e) {
-    if (this._selectedRole.includes(e.option._value))
+    if (this._selectedRole.includes(Number(e.option._value)))
       this._selectedRole = this._selectedRole.filter(
-        x => x !== e.option._value
+        x => x !== Number(e.option._value)
       );
-    else this._selectedRole.push(e.option._value);
+    else this._selectedRole.push(Number(e.option._value));
   }
 
   disabledRole(id) {
-    if (this._selectedRole.includes('1') && id !== '1') return true;
+    if (this._selectedRole.includes(1) && id !== '1') return true;
     else
       return (
-        !this._selectedRole.includes('1') &&
+        !this._selectedRole.includes(1) &&
         this._selectedRole.length > 0 &&
         id === '1'
       );
