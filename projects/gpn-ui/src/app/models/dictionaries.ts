@@ -18,7 +18,7 @@ export class Dictionaries {
         { id: 'RelatedTransactions' },
         { id: 'GeneralContract' },
         { id: 'EmployeeContracts' },
-        { id: 'Credits' },
+        { id: 'Loans' },
         { id: 'PledgeEncumbrance' },
         { id: 'BigDeal' },
         { id: 'Liquidation' },
