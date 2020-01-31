@@ -174,13 +174,37 @@
         "children": [
           {
             "parents": [
-              { "kind": "Deal", "hideValue": true },
+              { "kind": "AgencyContract", "hideValue": true },
+              { "kind": "Renting", "hideValue": true },
+              { "kind": "BankGuarantees", "hideValue": true },
               { "kind": "Charity", "hideValue": true },
-              { "kind": "Other", "hideValue": true },
-              { "kind": "Lawsuit", "hideValue": true },
+              { "kind": "RelatedTransactions", "hideValue": true },
+              { "kind": "GeneralContract", "hideValue": true },
+              { "kind": "EmployeeContracts", "hideValue": true },
+              { "kind": "Loans", "hideValue": true },
+              { "kind": "PledgeEncumbrance", "hideValue": true },
+              { "kind": "BigDeal", "hideValue": true },
+              { "kind": "Liquidation", "hideValue": true },
+              { "kind": "Service", "hideValue": true },
+              { "kind": "CashPayments", "hideValue": true },
+              { "kind": "RefusalToLeaseLand", "hideValue": true },
+              { "kind": "Deal", "hideValue": true },
+              { "kind": "RevisionCommission", "hideValue": true },
+              { "kind": "Reorganization", "hideValue": true },
+              { "kind": "InterestedPartyTransaction", "hideValue": true },
+              { "kind": "RelatedPartyTransaction", "hideValue": true },
+              { "kind": "AssetTransactions", "hideValue": true },
               { "kind": "RealEstate", "hideValue": true },
+              { "kind": "DealIntellectualProperty", "hideValue": true },
+              { "kind": "RealEstateTransactions", "hideValue": true },
+              { "kind": "SecuritiesTransactions", "hideValue": true },
               { "kind": "Insurance", "hideValue": true },
-              { "kind": "Consulting", "hideValue": true }
+              { "kind": "RegisteredCapital", "hideValue": true },
+              {
+                "kind": "ParticipationInOtherOrganizations",
+                "hideValue": true
+              },
+              { "kind": "DecisionsForSubsidiary", "hideValue": true }
             ],
             "children": [
               {
