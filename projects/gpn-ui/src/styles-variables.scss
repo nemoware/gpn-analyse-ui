@@ -44,7 +44,29 @@ $competences: (
   Insurance: mat-color($mat-cyan, $comp_t),
   Consulting: mat-color($mat-blue, $comp_t),
   RentingOut: mat-color($mat-pink, $comp_t),
-  Renting: mat-color($mat-orange, $comp_t)
+  Renting: mat-color($mat-orange, $comp_t),
+  // temporal styles AgencyContract: mat-color($mat-gray, 500),
+  BankGuarantees: mat-color($mat-gray, 500),
+  RelatedTransactions: mat-color($mat-gray, 500),
+  GeneralContract: mat-color($mat-gray, 500),
+  EmployeeContracts: mat-color($mat-gray, 500),
+  LoansPledgeEncumbrance: mat-color($mat-gray, 500),
+  Liquidation: mat-color($mat-gray, 500),
+  Service: mat-color($mat-gray, 500),
+  CashPayments: mat-color($mat-gray, 500),
+  RefusalToLeaseLand: mat-color($mat-gray, 500),
+  DealGeneralBusiness: mat-color($mat-gray, 500),
+  RevisionCommission: mat-color($mat-gray, 500),
+  Reorganization: mat-color($mat-gray, 500),
+  InterestedPartyTransaction: mat-color($mat-gray, 500),
+  RelatedPartyTransaction: mat-color($mat-gray, 500),
+  AssetTransactions: mat-color($mat-gray, 500),
+  DealIntellectualProperty: mat-color($mat-gray, 500),
+  RealEstateTransactions: mat-color($mat-gray, 500),
+  SecuritiesTransactions: mat-color($mat-gray, 500),
+  RegisteredCapital: mat-color($mat-gray, 500),
+  ParticipationInOtherOrganizations: mat-color($mat-gray, 500),
+  DecisionsForSubsidiary: mat-color($mat-gray, 500)
 );
 
 @each $name, $color in $competences {
