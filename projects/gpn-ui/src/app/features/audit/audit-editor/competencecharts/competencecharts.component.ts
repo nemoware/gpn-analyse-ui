@@ -158,4 +158,9 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
   scrollToSpan(span) {
     this.goToAttribute.emit('span_' + span[0]);
   }
+
+  public refreshData(attributes) {
+    this.attributes = attributes;
+    this.prepareData();
+  }
 }

@@ -88,7 +88,7 @@
     <ng-container *ngIf="document.documentType == 'CHARTER' && attributes">
       <div class="chart-container">
         <label>компетенции органов управления и пороговые суммы</label>
-        <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
+        <gpn-competencecharts #competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
           (goToAttribute)="goToAttribute($event)" [attributes]="attributes"></gpn-competencecharts>
       </div>
 

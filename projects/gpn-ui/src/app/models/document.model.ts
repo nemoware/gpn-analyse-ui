@@ -20,7 +20,7 @@ export interface Document {
     checksum: number;
     attributes: Object;
     headers: [HeaderModel];
-    warnings: [];
+    warnings: any[];
   };
   user: {
     attributes: Object;
