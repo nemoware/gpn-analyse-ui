@@ -127,16 +127,45 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
 
     //TODO: get rid of this list, this is very temporal solution
     const deal_kinds = [
-      'Deal',
+      /*'Deal',
       'BigDeal',
       'Charity',
       'Lawsuit',
       'RealEstate',
-      'Loans',
+      'LoansLoans',
       'Insurance',
       'Consulting',
-      'RentingOut',
-      'Renting'
+      'RentingOutRentingOut',
+      'Renting'*/
+      // temporal labels
+      'AgencyContract',
+      'Renting',
+      'BankGuarantees',
+      'Charity',
+      'RelatedTransactions',
+      'GeneralContract',
+      'EmployeeContracts',
+      'Loans',
+      'PledgeEncumbrance',
+      'BigDeal',
+      'Liquidation',
+      'Service',
+      'CashPayments',
+      'RefusalToLeaseLand',
+      'Deal',
+      'RevisionCommission',
+      'Reorganization',
+      'InterestedPartyTransaction',
+      'RelatedPartyTransaction',
+      'AssetTransactions',
+      'RealEstate',
+      'DealIntellectualProperty',
+      'RealEstateTransactions',
+      'SecuritiesTransactions',
+      'Insurance',
+      'RegisteredCapital',
+      'ParticipationInOtherOrganizations',
+      'DecisionsForSubsidiary'
     ];
     this.attributes
       .filter(a => deal_kinds.includes(a.kind))
