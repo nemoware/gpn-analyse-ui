@@ -66,9 +66,9 @@
   "agenda-item": "Пункт повестки дня",
 
   "Charity": "Благотворительность",
-  "Deal": "ОХД",
+  "Deal": "Сделка",
   "BigDeal": "Крупная сделка",
-
+  "DealGeneralBusiness": "ОХД",
   "DealIntellectualProperty": "Сделки с интеллектуальной собственностью",
   "InterestedPartyTransaction": "Сделка с заинтересованностью",
   "RelatedTransactions": "Взаимосвязанные сделки",

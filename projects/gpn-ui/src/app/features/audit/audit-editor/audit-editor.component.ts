@@ -103,7 +103,8 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
 
   saveChanges() {
     this.view_doc.saveChanges();
-    this.competencecharts.refreshData(this.view_doc.attributes);
+    if (this.competencecharts)
+      this.competencecharts.refreshData(this.view_doc.attributes);
   }
 
   editMode() {

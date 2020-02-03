@@ -152,6 +152,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
       'Service',
       'CashPayments',
       'RefusalToLeaseLand',
+      'DealGeneralBusiness',
       'Deal',
       'RevisionCommission',
       'Reorganization',
