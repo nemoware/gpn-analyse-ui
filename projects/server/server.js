@@ -2,9 +2,9 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
-const parser = require('./parser/auditParser');
+const parser = require('./parser/audit-parser');
 
-const appConfig = require('./config/app.config');
+const appConfig = require('./config/app');
 
 if (process.argv[2]) {
   appConfig.ad.on = process.argv[2] === 'true';
@@ -13,18 +13,11 @@ if (process.argv[3]) {
   appConfig.ad.login = process.argv[3];
 }
 
-const adAuthorization = require('./authorization/adAuthorization');
-const fakeAuthorization = require('./authorization/fakeAuthorization');
+const adAuthorization = require('./authorization/ad');
+const fakeAuthorization = require('./authorization/fake');
+appConfig.ad.auth = appConfig.ad.on ? adAuthorization : fakeAuthorization;
 
-if (appConfig.ad.on) {
-  appConfig.ad.auth = adAuthorization;
-} else {
-  appConfig.ad.auth = fakeAuthorization;
-}
-
-const adAuth = appConfig.ad.auth;
-
-const dbAuth = require('./authorization/dbAuthorization');
+const dbAuth = require('./authorization/db');
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
 
@@ -36,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(async function(req, res, next) {
-  let ADUser = await adAuth.getUser(req, res);
+  let ADUser = await appConfig.ad.auth.getUser(req, res);
 
   if (!ADUser) {
     res.status(401).sendFile('error.html', {
@@ -57,33 +50,25 @@ app.use(async function(req, res, next) {
 });
 
 app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
-
 app.use('/', express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
 
-const adminRouter = require('./routers/adminRouter');
+const adminRouter = require('./routers/admin-router');
 app.use('/api', adminRouter);
 
-const auditRouter = require('./routers/auditRouter');
+const auditRouter = require('./routers/audit-router');
 app.use('/api', auditRouter);
 
-const developerRouter = require('./routers/developerRouter');
-app.use('/api', developerRouter);
-
-const documentRouter = require('./routers/documentRouter');
+const documentRouter = require('./routers/document-router');
 app.use('/api', documentRouter);
 
-const eventRouter = require('./routers/eventRouter');
+const eventRouter = require('./routers/event-router');
 app.use('/api', eventRouter);
 
-app.listen(port, err => {
-  if (err) {
-    console.log(err);
-    return;
-  }
+app.listen(port, async err => {
+  if (err) return console.log(err);
 
   console.log(`App is listening on port ${port}`);
   console.log();
 
-  parser.test();
-  adAuthorization.test();
+  await Promise.all([parser.test(), adAuthorization.test()]);
 });

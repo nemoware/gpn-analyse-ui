@@ -1,5 +1,5 @@
 const roles = require('../json/role');
-const db = require('../config/db.config');
+const db = require('../config/db');
 const User = db.User;
 
 exports.getUser = async login => {

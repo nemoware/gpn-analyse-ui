@@ -1,4 +1,4 @@
-const { EventType, Log } = require('../config/db.config');
+const { EventType, Log } = require('../config/db');
 const logger = require('../core/logger');
 
 exports.getEventTypes = async (req, res) => {

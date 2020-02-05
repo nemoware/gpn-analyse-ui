@@ -1,7 +1,7 @@
 const roles = require('../json/role');
 const logger = require('../core/logger');
-const adAuth = require('../config/app.config').ad.auth;
-const User = require('../config/db.config').User;
+const adAuth = require('../config/app').ad.auth;
+const User = require('../config/db').User;
 
 exports.getApplicationUsers = async (req, res) => {
   try {

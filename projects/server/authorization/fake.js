@@ -1,5 +1,5 @@
-const appConfig = require('../config/app.config');
-const users = require('../json/fakeUser');
+const appConfig = require('../config/app');
+const users = require('../json/fake-user');
 
 exports.getUser = async (req, res) => {
   for (let user of users) {

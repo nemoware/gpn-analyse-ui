@@ -1,10 +1,10 @@
 const fs = require('fs-promise');
 const logger = require('../core/logger');
-const db = require('../config/db.config');
+const db = require('../config/db');
 const Audit = db.Audit;
 const Document = db.Document;
 const subsidiaries = require('../json/subsidiary');
-const parser = require('../parser/auditParser');
+const parser = require('../parser/audit-parser');
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);

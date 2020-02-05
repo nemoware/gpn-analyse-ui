@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const dbConfig = require('./app.config').db;
+const dbConfig = require('./app').db;
 const host = dbConfig.host;
 const port = dbConfig.port;
 const name = dbConfig.name;
@@ -38,7 +38,7 @@ db.Audit = require('../model/audit')(mongoose, Schema);
 db.Error = require('../model/error')(mongoose, Schema);
 db.User = require('../model/user')(mongoose, Schema);
 db.Log = require('../model/log')(mongoose, Schema);
-db.EventType = require('../model/eventType')(mongoose, Schema);
+db.EventType = require('../model/event-type')(mongoose, Schema);
 db.Document = require('../model/document')(mongoose, Schema);
 
 module.exports = db;

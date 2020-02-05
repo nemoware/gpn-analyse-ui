@@ -1,6 +1,6 @@
 const kerberos = require('kerberos');
 const ActiveDirectory = require('activedirectory');
-const appConfig = require('../config/app.config');
+const appConfig = require('../config/app');
 const ad = new ActiveDirectory(appConfig.ad.options);
 
 exports.getUser = (req, res) => {
@@ -75,7 +75,7 @@ exports.test = async () => {
 };
 
 function info(adStatus, kerberosStatus) {
-  console.log(`Active Directory`);
+  console.log(`Kerberos`);
   console.log(`Server uses ${appConfig.ad.on ? 'AD' : 'FAKE'} authentication`);
   if (appConfig.ad.on) {
     console.log(`Url: ${appConfig.ad.options.url}`);

@@ -1,4 +1,4 @@
-const db = require('../config/db.config');
+const db = require('../config/db');
 const logger = require('../core/logger');
 const Document = db.Document;
 const Audit = db.Audit;

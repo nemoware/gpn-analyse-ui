@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const controller = require('../controller/adminController');
+const controller = require('../controller/admin-controller');
 router.get('/roles', controller.getRoles);
 router.get('/appUsers', controller.getApplicationUsers);
 router.get('/groupUsers', controller.getGroupUsers);
