@@ -13,7 +13,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getRoles(): Observable<Array<RoleInfo>> {
-    return this.http.get<Array<RoleInfo>>(`${api}/roles`);
+    return this.http.get<Array<RoleInfo>>(`${api}/admin/roles`);
   }
 
   getUsersApp(

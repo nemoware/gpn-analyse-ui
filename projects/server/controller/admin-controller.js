@@ -1,14 +1,7 @@
 const roles = require('../json/role');
 const logger = require('../core/logger');
 const adService = require('../services/ad-service');
-const { User, Group } = require('../models');
-
-exports.getUserInfo = async (req, res) => {
-  const user = res.locals.user.sAMAccountName;
-  user.name = await adService.getUserName(user.login);
-  logger.log(req, res, 'Вход в приложение');
-  res.status(200).json(user);
-};
+const { Group } = require('../models');
 
 exports.getADGroups = async (req, res) => {
   try {

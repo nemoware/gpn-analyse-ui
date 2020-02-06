@@ -29,14 +29,14 @@ export class EventViewerService {
     if (column) httpParams = httpParams.append('column', column.toString());
     if (sort) httpParams = httpParams.append('sort', sort.toString());
 
-    return this.http.get<DataSourceEvent>(`${api}/logs`, {
+    return this.http.get<DataSourceEvent>(`${api}/event/logs`, {
       params: httpParams
     });
   }
 
   getEventsType(): Observable<Array<{ _id: string; name: string }>> {
     return this.http.get<Array<{ _id: string; name: string }>>(
-      `${api}/eventTypes`
+      `${api}/event/types`
     );
   }
 }

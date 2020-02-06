@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const controller = require('../controller/document-controller');
 
-router.get('/documents', controller.getDocuments);
-router.get('/documentsByType', controller.getDocumentsByType);
+router.get('/list', controller.getDocuments);
+router.get('/list-by-type', controller.getDocumentsByType);
 router
-  .route('/document')
+  .route('')
   .get(controller.getDocument)
   .put(controller.updateDocument);
 router.get('/attributes', controller.getAttributes);
@@ -13,9 +13,8 @@ router
   .route('/link')
   .post(controller.postLink)
   .delete(controller.deleteLink);
-router
-  .route('/star')
+/*router.route('/star')
   .post(controller.addStar)
-  .delete(controller.deleteStar);
+  .delete(controller.deleteStar);*/
 
 module.exports = router;

@@ -52,7 +52,7 @@ exports.getDocuments = async (req, res) => {
       return document;
     });
 
-    const stars = Array.from(res.locals.user.stars).filter(
+    /*const stars = Array.from(res.locals.user.stars).filter(
       s => s.auditId.toString() === req.query.auditId
     );
 
@@ -63,7 +63,7 @@ exports.getDocuments = async (req, res) => {
       if (document) {
         document.starred = true;
       }
-    }
+    }*/
 
     res.status(200).json(documents);
   } catch (err) {
@@ -370,7 +370,7 @@ exports.getDocumentsByType = async (req, res) => {
   }
 };
 
-exports.addStar = async (req, res) => {
+/*exports.addStar = async (req, res) => {
   const id = req.body.id;
   if (!id) {
     return res.status(400).send(`Required parameter 'id' is not passed`);
@@ -415,4 +415,4 @@ exports.deleteStar = async (req, res) => {
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
-};
+};*/

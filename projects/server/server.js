@@ -4,6 +4,14 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const parser = require('./services/parser-service');
 const ad = require('./services/ad-service');
+const authenticationService = require('./services/authentication-service');
+const rightService = require('./services/right-service');
+
+const accountRouter = require('./routers/account-router');
+const adminRouter = require('./routers/admin-router');
+const auditRouter = require('./routers/audit-router');
+const documentRouter = require('./routers/document-router');
+const eventRouter = require('./routers/event-router');
 
 const appConfig = require('./config/app');
 const argv = require('yargs').argv;
@@ -19,43 +27,17 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(async (req, res, next) => {
-  let login;
-  try {
-    login = await ad.getLogin(req, res);
-    if (!login) return;
-  } catch (err) {
-    res.status(401).sendFile('error.html', {
-      root: path.join(__dirname, './file/')
-    });
-  }
-
-  try {
-    const user = await ad.getUser(login);
-    const groups = user.memberOf;
-    res.locals.user = user;
-    next();
-  } catch (err) {
-    res.status(403).sendFile('error.html', {
-      root: path.join(__dirname, './file/')
-    });
-  }
-});
+app.use(authenticationService);
+app.use(rightService);
 
 app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
 app.use('/', express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
 
-const adminRouter = require('./routers/admin-router');
-app.use('/api', adminRouter);
-
-const auditRouter = require('./routers/audit-router');
-app.use('/api', auditRouter);
-
-const documentRouter = require('./routers/document-router');
-app.use('/api', documentRouter);
-
-const eventRouter = require('./routers/event-router');
-app.use('/api', eventRouter);
+app.use('/api/account', accountRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/audit', auditRouter);
+app.use('/api/document', documentRouter);
+app.use('/api/event', eventRouter);
 
 app.listen(port, async err => {
   if (err) return console.log(err);
