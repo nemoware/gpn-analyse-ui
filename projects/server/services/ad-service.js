@@ -157,4 +157,21 @@ function find(filter, base, scope, attributes, client) {
   });
 }
 
-module.exports = { getUserName, test, getLogin, getUser };
+async function getGroups(filter) {
+  const client = ldap.createClient({
+    url: options.url
+  });
+  await bind(client);
+  const groups = await find(
+    `(&(objectClass=group)(cn=${filter ? `*${filter}*` : '*'}))`,
+    options.baseDN,
+    'sub',
+    ['cn', 'distinguishedName'],
+    client
+  );
+  await unbind(client);
+
+  return groups;
+}
+
+module.exports = { getUserName, test, getLogin, getUser, getGroups };

@@ -28,7 +28,7 @@ export class AuthorizationData {
   }
 
   getUserInfo(): Observable<UserInfo> {
-    return this.http.get<UserInfo>(`${api}/userInfo`).pipe(
+    return this.http.get<UserInfo>(`${api}/user`).pipe(
       map(value => {
         this.userInfo = value;
         return value;
