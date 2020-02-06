@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-
+const router = require('express').Router();
 const controller = require('../controller/audit-controller');
+
 router.post('/audit', controller.postAudit);
 router.get('/subsidiaries', controller.getSubsidiaries);
 router.get('/auditStatuses', controller.getAuditStatuses);

@@ -125,20 +125,6 @@ exports.getDocument = async (req, res) => {
   }
 };
 
-function wrapWords(words, normal_text) {
-  let result = normal_text;
-  for (let i = words.length - 1; i >= 0; i--) {
-    const word = normal_text.slice(words[i][0], words[i][1]);
-    result =
-      result.slice(0, words[i][0]) +
-      `<span id="span_${i}" >` +
-      word +
-      '</span>' +
-      result.slice(words[i][1]);
-  }
-  return '<span id="top"></span>' + result + '<span id ="foot"></span>';
-}
-
 exports.updateDocument = async (req, res) => {
   let document = await Document.findOne({ _id: req.query._id });
   if (!document) {

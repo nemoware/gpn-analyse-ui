@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-
+const router = require('express').Router();
 const controller = require('../controller/document-controller');
+
 router.get('/documents', controller.getDocuments);
 router.get('/documentsByType', controller.getDocumentsByType);
 router
