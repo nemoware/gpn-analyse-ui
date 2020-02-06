@@ -194,21 +194,24 @@ exports.getFiles = async (req, res) => {
 };
 
 exports.parse = async (req, res) => {
-  if (!req.query.id) {
-    let msg = 'Cannot update audit because id is null';
-    logger.logError(req, res, msg, 400);
-    return;
-  }
-
   let auditId = req.query.id;
+  if (!auditId)
+    return logger.logError(
+      req,
+      res,
+      'Cannot update audit because id is null',
+      400
+    );
+
   try {
     let audit = await Audit.findOne({ _id: auditId });
-
-    if (!audit) {
-      let msg = `Cannot find audit with id ${auditId}`;
-      logger.logError(req, res, msg, 404);
-      return;
-    }
+    if (!audit)
+      return logger.logError(
+        req,
+        res,
+        `Cannot find audit with id ${auditId}`,
+        404
+      );
 
     audit.status = 'Loading';
     await audit.save();
@@ -226,9 +229,9 @@ exports.parse = async (req, res) => {
       await Document.deleteOne({ _id: document._id });
     }
 
-    await parser.setParseStatus(audit);
+    await parser.setResult(audit);
   } catch (err) {
-    logger.logError(req, res, err, 500);
+    logger.logError(req, res, err, 500, true);
   }
 };
 
