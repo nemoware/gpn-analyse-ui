@@ -15,7 +15,7 @@ exports.logError = async (req, res, err, status, silent) => {
     url: req.url,
     statusCode: status,
     statusMessage: res.statusMessage,
-    login: res.locals.user.login,
+    login: res.locals.user.sAMAccountName,
     text: err,
     body: req.body
   });
@@ -57,7 +57,7 @@ exports.log = async (req, res, event) => {
 
   let log = new Log({
     time: new Date(),
-    login: res.locals.user.login,
+    login: res.locals.user.sAMAccountName,
     eventType: eventType
   });
 

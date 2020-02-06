@@ -30,7 +30,7 @@ module.exports = (mongoose, Schema) => {
     },
     user: {
       attributes: Object,
-      author: { _id: ObjectId, login: String },
+      author: Object,
       updateDate: Date
     }
   });
