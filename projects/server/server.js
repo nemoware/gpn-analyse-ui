@@ -2,22 +2,13 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
-const parser = require('./parser/audit-parser');
+const parser = require('./services/parser-service');
+const ad = require('./services/ad-service');
 
 const appConfig = require('./config/app');
-
-if (process.argv[2]) {
-  appConfig.ad.on = process.argv[2] === 'true';
-}
-if (process.argv[3]) {
-  appConfig.ad.login = process.argv[3];
-}
-
-const adAuthorization = require('./authorization/ad');
-const fakeAuthorization = require('./authorization/fake');
-appConfig.ad.auth = appConfig.ad.on ? adAuthorization : fakeAuthorization;
-
-const dbAuth = require('./authorization/db');
+const argv = require('yargs').argv;
+appConfig.ad.kerberos = argv.kerberos !== 'false';
+appConfig.ad.login = argv.login || 'admin';
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
 
@@ -28,25 +19,27 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(async function(req, res, next) {
-  let ADUser = await appConfig.ad.auth.getUser(req, res);
-
-  if (!ADUser) {
+app.use(async (req, res, next) => {
+  let login;
+  try {
+    login = await ad.getLogin(req, res);
+    if (!login) return;
+  } catch (err) {
     res.status(401).sendFile('error.html', {
       root: path.join(__dirname, './file/')
     });
   }
 
-  let user = await dbAuth.getUser(ADUser.sAMAccountName);
-
-  if (!user) {
-    res.status(401).sendFile('error.html', {
+  try {
+    const user = await ad.getUser(login);
+    const groups = user.memberOf;
+    res.locals.user = user;
+    next();
+  } catch (err) {
+    res.status(403).sendFile('error.html', {
       root: path.join(__dirname, './file/')
     });
   }
-
-  res.locals.user = user;
-  next();
 });
 
 app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
@@ -70,5 +63,5 @@ app.listen(port, async err => {
   console.log(`App is listening on port ${port}`);
   console.log();
 
-  await Promise.all([parser.test(), adAuthorization.test()]);
+  await Promise.all([parser.test(), ad.test()]);
 });

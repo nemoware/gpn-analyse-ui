@@ -4,7 +4,7 @@ const db = require('../config/db');
 const Audit = db.Audit;
 const Document = db.Document;
 const subsidiaries = require('../json/subsidiary');
-const parser = require('../parser/audit-parser');
+const parser = require('../services/parser-service');
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);

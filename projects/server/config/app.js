@@ -11,14 +11,10 @@ exports.ad = {
     username: process.env.GPN_AD_USERNAME,
     password: process.env.GPN_AD_PASS
   },
-  groupName: process.env.GPN_AD_GROUP_NAME,
-  realm: process.env.GPN_AD_REALM,
-  on: true,
-  login: 'admin'
+  realm: process.env.GPN_AD_REALM
 };
 
 exports.parser = {
   pathFolder: process.env.GPN_DOC_DIRECTORY,
-  url: 'http://localhost:8888',
-  method: 'document-parser'
+  url: process.env.GPN_PARSER_URL
 };

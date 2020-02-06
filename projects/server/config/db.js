@@ -29,16 +29,13 @@ function info(status) {
   console.log();
 }
 
-let db = {};
-
-db.mongoose = mongoose;
-db.Schema = Schema;
-
-db.Audit = require('../model/audit')(mongoose, Schema);
-db.Error = require('../model/error')(mongoose, Schema);
-db.User = require('../model/user')(mongoose, Schema);
-db.Log = require('../model/log')(mongoose, Schema);
-db.EventType = require('../model/event-type')(mongoose, Schema);
-db.Document = require('../model/document')(mongoose, Schema);
-
-module.exports = db;
+module.exports = {
+  mongoose,
+  Schema,
+  Audit: require('../model/audit')(mongoose, Schema),
+  Error: require('../model/error')(mongoose, Schema),
+  User: require('../model/user')(mongoose, Schema),
+  Log: require('../model/log')(mongoose, Schema),
+  EventType: require('../model/event-type')(mongoose, Schema),
+  Document: require('../model/document')(mongoose, Schema)
+};

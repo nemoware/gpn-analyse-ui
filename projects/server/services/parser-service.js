@@ -8,20 +8,14 @@ const path = require('path');
 const logger = require('../core/logger');
 
 exports.test = async () => {
-  let filename = 'test.docx';
-  let data;
-  try {
-    let docpath = path.join(__dirname, '..', 'file', filename);
-    data = await fs.readFile(docpath);
-  } catch (err) {
-    console.log(err);
-    return;
-  }
+  const filename = 'test.docx';
+  const docPath = path.join(__dirname, '..', 'file', filename);
 
-  let options = getOptions(filename, data);
   try {
-    let response = await post(options);
-    let result = JSON.parse(response.body);
+    const data = await fs.readFile(docPath);
+    const options = getOptions(filename, data);
+    const response = await post(options);
+    const result = JSON.parse(response.body);
     info(result.version);
   } catch (err) {
     info();
@@ -49,7 +43,7 @@ function getOptions(filename, content) {
     documentFileType: extension
   };
   return {
-    url: `${parserConfig.url}/${parserConfig.method}`,
+    url: `${parserConfig.url}/document-parser`,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body)
   };
@@ -95,19 +89,17 @@ async function parse(root, filename, audit) {
       await postDocument(result, audit._id, filename, response.code);
     }
   } catch (err) {
-    if (err.code === 'ECONNREFUSED') {
-      await postDocument(
-        {
-          documentType: err.code,
-          message: 'Parser module is off'
-        },
-        audit._id,
-        filename,
-        504
-      );
-    } else {
-      logger.logLocalError(err);
-    }
+    if (err.code !== 'ECONNREFUSED') return logger.logLocalError(err);
+
+    await postDocument(
+      {
+        documentType: err.code,
+        message: 'Parser module is off'
+      },
+      audit._id,
+      filename,
+      504
+    );
   }
 }
 

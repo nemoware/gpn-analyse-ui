@@ -13,7 +13,7 @@ module.exports = (mongoose, Schema) => {
       status: String,
       createDate: Date,
       violations: [Object],
-      author: { _id: ObjectId, login: String },
+      author: Object,
       links: [
         {
           fromId: ObjectId,
