@@ -1,7 +1,11 @@
+'use strict';
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const fs = require('fs');
+const path = require('path');
+const basename = path.basename(__filename);
 
-const dbConfig = require('./app').db;
+const dbConfig = require('../config/app').db;
 const host = dbConfig.host;
 const port = dbConfig.port;
 const name = dbConfig.name;
@@ -29,13 +33,15 @@ function info(status) {
   console.log();
 }
 
-module.exports = {
-  mongoose,
-  Schema,
-  Audit: require('../model/audit')(mongoose, Schema),
-  Error: require('../model/error')(mongoose, Schema),
-  User: require('../model/user')(mongoose, Schema),
-  Log: require('../model/log')(mongoose, Schema),
-  EventType: require('../model/event-type')(mongoose, Schema),
-  Document: require('../model/document')(mongoose, Schema)
-};
+const db = { mongoose, Schema };
+
+fs.readdirSync(__dirname)
+  .filter(
+    file => file.indexOf('.') && file !== basename && file.endsWith('.js')
+  )
+  .forEach(file => {
+    const model = require(path.join(__dirname, file))(mongoose, Schema);
+    db[model.modelName] = model;
+  });
+
+module.exports = db;

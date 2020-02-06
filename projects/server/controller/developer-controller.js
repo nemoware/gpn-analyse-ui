@@ -1,5 +1,4 @@
-const db = require('../config/db');
-const Document = db.Document;
+const { Document } = require('../models');
 
 function getAttributeName(attribute) {
   const subAttributes = attribute.split('/');

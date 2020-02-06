@@ -5,5 +5,5 @@ module.exports = (mongoose, Schema) => {
     stars: [{ documentId: ObjectId, auditId: ObjectId }]
   });
 
-  return mongoose.model('user', userSchema);
+  return mongoose.model('User', userSchema);
 };

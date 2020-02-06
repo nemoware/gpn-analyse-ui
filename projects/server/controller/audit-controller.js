@@ -1,8 +1,6 @@
 const fs = require('fs-promise');
 const logger = require('../core/logger');
-const db = require('../config/db');
-const Audit = db.Audit;
-const Document = db.Document;
+const { Audit, Document } = require('../models');
 const subsidiaries = require('../json/subsidiary');
 const parser = require('../services/parser-service');
 

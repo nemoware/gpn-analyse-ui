@@ -3,5 +3,5 @@ module.exports = (mongoose, Schema) => {
     name: String
   });
 
-  return mongoose.model('eventType', eventTypeSchema);
+  return mongoose.model('EventType', eventTypeSchema);
 };

@@ -4,6 +4,7 @@ const router = express.Router();
 const controller = require('../controller/admin-controller');
 router.get('/roles', controller.getRoles);
 router.get('/user', controller.getUserInfo);
-router.get('/groups', controller.getGroups);
+router.get('/ad/groups', controller.getADGroups);
+router.get('/groups', controller.getAppGroups);
 
 module.exports = router;

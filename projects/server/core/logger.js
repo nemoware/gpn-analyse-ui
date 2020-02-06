@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../models');
 const Error = db.Error;
 const Log = db.Log;
 const EventType = db.EventType;

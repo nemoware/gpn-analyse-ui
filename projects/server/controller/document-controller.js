@@ -1,8 +1,5 @@
-const db = require('../config/db');
+const { Document, Audit, User } = require('../models');
 const logger = require('../core/logger');
-const Document = db.Document;
-const Audit = db.Audit;
-const User = db.User;
 const attribute = require('../core/attribute');
 
 const documentFields = `filename

@@ -35,5 +35,5 @@ module.exports = (mongoose, Schema) => {
     }
   });
 
-  return mongoose.model('document', documentSchema);
+  return mongoose.model('Document', documentSchema);
 };

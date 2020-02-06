@@ -6,5 +6,5 @@ module.exports = (mongoose, Schema) => {
     login: String
   });
 
-  return mongoose.model('log', logSchema);
+  return mongoose.model('Log', logSchema);
 };
