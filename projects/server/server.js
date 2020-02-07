@@ -3,20 +3,22 @@ const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
 const parser = require('./services/parser-service');
-const ad = require('./services/ad-service');
-const authenticationService = require('./services/authentication-service');
 const rightService = require('./services/right-service');
+
+const appConfig = require('./config/app');
+const argv = require('yargs').argv;
+appConfig.ad.kerberos = argv.kerberos !== 'false';
+appConfig.ad.on = argv.ad !== 'false';
+appConfig.ad.login = !appConfig.ad.kerberos && (argv.login || 'admin');
+
+const ad = require('./services/ad-service');
+const authentication = require('./services/authentication-service');
 
 const accountRouter = require('./routers/account-router');
 const adminRouter = require('./routers/admin-router');
 const auditRouter = require('./routers/audit-router');
 const documentRouter = require('./routers/document-router');
 const eventRouter = require('./routers/event-router');
-
-const appConfig = require('./config/app');
-const argv = require('yargs').argv;
-appConfig.ad.kerberos = argv.kerberos !== 'false';
-appConfig.ad.login = argv.login || 'admin';
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
 
@@ -27,7 +29,7 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(authenticationService);
+app.use(authentication.authenticate);
 app.use(rightService);
 
 app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
@@ -45,5 +47,5 @@ app.listen(port, async err => {
   console.log(`App is listening on port ${port}`);
   console.log();
 
-  await Promise.all([parser.test(), ad.test()]);
+  await Promise.all([parser.test(), ad.test(), authentication.test()]);
 });

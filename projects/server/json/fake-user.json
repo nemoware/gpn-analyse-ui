@@ -1,44 +1,40 @@
 [
   {
-    "dn": "CN=Иванов Иван,OU=Company,DC=company,DC=loc",
-    "userPrincipalName": "admin@company.loc",
+    "distinguishedName": "CN=Иванов Иван,OU=Company,DC=company,DC=loc",
     "sAMAccountName": "admin",
-    "mail": "admin@company.ru",
-    "whenCreated": "20040701063036.0Z",
-    "pwdLastSet": "127331459832265625",
-    "userAccountControl": "66048",
-    "sn": "Иванов",
-    "givenName": "Иван",
-    "initials": "И",
-    "cn": "Иванов Иван",
-    "displayName": "Иванов Иван"
+    "name": "Иванов Иван",
+    "memberOf": [
+      "CN=Admin,OU=department2,OU=department1,OU=Company,DC=company,DC=loc",
+      "CN=Group1,OU=Company,DC=company,DC=loc",
+      "CN=Group2,OU=Company,DC=company,DC=loc",
+      "CN=Group3,OU=Company,DC=company,DC=loc",
+      "CN=Group4,OU=Company,DC=company,DC=loc",
+      "CN=Group5,OU=Company,DC=company,DC=loc"
+    ]
   },
   {
-    "dn": "CN=Петров Петр,OU=Company,DC=company,DC=loc",
-    "userPrincipalName": "user2@company.loc",
+    "distinguishedName": "CN=Михайлов Михаил,OU=Company,DC=company,DC=loc",
+    "sAMAccountName": "user1",
+    "name": "Михайлов Михаил",
+    "memberOf": [
+      "CN=Group1,OU=Company,DC=company,DC=loc",
+      "CN=Group2,OU=Company,DC=company,DC=loc"
+    ]
+  },
+  {
+    "distinguishedName": "CN=Петров Петр,OU=Company,DC=company,DC=loc",
     "sAMAccountName": "user2",
-    "mail": "user2@company.ru",
-    "whenCreated": "20040604004931.0Z",
-    "pwdLastSet": "127486999965915000",
-    "userAccountControl": "66048",
-    "sn": "Петров",
-    "givenName": "Петр",
-    "initials": "П",
-    "cn": "Петров Петр",
-    "displayName": "Петров Петр"
+    "name": "Петров Петр",
+    "memberOf": ["CN=Group2,OU=Company,DC=company,DC=loc"]
   },
   {
-    "dn": "CN=Сидоров Василий,OU=Company,DC=company,DC=loc",
-    "userPrincipalName": "user3@company.loc",
+    "distinguishedName": "CN=Сидоров Василий,OU=Company,DC=company,DC=loc",
     "sAMAccountName": "user3",
-    "mail": "user3@company.ru",
-    "whenCreated": "20040604071106.0Z",
-    "pwdLastSet": "127308084498281250",
-    "userAccountControl": "66048",
-    "sn": "Сидоров",
-    "givenName": "Василий",
-    "initials": "В",
-    "cn": "Сидоров Василий",
-    "displayName": "Сидоров Василий"
+    "name": "Сидоров Василий",
+    "memberOf": [
+      "CN=Group3,OU=Company,DC=company,DC=loc",
+      "CN=Group4,OU=Company,DC=company,DC=loc",
+      "CN=Group5,OU=Company,DC=company,DC=loc"
+    ]
   }
 ]
