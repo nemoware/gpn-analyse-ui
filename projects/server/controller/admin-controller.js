@@ -6,7 +6,13 @@ const { Group } = require('../models');
 exports.getADGroups = async (req, res) => {
   try {
     const groups = await adService.getGroups(req.query.filter);
-    res.send(groups);
+    const appGroups = await Group.find({}, 'distinguishedName', { lean: true });
+    res.send(
+      groups.filter(
+        g =>
+          !appGroups.map(a => a.distinguishedName).includes(g.distinguishedName)
+      )
+    );
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
