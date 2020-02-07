@@ -175,7 +175,7 @@ export class AdministrationComponent implements OnInit, OnDestroy {
     if (
       this.selectedGroup &&
       confirm(
-        `Вы действительно хотите удалить сотрудника ${this.selectedGroup.cn} из списка пользователей?`
+        `Вы действительно хотите удалить группу ${this.selectedGroup.cn}?`
       )
     ) {
       this.subscriptions.push(
