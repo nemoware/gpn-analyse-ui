@@ -3,6 +3,7 @@
     "distinguishedName": "CN=Иванов Иван,OU=Company,DC=company,DC=loc",
     "sAMAccountName": "admin",
     "name": "Иванов Иван",
+    "userPrincipalName": "admin@company.loc",
     "memberOf": [
       "CN=Admin,OU=department2,OU=department1,OU=Company,DC=company,DC=loc",
       "CN=Group1,OU=Company,DC=company,DC=loc",
@@ -16,6 +17,7 @@
     "distinguishedName": "CN=Михайлов Михаил,OU=Company,DC=company,DC=loc",
     "sAMAccountName": "user1",
     "name": "Михайлов Михаил",
+    "userPrincipalName": "user1@company.loc",
     "memberOf": [
       "CN=Group1,OU=Company,DC=company,DC=loc",
       "CN=Group2,OU=Company,DC=company,DC=loc"
@@ -25,12 +27,14 @@
     "distinguishedName": "CN=Петров Петр,OU=Company,DC=company,DC=loc",
     "sAMAccountName": "user2",
     "name": "Петров Петр",
+    "userPrincipalName": "user2@company.loc",
     "memberOf": ["CN=Group2,OU=Company,DC=company,DC=loc"]
   },
   {
     "distinguishedName": "CN=Сидоров Василий,OU=Company,DC=company,DC=loc",
     "sAMAccountName": "user3",
     "name": "Сидоров Василий",
+    "userPrincipalName": "user3@company.loc",
     "memberOf": [
       "CN=Group3,OU=Company,DC=company,DC=loc",
       "CN=Group4,OU=Company,DC=company,DC=loc",

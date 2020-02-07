@@ -8,7 +8,7 @@ async function authenticate(req, res, next) {
   try {
     const login = await getLogin(req, res);
     if (!login) return;
-    res.locals.user = await adService.getUser(login);
+    res.locals.user = await adService.getUser(login, true);
     next();
   } catch (err) {
     res.status(401).sendFile('error.html', {

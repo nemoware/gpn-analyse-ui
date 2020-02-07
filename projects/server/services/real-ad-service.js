@@ -25,14 +25,16 @@ function unbind(client) {
   });
 }
 
-async function getUser(login) {
+async function getUser(login, principalName) {
   const client = ldap.createClient({
     url: options.url
   });
 
   await bind(client);
   const user = await findOne(
-    `(&(objectClass=user)(sAMAccountName=${login}))`,
+    `(&(objectClass=user)(${
+      principalName ? 'userPrincipalName' : 'sAMAccountName'
+    }=${login}))`,
     options.baseDN,
     ['name', 'memberOf', 'sAMAccountName', 'distinguishedName'],
     client

@@ -9,7 +9,8 @@ const appConfig = require('./config/app');
 const argv = require('yargs').argv;
 appConfig.ad.kerberos = argv.kerberos !== 'false';
 appConfig.ad.on = argv.ad !== 'false';
-appConfig.ad.login = !appConfig.ad.kerberos && (argv.login || 'admin');
+appConfig.ad.login =
+  !appConfig.ad.kerberos && (argv.login || 'admin@company.loc');
 
 const ad = require('./services/ad-service');
 const authentication = require('./services/authentication-service');

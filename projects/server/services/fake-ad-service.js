@@ -2,8 +2,10 @@ const appConfig = require('../config/app');
 const users = require('../json/fake-user');
 const groups = require('../json/fake-group');
 
-function getUser(login) {
-  const user = users.find(u => u.sAMAccountName === login);
+function getUser(login, principalName) {
+  const user = users.find(
+    u => u[principalName ? 'userPrincipalName' : 'sAMAccountName'] === login
+  );
   if (!user) throw new Error(`No user with login ${login} in fake AD`);
   return user;
 }
