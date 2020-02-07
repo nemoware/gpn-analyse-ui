@@ -52,20 +52,22 @@ exports.getDocuments = async (req, res) => {
       return document;
     });
 
-    /*const stars = Array.from(res.locals.user.stars).filter(
-      s => s.auditId.toString() === req.query.auditId
-    );
+    const user = await User.findOne({
+      login: res.locals.user.sAMAccountName
+    }).lean();
+    if (user) {
+      const stars = user.stars
+        .filter(s => s.auditId.toString() === req.query.auditId)
+        .map(s => s.documentId.toString());
 
-    for (let star of stars) {
-      const document = documents.find(
-        d => d._id.toString() === star.documentId.toString()
-      );
-      if (document) {
+      for (let document of documents.filter(d =>
+        stars.includes(d._id.toString())
+      )) {
         document.starred = true;
       }
-    }*/
+    }
 
-    res.status(200).json(documents);
+    res.send(documents);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
@@ -105,11 +107,6 @@ exports.getDocument = async (req, res) => {
         if (document.user) {
           delete document.analysis.attributes;
         }
-        /*
-        document.wrappedText = wrapWords(
-          document.analysis.tokenization_maps.words,
-          document.analysis.normal_text
-        );*/
 
         res.status(200).json(document);
       } else {
@@ -370,14 +367,14 @@ exports.getDocumentsByType = async (req, res) => {
   }
 };
 
-/*exports.addStar = async (req, res) => {
+exports.addStar = async (req, res) => {
   const id = req.body.id;
-  if (!id) {
-    return res.status(400).send(`Required parameter 'id' is not passed`);
-  }
+  if (!id) return res.status(400).send(`Required parameter 'id' is not passed`);
 
   try {
-    const user = await User.findById(res.locals.user._id);
+    let user = await User.findOne({ login: res.locals.user.sAMAccountName });
+    if (!user) user = new User({ login: res.locals.user.sAMAccountName });
+
     const document = await Document.findById(id);
 
     if (document && user.stars && !user.stars.find(s => s.documentId === id)) {
@@ -396,12 +393,11 @@ exports.getDocumentsByType = async (req, res) => {
 
 exports.deleteStar = async (req, res) => {
   const id = req.query.id;
-  if (!id) {
-    return res.status(400).send(`Required parameter 'id' is not passed`);
-  }
+  if (!id) return res.status(400).send(`Required parameter 'id' is not passed`);
 
   try {
-    const user = await User.findById(res.locals.user._id);
+    const user = await User.findOne({ login: res.locals.user.sAMAccountName });
+    if (!user) return res.end();
 
     let index = user.stars.map(s => s.documentId).indexOf(id);
 
@@ -415,4 +411,4 @@ exports.deleteStar = async (req, res) => {
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
-};*/
+};

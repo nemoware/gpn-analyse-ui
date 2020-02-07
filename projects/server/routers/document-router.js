@@ -13,8 +13,9 @@ router
   .route('/link')
   .post(controller.postLink)
   .delete(controller.deleteLink);
-/*router.route('/star')
+router
+  .route('/star')
   .post(controller.addStar)
-  .delete(controller.deleteStar);*/
+  .delete(controller.deleteStar);
 
 module.exports = router;
