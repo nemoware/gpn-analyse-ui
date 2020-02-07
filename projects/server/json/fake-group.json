@@ -1,0 +1,30 @@
+[
+  {
+    "cn": "Admin",
+    "distinguishedName": "CN=Admin,OU=department2,OU=department1,OU=Company,DC=company,DC=loc"
+  },
+  {
+    "cn": "Group1",
+    "distinguishedName": "CN=Group1,OU=Company,DC=company,DC=loc"
+  },
+  {
+    "cn": "Group2",
+    "distinguishedName": "CN=Group2,OU=Company,DC=company,DC=loc"
+  },
+  {
+    "cn": "Group3",
+    "distinguishedName": "CN=Group3,OU=Company,DC=company,DC=loc"
+  },
+  {
+    "cn": "Group4",
+    "distinguishedName": "CN=Group4,OU=Company,DC=company,DC=loc"
+  },
+  {
+    "cn": "Group5",
+    "distinguishedName": "CN=Group5,OU=Company,DC=company,DC=loc"
+  },
+  {
+    "cn": "Group6",
+    "distinguishedName": "CN=Group6,OU=Company,DC=company,DC=loc"
+  }
+]

@@ -20,7 +20,16 @@ exports.getADGroups = async (req, res) => {
 
 exports.getAppGroups = async (req, res) => {
   try {
-    const groups = await Group.find();
+    let where = {};
+    const filter = req.query.filter;
+    if (filter) {
+      where.cn = {
+        $regex: `.*${filter}.*`,
+        $options: 'i'
+      };
+    }
+
+    const groups = await Group.find(where);
     res.send(groups);
   } catch (err) {
     logger.logError(req, res, err, 500);
