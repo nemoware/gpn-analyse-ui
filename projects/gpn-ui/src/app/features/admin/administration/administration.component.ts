@@ -3,9 +3,10 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
-import { UserInfo } from '@app/models/user.model';
+import { GroupInfo } from '@app/models/group.model';
 import {
   MatDialog,
   MatPaginator,
@@ -22,6 +23,7 @@ import {
   faUserPlus,
   faUserCog
 } from '@fortawesome/free-solid-svg-icons';
+import { SubscriptionLike } from '@root/node_modules/rxjs';
 
 @Component({
   selector: 'gpn-administration',
@@ -30,18 +32,18 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UserService]
 })
-export class AdministrationComponent implements OnInit {
+export class AdministrationComponent implements OnInit, OnDestroy {
   faSearch = faSearch;
   faUserMinus = faUserMinus;
   faUserPlus = faUserPlus;
   faUserCog = faUserCog;
   str_error =
     'При сохранении данных возникли ошибки! Для просмотра перейдите в журнал ошибок!';
-  users: Array<UserInfo>;
+  groups: Array<GroupInfo>;
   roles: Array<RoleInfo>;
 
-  columns: string[] = ['id', 'login', 'name', 'roleString'];
-  selectedUser: UserInfo;
+  columns: string[] = ['id', 'cn', 'roleString'];
+  selectedGroup: GroupInfo;
   dataSource = new MatTableDataSource();
   activePageDataChunk = [];
   count = 0;
@@ -52,13 +54,13 @@ export class AdministrationComponent implements OnInit {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
+  subscriptions: SubscriptionLike[] = [];
   constructor(
     private userservice: UserService,
     private changeDetectorRefs: ChangeDetectorRef,
     public dialog: MatDialog
   ) {
-    this.users = new Array<UserInfo>();
+    this.groups = new Array<GroupInfo>();
   }
 
   statusMessage: string;
@@ -69,25 +71,34 @@ export class AdministrationComponent implements OnInit {
   }
 
   refreshData(filter: Array<{ name: string; value: string }> = null) {
-    this.userservice.getUsersApp(filter).subscribe(data => {
-      this.users = data;
-      this.selectedUser = this.users[0];
-      this.refreshViewTable();
-    });
+    this.subscriptions.push(
+      this.userservice.getGroupsApp(filter).subscribe(data => {
+        this.groups = data.map(x => {
+          x.roleString = x.roles
+            .map(e => {
+              return e.name;
+            })
+            .join(', ');
+          return x;
+        });
+        this.selectedGroup = this.groups[0];
+        this.refreshViewTable();
+      })
+    );
   }
 
   refreshViewTable(user: any = null) {
-    this.count = this.users.length;
-    this.activePageDataChunk = this.users.slice(0, this.pageSize);
+    this.count = this.groups.length;
+    this.activePageDataChunk = this.groups.slice(0, this.pageSize);
     this.dataSource = new MatTableDataSource(this.activePageDataChunk);
     this.dataSource.sort = this.sort;
     if (user != null) {
-      this.selectedUser = user as UserInfo;
+      this.selectedGroup = user as GroupInfo;
     }
     this.changeDetectorRefs.detectChanges();
   }
 
-  openDialogRoles(user: UserInfo): void {
+  openDialogRoles(user: GroupInfo): void {
     this.statusMessage = '';
     const A = [];
     user.roles.forEach(x => A.push(Number(x._id)));
@@ -104,70 +115,82 @@ export class AdministrationComponent implements OnInit {
         for (const role of roles) B.push(role._id.toString());
         if (!(JSON.stringify(A) === JSON.stringify(B))) {
           user.roles = roles;
-          this.userservice.updateUser(user._id, user).subscribe(data => {
-            const u = this.users.find(x => x._id === user._id);
-            u.roleString = (data as UserInfo).roleString;
-            this.refreshViewTable(u);
-          });
+          this.subscriptions.push(
+            this.userservice.updateGroup(user._id, user).subscribe(data => {
+              const u = this.groups.find(x => x._id === user._id);
+              u.roleString = (data as GroupInfo).roles
+                .map(e => e.name)
+                .join(', ');
+              this.refreshViewTable(u);
+            })
+          );
         }
       }
     });
   }
 
   private getRoles() {
-    this.userservice.getRoles().subscribe(value => {
-      this.roles = value;
-    });
+    this.subscriptions.push(
+      this.userservice.getRoles().subscribe(value => {
+        this.roles = value;
+      })
+    );
   }
 
-  addUser() {
+  addGroup() {
     this.statusMessage = '';
     const dialogRef = this.dialog.open(DialogUserComponent, {
-      width: '550px'
+      width: '30%'
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        if (result) {
-          this.statusMessage = '';
+        this.statusMessage = '';
 
-          this.userservice.createUser(result.sAMAccountName).subscribe(
-            user => {
-              user.name = result.displayName;
-              this.users.push(user);
-              this.refreshViewTable(user);
-              this.changeDetector(
-                'Пользователь ' + user.name + ' успешно добавлен!'
-              );
-            },
-            error => {
-              alert(this.str_error);
-              this.changeDetector(this.str_error);
-            }
-          );
-        }
+        this.subscriptions.push(
+          this.userservice
+            .createGroup(result.cn, result.distinguishedName)
+            .subscribe(
+              group => {
+                group.cn = result.cn;
+                this.groups.push(group);
+                this.refreshViewTable(group);
+                this.changeDetector(
+                  'Группа ' + group.cn + ' успешно добавлена!'
+                );
+              },
+              error => {
+                alert(this.str_error);
+                this.changeDetector(this.str_error);
+              }
+            )
+        );
       }
     });
   }
 
   deleteUser() {
     if (
-      this.selectedUser &&
+      this.selectedGroup &&
       confirm(
-        `Вы действительно хотите удалить сотрудника ${this.selectedUser.name} из списка пользователей?`
+        `Вы действительно хотите удалить сотрудника ${this.selectedGroup.cn} из списка пользователей?`
       )
     ) {
-      this.userservice.deleteUser(this.selectedUser._id.toString()).subscribe(
-        data => {
-          this.users = this.arrayRemove(this.users, this.selectedUser);
-          this.refreshViewTable();
-          this.changeDetector(
-            'Пользователь ' + this.selectedUser.login + ' успешно удален'
-          );
-        },
-        error => {
-          alert(this.str_error);
-          this.changeDetector(this.str_error);
-        }
+      this.subscriptions.push(
+        this.userservice
+          .deleteGroup(this.selectedGroup._id.toString())
+          .subscribe(
+            data => {
+              this.groups = this.arrayRemove(this.groups, this.selectedGroup);
+              this.refreshViewTable();
+              this.changeDetector(
+                'Пользователь ' + this.selectedGroup.cn + ' успешно удален'
+              );
+            },
+            error => {
+              alert(this.str_error);
+              this.changeDetector(this.str_error);
+            }
+          )
       );
     }
   }
@@ -192,8 +215,8 @@ export class AdministrationComponent implements OnInit {
   }
 
   selectRow(row) {
-    if (this.selectedUser._id !== row._id) {
-      this.selectedUser = row;
+    if (this.selectedGroup._id !== row._id) {
+      this.selectedGroup = row;
     }
   }
 
@@ -210,8 +233,13 @@ export class AdministrationComponent implements OnInit {
     const firstCut = event.pageIndex * event.pageSize;
     const secondCut = firstCut + event.pageSize;
 
-    this.activePageDataChunk = this.users.slice(firstCut, secondCut);
+    this.activePageDataChunk = this.groups.slice(firstCut, secondCut);
     this.dataSource = new MatTableDataSource(this.activePageDataChunk);
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions = [];
   }
 }

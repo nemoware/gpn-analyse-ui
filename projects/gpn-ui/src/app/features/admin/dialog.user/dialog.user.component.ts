@@ -5,7 +5,8 @@ import {
   Inject,
   Input,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import { UserService } from '@app/features/admin/user.service';
 import {
@@ -15,9 +16,8 @@ import {
   MatSort,
   MatTableDataSource
 } from '@root/node_modules/@angular/material';
-import { Observable } from '@root/node_modules/rxjs';
+import { Observable, SubscriptionLike } from '@root/node_modules/rxjs';
 import { faSearch, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { UserInfo } from '@app/models/user.model';
 
 @Component({
   selector: 'gpn-dialog-user',
@@ -26,11 +26,11 @@ import { UserInfo } from '@app/models/user.model';
   styleUrls: ['./dialog.user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DialogUserComponent implements OnInit {
+export class DialogUserComponent implements OnInit, OnDestroy {
   faSearch = faSearch;
   faPlusSquare = faPlusSquare;
   users: Array<{ sAMAccountName: string; displayName: string }>;
-  columns: string[] = ['sAMAccountName', 'displayName'];
+  columns: string[] = ['cn'];
 
   dataSource = new MatTableDataSource();
   activePageDataChunk = [];
@@ -42,6 +42,7 @@ export class DialogUserComponent implements OnInit {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  subscriptions: SubscriptionLike[] = [];
 
   constructor(
     private userservice: UserService,
@@ -56,10 +57,12 @@ export class DialogUserComponent implements OnInit {
   }
 
   refreshData(filter: Array<{ name: string; value: string }> = null) {
-    this.userservice.getUsersGroup(filter).subscribe(data => {
-      this.users = data;
-      this.refreshViewTable();
-    });
+    this.subscriptions.push(
+      this.userservice.getADGroup(filter).subscribe(data => {
+        this.users = data;
+        this.refreshViewTable();
+      })
+    );
   }
 
   refreshViewTable() {
@@ -102,5 +105,10 @@ export class DialogUserComponent implements OnInit {
     this.activePageDataChunk = this.users.slice(firstCut, secondCut);
     this.dataSource = new MatTableDataSource(this.activePageDataChunk);
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions = [];
   }
 }

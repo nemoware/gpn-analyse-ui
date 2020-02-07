@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { UserInfo } from '@app/models/user.model';
+import { GroupInfo } from '@app/models/group.model';
 import { Observable, throwError } from '@root/node_modules/rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { RoleInfo } from '@app/models/role.model';
@@ -16,21 +16,21 @@ export class UserService {
     return this.http.get<Array<RoleInfo>>(`${api}/admin/roles`);
   }
 
-  getUsersApp(
+  getGroupsApp(
     filterVlaue: Array<{ name: string; value: any }> = null
-  ): Observable<UserInfo[]> {
+  ): Observable<GroupInfo[]> {
     let httpParams = new HttpParams();
     if (filterVlaue) {
       for (const filter of filterVlaue) {
         httpParams = httpParams.append(filter.name, filter.value);
       }
     }
-    return this.http.get<Array<UserInfo>>(`${api}/appUsers`, {
+    return this.http.get<Array<GroupInfo>>(`${api}/admin/groups`, {
       params: httpParams
     });
   }
 
-  getUsersGroup(
+  getADGroup(
     filterVlaue: Array<{ name: string; value: any }> = null
   ): Observable<any> {
     let httpParams = new HttpParams();
@@ -39,22 +39,25 @@ export class UserService {
         httpParams = httpParams.append(filter.name, filter.value);
       }
     }
-    return this.http.get<Array<UserInfo>>(`${api}/groupUsers`, {
+    return this.http.get<Array<GroupInfo>>(`${api}/admin/ad/groups`, {
       params: httpParams
     });
   }
 
-  createUser(login: string): Observable<UserInfo> {
-    return this.http.post<UserInfo>(`${api}/user`, { login: login });
+  createGroup(cn: string, distinguishedName: string): Observable<GroupInfo> {
+    return this.http.post<GroupInfo>(`${api}/admin/group`, {
+      cn: cn,
+      distinguishedName: distinguishedName
+    });
   }
 
-  updateUser(id: string, user: UserInfo) {
+  updateGroup(id: string, group: GroupInfo) {
     const urlParams = new HttpParams().set('id', id.toString());
-    return this.http.put(`${api}/user`, user, { params: urlParams });
+    return this.http.put(`${api}/admin/group`, group, { params: urlParams });
   }
 
-  deleteUser(id: string) {
+  deleteGroup(id: string) {
     const urlParams = new HttpParams().set('id', id.toString());
-    return this.http.delete(`${api}/user`, { params: urlParams });
+    return this.http.delete(`${api}/admin/group`, { params: urlParams });
   }
 }
