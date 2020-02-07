@@ -21,7 +21,8 @@ import {
   faSearch,
   faUserMinus,
   faUserPlus,
-  faUserCog
+  faUserCog,
+  faCog
 } from '@fortawesome/free-solid-svg-icons';
 import { SubscriptionLike } from '@root/node_modules/rxjs';
 
@@ -37,6 +38,7 @@ export class AdministrationComponent implements OnInit, OnDestroy {
   faUserMinus = faUserMinus;
   faUserPlus = faUserPlus;
   faUserCog = faUserCog;
+  faCog = faCog;
   str_error =
     'При сохранении данных возникли ошибки! Для просмотра перейдите в журнал ошибок!';
   groups: Array<GroupInfo>;
@@ -140,7 +142,8 @@ export class AdministrationComponent implements OnInit, OnDestroy {
   addGroup() {
     this.statusMessage = '';
     const dialogRef = this.dialog.open(DialogUserComponent, {
-      width: '30%'
+      width: '30%',
+      height: '100%'
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -209,7 +212,7 @@ export class AdministrationComponent implements OnInit, OnDestroy {
   valueSearch(value: string) {
     const filterVlaue = new Array<{ name: string; value: string }>();
     if (value.length > 0) {
-      filterVlaue.push({ name: 'value', value: value });
+      filterVlaue.push({ name: 'filter', value: value });
     }
     this.refreshData(filterVlaue);
   }

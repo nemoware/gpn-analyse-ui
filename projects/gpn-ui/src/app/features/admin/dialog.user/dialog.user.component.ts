@@ -84,7 +84,7 @@ export class DialogUserComponent implements OnInit, OnDestroy {
   valueSearch(value: string) {
     const filterVlaue = new Array<{ name: string; value: string }>();
     if (value.length > 0) {
-      filterVlaue.push({ name: 'value', value: value });
+      filterVlaue.push({ name: 'filter', value: value });
     }
     this.refreshData(filterVlaue);
   }
