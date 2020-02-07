@@ -2,6 +2,8 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
+const https = require('https');
+const fs = require('fs');
 const parser = require('./services/parser-service');
 const rightService = require('./services/right-service');
 
@@ -42,7 +44,11 @@ app.use('/api/audit', auditRouter);
 app.use('/api/document', documentRouter);
 app.use('/api/event', eventRouter);
 
-app.listen(port, async err => {
+const privateKey = fs.readFileSync('./ssl/server.key', 'utf8');
+const certificate = fs.readFileSync('./ssl/server.crt', 'utf8');
+
+const server = https.createServer({ key: privateKey, cert: certificate }, app);
+server.listen(port, async err => {
   if (err) return console.log(err);
 
   console.log(`App is listening on port ${port}`);
