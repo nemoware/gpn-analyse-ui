@@ -196,6 +196,24 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       if (changed) spanHint.classList.add('changed');
       span.appendChild(spanHint);
     }
+
+    if (kind === 'value') {
+      for (let i = 0; i < span.childElementCount; i++) {
+        if (span.children[i].id) {
+          span.children[i].innerHTML = this.formatValueText(
+            span.children[i].innerHTML
+          );
+        }
+      }
+    }
+  }
+
+  formatValueText(value): string {
+    if (!isNaN(Number(value)))
+      return Number(value)
+        .toFixed(2)
+        .replace(/\d(?=(\d{3})+\.)/g, '$& ');
+    else return value;
   }
 
   checkEndWord(id: number): Node {
