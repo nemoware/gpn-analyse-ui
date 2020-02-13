@@ -5,10 +5,10 @@ const fs = require('fs');
 const path = require('path');
 const basename = path.basename(__filename);
 
-const dbConfig = require('../config/app').db;
-const host = dbConfig.host;
-const port = dbConfig.port;
-const name = dbConfig.name;
+const options = require('../config/app').db;
+const host = options.host;
+const port = options.port;
+const name = options.name;
 
 // подключение
 mongoose

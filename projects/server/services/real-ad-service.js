@@ -1,6 +1,5 @@
 const ldap = require('ldapjs');
-const appConfig = require('../config/app');
-const options = appConfig.ad.options;
+const options = require('../config/app').ad.options;
 
 function bind(client) {
   return new Promise((resolve, reject) => {
@@ -69,7 +68,7 @@ async function test() {
 
 function info(status) {
   console.log(`Active Directory`);
-  console.log(`Url: ${appConfig.ad.options.url}`);
+  console.log(`Url: ${options.url}`);
   console.log(`AD status: ${status}`);
   console.log();
 }

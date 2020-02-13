@@ -1,4 +1,3 @@
-const appConfig = require('../config/app');
 const users = require('../json/fake-user');
 const groups = require('../json/fake-group');
 
@@ -17,7 +16,6 @@ function getUserName(login) {
 
 function test() {
   console.log(`Active Directory`);
-  console.log(`Url: ${appConfig.ad.options.url}`);
   console.log(`AD status: off`);
   console.log();
 }

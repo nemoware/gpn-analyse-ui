@@ -1,3 +1,3 @@
-module.exports = require('../config/app').ad.on
+module.exports = global.ad
   ? require('./real-ad-service')
   : require('./fake-ad-service');

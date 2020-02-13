@@ -1,7 +1,6 @@
 const fs = require('fs-promise');
 const request = require('request');
-const config = require('../config/app');
-const parserConfig = config.parser;
+const url = require('../config/app').parser.url;
 const db = require('../models');
 const Document = db.Document;
 const path = require('path');
@@ -24,7 +23,7 @@ exports.test = async () => {
 
 function info(version) {
   console.log(`Document parser`);
-  console.log(`Url: ${parserConfig.url}`);
+  console.log(`Url: ${url}`);
   console.log(`Status: ${version ? 'on' : 'off'}`);
   if (version) {
     console.log(`Version: ${version}`);
@@ -43,7 +42,7 @@ function getOptions(filename, content) {
     documentFileType: extension
   };
   return {
-    url: `${parserConfig.url}/document-parser`,
+    url: `${url}/document-parser`,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body)
   };

@@ -1,8 +1,7 @@
 const path = require('path');
 const kerberos = require('kerberos');
 const adService = require('../services/ad-service');
-const appConfig = require('../config/app');
-const realm = appConfig.ad.realm;
+const realm = require('../config/app').ad.realm;
 
 async function authenticate(req, res, next) {
   try {
@@ -18,7 +17,7 @@ async function authenticate(req, res, next) {
 }
 
 async function getLogin(req, res) {
-  if (!appConfig.ad.kerberos) return appConfig.ad.login;
+  if (!global.kerberos) return global.login;
 
   if (!req.headers.authorization) {
     res.set('WWW-Authenticate', 'Negotiate');
@@ -55,7 +54,7 @@ function step(server, ticket) {
 async function test() {
   let status = 'on';
   try {
-    await initializeServer(appConfig.ad.realm);
+    await initializeServer(realm);
   } catch (err) {
     status = 'off';
   }
@@ -66,10 +65,10 @@ function info(status) {
   console.log('Kerberos');
   console.log(`Kerberos status: ${status}`);
   console.log(
-    `Server uses ${appConfig.ad.kerberos ? 'Kerberos' : 'Fake'} authentication`
+    `Server uses ${global.kerberos ? 'Kerberos' : 'Fake'} authentication`
   );
-  if (!appConfig.ad.kerberos) {
-    console.log(`Fake user: ${appConfig.ad.login}`);
+  if (!global.kerberos) {
+    console.log(`Fake user: ${global.login}`);
   }
   console.log();
 }
