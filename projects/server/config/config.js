@@ -11,7 +11,8 @@ exports.ad = {
     username: process.env.GPN_AD_USERNAME,
     password: process.env.GPN_AD_PASS
   },
-  realm: process.env.GPN_AD_REALM
+  realm: process.env.GPN_AD_REALM,
+  group: process.env.GPN_DEFAULT_GROUP
 };
 
 exports.parser = {

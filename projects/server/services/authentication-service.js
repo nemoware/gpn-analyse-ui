@@ -1,7 +1,7 @@
 const path = require('path');
 const kerberos = require('kerberos');
 const adService = require('../services/ad-service');
-const realm = require('../config/app').ad.realm;
+const realm = require('../config/config').ad.realm;
 
 async function authenticate(req, res, next) {
   try {

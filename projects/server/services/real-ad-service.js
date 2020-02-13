@@ -1,5 +1,5 @@
 const ldap = require('ldapjs');
-const options = require('../config/app').ad.options;
+const options = require('../config/config').ad.options;
 
 function bind(client) {
   return new Promise((resolve, reject) => {

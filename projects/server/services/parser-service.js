@@ -1,6 +1,6 @@
 const fs = require('fs-promise');
 const request = require('request');
-const url = require('../config/app').parser.url;
+const url = require('../config/config').parser.url;
 const db = require('../models');
 const Document = db.Document;
 const path = require('path');

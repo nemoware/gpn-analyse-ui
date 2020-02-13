@@ -5,10 +5,13 @@ const fs = require('fs');
 const path = require('path');
 const basename = path.basename(__filename);
 
-const options = require('../config/app').db;
+const options = require('../config/config').db;
 const host = options.host;
 const port = options.port;
 const name = options.name;
+
+const defaultGroup = require('../config/config').ad.group;
+const roles = require('../json/role');
 
 // подключение
 mongoose
@@ -17,12 +20,24 @@ mongoose
     useUnifiedTopology: true,
     useFindAndModify: false
   })
-  .then(() => {
+  .then(async () => {
+    const count = await db.Group.countDocuments({
+      distinguishedName: defaultGroup
+    });
+    if (!count) {
+      const group = new db.Group({
+        cn: defaultGroup
+          .split(',')
+          .find(l => l.split('=')[0].toLowerCase() === 'cn')
+          .split('=')[1],
+        distinguishedName: defaultGroup,
+        roles: [roles.find(r => r._id === '3')]
+      });
+      await group.save();
+    }
     info('on');
   })
-  .catch(() => {
-    info('off');
-  });
+  .catch(() => info('off'));
 
 function info(status) {
   console.log(`Database`);
