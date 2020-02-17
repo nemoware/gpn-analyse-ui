@@ -35,16 +35,17 @@ mongoose
       });
       await group.save();
     }
-    info('on');
+    info();
   })
-  .catch(() => info('off'));
+  .catch(err => info(err));
 
-function info(status) {
+function info(err) {
   console.log(`Database`);
   console.log(`Name: ${name}`);
   console.log(`Host: ${host}`);
   console.log(`Port: ${port}`);
-  console.log(`Status: ${status}`);
+  console.log(`Status: ${err ? 'off' : 'on'}`);
+  if (err) console.log(err);
   console.log();
 }
 

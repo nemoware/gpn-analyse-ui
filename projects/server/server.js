@@ -11,6 +11,7 @@ const argv = require('yargs').argv;
 global.kerberos = argv.kerberos !== 'false';
 global.ad = argv.ad !== 'false';
 global.login = !global.kerberos && (argv.login || 'admin@company.loc');
+const ssl = argv.ssl !== 'false';
 
 const ad = require('./services/ad-service');
 const authentication = require('./services/authentication-service');
@@ -42,15 +43,24 @@ app.use('/api/audit', auditRouter);
 app.use('/api/document', documentRouter);
 app.use('/api/event', eventRouter);
 
-const privateKey = fs.readFileSync('./ssl/server.key', 'utf8');
-const certificate = fs.readFileSync('./ssl/server.crt', 'utf8');
-
-const server = https.createServer({ key: privateKey, cert: certificate }, app);
-server.listen(port, async err => {
+const listen = async err => {
   if (err) return console.log(err);
 
   console.log(`App is listening on port ${port}`);
   console.log();
 
   await Promise.all([parser.test(), ad.test(), authentication.test()]);
-});
+};
+
+if (ssl) {
+  const privateKey = fs.readFileSync('./ssl/server.key', 'utf8');
+  const certificate = fs.readFileSync('./ssl/server.crt', 'utf8');
+
+  const server = https.createServer(
+    { key: privateKey, cert: certificate },
+    app
+  );
+  server.listen(port, listen);
+} else {
+  app.listen(port, listen);
+}
