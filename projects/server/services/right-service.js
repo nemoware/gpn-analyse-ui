@@ -17,6 +17,12 @@ module.exports = async (req, res, next) => {
     );
   }
 
+  if (!roles.length) {
+    return res.status(403).sendFile('403.html', {
+      root: path.join(__dirname, '../file/')
+    });
+  }
+
   const controller = req.url.split('/')[2];
   let check = true;
   switch (controller) {

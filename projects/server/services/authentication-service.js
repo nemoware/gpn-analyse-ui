@@ -10,7 +10,7 @@ async function authenticate(req, res, next) {
     res.locals.user = await adService.getUser(login, true);
     next();
   } catch (err) {
-    res.status(401).sendFile('error.html', {
+    res.status(401).sendFile('401.html', {
       root: path.join(__dirname, '../file/')
     });
   }
