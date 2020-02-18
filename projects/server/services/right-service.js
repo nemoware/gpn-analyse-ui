@@ -1,3 +1,4 @@
+const path = require('path');
 const { Group } = require('../models');
 const groups = require('../config/config').ad.groups;
 
