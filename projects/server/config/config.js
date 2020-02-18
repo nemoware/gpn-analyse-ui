@@ -12,7 +12,11 @@ exports.ad = {
     password: process.env.GPN_AD_PASS
   },
   realm: process.env.GPN_AD_REALM,
-  group: process.env.GPN_DEFAULT_GROUP
+  groups: {
+    admin: process.env.GPN_ADMIN_GROUP,
+    audit: process.env.GPN_AUDIT_GROUP,
+    event: process.env.GPN_EVENT_GROUP
+  }
 };
 
 exports.parser = {

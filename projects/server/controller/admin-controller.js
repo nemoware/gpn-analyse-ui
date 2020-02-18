@@ -36,16 +36,6 @@ exports.getAppGroups = async (req, res) => {
   }
 };
 
-exports.postGroup = async (req, res) => {
-  try {
-    const group = new Group(req.body);
-    await group.save();
-    res.status(201).send(group);
-  } catch (err) {
-    logger.logError(req, res, err, 500);
-  }
-};
-
 exports.updateGroup = async (req, res) => {
   const id = req.body._id;
 
@@ -62,15 +52,4 @@ exports.updateGroup = async (req, res) => {
   }
 };
 
-exports.deleteGroup = async (req, res) => {
-  try {
-    await Group.deleteOne({ _id: req.query.id });
-    res.sendStatus(204);
-  } catch (err) {
-    logger.logError(req, res, err, 500);
-  }
-};
-
-exports.getRoles = async (req, res) => {
-  res.send(roles);
-};
+exports.getRoles = (req, res) => res.send(roles);

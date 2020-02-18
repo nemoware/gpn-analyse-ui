@@ -51,3 +51,5 @@ Thumbs.db
 debug.log
 
 projects/server/ssl/
+
+projects/server/ecosystem.config.js

@@ -1,12 +1,14 @@
 const { Group } = require('../models');
+const groups = require('../config/config').ad.groups;
 
 module.exports = async (req, res, next) => {
   const userGroups = res.locals.user.memberOf;
-  const appGroups = await Group.find(
-    { distinguishedName: { $in: userGroups } },
-    'roles',
-    { lean: true }
+  const targets = Object.keys(groups).filter(group =>
+    userGroups.includes(groups[group])
   );
+  const appGroups = await Group.find({ target: { $in: targets } }, 'roles', {
+    lean: true
+  });
 
   let roles = [];
   for (let group of appGroups) {

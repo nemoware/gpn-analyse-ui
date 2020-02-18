@@ -10,7 +10,7 @@ const host = options.host;
 const port = options.port;
 const name = options.name;
 
-const defaultGroup = require('../config/config').ad.group;
+const groups = require('../config/config').ad.groups;
 const roles = require('../json/role');
 
 // подключение
@@ -21,19 +21,20 @@ mongoose
     useFindAndModify: false
   })
   .then(async () => {
-    const count = await db.Group.countDocuments({
-      distinguishedName: defaultGroup
-    });
+    const count = await db.Group.countDocuments();
     if (!count) {
-      const group = new db.Group({
-        cn: defaultGroup
-          .split(',')
-          .find(l => l.split('=')[0].toLowerCase() === 'cn')
-          .split('=')[1],
-        distinguishedName: defaultGroup,
-        roles: [roles.find(r => r._id === '3')]
-      });
-      await group.save();
+      for (let key in groups) {
+        const group = new db.Group({
+          cn: groups[key]
+            .split(',')
+            .find(l => l.split('=')[0].toLowerCase() === 'cn')
+            .split('=')[1],
+          distinguishedName: groups[key],
+          target: key,
+          roles: key === 'admin' ? [roles.find(r => r._id === '3')] : []
+        });
+        await group.save();
+      }
     }
     info();
   })
