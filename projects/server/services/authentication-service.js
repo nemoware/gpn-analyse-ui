@@ -1,7 +1,7 @@
 const path = require('path');
 const kerberos = require('kerberos');
 const adService = require('../services/ad-service');
-const realm = require('../config/config').ad.realm;
+const principal = require('../config/config').ad.principal;
 
 async function authenticate(req, res, next) {
   try {
@@ -26,7 +26,7 @@ async function getLogin(req, res) {
     try {
       let ticket = req.headers.authorization.substring('Negotiate '.length);
       console.log(ticket);
-      const server = await initializeServer(realm);
+      const server = await initializeServer(principal);
       console.log(server);
       await step(server, ticket);
       console.log(server.username);
@@ -57,7 +57,7 @@ function step(server, ticket) {
 async function test() {
   let status = 'on';
   try {
-    await initializeServer(realm);
+    await initializeServer(principal);
   } catch (err) {
     status = 'off';
   }

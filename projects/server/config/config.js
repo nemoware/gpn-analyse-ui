@@ -11,7 +11,7 @@ exports.ad = {
     username: process.env.GPN_AD_USERNAME,
     password: process.env.GPN_AD_PASS
   },
-  realm: process.env.GPN_AD_REALM,
+  principal: process.env.GPN_AD_PRINCIPAL,
   groups: {
     admin: process.env.GPN_ADMIN_GROUP,
     audit: process.env.GPN_AUDIT_GROUP,
