@@ -25,8 +25,11 @@ async function getLogin(req, res) {
   } else {
     try {
       let ticket = req.headers.authorization.substring('Negotiate '.length);
+      console.log(ticket);
       const server = await initializeServer(realm);
+      console.log(server);
       await step(server, ticket);
+      console.log(server.username);
       return server.username;
     } catch (err) {
       console.log(err);
