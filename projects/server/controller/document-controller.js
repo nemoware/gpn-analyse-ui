@@ -125,7 +125,7 @@ exports.getDocument = async (req, res) => {
 exports.updateDocument = async (req, res) => {
   let document = await Document.findOne(
     { _id: req.query._id },
-    'user parse.documentType auditId'
+    'user parse.documentType auditId analysis.warnings'
   );
   if (!document) {
     return logger.logError(req, res, 'Document not found', 404);
@@ -135,6 +135,18 @@ exports.updateDocument = async (req, res) => {
     const user = req.body.user;
     document.user.attributes = {};
     const attributes = attribute.getAttributeList(document.parse.documentType);
+    for (let i = 0; i < document.analysis.warnings.length; i++) {
+      const warning = document.analysis.warnings[i];
+      if (
+        (warning.code === 'date_not_found' && user.date) ||
+        (warning.code === 'number_not_found' && user.number)
+      ) {
+        if (!document.analysis.resolvedWarnings)
+          document.analysis.resolvedWarnings = [];
+        document.analysis.resolvedWarnings.push(warning);
+        document.analysis.warnings.splice(i);
+      }
+    }
     for (let key in user) {
       const attribute = attributes.find(a => a.kind === key);
       if (attribute) {
