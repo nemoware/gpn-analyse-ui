@@ -15,11 +15,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/dash/dash.module').then(m => m.FeatureListModule)
   },
-  {
+  /*{
     path: 'settings',
     loadChildren: () =>
       import('./features/settings/settings.module').then(m => m.SettingsModule)
-  },
+  },*/
   {
     path: 'analyse',
     loadChildren: () =>

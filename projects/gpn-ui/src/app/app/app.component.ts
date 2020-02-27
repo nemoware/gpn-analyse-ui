@@ -40,8 +40,8 @@ export class AppComponent implements OnInit {
   ];
 
   navigationSideMenu = [
-    ...this.navigation,
-    { link: 'settings', label: 'Настройки' }
+    ...this.navigation /*,
+    { link: 'settings', label: 'Настройки' }*/
   ];
 
   isAuthenticated$: Observable<boolean>;
