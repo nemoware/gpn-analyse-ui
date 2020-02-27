@@ -123,7 +123,10 @@ exports.getDocument = async (req, res) => {
 };
 
 exports.updateDocument = async (req, res) => {
-  let document = await Document.findOne({ _id: req.query._id });
+  let document = await Document.findOne(
+    { _id: req.query._id },
+    'user parse.documentType auditId'
+  );
   if (!document) {
     return logger.logError(req, res, 'Document not found', 404);
   }
