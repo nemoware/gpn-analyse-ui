@@ -87,7 +87,7 @@ exports.getDocument = async (req, res) => {
     ).lean();
 
     if (document) {
-      logger.log(req, res, 'Просмотр документа');
+      await logger.log(req, res, 'Просмотр документа');
 
       let audit = await Audit.findOne(
         { _id: document.auditId },
@@ -164,7 +164,7 @@ exports.updateDocument = async (req, res) => {
     audit.status = 'InWork';
     await audit.save();
 
-    logger.log(req, res, 'Изменение документа');
+    await logger.log(req, res, 'Изменение документа');
     res.status(200).json(document);
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -256,6 +256,7 @@ exports.postLink = async (req, res) => {
 
     audit.links.push(req.body);
     await Audit.findOneAndUpdate({ _id: audit._id }, { links: audit.links });
+    await logger.log(req, res, 'Добавление связи документов');
     res.sendStatus(201);
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -319,6 +320,7 @@ exports.deleteLink = async (req, res) => {
       }
     );
 
+    await logger.log(req, res, 'Удаление связи документов');
     res.status(200).send();
   } catch (err) {
     logger.logError(req, res, err, 500);
