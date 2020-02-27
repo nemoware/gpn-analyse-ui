@@ -1,7 +1,6 @@
 const fs = require('fs-promise');
 const logger = require('../core/logger');
-const { Audit, Document } = require('../models');
-const subsidiaries = require('../json/subsidiary');
+const { Audit, Document, Subsidiary } = require('../models');
 const parser = require('../services/parser-service');
 
 exports.postAudit = async (req, res) => {
@@ -37,13 +36,12 @@ exports.postAudit = async (req, res) => {
 };
 
 exports.getSubsidiaries = async (req, res) => {
-  res.send(
-    subsidiaries.map(s => {
-      return {
-        name: s._id
-      };
-    })
-  );
+  try {
+    const subsidiaries = await Subsidiary.find(null, '_id');
+    res.send(subsidiaries);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
 };
 
 exports.getAuditStatuses = async (req, res) => {
