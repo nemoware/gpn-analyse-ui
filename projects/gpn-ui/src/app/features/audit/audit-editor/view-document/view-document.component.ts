@@ -169,7 +169,15 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     const startWord = document.getElementById('span_' + indexStart);
 
     if (indexStart !== indexEnd - 1) {
-      const endWord = this.checkEndWord(indexEnd);
+      const lastSpan =
+        Number(
+          startWord.parentElement.children[
+            startWord.parentElement.children.length - 2
+          ].id.split('_')[1]
+        ) ===
+        indexEnd - 1;
+      let endWord = this.checkEndWord(indexEnd - Number(lastSpan));
+      if (lastSpan) endWord = endWord.nextSibling;
       const range = document.createRange();
       range.setStart(startWord, 0);
       range.setEnd(endWord, 0);
@@ -181,7 +189,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         span.previousElementSibling.textContent === ''
       )
         span.previousElementSibling.remove();
-      if (span.children[span.children.length - 1])
+      if (
+        span.children[span.children.length - 1] &&
+        span.children[span.children.length - 1].textContent === ''
+      )
         span.children[span.children.length - 1].remove();
     } else {
       startWord.parentElement.insertBefore(span, startWord);
