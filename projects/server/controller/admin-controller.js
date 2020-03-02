@@ -46,6 +46,8 @@ exports.updateGroup = async (req, res) => {
     group.roles = req.body.roles;
 
     await group.save();
+    await logger.log(req, res, 'Обновление прав группы');
+
     res.send(group);
   } catch (err) {
     logger.logError(req, res, err, 500);

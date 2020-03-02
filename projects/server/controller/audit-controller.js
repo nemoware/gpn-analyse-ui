@@ -26,7 +26,7 @@ exports.postAudit = async (req, res) => {
 
   try {
     await audit.save();
-    logger.log(req, res, 'Создание аудита');
+    await logger.log(req, res, 'Создание аудита');
     res.status(201).json(audit);
 
     parser.parseAudit(audit);
@@ -299,6 +299,7 @@ exports.approve = async (req, res) => {
 
     audit.status = 'Approved';
     await audit.save();
+    await logger.log(req, res, 'Подтверждение аудита');
     res.end();
   } catch (err) {
     logger.logError(req, res, err, 500);

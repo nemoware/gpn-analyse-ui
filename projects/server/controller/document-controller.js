@@ -87,7 +87,7 @@ exports.getDocument = async (req, res) => {
     ).lean();
 
     if (document) {
-      logger.log(req, res, 'Просмотр документа');
+      await logger.log(req, res, 'Просмотр документа');
 
       let audit = await Audit.findOne(
         { _id: document.auditId },
@@ -125,7 +125,7 @@ exports.getDocument = async (req, res) => {
 exports.updateDocument = async (req, res) => {
   let document = await Document.findOne(
     { _id: req.query._id },
-    'user parse.documentType auditId'
+    'user parse.documentType auditId analysis.warnings'
   );
   if (!document) {
     return logger.logError(req, res, 'Document not found', 404);
@@ -135,6 +135,18 @@ exports.updateDocument = async (req, res) => {
     const user = req.body.user;
     document.user.attributes = {};
     const attributes = attribute.getAttributeList(document.parse.documentType);
+    for (let i = 0; i < document.analysis.warnings.length; i++) {
+      const warning = document.analysis.warnings[i];
+      if (
+        (warning.code === 'date_not_found' && user.date) ||
+        (warning.code === 'number_not_found' && user.number)
+      ) {
+        if (!document.analysis.resolvedWarnings)
+          document.analysis.resolvedWarnings = [];
+        document.analysis.resolvedWarnings.push(warning);
+        document.analysis.warnings.splice(i);
+      }
+    }
     for (let key in user) {
       const attribute = attributes.find(a => a.kind === key);
       if (attribute) {
@@ -164,7 +176,7 @@ exports.updateDocument = async (req, res) => {
     audit.status = 'InWork';
     await audit.save();
 
-    logger.log(req, res, 'Изменение документа');
+    await logger.log(req, res, 'Изменение документа');
     res.status(200).json(document);
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -256,6 +268,7 @@ exports.postLink = async (req, res) => {
 
     audit.links.push(req.body);
     await Audit.findOneAndUpdate({ _id: audit._id }, { links: audit.links });
+    await logger.log(req, res, 'Добавление связи документов');
     res.sendStatus(201);
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -319,6 +332,7 @@ exports.deleteLink = async (req, res) => {
       }
     );
 
+    await logger.log(req, res, 'Удаление связи документов');
     res.status(200).send();
   } catch (err) {
     logger.logError(req, res, err, 500);
