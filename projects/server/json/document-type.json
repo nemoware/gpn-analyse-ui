@@ -100,6 +100,14 @@
         "once": true
       },
       {
+        "kind": "org-2-type",
+        "once": true
+      },
+      {
+        "kind": "org-2-name",
+        "once": true
+      },
+      {
         "kind": "org-structural-level",
         "type": "dictionary",
         "dictionaryName": "StructuralLevel",
