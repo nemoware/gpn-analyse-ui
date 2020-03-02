@@ -13,7 +13,7 @@
       <form [formGroup]="editForm">
         <mat-form-field>
           <mat-label>Тип фрагмента</mat-label>
-            <mat-select (selectionChange)="changedKind($event)" formControlName = "kind" [disabled]="readOnly">
+            <mat-select (selectionChange)="changedKind($event)" formControlName = "kind">
             <mat-option *ngFor="let type of data.kinds" [value]="type">
             {{type.kind | translate}}
             </mat-option>
@@ -66,9 +66,9 @@
   </div>
 </div>
 <mat-dialog-actions align="end">
-    <span *ngIf="readOnly" class="readonly">Атрибут закрыт на редактирование!</span>
+    <span *ngIf="readOnly" class="readonly">Не известный атрибут!</span>
     <button mat-button mat-dialog-close>Отмена</button>
-    <button mat-raised-button (click)="deleteAtr()" [disabled]="_new || readOnly" style="float: right; width: 100px;">Удалить</button>
+    <button mat-raised-button (click)="deleteAtr()" [disabled]="_new" style="float: right; width: 100px;">Удалить</button>
     <button mat-raised-button color="accent" (click)="applyChanges()" [disabled]="!valid()" style="float: right; width: 100px; margin-left: 10px ">Применить</button>
 </mat-dialog-actions>
 
