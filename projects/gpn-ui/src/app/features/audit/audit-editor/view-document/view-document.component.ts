@@ -141,7 +141,14 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     let result = normal_text;
     for (let i = words.length - 1; i >= 0; i--) {
-      const word = normal_text.slice(words[i][0], words[i][1]);
+      let word = normal_text.slice(words[i][0], words[i][1]);
+      if (Number(word) && Number(word) >= 1000) {
+        const checkValue = normal_text.slice(words[i][1], words[i][1] + 50);
+        if (checkValue.match('руб|доллар|евро|тенге'))
+          word = Number(word)
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, '$& ');
+      }
       result =
         result.slice(0, words[i][0]) +
         `<span id = "span_${i}">` +
@@ -207,24 +214,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       if (changed) spanHint.classList.add('changed');
       span.appendChild(spanHint);
     }
-
-    if (kind === 'value') {
-      for (let i = 0; i < span.childElementCount; i++) {
-        if (span.children[i].id) {
-          span.children[i].innerHTML = this.formatValueText(
-            span.children[i].innerHTML
-          );
-        }
-      }
-    }
-  }
-
-  formatValueText(value): string {
-    if (!isNaN(Number(value)))
-      return Number(value)
-        .toFixed(2)
-        .replace(/\d(?=(\d{3})+\.)/g, '$& ');
-    else return value;
   }
 
   checkEndWord(id: number): Node {
