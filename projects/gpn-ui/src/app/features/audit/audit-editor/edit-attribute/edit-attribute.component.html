@@ -10,16 +10,21 @@
 <div class="row">
 
     <div class="col">
-      <form [formGroup]="editForm">
         <mat-form-field>
-          <mat-label>Тип фрагмента</mat-label>
-            <mat-select (selectionChange)="changedKind($event)" formControlName = "kind">
-            <mat-option *ngFor="let type of data.kinds" [value]="type">
-            {{type.kind | translate}}
+          <mat-select [formControl]="kindCtrl" placeholder="Выбрать атрибут" (selectionChange)="changedKind($event)">
+            <mat-option>
+              <ngx-mat-select-search [formControl]="kindFilterCtrl"
+                                     [placeholderLabel]="'Поиск атрибута'"
+                                     [noEntriesFoundLabel]="'Атрибут не найден'"
+              >
+                <fa-icon ngxMatSelectSearchClear [icon]="faTimes" matTooltip="Очистить поиск"></fa-icon>
+              </ngx-mat-select-search>
             </mat-option>
-        </mat-select>
+            <mat-option *ngFor="let kind of filteredKinds | async" [value]="kind">
+              {{kind.kind | translate}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
-      </form>
     </div>
 
   <div class="col" *ngIf="selectedKind && !selectedKind.hideValue" [ngSwitch]="selectedKind.type">
@@ -55,9 +60,17 @@
     <ng-container *ngSwitchCase="'dictionary'">
       <mat-form-field>
         <mat-label>Значение</mat-label>
-        <mat-select (selectionChange)="change($event)" [(ngModel)]="data.value">
-          <mat-option *ngFor="let _value of dictionaryValues" [value]="_value.id">
-            {{_value.value | translate}}
+        <mat-select [formControl]="valueCtrl" placeholder="Выбрать значение" (selectionChange)="change($event.value.id, true)">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="valueFilterCtrl"
+                                   [placeholderLabel]="'Поиск значения'"
+                                   [noEntriesFoundLabel]="'Значение не найден'"
+            >
+              <fa-icon ngxMatSelectSearchClear [icon]="faTimes" matTooltip="Очистить поиск"></fa-icon>
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let value of filteredValues | async" [value]="value">
+            {{value.value | translate}}
           </mat-option>
         </mat-select>
       </mat-form-field>
