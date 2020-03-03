@@ -163,7 +163,9 @@ exports.updateDocument = async (req, res) => {
       }
     }
     for (let key in user) {
-      const attribute = attributes.find(a => a.kind === key);
+      const parts = key.replace(/_/g, '-').split('/');
+      const kind = parts[parts.length - 1];
+      const attribute = attributes.find(a => a.kind === kind);
       if (attribute) {
         switch (attribute.type) {
           case 'date':
@@ -172,6 +174,9 @@ exports.updateDocument = async (req, res) => {
           case 'number':
             user[key].value = +user[key].value;
             break;
+        }
+        if (attribute.kind === 'sign') {
+          user[key].value = +user[key].value;
         }
       }
 
