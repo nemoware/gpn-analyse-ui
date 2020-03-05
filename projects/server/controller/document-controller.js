@@ -139,7 +139,22 @@ exports.updateDocument = async (req, res) => {
       const warning = document.analysis.warnings[i];
       if (
         (warning.code === 'date_not_found' && user.date) ||
-        (warning.code === 'number_not_found' && user.number)
+        (warning.code === 'number_not_found' && user.number) ||
+        (warning.code === 'org_name_not_found' &&
+          (user['org-1-name'] || user['org-2-name'])) ||
+        (warning.code === 'org_type_not_found' &&
+          (user['org-1-type'] || user['org-2-type'])) ||
+        (warning.code === 'org_struct_level_not_found' &&
+          user['org-structural-level']) ||
+        (
+          warning.code === 'value_section_not_found' &&
+          user['sign-value-currency']
+        )(
+          (warning.code === 'subject_section_not_found' ||
+            warning.code === 'contract_subject_not_found' ||
+            warning.code === 'contract_subject_section_not_found') &&
+            user.subject
+        )
       ) {
         if (!document.analysis.resolvedWarnings)
           document.analysis.resolvedWarnings = [];
@@ -148,7 +163,9 @@ exports.updateDocument = async (req, res) => {
       }
     }
     for (let key in user) {
-      const attribute = attributes.find(a => a.kind === key);
+      const parts = key.replace(/_/g, '-').split('/');
+      const kind = parts[parts.length - 1];
+      const attribute = attributes.find(a => a.kind === kind);
       if (attribute) {
         switch (attribute.type) {
           case 'date':
@@ -157,6 +174,9 @@ exports.updateDocument = async (req, res) => {
           case 'number':
             user[key].value = +user[key].value;
             break;
+        }
+        if (attribute.kind === 'sign') {
+          user[key].value = +user[key].value;
         }
       }
 
