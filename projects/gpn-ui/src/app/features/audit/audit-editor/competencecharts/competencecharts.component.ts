@@ -84,6 +84,8 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
         const pth = keyToPieces(x.key);
 
         const org_level = pth[0];
+        if (org_level.toLowerCase().includes('constraint')) break;
+
         const competence_name = pth[1];
 
         if (!(org_level in constraintsTree)) {
