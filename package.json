@@ -73,6 +73,7 @@
     "hammerjs": "^2.0.8",
     "kerberos": "^1.1.3",
     "ldapjs": "^1.0.2",
+    "moment": "^2.24.0",
     "mongoose": "^5.8.0",
     "ngx-mat-select-search": "^1.8.0",
     "ngx-spinner": "^8.0.3",

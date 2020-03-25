@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { Document, Audit, User } = require('../models');
 const logger = require('../core/logger');
 const attribute = require('../core/attribute');
@@ -87,12 +88,22 @@ exports.getDocument = async (req, res) => {
     ).lean();
 
     if (document) {
-      await logger.log(req, res, 'Просмотр документа');
-
       let audit = await Audit.findOne(
         { _id: document.auditId },
         `subsidiary.name auditStart auditEnd status -_id`
       ).lean();
+
+      await logger.log(
+        req,
+        res,
+        'Просмотр документа',
+        `${document.parse.documentType} № ${document.parse.documentNumber ||
+          'н/д'} от ${document.parse.documentDate || 'н/д'}. Аудит "${
+          audit.subsidiary.name
+        }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
+          audit.auditEnd
+        ).format('DD.MM.YYYY')}`
+      );
 
       if (audit) {
         audit.subsidiaryName = audit.subsidiary.name;

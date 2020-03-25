@@ -1,4 +1,5 @@
 const fs = require('fs-promise');
+const moment = require('moment');
 const logger = require('../core/logger');
 const { Audit, Document, Subsidiary } = require('../models');
 const parser = require('../services/parser-service');
@@ -26,7 +27,14 @@ exports.postAudit = async (req, res) => {
 
   try {
     await audit.save();
-    await logger.log(req, res, 'Создание аудита');
+    await logger.log(
+      req,
+      res,
+      'Создание аудита',
+      `Аудит "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+        'DD.MM.YYYY'
+      )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
+    );
     res.status(201).json(audit);
 
     parser.parseAudit(audit);

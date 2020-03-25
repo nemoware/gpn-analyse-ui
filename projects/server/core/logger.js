@@ -43,7 +43,7 @@ exports.logLocalError = async err => {
   }
 };
 
-exports.log = async (req, res, event) => {
+exports.log = async (req, res, event, details) => {
   let eventType = await EventType.findOne({ name: event });
   if (!eventType) {
     eventType = new EventType({ name: event });
@@ -58,7 +58,8 @@ exports.log = async (req, res, event) => {
   let log = new Log({
     time: new Date(),
     login: res.locals.user.sAMAccountName,
-    eventType: eventType
+    eventType,
+    details
   });
 
   try {

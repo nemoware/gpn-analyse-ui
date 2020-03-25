@@ -46,7 +46,14 @@ exports.updateGroup = async (req, res) => {
     group.roles = req.body.roles;
 
     await group.save();
-    await logger.log(req, res, 'Обновление прав группы');
+    await logger.log(
+      req,
+      res,
+      'Обновление прав группы',
+      `Роли ${group.target} назначены права "${group.roles
+        .map(r => r.name)
+        .join('", "')}"`
+    );
 
     res.send(group);
   } catch (err) {

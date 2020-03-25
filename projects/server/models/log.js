@@ -3,7 +3,8 @@ module.exports = (mongoose, Schema) => {
   let logSchema = new Schema({
     time: Date,
     eventType: { _id: ObjectId, name: String },
-    login: String
+    login: String,
+    details: String
   });
 
   return mongoose.model('Log', logSchema);
