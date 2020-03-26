@@ -29,7 +29,7 @@ export class EventViewerComponent implements OnInit, AfterViewInit {
 
   defPageSize = 20;
   dataSource: EventDataSource;
-  displayedColumns: string[] = ['time', 'login', 'name'];
+  displayedColumns: string[] = ['time', 'login', 'name', 'details'];
   eventsType = [];
   _filterValue: [];
 

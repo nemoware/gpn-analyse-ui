@@ -13,11 +13,15 @@ table {
 }
 
 .mat-column-time {
-  max-width: 30px;
+  width: 150px !important;
 }
 
 .mat-column-login {
-  max-width: 30px;
+  width: 150px !important;
+}
+
+.mat-column-name {
+  width: 200px !important;
 }
 
 .left_group {
