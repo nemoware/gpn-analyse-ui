@@ -1,6 +1,7 @@
 [
   {
     "_id": "CONTRACT",
+    "name": "Договор",
     "attributes": [
       {
         "kind": "org-1-type",
@@ -90,6 +91,7 @@
   },
   {
     "_id": "PROTOCOL",
+    "name": "Протокол",
     "attributes": [
       {
         "kind": "org-1-name",
@@ -157,6 +159,7 @@
   },
   {
     "_id": "CHARTER",
+    "name": "Устав",
     "attributes": [
       {
         "kind": "org-1-name",

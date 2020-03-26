@@ -2,6 +2,7 @@ const moment = require('moment');
 const { Document, Audit, User } = require('../models');
 const logger = require('../core/logger');
 const attribute = require('../core/attribute');
+const types = require('../json/document-type');
 
 const documentFields = `filename
 parse.documentDate
@@ -93,11 +94,12 @@ exports.getDocument = async (req, res) => {
         `subsidiary.name auditStart auditEnd status -_id`
       ).lean();
 
+      const type = types.find(t => t._id === document.parse.documentType);
       await logger.log(
         req,
         res,
         'Просмотр документа',
-        `${document.parse.documentType} № ${document.parse.documentNumber ||
+        `${type && type.name} № ${document.parse.documentNumber ||
           'н/д'} от ${document.parse.documentDate || 'н/д'}. Аудит "${
           audit.subsidiary.name
         }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
@@ -136,7 +138,7 @@ exports.getDocument = async (req, res) => {
 exports.updateDocument = async (req, res) => {
   let document = await Document.findOne(
     { _id: req.query._id },
-    'user parse.documentType auditId analysis.warnings'
+    'user parse auditId analysis.warnings'
   );
   if (!document) {
     return logger.logError(req, res, 'Document not found', 404);
@@ -207,7 +209,18 @@ exports.updateDocument = async (req, res) => {
     audit.status = 'InWork';
     await audit.save();
 
-    await logger.log(req, res, 'Изменение документа');
+    const type = types.find(t => t._id === document.parse.documentType);
+    await logger.log(
+      req,
+      res,
+      'Изменение документа',
+      `${type && type.name} № ${document.parse.documentNumber ||
+        'н/д'} от ${document.parse.documentDate || 'н/д'}. Аудит "${
+        audit.subsidiary.name
+      }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
+        audit.auditEnd
+      ).format('DD.MM.YYYY')}`
+    );
     res.status(200).json(document);
   } catch (err) {
     logger.logError(req, res, err, 500);
