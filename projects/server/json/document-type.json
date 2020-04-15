@@ -134,10 +134,12 @@
           "contract-agent-org-1-name",
           "contract-agent-org-1-type",
           "contract-agent-org-1-alt-name",
+          "contract-agent-org-1-alias",
 
           "contract-agent-org-2-name",
           "contract-agent-org-2-type",
           "contract-agent-org-2-alt-name",
+          "contract-agent-org-2-alias",
 
           {
             "parents": ["sign-value-currency"],
