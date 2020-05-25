@@ -101,6 +101,9 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     this.auditservice.getSubsidiaries().subscribe(data => {
       this.subsidiaries = data;
+      const allSubs = {name: '* Все ДО'};
+      this.subsidiaries.unshift(allSubs);
+
       this.filteredSubsidiaries.next(this.subsidiaries.slice());
       this.subsidiaryFilterCtrl.valueChanges
         .pipe(takeUntil(this._onDestroy))
@@ -146,7 +149,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   CloseForm() {
     this.dialogRef.close();
   }
-
+ 
   CreateAudit() {
     const newAudit: Audit = {
       subsidiaryName: this.subsidiaryCtrl.value.name,
