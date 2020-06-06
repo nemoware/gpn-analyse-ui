@@ -37,4 +37,5 @@ export interface Document {
   };
   statusAudit: string;
   starred: boolean;
+  state?: number;
 }

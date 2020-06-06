@@ -47,6 +47,10 @@ exports.getDocuments = async (req, res) => {
       if (d.analysis && d.analysis.attributes) {
         if (d.user) {
           document.user = d.user;
+          if (d.analysis.analyze_timestamp)
+            document.analysis = {
+              analyze_timestamp: d.analysis.analyze_timestamp
+            };
         } else {
           document.analysis = d.analysis;
         }
