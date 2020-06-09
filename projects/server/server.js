@@ -2,29 +2,25 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
-const parser = require('./parser/auditParser');
+const https = require('https');
+const fs = require('fs');
+const parser = require('./services/parser-service');
+const rightService = require('./services/right-service');
 
-const appConfig = require('./config/app.config');
+const argv = require('yargs').argv;
+global.kerberos = argv.kerberos !== 'false';
+global.ad = argv.ad !== 'false';
+global.login = !global.kerberos && (argv.login || 'admin@company.loc');
+const ssl = argv.ssl !== 'false';
 
-if (process.argv[2]) {
-  appConfig.ad.on = process.argv[2] === 'true';
-}
-if (process.argv[3]) {
-  appConfig.ad.login = process.argv[3];
-}
+const ad = require('./services/ad-service');
+const authentication = require('./services/authentication-service');
 
-const adAuthorization = require('./authorization/adAuthorization');
-const fakeAuthorization = require('./authorization/fakeAuthorization');
-
-if (appConfig.ad.on) {
-  appConfig.ad.auth = adAuthorization;
-} else {
-  appConfig.ad.auth = fakeAuthorization;
-}
-
-const adAuth = appConfig.ad.auth;
-
-const dbAuth = require('./authorization/dbAuthorization');
+const accountRouter = require('./routers/account-router');
+const adminRouter = require('./routers/admin-router');
+const auditRouter = require('./routers/audit-router');
+const documentRouter = require('./routers/document-router');
+const eventRouter = require('./routers/event-router');
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
 
@@ -35,55 +31,36 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(async function(req, res, next) {
-  let ADUser = await adAuth.getUser(req, res);
-
-  if (!ADUser) {
-    res.status(401).sendFile('error.html', {
-      root: path.join(__dirname, './file/')
-    });
-  }
-
-  let user = await dbAuth.getUser(ADUser.sAMAccountName);
-
-  if (!user) {
-    res.status(401).sendFile('error.html', {
-      root: path.join(__dirname, './file/')
-    });
-  }
-
-  res.locals.user = user;
-  next();
-});
+app.use(authentication.authenticate);
+app.use(rightService);
 
 app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
-
 app.use('/', express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
 
-const adminRouter = require('./routers/adminRouter');
-app.use('/api', adminRouter);
+app.use('/api/account', accountRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/audit', auditRouter);
+app.use('/api/document', documentRouter);
+app.use('/api/event', eventRouter);
 
-const auditRouter = require('./routers/auditRouter');
-app.use('/api', auditRouter);
-
-const developerRouter = require('./routers/developerRouter');
-app.use('/api', developerRouter);
-
-const documentRouter = require('./routers/documentRouter');
-app.use('/api', documentRouter);
-
-const eventRouter = require('./routers/eventRouter');
-app.use('/api', eventRouter);
-
-app.listen(port, err => {
-  if (err) {
-    console.log(err);
-    return;
-  }
+const listen = async err => {
+  if (err) return console.log(err);
 
   console.log(`App is listening on port ${port}`);
   console.log();
 
-  parser.test();
-  adAuthorization.test();
-});
+  await Promise.all([parser.test(), ad.test(), authentication.test()]);
+};
+
+if (ssl) {
+  const privateKey = fs.readFileSync('./ssl/server.key', 'utf8');
+  const certificate = fs.readFileSync('./ssl/server.crt', 'utf8');
+
+  const server = https.createServer(
+    { key: privateKey, cert: certificate },
+    app
+  );
+  server.listen(port, listen);
+} else {
+  app.listen(port, listen);
+}

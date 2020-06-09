@@ -49,3 +49,7 @@ Thumbs.db
 
 # debug
 debug.log
+
+projects/server/ssl/
+
+projects/server/ecosystem.config.js

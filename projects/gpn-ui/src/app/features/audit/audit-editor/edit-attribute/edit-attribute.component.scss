@@ -18,3 +18,7 @@ mat-form-field {
 .readonly {
   color: red;
 }
+
+.mat-option.mat-selected {
+  background: #2196f3 !important;
+}

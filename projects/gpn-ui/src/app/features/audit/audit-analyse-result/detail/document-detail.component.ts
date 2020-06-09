@@ -42,7 +42,7 @@ const cols_by_type = {
 
 const column_to_sorting_mapping = {
   date: 'date',
-  subject: 'subject',
+  contract_subject: 'subject',
   number: 'number',
   value: 'sign_value_currency/value',
   org1: 'org-1-name',
@@ -94,8 +94,12 @@ export class DocumentDetailComponent implements OnInit {
     data,
     sortHeaderId: string
   ): string | number => {
+    if (sortHeaderId === 'analyze_state')
+      return data.analysis.analyze_timestamp;
     if (sortHeaderId in column_to_sorting_mapping) {
       const attr = column_to_sorting_mapping[sortHeaderId];
+      if (sortHeaderId === 'contract_subject')
+        return this.translate.instant(this.getAttrValue(attr, data));
       return this.getAttrValue(attr, data);
     }
     if ('warnings' === sortHeaderId) {

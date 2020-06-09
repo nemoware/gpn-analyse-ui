@@ -1,0 +1,260 @@
+[
+  {
+    "_id": "CONTRACT",
+    "name": "Договор",
+    "attributes": [
+      {
+        "kind": "org-1-type",
+        "once": true
+      },
+      {
+        "kind": "org-1-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-alias",
+        "once": true
+      },
+      {
+        "kind": "org-2-type",
+        "once": true
+      },
+      {
+        "kind": "org-2-name",
+        "once": true
+      },
+      {
+        "kind": "org-2-alias",
+        "once": true
+      },
+      {
+        "kind": "org-1-alt-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-type-ext",
+        "once": true,
+        "hide": true
+      },
+      {
+        "kind": "org-2-alt-name",
+        "once": true
+      },
+      {
+        "kind": "org-2-type-ext",
+        "once": true,
+        "hide": true
+      },
+      {
+        "kind": "number",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
+        "once": true
+      },
+      {
+        "kind": "subject",
+        "type": "dictionary",
+        "dictionaryName": "Subject",
+        "once": true
+      },
+      {
+        "parents": [
+          {
+            "kind": "sign-value-currency",
+            "once": true
+          }
+        ],
+        "children": [
+          {
+            "kind": "value",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "sign",
+            "type": "dictionary",
+            "dictionaryName": "Sign",
+            "once": true
+          },
+          {
+            "kind": "currency",
+            "type": "dictionary",
+            "dictionaryName": "Currency",
+            "once": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "PROTOCOL",
+    "name": "Протокол",
+    "attributes": [
+      {
+        "kind": "org-1-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-type",
+        "once": true
+      },
+      {
+        "kind": "org-2-type",
+        "once": true
+      },
+      {
+        "kind": "org-2-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-alias",
+        "once": true
+      },
+      {
+        "kind": "org-2-alias",
+        "once": true
+      },
+      {
+        "kind": "org-structural-level",
+        "type": "dictionary",
+        "dictionaryName": "StructuralLevel",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
+        "once": true
+      },
+      {
+        "parents": ["agenda-item"],
+        "children": [
+          "contract-agent-org-1-name",
+          "contract-agent-org-1-type",
+          "contract-agent-org-1-alt-name",
+          "contract-agent-org-1-alias",
+
+          "contract-agent-org-2-name",
+          "contract-agent-org-2-type",
+          "contract-agent-org-2-alt-name",
+          "contract-agent-org-2-alias",
+
+          {
+            "parents": ["sign-value-currency"],
+            "children": [
+              {
+                "kind": "value",
+                "type": "number",
+                "once": true
+              },
+              {
+                "kind": "sign",
+                "type": "dictionary",
+                "dictionaryName": "Sign",
+                "once": true
+              },
+              {
+                "kind": "currency",
+                "type": "dictionary",
+                "dictionaryName": "Currency",
+                "once": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "CHARTER",
+    "name": "Устав",
+    "attributes": [
+      {
+        "kind": "org-1-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-type",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
+        "once": true
+      },
+      {
+        "parents": [
+          { "kind": "ShareholdersGeneralMeeting", "hideValue": true },
+          { "kind": "BoardOfDirectors", "hideValue": true },
+          { "kind": "CEO", "hideValue": true },
+          { "kind": "AllMembers", "hideValue": true },
+          { "kind": "BoardOfCompany", "hideValue": true }
+        ],
+        "children": [
+          {
+            "parents": [
+              { "kind": "AgencyContract", "hideValue": true },
+              { "kind": "Renting", "hideValue": true },
+              { "kind": "BankGuarantees", "hideValue": true },
+              { "kind": "Charity", "hideValue": true },
+              { "kind": "RelatedTransactions", "hideValue": true },
+              { "kind": "GeneralContract", "hideValue": true },
+              { "kind": "EmployeeContracts", "hideValue": true },
+              { "kind": "Loans", "hideValue": true },
+              { "kind": "PledgeEncumbrance", "hideValue": true },
+              { "kind": "BigDeal", "hideValue": true },
+              { "kind": "Liquidation", "hideValue": true },
+              { "kind": "Service", "hideValue": true },
+              { "kind": "CashPayments", "hideValue": true },
+              { "kind": "RefusalToLeaseLand", "hideValue": true },
+              { "kind": "DealGeneralBusiness", "hideValue": true },
+              { "kind": "RevisionCommission", "hideValue": true },
+              { "kind": "Reorganization", "hideValue": true },
+              { "kind": "Deal", "hideValue": true },
+              { "kind": "InterestedPartyTransaction", "hideValue": true },
+              { "kind": "RelatedPartyTransaction", "hideValue": true },
+              { "kind": "AssetTransactions", "hideValue": true },
+              { "kind": "RealEstate", "hideValue": true },
+              { "kind": "DealIntellectualProperty", "hideValue": true },
+              { "kind": "RealEstateTransactions", "hideValue": true },
+              { "kind": "SecuritiesTransactions", "hideValue": true },
+              { "kind": "Insurance", "hideValue": true },
+              { "kind": "RegisteredCapital", "hideValue": true },
+              {
+                "kind": "ParticipationInOtherOrganizations",
+                "hideValue": true
+              },
+              { "kind": "DecisionsForSubsidiary", "hideValue": true }
+            ],
+            "children": [
+              {
+                "parents": ["constraint-min", "constraint-max", "constraint"],
+                "children": [
+                  {
+                    "kind": "value",
+                    "type": "number",
+                    "once": true
+                  },
+                  {
+                    "kind": "sign",
+                    "type": "dictionary",
+                    "dictionaryName": "Sign",
+                    "once": true
+                  },
+                  {
+                    "kind": "currency",
+                    "type": "dictionary",
+                    "dictionaryName": "Currency",
+                    "once": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

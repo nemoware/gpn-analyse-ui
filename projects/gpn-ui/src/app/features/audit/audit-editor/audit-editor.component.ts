@@ -16,6 +16,7 @@ import { AttributeModel } from '@app/models/attribute-model';
 import { Helper } from '@app/features/audit/helper';
 // import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { ResizedEvent } from 'angular-resize-event';
+import { CompetencechartsComponent } from '@app/features/audit/audit-editor/competencecharts/competencecharts.component';
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -33,6 +34,8 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   view_doc: ViewDocumentComponent;
   @ViewChild(TreeAttributesComponent, { static: false })
   tree: TreeAttributesComponent;
+  @ViewChild(CompetencechartsComponent, { static: false })
+  competencecharts: CompetencechartsComponent;
   documentType: string[];
   changed = false;
   selectedAttribute: string;
@@ -100,6 +103,8 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
 
   saveChanges() {
     this.view_doc.saveChanges();
+    if (this.competencecharts)
+      this.competencecharts.refreshData(this.view_doc.attributes);
   }
 
   editMode() {

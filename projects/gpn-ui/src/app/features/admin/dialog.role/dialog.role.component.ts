@@ -30,25 +30,49 @@ export class DialogRoleComponent implements OnInit {
     }
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.data.user_role.forEach(x => this._selectedRole.push(x));
+  }
+  _selectedRole = [];
 
   Apply() {
     const listRoles: Array<RoleInfo> = [];
-    for (const s of this.data.roles) {
-      const elem = document.getElementById('chk_' + s._id);
-      if (elem && (elem as HTMLInputElement).checked) {
-        listRoles.push({
-          _id: s._id,
-          name: s.name,
-          description: s.description,
-          appPage: s.appPage
-        });
-      }
+    for (const s of this.data.roles.filter(x =>
+      this._selectedRole.includes(Number(x._id))
+    )) {
+      listRoles.push({
+        _id: s._id,
+        name: s.name,
+        description: s.description,
+        appPage: s.appPage
+      });
     }
     this.dialogRef.close(listRoles);
   }
 
   CloseForm() {
     this.dialogRef.close();
+  }
+
+  selectedRole(id) {
+    return this._selectedRole.includes(Number(id));
+  }
+
+  selectionChange(e) {
+    if (this._selectedRole.includes(Number(e.option._value)))
+      this._selectedRole = this._selectedRole.filter(
+        x => x !== Number(e.option._value)
+      );
+    else this._selectedRole.push(Number(e.option._value));
+  }
+
+  disabledRole(id) {
+    if (this._selectedRole.includes(1) && id !== '1') return true;
+    else
+      return (
+        !this._selectedRole.includes(1) &&
+        this._selectedRole.length > 0 &&
+        id === '1'
+      );
   }
 }

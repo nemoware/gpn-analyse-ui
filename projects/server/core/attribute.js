@@ -1,4 +1,4 @@
-const documentTypes = require('../json/documentType');
+const documentTypes = require('../json/document-type');
 
 exports.getAttributeList = function(documentTypeName) {
   const attributes = getAttributes(documentTypeName);

@@ -1,14 +1,16 @@
 <span><b>Список прав доступа</b></span>
 <hr>
-<div mat-dialog-content>
-  <ul>
-    <li matInput *ngFor="let role of data.roles">
-      <label>
-        <input type="checkbox" id="chk_{{ role._id }}" [checked]="data.user_role.includes(role._id.toString())">
-        <span> {{ role.description }}</span>
-      </label>
-  </ul>
-</div>
+
+<mat-selection-list (selectionChange)="selectionChange($event)">
+  <mat-list-option *ngFor="let role of data.roles"
+                   [value]="role._id"
+                   [disabled]="disabledRole(role._id)"
+                   [selected]="selectedRole(role._id)"
+                   checkboxPosition="before"
+  >
+    {{role.description}}
+  </mat-list-option>
+</mat-selection-list>
 
 <div class="row">
   <div class="col">

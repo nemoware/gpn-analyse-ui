@@ -56,27 +56,29 @@ $comp_t: 200;
 }
 // -----------
 
-$org_1_base: $mat-red;
-$org_1_base_alt: $mat-pink;
-$org_2_base: $mat-indigo;
-$org_2_base_alt: $mat-blue;
+$org_1_base: $mat-indigo;
+$org_1_base_alt: $mat-blue;
+
+$org_2_base: $mat-red;
+$org_2_base_alt: $mat-pink;
+
 
 .contract-agent-org-1-name,
 .org-1-name {
-  background: mat-color($org_1_base, 300);
+  background: mat-color($org_1_base_alt, 200);
 }
 
 .org-1-alt-name {
-  background: mat-color($org_1_base, 200);
+  background: mat-color($org_1_base_alt, 100);
 }
 
 .contract-agent-org-1-type,
 .org-1-type {
-  background: mat-color($org_1_base_alt, 200);
+  background: mat-color($org_1_base, 200);
 }
 
 .org-1-type-ext {
-  background: mat-color($org_1_base_alt, 100);
+  background: mat-color($org_1_base, 100);
 }
 
 .org-1-alias {
@@ -194,5 +196,9 @@ $org_2_base_alt: $mat-blue;
 }
 
 .changed {
-  background: mat-color($mat-red, 500);
+  background: mat-color($mat-red, 400);
+  
+  &:after{
+    content: ' *';
+  }
 }

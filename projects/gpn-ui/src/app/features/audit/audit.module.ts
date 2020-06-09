@@ -51,6 +51,7 @@ import {
 } from '@app/format/file-path.pipe';
 import { ViolationsAuditComponent } from './audit-analyse-result/violations-audit/violations-audit.component';
 import { MaskDateDirective } from './create-audit/mask-date.directive';
+import { SortValuePipe } from './audit-editor/competencecharts/sort-value.pipe';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { MaskDateDirective } from './create-audit/mask-date.directive';
     ChildDetailComponent,
     DocStateComponent,
     ViolationsAuditComponent,
-    MaskDateDirective
+    MaskDateDirective,
+    SortValuePipe
   ],
   imports: [
     CommonModule,

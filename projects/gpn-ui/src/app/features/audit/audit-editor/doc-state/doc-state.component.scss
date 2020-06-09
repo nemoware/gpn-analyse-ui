@@ -16,7 +16,7 @@
 .state-12 {
   color: mat-color($mat-orange, 500);
   &::after {
-    content: 'не анализирован';
+    content: 'Документ не попадает под параметры Аудита';
   }
 }
 

@@ -35,13 +35,13 @@ export class AppComponent implements OnInit {
     { link: 'audit', label: 'Аудит' },
     // { link: 'dash', label: 'Дэшборд' },
     // { link: 'analyse', label: 'Анализ' },
-    { link: 'admin', label: 'Администрирование' }
-    //{ link: 'events', label: 'Журнал событий' }
+    { link: 'admin', label: 'Администрирование' },
+    { link: 'events', label: 'Журнал событий' }
   ];
 
   navigationSideMenu = [
-    ...this.navigation,
-    { link: 'settings', label: 'Настройки' }
+    ...this.navigation /*,
+    { link: 'settings', label: 'Настройки' }*/
   ];
 
   isAuthenticated$: Observable<boolean>;

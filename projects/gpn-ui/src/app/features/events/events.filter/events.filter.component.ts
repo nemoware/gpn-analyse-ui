@@ -64,12 +64,12 @@ export class EventFilterComponent implements OnInit {
     if (this._dateFrom)
       filterVlaue.push({
         name: 'dateFrom',
-        value: this._dateFrom.getTime() / 1000
+        value: this._dateFrom.toLocaleDateString()
       });
     if (this._dateTo)
       filterVlaue.push({
         name: 'dateTo',
-        value: this._dateTo.getTime() / 1000
+        value: this._dateTo.toLocaleDateString()
       });
     this.ApplyFilter.emit(filterVlaue);
   }
