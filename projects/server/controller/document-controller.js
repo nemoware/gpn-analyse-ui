@@ -163,10 +163,8 @@ exports.updateDocument = async (req, res) => {
           (user['org-1-type'] || user['org-2-type'])) ||
         (warning.code === 'org_struct_level_not_found' &&
           user['org-structural-level']) ||
+        (warning.code === 'value_section_not_found' && user['sign-value-currency']) ||
         (
-          warning.code === 'value_section_not_found' &&
-          user['sign-value-currency']
-        )(
           (warning.code === 'subject_section_not_found' ||
             warning.code === 'contract_subject_not_found' ||
             warning.code === 'contract_subject_section_not_found') &&
