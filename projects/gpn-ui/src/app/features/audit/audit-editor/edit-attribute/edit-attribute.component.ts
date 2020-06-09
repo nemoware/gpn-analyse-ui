@@ -21,7 +21,7 @@ import {
 import { AttributeModel } from '@app/models/attribute-model';
 import { Dictionaries } from '@app/models/dictionaries';
 import { ReplaySubject, Subject } from '@root/node_modules/rxjs';
-import { takeUntil } from '@root/node_modules/rxjs/internal/operators';
+import { takeUntil } from '@root/node_modules/rxjs/operators';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 @Component({
   selector: 'gpn-edit-attribute',
