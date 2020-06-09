@@ -3,6 +3,7 @@ node_js:
   - '10'
 sudo: required
 dist: xenial
+
 apt:
   packages:
     google-chrome-stable
@@ -14,8 +15,7 @@ cache:
     - $HOME/.npm
 
 
-before_install:
-  - export CHROME_BIN=/usr/bin/google-chrome
+
 
 install:
   - npm install codecov -g
