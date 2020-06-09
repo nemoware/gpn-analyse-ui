@@ -4,9 +4,11 @@ node_js:
 sudo: required
 dist: xenial
 
-apt:
-  packages:
-    google-chrome-stable
+addons:  
+  apt:
+    packages:
+      dpkg
+      google-chrome-stable
     
 services:
   - xvfb
@@ -14,8 +16,8 @@ cache:
   directories:
     - $HOME/.npm
 
-
-
+before_script:
+  - google-chrome-stable --version
 
 install:
   - npm install codecov -g
