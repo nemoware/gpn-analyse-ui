@@ -10,6 +10,9 @@ cache:
     - $HOME/.npm
     
 before_install:
+  - gem update --system
+  - gem install bundler	  - gem install bundler
+  - gem install chromedriver-helper -v 1.2.0
   - chromedriver-update 73.0.3683.68
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
