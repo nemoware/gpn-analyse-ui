@@ -94,12 +94,29 @@ export class DocumentDetailComponent implements OnInit {
     data,
     sortHeaderId: string
   ): string | number => {
-    if (sortHeaderId === 'analyze_state')
-      return data.analysis.analyze_timestamp;
+    if (sortHeaderId === 'analyze_state') {
+      if (
+        data.state === 0 ||
+        data.state === 1 ||
+        data.state === 5 ||
+        data.state === null
+      )
+        return 'Загружен, ожидает анализа' + data.analysis.analyze_timestamp;
+      if (data.state === 2)
+        return 'Ожидает анализа' + data.analysis.analyze_timestamp;
+      if (data.state === 12)
+        return (
+          'Документ не попадает под параметры Аудита' +
+          data.analysis.analyze_timestamp
+        );
+      if (data.state === 15)
+        return 'Анализ завершен' + data.analysis.analyze_timestamp;
+      return ' ';
+    }
     if (sortHeaderId in column_to_sorting_mapping) {
       const attr = column_to_sorting_mapping[sortHeaderId];
       if (sortHeaderId === 'contract_subject')
-        return this.translate.instant(this.getAttrValue(attr, data));
+        return this.translate.instant(this.getAttrValue(attr, data) || ' ');
       return this.getAttrValue(attr, data);
     }
     if ('warnings' === sortHeaderId) {
