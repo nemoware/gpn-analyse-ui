@@ -40,4 +40,13 @@
 .small {
   font-size: 85%;
   color: $gpn-labels;
+
+  mat-icon {    
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    height: auto;
+    width: 16px;
+  }
 }
+
