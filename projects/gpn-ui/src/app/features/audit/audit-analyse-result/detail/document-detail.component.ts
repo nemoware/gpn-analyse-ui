@@ -47,7 +47,8 @@ const column_to_sorting_mapping = {
   value: 'sign_value_currency/value',
   org1: 'org-1-name',
   org2: 'org-2-name',
-  org: 'org-1-name'
+  org: 'org-1-name',
+  org_level: 'org_structural_level'
 };
 
 @Component({
@@ -117,7 +118,7 @@ export class DocumentDetailComponent implements OnInit {
     }
     if (sortHeaderId in column_to_sorting_mapping) {
       const attr = column_to_sorting_mapping[sortHeaderId];
-      if (sortHeaderId === 'contract_subject')
+      if (sortHeaderId === 'contract_subject' || sortHeaderId === 'org_level')
         return this.translate.instant(this.getAttrValue(attr, data) || ' ');
       return this.getAttrValue(attr, data);
     }
