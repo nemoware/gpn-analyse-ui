@@ -102,8 +102,10 @@ export class DocumentDetailComponent implements OnInit {
         data.state === null
       )
         return 'Загружен, ожидает анализа' + data.analysis.analyze_timestamp;
-      if (data.state === 2)
-        return 'Ожидает анализа' + data.analysis.analyze_timestamp;
+      if (data.state === 10)
+        return 'Анализируется' + data.analysis.analyze_timestamp;
+      if (data.state === 11)
+        return 'Ошибка при анализе' + data.analysis.analyze_timestamp;
       if (data.state === 12)
         return (
           'Документ не попадает под параметры Аудита' +
