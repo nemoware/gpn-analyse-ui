@@ -437,7 +437,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     if (parentKey) {
       const parentKind = Helper.parseKind(parentKey).kind;
       N = this.attributes
-        .filter(x => x.kind === parentKind)
+        .filter(x => x.parent === parentKind)
         .filter(x => x.kind === kind).length;
     } else N = this.attributes.filter(x => x.kind === kind).length;
     return (
