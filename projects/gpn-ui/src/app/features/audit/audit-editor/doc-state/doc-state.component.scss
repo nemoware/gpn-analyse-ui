@@ -6,10 +6,17 @@
   display: block;
 }
 
-.state-2 {
-  color: mat-color($mat-deep-purple, 500);
+.state-10 {
+  color: mat-color($mat-green, 500);
   &::after {
-    content: 'Ожидает анализа';
+    content: 'Анализируется';
+  }
+}
+
+.state-11 {
+  color: mat-color($mat-red, 500);
+  &::after {
+    content: 'Ошибка при анализе';
   }
 }
 
@@ -27,7 +34,6 @@
   }
 }
 
-.state-1,
 .state-0,
 .state-5,
 .state-null {
