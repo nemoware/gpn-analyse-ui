@@ -63,7 +63,7 @@
       {
         "parents": [
           {
-            "kind": "sign-value-currency",
+            "kind": "sign_value_currency",
             "once": true
           }
         ],
@@ -142,7 +142,7 @@
           "contract-agent-org-2-alias",
 
           {
-            "parents": ["sign-value-currency"],
+            "parents": ["sign_value_currency"],
             "children": [
               {
                 "kind": "value",

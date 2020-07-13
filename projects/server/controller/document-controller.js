@@ -163,13 +163,12 @@ exports.updateDocument = async (req, res) => {
           (user['org-1-type'] || user['org-2-type'])) ||
         (warning.code === 'org_struct_level_not_found' &&
           user['org-structural-level']) ||
-        (warning.code === 'value_section_not_found' && user['sign-value-currency']) ||
-        (
-          (warning.code === 'subject_section_not_found' ||
-            warning.code === 'contract_subject_not_found' ||
-            warning.code === 'contract_subject_section_not_found') &&
-            user.subject
-        )
+        (warning.code === 'value_section_not_found' &&
+          user['sign_value_currency']) ||
+        ((warning.code === 'subject_section_not_found' ||
+          warning.code === 'contract_subject_not_found' ||
+          warning.code === 'contract_subject_section_not_found') &&
+          user.subject)
       ) {
         if (!document.analysis.resolvedWarnings)
           document.analysis.resolvedWarnings = [];
@@ -178,7 +177,7 @@ exports.updateDocument = async (req, res) => {
       }
     }
     for (let key in user) {
-      const parts = key.replace(/_/g, '-').split('/');
+      const parts = key.split('/');
       const kind = parts[parts.length - 1];
       const attribute = attributes.find(a => a.kind === kind);
       if (attribute) {
