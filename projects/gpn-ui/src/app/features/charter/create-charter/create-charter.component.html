@@ -1,0 +1,16 @@
+<div class="container">
+  <h4>Новое задание</h4>
+  <mat-form-field>
+    <input matInput placeholder="Путь к файлам (FTP URL)" [(ngModel)]="_ftpUrl">
+  </mat-form-field>
+  <br>
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+    </div>
+    <div class="col">
+      <button mat-raised-button color="accent" (click)="uploadCharter()">Загрузить устав</button>
+    </div>
+  </div>
+</div>
+

@@ -5,6 +5,7 @@ export interface Document {
   auditId: string;
   filename: string;
   documentDate: Date; //TODO: deprecated, moved to attributes
+  documentEndDate: Date;
   documentType: string;
   documentNumber: string; //TODO: deprecated, moved to attributes
   parentId: string;

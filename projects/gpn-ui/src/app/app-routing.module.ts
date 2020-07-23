@@ -44,6 +44,11 @@ const routes: Routes = [
     data: { appPage: 'events' }
   },
   {
+    path: 'charter',
+    loadChildren: () =>
+      import('./features/charter/charter.module').then(m => m.CharterModule)
+  },
+  {
     path: '**',
     redirectTo: 'audit'
   }

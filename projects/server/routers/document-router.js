@@ -3,6 +3,7 @@ const controller = require('../controller/document-controller');
 
 router.get('/list', controller.getDocuments);
 router.get('/list-by-type', controller.getDocumentsByType);
+router.get('/charters', controller.getCharters);
 router
   .route('')
   .get(controller.getDocument)

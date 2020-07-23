@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
   logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
     { link: 'audit', label: 'Аудит' },
+    { link: 'charter', label: 'Уставы' },
     // { link: 'dash', label: 'Дэшборд' },
     // { link: 'analyse', label: 'Анализ' },
     { link: 'admin', label: 'Администрирование' },
