@@ -430,42 +430,47 @@ exports.getDocumentsByType = async (req, res) => {
 };
 
 exports.getCharters = async (req, res) => {
-  let where = {};
+  let where = {
+    'parse.documentType': 'CHARTER',
+    parserResponseCode: 200,
+    'analysis.attributes': { $exists: true },
+    $or: [{ isActive: true }, { isActive: { $exists: false } }]
+  };
+
   if (req.query.name) {
     where['analysis.attributes.org-1-name.value'] = {
       $regex: `.*${req.query.name}.*`,
       $options: 'i'
     };
   }
-  where['parse.documentType'] = 'CHARTER';
-  where['parserResponseCode'] = 200;
-  where['analysis.attributes'] = { $exists: true };
+
   try {
-    let charters = await Document.find(
+    const charters = await Document.find(
       where,
       `parse.documentDate
     filename
     parse.documentNumber
-    analysis.attributes
-    analysis.analyze_timestamp
     user.author.name
-    `,
-      { lean: true }
+    analysis.attributes.date.value
+    analysis.attributes.org-1-name`,
+      {
+        lean: true,
+        sort: { 'analysis.attributes.date.value': 1 }
+      }
     );
-    charters = charters.map(d => {
-      return {
-        filename: d.filename,
-        documentDate: d.parse.documentDate,
-        documentType: d.parse.documentType,
-        documentNumber: d.parse.documentNumber,
-        attributes: (d.analysis && d.analysis.attributes) || {},
-        _id: d._id,
-        analysis: d.analysis,
-        user: d.user
-      };
-    });
 
-    res.status(200).json(charters);
+    const result = [];
+    for (let i = 0; i < charters.length; i++) {
+      result.push({
+        _id: charters[i]._id,
+        fromDate: charters[i].analysis.attributes.date.value,
+        toDate:
+          charters[i + 1] && charters[i + 1].analysis.attributes.date.value,
+        subsidiary: charters[i].analysis.attributes['org-1-name'].value
+      });
+    }
+
+    res.send(result);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
