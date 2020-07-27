@@ -159,4 +159,12 @@ export class AuditService {
       { responseType: 'text' as 'json' }
     );
   }
+
+  public getCharter(name?): Observable<Array<ViolationModel>> {
+    let urlParams = new HttpParams();
+    if (name) urlParams = urlParams.append('name', name);
+    return this.http.get<Array<ViolationModel>>(`${api}/document/charters`, {
+      params: urlParams
+    });
+  }
 }
