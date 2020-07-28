@@ -16,7 +16,8 @@ analysis.warnings
 `;
 
 exports.getDocuments = async (req, res) => {
-  if (!req.query.auditId) {
+  const auditId = req.query.auditId;
+  if (!auditId) {
     let err = 'Can not find documents: auditId is null';
     logger.logError(req, res, err, 400);
     return;
@@ -28,8 +29,13 @@ exports.getDocuments = async (req, res) => {
       include = documentFields + `analysis.attributes`;
     }
 
+    const audit = await Audit.findById(auditId, `charters`, { lean: true });
+
     let documents = await Document.find(
-      { auditId: req.query.auditId, parserResponseCode: 200 },
+      {
+        $or: [{ auditId }, { _id: { $in: audit.charters } }],
+        parserResponseCode: 200
+      },
       include,
       { lean: true }
     );
@@ -63,7 +69,7 @@ exports.getDocuments = async (req, res) => {
     }).lean();
     if (user) {
       const stars = user.stars
-        .filter(s => s.auditId.toString() === req.query.auditId)
+        .filter(s => s.auditId.toString() === auditId)
         .map(s => s.documentId.toString());
 
       for (let document of documents.filter(d =>
