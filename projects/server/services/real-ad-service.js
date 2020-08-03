@@ -1,5 +1,9 @@
 const ldap = require('ldapjs');
 const options = require('../config/config').ad.options;
+const clientOptions = {
+  url: options.url,
+  reconnect: true
+};
 
 function bind(client) {
   return new Promise((resolve, reject) => {
@@ -25,9 +29,7 @@ function unbind(client) {
 }
 
 async function getUser(login, principalName) {
-  const client = ldap.createClient({
-    url: options.url
-  });
+  const client = ldap.createClient(clientOptions);
 
   await bind(client);
   const user = await findOne(
@@ -54,9 +56,7 @@ async function test() {
   let status = 'on';
 
   try {
-    const client = ldap.createClient({
-      url: options.url
-    });
+    const client = ldap.createClient(clientOptions);
     await bind(client);
     await unbind(client);
   } catch (err) {
@@ -108,9 +108,7 @@ function find(filter, base, scope, attributes, client) {
 }
 
 async function getGroups(filter) {
-  const client = ldap.createClient({
-    url: options.url
-  });
+  const client = ldap.createClient(clientOptions);
   await bind(client);
   const groups = await find(
     `(&(objectClass=group)(cn=${filter ? `*${filter}*` : '*'}))`,
