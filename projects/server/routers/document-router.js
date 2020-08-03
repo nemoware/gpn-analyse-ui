@@ -3,7 +3,9 @@ const controller = require('../controller/document-controller');
 
 router.get('/list', controller.getDocuments);
 router.get('/list-by-type', controller.getDocumentsByType);
-router.get('/charters', controller.getCharters);
+router.route('/charters').get(controller.getCharters);
+router.put('/activate-charter', controller.charterActivation);
+router.get('/charter-table', controller.getChartersForTable);
 router
   .route('')
   .get(controller.getDocument)

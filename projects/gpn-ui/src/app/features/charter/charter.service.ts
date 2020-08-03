@@ -23,8 +23,20 @@ export class CharterService {
         httpParams = httpParams.append(filter.name, filter.value);
       }
     }
-    return this.http.get<Array<Document>>(`${api}/document/charters`, {
+    return this.http.get<Array<Document>>(`${api}/document/charter-table`, {
       params: httpParams
     });
+  }
+
+  public deactivateCharter(id: string, action: boolean) {
+    return this.http.put(
+      `${api}/document/activate-charter`,
+      { id: id, action: action },
+      { responseType: 'text' as 'json' }
+    );
+  }
+
+  public postCharter(charter): Observable<Document> {
+    return this.http.post<Document>(`${api}/document/charters`, charter);
   }
 }

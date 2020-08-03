@@ -527,3 +527,232 @@ exports.deleteStar = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+exports.getChartersForTable = async (req, res) => {
+  let whereActive, whereInactive;
+  if (req.query.name) {
+    whereActive = {
+      'parse.documentType': 'CHARTER',
+      parserResponseCode: 200,
+      $and: [
+        {
+          $or: [
+            {
+              'analysis.attributes.org-1-name': { $exists: true },
+              'analysis.attributes.date': { $exists: true },
+              user: { $exists: false }
+            },
+            {
+              'user.attributes.org-1-name': { $exists: true },
+              'user.attributes.date': { $exists: true }
+            }
+          ]
+        },
+        {
+          $or: [{ isActive: true }, { isActive: { $exists: false } }]
+        },
+        {
+          $or: [
+            {
+              'analysis.attributes.org-1-name.value': {
+                $regex: `.*${req.query.name}.*`,
+                $options: 'i'
+              }
+            },
+            {
+              'user.attributes.org-1-name.value': {
+                $regex: `.*${req.query.name}.*`,
+                $options: 'i'
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    whereInactive = {
+      'parse.documentType': 'CHARTER',
+      parserResponseCode: 200,
+      isActive: false,
+      $and: [
+        {
+          $or: [
+            {
+              'analysis.attributes.org-1-name': { $exists: true },
+              'analysis.attributes.date': { $exists: true },
+              user: { $exists: false }
+            },
+            {
+              'user.attributes.org-1-name': { $exists: true },
+              'user.attributes.date': { $exists: true }
+            }
+          ]
+        },
+        {
+          $or: [
+            {
+              'analysis.attributes.org-1-name.value': {
+                $regex: `.*${req.query.name}.*`,
+                $options: 'i'
+              }
+            },
+            {
+              'user.attributes.org-1-name.value': {
+                $regex: `.*${req.query.name}.*`,
+                $options: 'i'
+              }
+            }
+          ]
+        }
+      ]
+    };
+  } else {
+    whereActive = {
+      'parse.documentType': 'CHARTER',
+      parserResponseCode: 200,
+      $and: [
+        {
+          $or: [
+            {
+              'analysis.attributes.org-1-name': { $exists: true },
+              'analysis.attributes.date': { $exists: true },
+              user: { $exists: false }
+            },
+            {
+              'user.attributes.org-1-name': { $exists: true },
+              'user.attributes.date': { $exists: true }
+            }
+          ]
+        },
+        {
+          $or: [{ isActive: true }, { isActive: { $exists: false } }]
+        }
+      ]
+    };
+    whereInactive = {
+      'parse.documentType': 'CHARTER',
+      parserResponseCode: 200,
+      isActive: false,
+      $or: [
+        {
+          'analysis.attributes.org-1-name': { $exists: true },
+          'analysis.attributes.date': { $exists: true },
+          user: { $exists: false }
+        },
+        {
+          'user.attributes.org-1-name': { $exists: true },
+          'user.attributes.date': { $exists: true }
+        }
+      ]
+    };
+  }
+
+  try {
+    const charters = await Document.find(
+      whereActive,
+      `
+    analysis.analyze_timestamp
+    analysis.attributes.date.value
+    analysis.attributes.org-1-name
+    user.author.name
+    user.attributes.date.value
+    user.attributes.org-1-name`,
+      {
+        lean: true
+      }
+    );
+
+    const chartersInactive = await Document.find(
+      whereInactive,
+      `
+    analysis.analyze_timestamp
+    analysis.attributes.date.value
+    analysis.attributes.org-1-name
+    user.author.name
+    user.attributes.date.value
+    user.attributes.org-1-name`,
+      {
+        lean: true
+      }
+    );
+    const result = [];
+
+    for (let i = 0; i < charters.length; i++) {
+      if (charters[i].user)
+        result.push({
+          _id: charters[i]._id,
+          fromDate: charters[i].user.attributes.date.value,
+          subsidiary: charters[i].user.attributes['org-1-name'].value,
+          user: charters[i].user.author.name,
+          analyze_timestamp: charters[i].analysis.analyze_timestamp,
+          isActive: true
+        });
+      else
+        result.push({
+          _id: charters[i]._id,
+          fromDate:
+            charters[i].analysis.attributes.date &&
+            charters[i].analysis.attributes.date.value,
+          subsidiary: charters[i].analysis.attributes['org-1-name'].value,
+          analyze_timestamp: charters[i].analysis.analyze_timestamp,
+          isActive: true
+        });
+    }
+    result.sort(compare);
+    for (let i = 0; i < result.length; i++) {
+      result[i].toDate =
+        result[i + 1] &&
+        result[i].subsidiary === result[i + 1].subsidiary &&
+        result[i + 1].fromDate;
+    }
+
+    for (let i = 0; i < chartersInactive.length; i++) {
+      if (chartersInactive[i].user)
+        result.push({
+          _id: chartersInactive[i]._id,
+          fromDate: chartersInactive[i].user.attributes.date.value,
+          subsidiary: chartersInactive[i].user.attributes['org-1-name'].value,
+          user: chartersInactive[i].user.author.name,
+          analyze_timestamp: chartersInactive[i].analysis.analyze_timestamp,
+          isActive: false
+        });
+      else
+        result.push({
+          _id: chartersInactive[i]._id,
+          fromDate:
+            chartersInactive[i].analysis.attributes.date &&
+            chartersInactive[i].analysis.attributes.date.value,
+          subsidiary:
+            chartersInactive[i].analysis.attributes['org-1-name'].value,
+          analyze_timestamp: chartersInactive[i].analysis.analyze_timestamp,
+          isActive: false
+        });
+    }
+    result.sort(compare);
+    res.send(result);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.charterActivation = async (req, res) => {
+  const id = req.body.id;
+  const action = req.body.action;
+  if (!id) return res.status(400).send(`Required parameter 'id' is not passed`);
+  try {
+    await Document.findOneAndUpdate({ _id: id }, { isActive: action });
+    res.end();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+function compare(a, b) {
+  {
+    if (a.subsidiary > b.subsidiary) return 1;
+    else if (a.subsidiary < b.subsidiary) return -1;
+    else {
+      return a.fromDate > b.fromDate ? 1 : -1;
+    }
+  }
+}
