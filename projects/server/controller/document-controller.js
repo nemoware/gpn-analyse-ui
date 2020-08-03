@@ -436,19 +436,40 @@ exports.getDocumentsByType = async (req, res) => {
 };
 
 exports.getCharters = async (req, res) => {
-  let where = {
+  const where = {
     'parse.documentType': 'CHARTER',
     parserResponseCode: 200,
-    'analysis.attributes': { $exists: true },
-    $or: [{ isActive: true }, { isActive: { $exists: false } }]
+    analysis: { $exists: true },
+    $and: [
+      // признак активности
+      { $or: [{ isActive: true }, { isActive: { $exists: false } }] },
+      {
+        $or: [
+          // если существует user
+          {
+            // существует атрибут date
+            'user.attributes.date': { $exists: true },
+            // фильтр по наименованию ДО
+            'user.attributes.org-1-name.value': {
+              $regex: `.*${req.query.name || ''}.*`,
+              $options: 'i'
+            }
+          },
+          // если существует только analysis
+          {
+            user: { $exists: false },
+            // существует атрибут date
+            'analysis.attributes.date': { $exists: true },
+            // фильтр по наименованию ДО
+            'analysis.attributes.org-1-name.value': {
+              $regex: `.*${req.query.name || ''}.*`,
+              $options: 'i'
+            }
+          }
+        ]
+      }
+    ]
   };
-
-  if (req.query.name) {
-    where['analysis.attributes.org-1-name.value'] = {
-      $regex: `.*${req.query.name}.*`,
-      $options: 'i'
-    };
-  }
 
   try {
     const charters = await Document.find(
@@ -458,21 +479,18 @@ exports.getCharters = async (req, res) => {
     parse.documentNumber
     user.author.name
     analysis.attributes.date.value
-    analysis.attributes.org-1-name`,
-      {
-        lean: true,
-        sort: { 'analysis.attributes.date.value': 1 }
-      }
+    user.attributes.date.value
+    analysis.attributes.org-1-name
+    user.attributes.org-1-name`
     );
 
     const result = [];
     for (let i = 0; i < charters.length; i++) {
       result.push({
         _id: charters[i]._id,
-        fromDate: charters[i].analysis.attributes.date.value,
-        toDate:
-          charters[i + 1] && charters[i + 1].analysis.attributes.date.value,
-        subsidiary: charters[i].analysis.attributes['org-1-name'].value
+        fromDate: charters[i].getAttributeValue('date'),
+        toDate: charters[i + 1] && charters[i + 1].getAttributeValue('date'),
+        subsidiary: charters[i].getAttributeValue('org-1-name')
       });
     }
 
