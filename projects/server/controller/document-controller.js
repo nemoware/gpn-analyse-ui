@@ -436,6 +436,16 @@ exports.getDocumentsByType = async (req, res) => {
 };
 
 exports.getCharters = async (req, res) => {
+  const allSubsidiariesRegexp = /.*все до$/i;
+  const name = req.query.name;
+
+  // Все ДО, если совпадает с регэкспом или не пришел параметр name
+  const allSubsidiaries = allSubsidiariesRegexp.test(name) || !name;
+  const mongoRegexp = {
+    $regex: `.*${allSubsidiaries ? '' : name}.*`,
+    $options: 'i'
+  };
+
   const where = {
     'parse.documentType': 'CHARTER',
     parserResponseCode: 200,
@@ -450,10 +460,7 @@ exports.getCharters = async (req, res) => {
             // существует атрибут date
             'user.attributes.date': { $exists: true },
             // фильтр по наименованию ДО
-            'user.attributes.org-1-name.value': {
-              $regex: `.*${req.query.name || ''}.*`,
-              $options: 'i'
-            }
+            'user.attributes.org-1-name.value': mongoRegexp
           },
           // если существует только analysis
           {
@@ -461,10 +468,7 @@ exports.getCharters = async (req, res) => {
             // существует атрибут date
             'analysis.attributes.date': { $exists: true },
             // фильтр по наименованию ДО
-            'analysis.attributes.org-1-name.value': {
-              $regex: `.*${req.query.name || ''}.*`,
-              $options: 'i'
-            }
+            'analysis.attributes.org-1-name.value': mongoRegexp
           }
         ]
       }
@@ -484,21 +488,59 @@ exports.getCharters = async (req, res) => {
     user.attributes.org-1-name`
     );
 
-    const result = [];
-    for (let i = 0; i < charters.length; i++) {
-      result.push({
-        _id: charters[i]._id,
-        fromDate: charters[i].getAttributeValue('date'),
-        toDate: charters[i + 1] && charters[i + 1].getAttributeValue('date'),
-        subsidiary: charters[i].getAttributeValue('org-1-name')
-      });
+    const result = charters.map(c => {
+      return {
+        _id: c._id,
+        fromDate: c.getAttributeValue('date'),
+        subsidiary: c.getAttributeValue('org-1-name')
+      };
+    });
+
+    if (allSubsidiaries) {
+      // получаем все возможные наименования ДО
+      const subsidiaries = Object.keys(
+        result.reduce((previous, current) => {
+          previous[current.subsidiary] = true;
+          return previous;
+        }, {})
+      );
+
+      for (const subsidiary of subsidiaries) {
+        setToDate(result.filter(c => c.subsidiary === subsidiary));
+      }
+    } else {
+      setToDate(result);
     }
 
-    res.send(result);
+    res.send(
+      result.sort((a, b) => {
+        // сортировка по наименованию ДО
+        if (a.subsidiary > b.subsidiary) return 1;
+        if (a.subsidiary < b.subsidiary) return -1;
+        // сортировка по дате
+        return a.fromDate - b.fromDate;
+      })
+    );
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
 };
+
+function setToDate(charters) {
+  // получаем все возможные даты и сортируем по возрастанию
+  const dates = Object.keys(
+    charters.reduce((previous, current) => {
+      previous[current.fromDate.getTime()] = true;
+      return previous;
+    }, {})
+  ).sort((a, b) => a - b);
+
+  // дата "по" будет равна следующей дате из массива
+  for (const charter of charters) {
+    charter.toDate =
+      dates[dates.indexOf(charter.fromDate.getTime().toString()) + 1];
+  }
+}
 
 exports.addStar = async (req, res) => {
   const id = req.body.id;
