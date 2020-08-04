@@ -664,7 +664,6 @@ exports.getChartersForTable = async (req, res) => {
           result.subsidiary !== ''
       )
       .sort(sortingFunction);
-    console.table(filterActive);
     //Неактивные или с невалидными полями
     const filterInactiveAndBad = result
       .filter(
@@ -679,7 +678,6 @@ exports.getChartersForTable = async (req, res) => {
           )
       )
       .sort(sortingFunction);
-    console.table(filterInactiveAndBad);
     //Заполняем даты окончания
     for (let i = 0; i < filterActive.length; i++) {
       filterActive[i].toDate =

@@ -32,9 +32,7 @@ module.exports = async (req, res, next) => {
       break;
     case 'audit':
     case 'document':
-      check = !!roles.find(
-        r => r.appPage === 'audit' || r.appPage === 'charter'
-      );
+      check = !!roles.find(r => r.appPage === 'audit');
       break;
     case 'event':
       check = !!roles.find(r => r.appPage === 'events');

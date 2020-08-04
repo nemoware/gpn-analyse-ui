@@ -46,7 +46,9 @@ const routes: Routes = [
   {
     path: 'charter',
     loadChildren: () =>
-      import('./features/charter/charter.module').then(m => m.CharterModule)
+      import('./features/charter/charter.module').then(m => m.CharterModule),
+    canActivate: [AppPageGuard],
+    data: { appPage: 'audit' }
   },
   {
     path: '**',
