@@ -5,6 +5,7 @@ import {
   HttpClient,
   HttpParams
 } from '@root/node_modules/@angular/common/http';
+import { Subsidiary } from '@app/models/subsidiary.model';
 
 const api = '/api';
 
@@ -36,7 +37,11 @@ export class CharterService {
     );
   }
 
-  public postCharter(charter): Observable<Document> {
+  public postCharter(charter): Observable<any> {
     return this.http.post<Document>(`${api}/document/charters`, charter);
+  }
+
+  public getSubsidiaries(): Observable<Subsidiary[]> {
+    return this.http.get<Array<Subsidiary>>(`${api}/audit/subsidiaries`);
   }
 }

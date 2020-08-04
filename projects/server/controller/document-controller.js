@@ -3,6 +3,7 @@ const { Document, Audit, User } = require('../models');
 const logger = require('../core/logger');
 const attribute = require('../core/attribute');
 const types = require('../json/document-type');
+const fs = require('fs-promise');
 
 const documentFields = `filename
 parse.documentDate
@@ -436,19 +437,44 @@ exports.getDocumentsByType = async (req, res) => {
 };
 
 exports.getCharters = async (req, res) => {
-  let where = {
-    'parse.documentType': 'CHARTER',
-    parserResponseCode: 200,
-    'analysis.attributes': { $exists: true },
-    $or: [{ isActive: true }, { isActive: { $exists: false } }]
+  const allSubsidiariesRegexp = /.*все до$/i;
+  const name = req.query.name;
+
+  // Все ДО, если совпадает с регэкспом или не пришел параметр name
+  const allSubsidiaries = allSubsidiariesRegexp.test(name) || !name;
+  const mongoRegexp = {
+    $regex: `.*${allSubsidiaries ? '' : name}.*`,
+    $options: 'i'
   };
 
-  if (req.query.name) {
-    where['analysis.attributes.org-1-name.value'] = {
-      $regex: `.*${req.query.name}.*`,
-      $options: 'i'
-    };
-  }
+  const where = {
+    'parse.documentType': 'CHARTER',
+    parserResponseCode: 200,
+    analysis: { $exists: true },
+    $and: [
+      // признак активности
+      { $or: [{ isActive: true }, { isActive: { $exists: false } }] },
+      {
+        $or: [
+          // если существует user
+          {
+            // существует атрибут date
+            'user.attributes.date': { $exists: true },
+            // фильтр по наименованию ДО
+            'user.attributes.org-1-name.value': mongoRegexp
+          },
+          // если существует только analysis
+          {
+            user: { $exists: false },
+            // существует атрибут date
+            'analysis.attributes.date': { $exists: true },
+            // фильтр по наименованию ДО
+            'analysis.attributes.org-1-name.value': mongoRegexp
+          }
+        ]
+      }
+    ]
+  };
 
   try {
     const charters = await Document.find(
@@ -458,29 +484,64 @@ exports.getCharters = async (req, res) => {
     parse.documentNumber
     user.author.name
     analysis.attributes.date.value
-    analysis.attributes.org-1-name`,
-      {
-        lean: true,
-        sort: { 'analysis.attributes.date.value': 1 }
-      }
+    user.attributes.date.value
+    analysis.attributes.org-1-name
+    user.attributes.org-1-name`
     );
 
-    const result = [];
-    for (let i = 0; i < charters.length; i++) {
-      result.push({
-        _id: charters[i]._id,
-        fromDate: charters[i].analysis.attributes.date.value,
-        toDate:
-          charters[i + 1] && charters[i + 1].analysis.attributes.date.value,
-        subsidiary: charters[i].analysis.attributes['org-1-name'].value
-      });
+    const result = charters.map(c => {
+      return {
+        _id: c._id,
+        fromDate: c.getAttributeValue('date'),
+        subsidiary: c.getAttributeValue('org-1-name')
+      };
+    });
+
+    if (allSubsidiaries) {
+      // получаем все возможные наименования ДО
+      const subsidiaries = Object.keys(
+        result.reduce((previous, current) => {
+          previous[current.subsidiary] = true;
+          return previous;
+        }, {})
+      );
+
+      for (const subsidiary of subsidiaries) {
+        setToDate(result.filter(c => c.subsidiary === subsidiary));
+      }
+    } else {
+      setToDate(result);
     }
 
-    res.send(result);
+    res.send(
+      result.sort((a, b) => {
+        // сортировка по наименованию ДО
+        if (a.subsidiary > b.subsidiary) return 1;
+        if (a.subsidiary < b.subsidiary) return -1;
+        // сортировка по дате
+        return a.fromDate - b.fromDate;
+      })
+    );
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
 };
+
+function setToDate(charters) {
+  // получаем все возможные даты и сортируем по возрастанию
+  const dates = Object.keys(
+    charters.reduce((previous, current) => {
+      previous[current.fromDate.getTime()] = true;
+      return previous;
+    }, {})
+  ).sort((a, b) => a - b);
+
+  // дата "по" будет равна следующей дате из массива
+  for (const charter of charters) {
+    charter.toDate =
+      dates[dates.indexOf(charter.fromDate.getTime().toString()) + 1];
+  }
+}
 
 exports.addStar = async (req, res) => {
   const id = req.body.id;
@@ -529,211 +590,131 @@ exports.deleteStar = async (req, res) => {
 };
 
 exports.getChartersForTable = async (req, res) => {
-  let whereActive, whereInactive;
-  if (req.query.name) {
-    whereActive = {
-      'parse.documentType': 'CHARTER',
-      parserResponseCode: 200,
-      $and: [
-        {
-          $or: [
-            {
-              'analysis.attributes.org-1-name': { $exists: true },
-              'analysis.attributes.date': { $exists: true },
-              user: { $exists: false }
-            },
-            {
-              'user.attributes.org-1-name': { $exists: true },
-              'user.attributes.date': { $exists: true }
-            }
-          ]
-        },
-        {
-          $or: [{ isActive: true }, { isActive: { $exists: false } }]
-        },
-        {
-          $or: [
-            {
-              'analysis.attributes.org-1-name.value': {
-                $regex: `.*${req.query.name}.*`,
-                $options: 'i'
-              }
-            },
-            {
-              'user.attributes.org-1-name.value': {
-                $regex: `.*${req.query.name}.*`,
-                $options: 'i'
-              }
-            }
-          ]
-        }
-      ]
-    };
+  const allSubsidiariesRegexp = /.*все до$/i;
+  const name = req.query.name;
 
-    whereInactive = {
-      'parse.documentType': 'CHARTER',
-      parserResponseCode: 200,
-      isActive: false,
-      $and: [
-        {
-          $or: [
-            {
-              'analysis.attributes.org-1-name': { $exists: true },
-              'analysis.attributes.date': { $exists: true },
-              user: { $exists: false }
-            },
-            {
-              'user.attributes.org-1-name': { $exists: true },
-              'user.attributes.date': { $exists: true }
-            }
-          ]
-        },
-        {
-          $or: [
-            {
-              'analysis.attributes.org-1-name.value': {
-                $regex: `.*${req.query.name}.*`,
-                $options: 'i'
-              }
-            },
-            {
-              'user.attributes.org-1-name.value': {
-                $regex: `.*${req.query.name}.*`,
-                $options: 'i'
-              }
-            }
-          ]
-        }
-      ]
-    };
-  } else {
-    whereActive = {
-      'parse.documentType': 'CHARTER',
-      parserResponseCode: 200,
-      $and: [
-        {
-          $or: [
-            {
-              'analysis.attributes.org-1-name': { $exists: true },
-              'analysis.attributes.date': { $exists: true },
-              user: { $exists: false }
-            },
-            {
-              'user.attributes.org-1-name': { $exists: true },
-              'user.attributes.date': { $exists: true }
-            }
-          ]
-        },
-        {
-          $or: [{ isActive: true }, { isActive: { $exists: false } }]
-        }
-      ]
-    };
-    whereInactive = {
-      'parse.documentType': 'CHARTER',
-      parserResponseCode: 200,
-      isActive: false,
-      $or: [
-        {
-          'analysis.attributes.org-1-name': { $exists: true },
-          'analysis.attributes.date': { $exists: true },
-          user: { $exists: false }
-        },
-        {
-          'user.attributes.org-1-name': { $exists: true },
-          'user.attributes.date': { $exists: true }
-        }
-      ]
-    };
-  }
+  // Все ДО, если совпадает с регэкспом или не пришел параметр name
+  const allSubsidiaries = allSubsidiariesRegexp.test(name) || !name;
+  const mongoRegexp = {
+    $regex: `.*${allSubsidiaries ? '' : name}.*`,
+    $options: 'i'
+  };
 
+  const where = {
+    'parse.documentType': 'CHARTER',
+    $or: [
+      // если существует user
+      {
+        // фильтр по наименованию ДО
+        'user.attributes.org-1-name.value': mongoRegexp
+      },
+      // если существует только analysis
+      {
+        user: { $exists: false },
+        // фильтр по наименованию ДО
+        'analysis.attributes.org-1-name.value': mongoRegexp
+      },
+      {
+        // Те уставы, в которых нет этих полей
+        'analysis.attributes.org-1-name.value': undefined,
+        'user.attributes.org-1-name.value': undefined
+      }
+    ]
+  };
   try {
     const charters = await Document.find(
-      whereActive,
+      where,
       `
-    analysis.analyze_timestamp
-    analysis.attributes.date.value
-    analysis.attributes.org-1-name
     user.author.name
-    user.attributes.date.value
-    user.attributes.org-1-name`,
-      {
-        lean: true
-      }
-    );
-
-    const chartersInactive = await Document.find(
-      whereInactive,
-      `
     analysis.analyze_timestamp
+    isActive
+    subsidiary.name
     analysis.attributes.date.value
-    analysis.attributes.org-1-name
-    user.author.name
     user.attributes.date.value
-    user.attributes.org-1-name`,
-      {
-        lean: true
-      }
+    analysis.attributes.org-1-name
+    user.attributes.org-1-name`
     );
-    const result = [];
+    const result = charters.map(c => {
+      return {
+        _id: c._id,
+        fromDate:
+          c.getAttributeValue('date') ||
+          (c.analysis.attributes && 'Дата не обнаружена') ||
+          'Ожидает анализа',
+        subsidiary:
+          c.getAttributeValue('org-1-name') ||
+          (!c.analysis.attributes && c.subsidiary.name) ||
+          '',
+        analyze_timestamp: c.analysis.analyze_timestamp,
+        user: c.user.author && c.user.author.name,
+        isActive: c.isActive === undefined || c.isActive,
+        toDate: null
+      };
+    });
 
-    for (let i = 0; i < charters.length; i++) {
-      if (charters[i].user)
-        result.push({
-          _id: charters[i]._id,
-          fromDate: charters[i].user.attributes.date.value,
-          subsidiary: charters[i].user.attributes['org-1-name'].value,
-          user: charters[i].user.author.name,
-          analyze_timestamp: charters[i].analysis.analyze_timestamp,
-          isActive: true
-        });
-      else
-        result.push({
-          _id: charters[i]._id,
-          fromDate:
-            charters[i].analysis.attributes.date &&
-            charters[i].analysis.attributes.date.value,
-          subsidiary: charters[i].analysis.attributes['org-1-name'].value,
-          analyze_timestamp: charters[i].analysis.analyze_timestamp,
-          isActive: true
-        });
-    }
-    result.sort(compare);
-    for (let i = 0; i < result.length; i++) {
-      result[i].toDate =
-        result[i + 1] &&
-        result[i].subsidiary === result[i + 1].subsidiary &&
-        result[i + 1].fromDate;
+    //Активные уставы с валидными полями
+    const filterActive = result
+      .filter(
+        result =>
+          (result.isActive || result.isActive === undefined) &&
+          result.fromDate &&
+          result.fromDate !== '' &&
+          result.fromDate !== 'Ожидает анализа' &&
+          result.subsidiary &&
+          result.subsidiary !== ''
+      )
+      .sort(sortingFunction);
+    console.table(filterActive);
+    //Неактивные или с невалидными полями
+    const filterInactiveAndBad = result
+      .filter(
+        result =>
+          !(
+            (result.isActive || result.isActive === undefined) &&
+            result.fromDate &&
+            result.fromDate !== '' &&
+            result.fromDate !== 'Ожидает анализа' &&
+            result.subsidiary &&
+            result.subsidiary !== ''
+          )
+      )
+      .sort(sortingFunction);
+    console.table(filterInactiveAndBad);
+    //Заполняем даты окончания
+    for (let i = 0; i < filterActive.length; i++) {
+      filterActive[i].toDate =
+        filterActive[i + 1] &&
+        filterActive[i].subsidiary === filterActive[i + 1].subsidiary &&
+        filterActive[i + 1].fromDate;
     }
 
-    for (let i = 0; i < chartersInactive.length; i++) {
-      if (chartersInactive[i].user)
-        result.push({
-          _id: chartersInactive[i]._id,
-          fromDate: chartersInactive[i].user.attributes.date.value,
-          subsidiary: chartersInactive[i].user.attributes['org-1-name'].value,
-          user: chartersInactive[i].user.author.name,
-          analyze_timestamp: chartersInactive[i].analysis.analyze_timestamp,
-          isActive: false
-        });
-      else
-        result.push({
-          _id: chartersInactive[i]._id,
-          fromDate:
-            chartersInactive[i].analysis.attributes.date &&
-            chartersInactive[i].analysis.attributes.date.value,
-          subsidiary:
-            chartersInactive[i].analysis.attributes['org-1-name'].value,
-          analyze_timestamp: chartersInactive[i].analysis.analyze_timestamp,
-          isActive: false
-        });
+    if (!name)
+      for (let i = 0; i < filterInactiveAndBad.length; i++) {
+        filterActive.push(filterInactiveAndBad[i]);
+      }
+    else {
+      const regExp = new RegExp(name);
+      for (let i = 0; i < filterInactiveAndBad.length; i++) {
+        if (regExp.test(filterInactiveAndBad[i].subsidiary))
+          filterActive.push(filterInactiveAndBad[i]);
+      }
     }
-    result.sort(compare);
-    res.send(result);
+    filterActive.sort(sortingFunction);
+    res.send(filterActive);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
 };
+
+function sortingFunction(a, b) {
+  {
+    if (a.subsidiary > b.subsidiary) return 1;
+    else if (a.subsidiary < b.subsidiary) return -1;
+    else {
+      return a.fromDate > b.fromDate ? 1 : -1;
+    }
+  }
+}
 
 exports.charterActivation = async (req, res) => {
   const id = req.body.id;
@@ -747,12 +728,39 @@ exports.charterActivation = async (req, res) => {
   }
 };
 
-function compare(a, b) {
-  {
-    if (a.subsidiary > b.subsidiary) return 1;
-    else if (a.subsidiary < b.subsidiary) return -1;
-    else {
-      return a.fromDate > b.fromDate ? 1 : -1;
+exports.postCharter = async (req, res) => {
+  let charter = new Document(req.body);
+  charter.author = res.locals.user;
+
+  try {
+    await fs.access(charter.ftpUrl);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      logger.logError(
+        req,
+        res,
+        `No such file or directory: ${charter.ftpUrl}`,
+        400
+      );
+    } else {
+      logger.logError(req, res, err, 500);
     }
+    return;
   }
-}
+
+  try {
+    await charter.save();
+    await logger.log(
+      req,
+      res,
+      'Загрузка устава',
+      `Устав '${charter.subsidiary.name}'
+      `
+    );
+    res.status(201).json(charter);
+
+    // parser.parseAudit(audit);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};

@@ -156,7 +156,9 @@ export class ListCharterComponent implements OnInit, AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        //TODO: afterResult
+        this.documents.unshift(result);
+        this.refreshViewTable();
+        this.changeDetectorRefs.detectChanges();
       }
     });
   }
@@ -168,10 +170,13 @@ export class ListCharterComponent implements OnInit, AfterViewInit {
         confirm(
           `Вы действительно хотите ${
             element.isActive ? 'деактивировать' : 'активировать'
-          } "Устав ${element.subsidiary} от ${this.datepipe.transform(
-            element.fromDate,
-            'dd.MM.yyyy'
-          )}"?`
+          } "Устав ${element.subsidiary} от ${
+            element.fromDate &&
+            element.fromDate !== 'Ожидание анализа' &&
+            element.fromDate !== 'Дата не обнаружена'
+              ? this.datepipe.transform(element.fromDate, 'dd.MM.yyyy')
+              : ''
+          }"?`
         )
       ) {
         this.charterService

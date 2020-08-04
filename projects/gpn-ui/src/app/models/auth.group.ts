@@ -1,1 +1,1 @@
-export type AuthGroup = 'audit' | 'analyse' | 'admin' | 'event';
+export type AuthGroup = 'audit' | 'analyse' | 'admin' | 'event' | 'charter';
