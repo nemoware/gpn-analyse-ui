@@ -4,6 +4,7 @@ const logger = require('../core/logger');
 const attribute = require('../core/attribute');
 const types = require('../json/document-type');
 const fs = require('fs-promise');
+const parser = require('../services/parser-service');
 
 const documentFields = `filename
 parse.documentDate
@@ -625,6 +626,7 @@ exports.getChartersForTable = async (req, res) => {
     const charters = await Document.find(
       where,
       `
+    state
     user.author.name
     analysis.analyze_timestamp
     isActive
@@ -637,10 +639,7 @@ exports.getChartersForTable = async (req, res) => {
     const result = charters.map(c => {
       return {
         _id: c._id,
-        fromDate:
-          c.getAttributeValue('date') ||
-          (c.analysis.attributes && 'Дата не обнаружена') ||
-          'Ожидает анализа',
+        fromDate: c.getAttributeValue('date') || '',
         subsidiary:
           c.getAttributeValue('org-1-name') ||
           (!c.analysis.attributes && c.subsidiary.name) ||
@@ -648,7 +647,8 @@ exports.getChartersForTable = async (req, res) => {
         analyze_timestamp: c.analysis.analyze_timestamp,
         user: c.user.author && c.user.author.name,
         isActive: c.isActive === undefined || c.isActive,
-        toDate: null
+        toDate: null,
+        state: c.state
       };
     });
 
@@ -659,7 +659,6 @@ exports.getChartersForTable = async (req, res) => {
           (result.isActive || result.isActive === undefined) &&
           result.fromDate &&
           result.fromDate !== '' &&
-          result.fromDate !== 'Ожидает анализа' &&
           result.subsidiary &&
           result.subsidiary !== ''
       )
@@ -672,7 +671,6 @@ exports.getChartersForTable = async (req, res) => {
             (result.isActive || result.isActive === undefined) &&
             result.fromDate &&
             result.fromDate !== '' &&
-            result.fromDate !== 'Ожидает анализа' &&
             result.subsidiary &&
             result.subsidiary !== ''
           )
@@ -706,11 +704,14 @@ exports.getChartersForTable = async (req, res) => {
 
 function sortingFunction(a, b) {
   {
-    if (a.subsidiary > b.subsidiary) return 1;
-    else if (a.subsidiary < b.subsidiary) return -1;
-    else {
+    if (a.subsidiary === b.subsidiary) {
+      let date1 = new Date(a.fromDate);
+      let date2 = new Date(b.fromDate);
+      if (date1.getTime() === date2.getTime())
+        return a.toDate > b.toDate ? -1 : 1;
       return a.fromDate > b.fromDate ? 1 : -1;
     }
+    return a.subsidiary > b.subsidiary ? 1 : -1;
   }
 }
 
@@ -757,7 +758,7 @@ exports.postCharter = async (req, res) => {
     );
     res.status(201).json(charter);
 
-    // parser.parseAudit(audit);
+    parser.parseCharter(charter);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

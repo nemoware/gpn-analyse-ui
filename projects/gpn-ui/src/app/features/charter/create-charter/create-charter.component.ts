@@ -70,7 +70,6 @@ export class CreateCharterComponent implements OnInit, OnDestroy {
       this.charterService.postCharter(newCharter).subscribe(
         data => {
           data.subsidiary = data.subsidiary.name;
-          data.fromDate = 'Ожидает анализа';
           this.dialogRef.close(data);
         },
         error => console.log(error)

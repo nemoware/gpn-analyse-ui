@@ -12,6 +12,7 @@ import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
 import { LOCALE_ID } from '@root/node_modules/@angular/core';
 import { CreateCharterComponent } from './create-charter/create-charter.component';
 import { NgxMatSelectSearchModule } from '@root/node_modules/ngx-mat-select-search';
+import { AuditModule } from '@app/features/audit/audit.module';
 
 @NgModule({
   declarations: [ListCharterComponent, CreateCharterComponent],
@@ -19,7 +20,8 @@ import { NgxMatSelectSearchModule } from '@root/node_modules/ngx-mat-select-sear
     CommonModule,
     ListCharterRoutingModule,
     SharedModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    AuditModule
   ],
   entryComponents: [CreateCharterComponent],
   providers: [

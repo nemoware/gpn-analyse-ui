@@ -147,6 +147,16 @@ exports.parseAudit = async audit => {
   await this.setResult(audit);
 };
 
+exports.parseCharter = async charter => {
+  charter.status = 'Loading';
+  console.log(charter.status);
+  await charter.save();
+  console.log(charter);
+
+  await parseFile(charter);
+  await this.setResult(charter);
+};
+
 exports.setResult = async audit => {
   let count = await Document.countDocuments({
     auditId: audit._id,
@@ -173,6 +183,47 @@ async function parseDirectory(audit) {
     promises.push(parse(directory, filePath, audit));
   }
   await Promise.all(promises);
+}
+
+async function parseFile(charter) {
+  const url = charter.ftpUrl;
+  const root = path.dirname(url);
+  const filename = path.basename(url);
+  let options;
+  try {
+    const content = await fs.readFile(path.join(root, filename));
+    options = getOptions(filename, content);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      charter.parse = {
+        documentType: err.code,
+        message: 'File not found'
+      };
+      charter.responseCode = 0;
+      charter.filename = filename;
+      await charter.save();
+      return;
+    } else {
+      logger.logLocalError(err);
+    }
+  }
+
+  try {
+    const response = await post(options);
+    charter.data = JSON.parse(response.body);
+    charter.filename = filename;
+    charter.parserResponseCode = response.code;
+    await charter.save();
+  } catch (err) {
+    if (err.code !== 'ECONNREFUSED') return logger.logLocalError(err);
+
+    charter.parse = {
+      documentType: err.code,
+      message: 'Parser module is off'
+    };
+    charter.filename = filename;
+    charter.parserResponseCode = 504;
+  }
 }
 
 async function getPaths(directory, root) {

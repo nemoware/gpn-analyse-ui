@@ -35,6 +35,7 @@ export class ListCharterComponent implements OnInit, AfterViewInit {
     'charterEnd',
     'lastEditDate',
     'lastEditUser',
+    'status',
     'events'
   ];
 
