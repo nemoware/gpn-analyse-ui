@@ -1,22 +1,7 @@
 <div class="container">
-  <h4>Новое задание</h4>
+  <h4>Новый устав</h4>
   <mat-form-field>
-    <mat-select [formControl]="subsidiaryCtrl" placeholder="Выбрать Дочернее Общество" #selectSubsidiary>
-      <mat-option>
-        <ngx-mat-select-search [formControl]="subsidiaryFilterCtrl"
-                               [placeholderLabel]="'Поиск дочернего общества...'"
-                               [noEntriesFoundLabel]="'Дочернее общество не найдено'"
-        >
-          <fa-icon ngxMatSelectSearchClear [icon]="faTimes" matTooltip="Очистить поиск"></fa-icon>
-        </ngx-mat-select-search>
-      </mat-option>
-      <mat-option *ngFor="let subsidiary of filteredSubsidiaries | async" [value]="subsidiary">
-        {{subsidiary.name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="Путь к файлам (FTP URL)" [(ngModel)]="_ftpUrl">
+    <input matInput placeholder="Путь к файлу (FTP URL)" [(ngModel)]="_ftpUrl">
   </mat-form-field>
   <br>
   <div class="row">

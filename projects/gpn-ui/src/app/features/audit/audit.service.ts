@@ -167,4 +167,12 @@ export class AuditService {
       params: urlParams
     });
   }
+
+  public deactivateCharter(id: string, action: boolean) {
+    return this.http.put(
+      `${api}/document/activate-charter`,
+      { id: id, action: action },
+      { responseType: 'text' as 'json' }
+    );
+  }
 }

@@ -13,7 +13,7 @@ import {
   MatTableDataSource
 } from '@root/node_modules/@angular/material';
 import { DatePipe } from '@root/node_modules/@angular/common';
-import { faSearch, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Document } from '@app/models/document.model';
 import { CharterService } from '@app/features/charter/charter.service';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
@@ -28,15 +28,13 @@ import { CreateCharterComponent } from '@app/features/charter/create-charter/cre
 })
 export class ListCharterComponent implements OnInit, AfterViewInit {
   faSearch = faSearch;
-  faCog = faCog;
   columns: string[] = [
     'subsidiaryName',
     'charterStart',
     'charterEnd',
     'lastEditDate',
     'lastEditUser',
-    'status',
-    'events'
+    'analyze_state'
   ];
 
   dataSource = new MatTableDataSource();
@@ -134,6 +132,24 @@ export class ListCharterComponent implements OnInit, AfterViewInit {
     data,
     sortHeaderId: string
   ): string | number => {
+    if (sortHeaderId === 'analyze_state') {
+      if (
+        data.state === 0 ||
+        data.state === 1 ||
+        data.state === 5 ||
+        data.state === null
+      )
+        return 'Загружен, ожидает анализа' + data.analyze_timestamp;
+      if (data.state === 10) return 'Анализируется' + data.analyze_timestamp;
+      if (data.state === 11)
+        return 'Ошибка при анализе' + data.analyze_timestamp;
+      if (data.state === 12)
+        return (
+          'Документ не попадает под параметры Аудита' + data.analyze_timestamp
+        );
+      if (data.state === 15) return 'Анализ завершен' + data.analyze_timestamp;
+      return ' ';
+    }
     if (sortHeaderId === 'subsidiaryName') return data.subsidiary;
     if (sortHeaderId === 'charterStart') return data.fromDate;
     if (sortHeaderId === 'lastEditDate') return data.analyze_timestamp;
@@ -148,7 +164,11 @@ export class ListCharterComponent implements OnInit, AfterViewInit {
   };
 
   openDocument(doc) {
-    window.open(window.location.origin + '/#/audit/view/' + doc._id, '_blank');
+    if (!(doc.state === 0 || doc.state === 5 || doc.state === null))
+      window.open(
+        window.location.origin + '/#/audit/view/' + doc._id,
+        '_blank'
+      );
   }
 
   uploadCharter() {
@@ -162,36 +182,6 @@ export class ListCharterComponent implements OnInit, AfterViewInit {
         this.changeDetectorRefs.detectChanges();
       }
     });
-  }
-
-  deactivateCharter(element, event) {
-    event.stopPropagation();
-    if (element != null) {
-      if (
-        confirm(
-          `Вы действительно хотите ${
-            element.isActive ? 'деактивировать' : 'активировать'
-          } "Устав ${element.subsidiary} от ${
-            element.fromDate &&
-            element.fromDate !== 'Ожидание анализа' &&
-            element.fromDate !== 'Дата не обнаружена'
-              ? this.datepipe.transform(element.fromDate, 'dd.MM.yyyy')
-              : ''
-          }"?`
-        )
-      ) {
-        this.charterService
-          .deactivateCharter(element._id, !element.isActive)
-          .subscribe(
-            () => {
-              this.refreshData(this.currentFilter);
-            },
-            error => {
-              alert(error.message());
-            }
-          );
-      }
-    }
   }
 
   showCharters() {

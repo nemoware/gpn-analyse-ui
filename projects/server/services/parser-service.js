@@ -147,16 +147,6 @@ exports.parseAudit = async audit => {
   await this.setResult(audit);
 };
 
-exports.parseCharter = async charter => {
-  charter.status = 'Loading';
-  console.log(charter.status);
-  await charter.save();
-  console.log(charter);
-
-  await parseFile(charter);
-  await this.setResult(charter);
-};
-
 exports.setResult = async audit => {
   let count = await Document.countDocuments({
     auditId: audit._id,
@@ -187,11 +177,10 @@ async function parseDirectory(audit) {
 
 async function parseFile(charter) {
   const url = charter.ftpUrl;
-  const root = path.dirname(url);
   const filename = path.basename(url);
   let options;
   try {
-    const content = await fs.readFile(path.join(root, filename));
+    const content = await fs.readFile(url);
     options = getOptions(filename, content);
   } catch (err) {
     if (err.code === 'ENOENT') {
@@ -210,13 +199,12 @@ async function parseFile(charter) {
 
   try {
     const response = await post(options);
-    charter.data = JSON.parse(response.body);
+    const result = JSON.parse(response.body);
+    if (result.documents) charter.parse = result.documents[0];
     charter.filename = filename;
     charter.parserResponseCode = response.code;
-    await charter.save();
   } catch (err) {
     if (err.code !== 'ECONNREFUSED') return logger.logLocalError(err);
-
     charter.parse = {
       documentType: err.code,
       message: 'Parser module is off'
@@ -225,6 +213,8 @@ async function parseFile(charter) {
     charter.parserResponseCode = 504;
   }
 }
+
+exports.parseFile = parseFile;
 
 async function getPaths(directory, root) {
   if (!root) {

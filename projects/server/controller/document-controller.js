@@ -15,6 +15,7 @@ state
 analysis.analyze_timestamp
 analysis.version
 analysis.warnings
+isActive
 `;
 
 exports.getDocuments = async (req, res) => {
@@ -603,6 +604,7 @@ exports.getChartersForTable = async (req, res) => {
 
   const where = {
     'parse.documentType': 'CHARTER',
+    parserResponseCode: 200,
     $or: [
       // если существует user
       {
@@ -623,9 +625,10 @@ exports.getChartersForTable = async (req, res) => {
     ]
   };
   try {
-    const charters = await Document.find(
+    const docs = await Document.find(
       where,
       `
+    createDate
     state
     user.author.name
     analysis.analyze_timestamp
@@ -636,7 +639,7 @@ exports.getChartersForTable = async (req, res) => {
     analysis.attributes.org-1-name
     user.attributes.org-1-name`
     );
-    const result = charters.map(c => {
+    const result = docs.map(c => {
       return {
         _id: c._id,
         fromDate: c.getAttributeValue('date') || '',
@@ -644,76 +647,69 @@ exports.getChartersForTable = async (req, res) => {
           c.getAttributeValue('org-1-name') ||
           (!c.analysis.attributes && c.subsidiary.name) ||
           '',
-        analyze_timestamp: c.analysis.analyze_timestamp,
+        analyze_timestamp: c.analysis.analyze_timestamp || c.createDate,
         user: c.user.author && c.user.author.name,
         isActive: c.isActive === undefined || c.isActive,
         toDate: null,
-        state: c.state
+        state: c.state || null
       };
     });
 
-    //Активные уставы с валидными полями
-    const filterActive = result
-      .filter(
-        result =>
-          (result.isActive || result.isActive === undefined) &&
+    //Уставы с валидными полями
+    const charters = result.filter(
+      result =>
+        result.fromDate &&
+        result.fromDate !== '' &&
+        result.subsidiary &&
+        result.subsidiary !== ''
+    );
+
+    //Уставы с невалидными полями
+    const badCharters = result.filter(
+      result =>
+        !(
           result.fromDate &&
           result.fromDate !== '' &&
           result.subsidiary &&
           result.subsidiary !== ''
-      )
-      .sort(sortingFunction);
-    //Неактивные или с невалидными полями
-    const filterInactiveAndBad = result
-      .filter(
-        result =>
-          !(
-            (result.isActive || result.isActive === undefined) &&
-            result.fromDate &&
-            result.fromDate !== '' &&
-            result.subsidiary &&
-            result.subsidiary !== ''
-          )
-      )
-      .sort(sortingFunction);
-    //Заполняем даты окончания
-    for (let i = 0; i < filterActive.length; i++) {
-      filterActive[i].toDate =
-        filterActive[i + 1] &&
-        filterActive[i].subsidiary === filterActive[i + 1].subsidiary &&
-        filterActive[i + 1].fromDate;
-    }
+        )
+    );
 
-    if (!name)
-      for (let i = 0; i < filterInactiveAndBad.length; i++) {
-        filterActive.push(filterInactiveAndBad[i]);
+    if (allSubsidiaries) {
+      // получаем все возможные наименования ДО
+      const subsidiaries = Object.keys(
+        result.reduce((previous, current) => {
+          previous[current.subsidiary] = true;
+          return previous;
+        }, {})
+      );
+      for (const subsidiary of subsidiaries) {
+        setToDate(charters.filter(c => c.subsidiary === subsidiary));
       }
-    else {
+      for (let i = 0; i < badCharters.length; i++) {
+        charters.push(badCharters[i]);
+      }
+    } else {
+      setToDate(charters);
       const regExp = new RegExp(name);
-      for (let i = 0; i < filterInactiveAndBad.length; i++) {
-        if (regExp.test(filterInactiveAndBad[i].subsidiary))
-          filterActive.push(filterInactiveAndBad[i]);
+      for (let i = 0; i < badCharters.length; i++) {
+        if (regExp.test(badCharters[i].subsidiary))
+          charters.push(badCharters[i]);
       }
     }
-    filterActive.sort(sortingFunction);
-    res.send(filterActive);
+    res.send(
+      charters.sort((a, b) => {
+        // сортировка по наименованию ДО
+        if (a.subsidiary > b.subsidiary) return 1;
+        if (a.subsidiary < b.subsidiary) return -1;
+        // сортировка по дате
+        return a.fromDate - b.fromDate;
+      })
+    );
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
 };
-
-function sortingFunction(a, b) {
-  {
-    if (a.subsidiary === b.subsidiary) {
-      let date1 = new Date(a.fromDate);
-      let date2 = new Date(b.fromDate);
-      if (date1.getTime() === date2.getTime())
-        return a.toDate > b.toDate ? -1 : 1;
-      return a.fromDate > b.fromDate ? 1 : -1;
-    }
-    return a.subsidiary > b.subsidiary ? 1 : -1;
-  }
-}
 
 exports.charterActivation = async (req, res) => {
   const id = req.body.id;
@@ -729,36 +725,46 @@ exports.charterActivation = async (req, res) => {
 
 exports.postCharter = async (req, res) => {
   let charter = new Document(req.body);
-  charter.author = res.locals.user;
-
   try {
     await fs.access(charter.ftpUrl);
   } catch (err) {
     if (err.code === 'ENOENT') {
-      logger.logError(
-        req,
-        res,
-        `No such file or directory: ${charter.ftpUrl}`,
-        400
-      );
+      logger.logError(req, res, `No such file: ${charter.ftpUrl}`, 400);
     } else {
       logger.logError(req, res, err, 500);
     }
     return;
   }
 
-  try {
-    await charter.save();
-    await logger.log(
-      req,
-      res,
-      'Загрузка устава',
-      `Устав '${charter.subsidiary.name}'
-      `
-    );
-    res.status(201).json(charter);
+  const stat = await fs.stat(charter.ftpUrl);
+  if (stat.isDirectory()) {
+    logger.logError(req, res, `${charter.ftpUrl} is not a file`, 400);
+    return;
+  }
 
-    parser.parseCharter(charter);
+  try {
+    await parser.parseFile(charter);
+    if (
+      charter.parserResponseCode === 200 &&
+      charter.parse.documentType === 'CHARTER'
+    ) {
+      await charter.save();
+      await logger.log(
+        req,
+        res,
+        'Загрузка устава',
+        `Имя файла: '${charter.filename}'
+      `
+      );
+      res.status(201).json(charter);
+    } else if (
+      charter.parserResponseCode === 504 ||
+      charter.parserResponseCode === 0
+    )
+      logger.logError(req, res, charter.parse.message, 400);
+    else {
+      logger.logError(req, res, 'Not a charter', 400);
+    }
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
