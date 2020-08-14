@@ -8,7 +8,9 @@
         <div class="container">
           <gpn-document-details [document]="document" [editable]="editmode">
           </gpn-document-details>
-            <mat-checkbox [checked]="document.isActive" (change)="onClick()">Устав активен</mat-checkbox>
+          <ng-container *ngIf="document.documentType==='CHARTER'">
+          <mat-checkbox [checked]="document.isActive" (change)="onClick()">Устав активен</mat-checkbox>
+          </ng-container>
         </div>
       </mat-tab>
 
