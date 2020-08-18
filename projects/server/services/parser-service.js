@@ -1,8 +1,7 @@
 const fs = require('fs-promise');
 const request = require('request');
 const url = require('../config/config').parser.url;
-const db = require('../models');
-const Document = db.Document;
+const { Document } = require('../models');
 const path = require('path');
 const logger = require('../core/logger');
 
@@ -60,7 +59,7 @@ async function parse(root, filename, audit) {
           documentType: err.code,
           message: 'File not found'
         },
-        audit._id,
+        audit,
         filename,
         0
       );
@@ -76,16 +75,10 @@ async function parse(root, filename, audit) {
     const version = result.version;
     if (result.documents) {
       for (let document of result.documents) {
-        await postDocument(
-          document,
-          audit._id,
-          filename,
-          response.code,
-          version
-        );
+        await postDocument(document, audit, filename, response.code, version);
       }
     } else {
-      await postDocument(result, audit._id, filename, response.code);
+      await postDocument(result, audit, filename, response.code);
     }
   } catch (err) {
     if (err.code !== 'ECONNREFUSED') return logger.logLocalError(err);
@@ -95,7 +88,7 @@ async function parse(root, filename, audit) {
         documentType: err.code,
         message: 'Parser module is off'
       },
-      audit._id,
+      audit,
       filename,
       504
     );
@@ -119,20 +112,26 @@ function post(options) {
   });
 }
 
-async function postDocument(data, auditId, filename, responseCode, version) {
+async function postDocument(data, audit, filename, responseCode, version) {
   if (!data.version) {
     data.version = version;
   }
 
-  let document = new Document({
-    auditId: auditId,
+  const document = new Document({
     filename: filename,
     parse: data,
     parserResponseCode: responseCode
   });
 
+  if (data.documentType !== 'CHARTER') {
+    document.auditId = audit._id;
+  }
+
   try {
     await document.save();
+    if (data.documentType === 'CHARTER') {
+      audit.charters.push(document._id);
+    }
   } catch (err) {
     console.log(err);
   }
