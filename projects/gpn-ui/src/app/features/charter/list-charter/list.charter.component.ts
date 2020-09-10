@@ -4,7 +4,8 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   AfterViewInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import {
   MatDialog,
@@ -18,6 +19,7 @@ import { Document } from '@app/models/document.model';
 import { CharterService } from '@app/features/charter/charter.service';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { CreateCharterComponent } from '@app/features/charter/create-charter/create-charter.component';
+import { SubscriptionLike } from '@root/node_modules/rxjs';
 
 @Component({
   selector: 'gpn-list-charter',
@@ -26,7 +28,7 @@ import { CreateCharterComponent } from '@app/features/charter/create-charter/cre
   providers: [CharterService, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListCharterComponent implements OnInit, AfterViewInit {
+export class ListCharterComponent implements OnInit, AfterViewInit, OnDestroy {
   faSearch = faSearch;
   columns: string[] = [
     'subsidiaryName',
@@ -49,6 +51,7 @@ export class ListCharterComponent implements OnInit, AfterViewInit {
   delete = false;
   currentFilter = [];
   showInactive = false;
+  subscription: SubscriptionLike;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -70,10 +73,12 @@ export class ListCharterComponent implements OnInit, AfterViewInit {
 
   refreshData(filter: Array<{ name: string; value: string }> = null) {
     this.currentFilter = filter;
-    this.charterService.getCharters(filter).subscribe(data => {
-      this.documents = data;
-      this.refreshViewTable();
-    });
+    this.subscription = this.charterService
+      .getCharters(filter)
+      .subscribe(data => {
+        this.documents = data;
+        this.refreshViewTable();
+      });
   }
 
   refreshViewTable() {
@@ -187,5 +192,9 @@ export class ListCharterComponent implements OnInit, AfterViewInit {
   showCharters() {
     this.showInactive = !this.showInactive;
     this.refreshViewTable();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
