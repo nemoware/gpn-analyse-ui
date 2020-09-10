@@ -2,10 +2,16 @@ module.exports = (mongoose, Schema) => {
   const ObjectId = Schema.Types.ObjectId;
   let documentSchema = new Schema({
     auditId: ObjectId,
+    subsidiary: {
+      name: String
+    },
+    ftpUrl: String,
+    createDate: Date,
     filename: String,
     parse: Object,
     parserResponseCode: Number,
     state: Number,
+    isActive: Boolean,
     analysis: {
       version: String,
       original_text: String,
@@ -35,6 +41,19 @@ module.exports = (mongoose, Schema) => {
       updateDate: Date
     }
   });
+
+  documentSchema.methods.getAttributeValue = function getAttributeValue(
+    attribute
+  ) {
+    if (!this.analysis || !this.analysis.attributes) return;
+
+    if (this.user && this.user.attributes) {
+      if (this.user.attributes[attribute])
+        return this.user.attributes[attribute].value;
+    } else if (this.analysis.attributes[attribute]) {
+      return this.analysis.attributes[attribute].value;
+    }
+  };
 
   return mongoose.model('Document', documentSchema);
 };

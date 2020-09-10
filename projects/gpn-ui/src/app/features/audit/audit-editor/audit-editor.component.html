@@ -8,6 +8,9 @@
         <div class="container">
           <gpn-document-details [document]="document" [editable]="editmode">
           </gpn-document-details>
+          <ng-container *ngIf="document.documentType==='CHARTER'">
+          <mat-checkbox [checked]="document.isActive" (change)="onClick()">Устав активен</mat-checkbox>
+          </ng-container>
         </div>
       </mat-tab>
 
@@ -74,7 +77,6 @@
           </h3>
         </div>
       </div>
-
     </div>
 
     <div *ngIf="hasWarnings()" class="balloon warnings">

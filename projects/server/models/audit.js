@@ -18,7 +18,8 @@ module.exports = (mongoose, Schema) => {
           fromId: ObjectId,
           toId: ObjectId
         }
-      ]
+      ],
+      charters: [ObjectId]
     },
     { toJSON: { virtuals: true } }
   );

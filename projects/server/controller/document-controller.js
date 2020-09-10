@@ -3,6 +3,8 @@ const { Document, Audit, User } = require('../models');
 const logger = require('../core/logger');
 const attribute = require('../core/attribute');
 const types = require('../json/document-type');
+const fs = require('fs-promise');
+const parser = require('../services/parser-service');
 
 const documentFields = `filename
 parse.documentDate
@@ -13,10 +15,12 @@ state
 analysis.analyze_timestamp
 analysis.version
 analysis.warnings
+isActive
 `;
 
 exports.getDocuments = async (req, res) => {
-  if (!req.query.auditId) {
+  const auditId = req.query.auditId;
+  if (!auditId) {
     let err = 'Can not find documents: auditId is null';
     logger.logError(req, res, err, 400);
     return;
@@ -28,8 +32,13 @@ exports.getDocuments = async (req, res) => {
       include = documentFields + `analysis.attributes`;
     }
 
+    const audit = await Audit.findById(auditId, `charters`, { lean: true });
+
     let documents = await Document.find(
-      { auditId: req.query.auditId, parserResponseCode: 200 },
+      {
+        $or: [{ auditId }, { _id: { $in: audit.charters } }],
+        parserResponseCode: 200
+      },
       include,
       { lean: true }
     );
@@ -63,7 +72,7 @@ exports.getDocuments = async (req, res) => {
     }).lean();
     if (user) {
       const stars = user.stars
-        .filter(s => s.auditId.toString() === req.query.auditId)
+        .filter(s => s.auditId.toString() === auditId)
         .map(s => s.documentId.toString());
 
       for (let document of documents.filter(d =>
@@ -429,6 +438,113 @@ exports.getDocumentsByType = async (req, res) => {
   }
 };
 
+exports.getCharters = async (req, res) => {
+  const allSubsidiariesRegexp = /.*все до$/i;
+  const name = req.query.name;
+
+  // Все ДО, если совпадает с регэкспом или не пришел параметр name
+  const allSubsidiaries = allSubsidiariesRegexp.test(name) || !name;
+  const mongoRegexp = {
+    $regex: `.*${allSubsidiaries ? '' : name}.*`,
+    $options: 'i'
+  };
+
+  const where = {
+    'parse.documentType': 'CHARTER',
+    parserResponseCode: 200,
+    analysis: { $exists: true },
+    $and: [
+      // признак активности
+      { $or: [{ isActive: true }, { isActive: { $exists: false } }] },
+      {
+        $or: [
+          // если существует user
+          {
+            // существует атрибут date
+            'user.attributes.date': { $exists: true },
+            // фильтр по наименованию ДО
+            'user.attributes.org-1-name.value': mongoRegexp
+          },
+          // если существует только analysis
+          {
+            user: { $exists: false },
+            // существует атрибут date
+            'analysis.attributes.date': { $exists: true },
+            // фильтр по наименованию ДО
+            'analysis.attributes.org-1-name.value': mongoRegexp
+          }
+        ]
+      }
+    ]
+  };
+
+  try {
+    const charters = await Document.find(
+      where,
+      `parse.documentDate
+    filename
+    parse.documentNumber
+    user.author.name
+    analysis.attributes.date.value
+    user.attributes.date.value
+    analysis.attributes.org-1-name
+    user.attributes.org-1-name`
+    );
+
+    const result = charters.map(c => {
+      return {
+        _id: c._id,
+        fromDate: c.getAttributeValue('date'),
+        subsidiary: c.getAttributeValue('org-1-name')
+      };
+    });
+
+    if (allSubsidiaries) {
+      // получаем все возможные наименования ДО
+      const subsidiaries = Object.keys(
+        result.reduce((previous, current) => {
+          previous[current.subsidiary] = true;
+          return previous;
+        }, {})
+      );
+
+      for (const subsidiary of subsidiaries) {
+        setToDate(result.filter(c => c.subsidiary === subsidiary));
+      }
+    } else {
+      setToDate(result);
+    }
+
+    res.send(
+      result.sort((a, b) => {
+        // сортировка по наименованию ДО
+        if (a.subsidiary > b.subsidiary) return 1;
+        if (a.subsidiary < b.subsidiary) return -1;
+        // сортировка по дате
+        return a.fromDate - b.fromDate;
+      })
+    );
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+function setToDate(charters) {
+  // получаем все возможные даты и сортируем по возрастанию
+  const dates = Object.keys(
+    charters.reduce((previous, current) => {
+      previous[current.fromDate.getTime()] = true;
+      return previous;
+    }, {})
+  ).sort((a, b) => a - b);
+
+  // дата "по" будет равна следующей дате из массива
+  for (const charter of charters) {
+    charter.toDate =
+      dates[dates.indexOf(charter.fromDate.getTime().toString()) + 1];
+  }
+}
+
 exports.addStar = async (req, res) => {
   const id = req.body.id;
   if (!id) return res.status(400).send(`Required parameter 'id' is not passed`);
@@ -470,6 +586,185 @@ exports.deleteStar = async (req, res) => {
     await user.save();
 
     res.end();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getChartersForTable = async (req, res) => {
+  const allSubsidiariesRegexp = /.*все до$/i;
+  const name = req.query.name;
+
+  // Все ДО, если совпадает с регэкспом или не пришел параметр name
+  const allSubsidiaries = allSubsidiariesRegexp.test(name) || !name;
+  const mongoRegexp = {
+    $regex: `.*${allSubsidiaries ? '' : name}.*`,
+    $options: 'i'
+  };
+
+  const where = {
+    'parse.documentType': 'CHARTER',
+    parserResponseCode: 200,
+    $or: [
+      // если существует user
+      {
+        // фильтр по наименованию ДО
+        'user.attributes.org-1-name.value': mongoRegexp
+      },
+      // если существует только analysis
+      {
+        user: { $exists: false },
+        // фильтр по наименованию ДО
+        'analysis.attributes.org-1-name.value': mongoRegexp
+      },
+      {
+        // Те уставы, в которых нет этих полей
+        'analysis.attributes.org-1-name.value': undefined,
+        'user.attributes.org-1-name.value': undefined
+      }
+    ]
+  };
+  try {
+    const docs = await Document.find(
+      where,
+      `
+    createDate
+    state
+    user.author.name
+    analysis.analyze_timestamp
+    isActive
+    subsidiary.name
+    analysis.attributes.date.value
+    user.attributes.date.value
+    analysis.attributes.org-1-name
+    user.attributes.org-1-name`
+    );
+    const result = docs.map(c => {
+      return {
+        _id: c._id,
+        fromDate: c.getAttributeValue('date') || '',
+        subsidiary:
+          c.getAttributeValue('org-1-name') ||
+          (!c.analysis.attributes && c.subsidiary.name) ||
+          '',
+        analyze_timestamp: c.analysis.analyze_timestamp || c.createDate,
+        user: c.user.author && c.user.author.name,
+        isActive: c.isActive === undefined || c.isActive,
+        toDate: null,
+        state: c.state || null
+      };
+    });
+
+    //Уставы с валидными полями
+    const charters = result.filter(
+      result =>
+        result.fromDate &&
+        result.fromDate !== '' &&
+        result.subsidiary &&
+        result.subsidiary !== ''
+    );
+
+    //Уставы с невалидными полями
+    const badCharters = result.filter(
+      result =>
+        !(
+          result.fromDate &&
+          result.fromDate !== '' &&
+          result.subsidiary &&
+          result.subsidiary !== ''
+        )
+    );
+
+    if (allSubsidiaries) {
+      // получаем все возможные наименования ДО
+      const subsidiaries = Object.keys(
+        result.reduce((previous, current) => {
+          previous[current.subsidiary] = true;
+          return previous;
+        }, {})
+      );
+      for (const subsidiary of subsidiaries) {
+        setToDate(charters.filter(c => c.subsidiary === subsidiary));
+      }
+      for (let i = 0; i < badCharters.length; i++) {
+        charters.push(badCharters[i]);
+      }
+    } else {
+      setToDate(charters);
+      const regExp = new RegExp(name);
+      for (let i = 0; i < badCharters.length; i++) {
+        if (regExp.test(badCharters[i].subsidiary))
+          charters.push(badCharters[i]);
+      }
+    }
+    res.send(
+      charters.sort((a, b) => {
+        // сортировка по наименованию ДО
+        if (a.subsidiary > b.subsidiary) return 1;
+        if (a.subsidiary < b.subsidiary) return -1;
+        // сортировка по дате
+        return a.fromDate - b.fromDate;
+      })
+    );
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.charterActivation = async (req, res) => {
+  const id = req.body.id;
+  const action = req.body.action;
+  if (!id) return res.status(400).send(`Required parameter 'id' is not passed`);
+  try {
+    await Document.findOneAndUpdate({ _id: id }, { isActive: action });
+    res.end();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.postCharter = async (req, res) => {
+  let charter = new Document(req.body);
+  try {
+    await fs.access(charter.ftpUrl);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      logger.logError(req, res, `No such file: ${charter.ftpUrl}`, 400);
+    } else {
+      logger.logError(req, res, err, 500);
+    }
+    return;
+  }
+
+  const stat = await fs.stat(charter.ftpUrl);
+  if (stat.isDirectory()) {
+    logger.logError(req, res, `${charter.ftpUrl} is not a file`, 400);
+    return;
+  }
+
+  try {
+    await parser.parseFile(charter);
+    if (
+      charter.parserResponseCode === 200 &&
+      charter.parse.documentType === 'CHARTER'
+    ) {
+      await charter.save();
+      await logger.log(
+        req,
+        res,
+        'Загрузка устава',
+        `Имя файла: '${charter.filename}'
+      `
+      );
+      res.status(201).json(charter);
+    } else if (
+      charter.parserResponseCode === 504 ||
+      charter.parserResponseCode === 0
+    )
+      logger.logError(req, res, charter.parse.message, 400);
+    else {
+      logger.logError(req, res, 'Not a charter', 400);
+    }
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
