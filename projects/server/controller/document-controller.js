@@ -213,6 +213,9 @@ exports.updateDocument = async (req, res) => {
   document.state = 5;
 
   try {
+    if (document.user.attributes) {
+      document.markModified('user.attributes');
+    }
     await document.save();
 
     const audit = await Audit.findById(document.auditId);
