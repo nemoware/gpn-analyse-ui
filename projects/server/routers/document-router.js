@@ -4,6 +4,12 @@ const controller = require('../controller/document-controller');
 router.get('/list', controller.getDocuments);
 router.get('/list-by-type', controller.getDocumentsByType);
 router
+  .route('/charters')
+  .get(controller.getCharters)
+  .post(controller.postCharter);
+router.put('/activate-charter', controller.charterActivation);
+router.get('/charter-table', controller.getChartersForTable);
+router
   .route('')
   .get(controller.getDocument)
   .put(controller.updateDocument);

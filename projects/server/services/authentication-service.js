@@ -38,8 +38,9 @@ async function getLogin(req, res) {
 }
 
 function initializeServer(realm) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     kerberos.initializeServer(realm, (err, server) => {
+      if (err) return reject(err);
       resolve(server);
     });
   });

@@ -1,0 +1,15 @@
+<div class="container">
+  <h4>Новый устав</h4>
+  <mat-form-field>
+    <input matInput placeholder="Путь к файлу (FTP URL)" [(ngModel)]="_ftpUrl">
+  </mat-form-field>
+  <br>
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button (click)="CloseForm()"  style="float: right">Отменить</button>
+    </div>
+    <div class="col">
+      <button mat-raised-button color="accent" (click)="uploadCharter()" [disabled]="!valid()">Загрузить устав</button>
+    </div>
+  </div>
+</div>

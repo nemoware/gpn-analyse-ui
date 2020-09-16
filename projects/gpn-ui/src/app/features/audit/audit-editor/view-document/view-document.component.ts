@@ -450,7 +450,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.attributes.forEach(
       item =>
         (atr[item.key] = {
-          confidence: item.confidence,
+          confidence: 1,
           kind: item.key,
           span: item.span,
           span_map: item.span_map,

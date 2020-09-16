@@ -102,7 +102,7 @@ import { SortValuePipe } from './audit-editor/competencecharts/sort-value.pipe';
     EditAttributeComponent,
     SearchDocumentComponent
   ],
-  exports: [ViewDocumentComponent],
+  exports: [ViewDocumentComponent, DocStateComponent],
   providers: [
     {
       provide: DateAdapter,
