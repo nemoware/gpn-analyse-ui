@@ -22,7 +22,7 @@ import {
   FormGroupDirective,
   NgForm
 } from '@root/node_modules/@angular/forms';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject, SubscriptionLike } from 'rxjs';
 
 import { take, takeUntil } from 'rxjs/operators';
 import { Subsidiary } from '@app/models/subsidiary.model';
@@ -48,12 +48,17 @@ class CrossFieldErrorMatcher implements ErrorStateMatcher {
 export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   faTimes = faTimes;
   public subsidiaryCtrl: FormControl = new FormControl();
+  public charterCtrl: FormControl = new FormControl();
   public subsidiaryFilterCtrl: FormControl = new FormControl();
   public filteredSubsidiaries: ReplaySubject<Subsidiary[]> = new ReplaySubject<
     Subsidiary[]
   >(1);
   @ViewChild('selectSubsidiary', { static: false }) selectSubsidiary: MatSelect;
-
+  @ViewChild('selectCharters', { static: false }) selectCharters: MatSelect;
+  selectedCharters = [];
+  selectedSubsidiary;
+  charters = [];
+  subscriptions: SubscriptionLike[] = [];
   auditForm: FormGroup;
   errorMatcher = new CrossFieldErrorMatcher();
   private subsidiaries: Subsidiary[];
@@ -61,6 +66,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   _auditStart: Date = null;
   _auditEnd: Date = null;
   _ftpUrl: string = null;
+  allSubs = { name: '* Все ДО' };
 
   constructor(
     private dateAdapter: DateAdapter<Date>,
@@ -101,8 +107,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     this.auditservice.getSubsidiaries().subscribe(data => {
       this.subsidiaries = data;
-      const allSubs = {name: '* Все ДО'};
-      this.subsidiaries.unshift(allSubs);
+      this.subsidiaries.unshift(this.allSubs);
 
       this.filteredSubsidiaries.next(this.subsidiaries.slice());
       this.subsidiaryFilterCtrl.valueChanges
@@ -124,6 +129,8 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions = [];
     this._onDestroy.next();
     this._onDestroy.complete();
   }
@@ -149,7 +156,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   CloseForm() {
     this.dialogRef.close();
   }
- 
+
   CreateAudit() {
     const newAudit: Audit = {
       subsidiaryName: this.subsidiaryCtrl.value.name,
@@ -163,14 +170,17 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
       // @ts-ignore
       comments: [],
       createDate: new Date(),
-      author: null
+      author: null,
+      charters: this.selectedCharters
     };
 
-    this.auditservice.postAudit(newAudit).subscribe(
-      data => {
-        this.dialogRef.close(data);
-      },
-      error => {}
+    this.subscriptions.push(
+      this.auditservice.postAudit(newAudit).subscribe(
+        data => {
+          this.dialogRef.close(data);
+        },
+        error => {}
+      )
     );
   }
 
@@ -190,5 +200,21 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     if (event.target.id === '_auditStart')
       this._auditStart = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
     else this._auditEnd = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
+  }
+
+  changeSubsidiary(e) {
+    if (e) {
+      this.selectedSubsidiary = e.value;
+      this.selectedCharters = [];
+      this.selectCharters.writeValue(null);
+      this.charters = [];
+      this.subscriptions.push(
+        this.auditservice
+          .getCharter(e.value.id !== this.allSubs.name ? e.value.id : null)
+          .subscribe(data => {
+            this.charters = data;
+          })
+      );
+    }
   }
 }

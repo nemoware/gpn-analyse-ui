@@ -28,7 +28,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           errorMessage =
             error.error.details != null ? error.error.details : error.message;
           if (error.status === 400) {
-            window.alert(error.error);
+            window.alert(error.error.details || error.error);
           }
         }
         return throwError(errorMessage);

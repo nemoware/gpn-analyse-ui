@@ -47,7 +47,8 @@ const column_to_sorting_mapping = {
   value: 'sign_value_currency/value',
   org1: 'org-1-name',
   org2: 'org-2-name',
-  org: 'org-1-name'
+  org: 'org-1-name',
+  org_level: 'org_structural_level'
 };
 
 @Component({
@@ -94,12 +95,31 @@ export class DocumentDetailComponent implements OnInit {
     data,
     sortHeaderId: string
   ): string | number => {
-    if (sortHeaderId === 'analyze_state')
-      return data.analysis.analyze_timestamp;
+    if (sortHeaderId === 'analyze_state') {
+      if (
+        data.state === 0 ||
+        data.state === 1 ||
+        data.state === 5 ||
+        data.state === null
+      )
+        return 'Загружен, ожидает анализа' + data.analysis.analyze_timestamp;
+      if (data.state === 10)
+        return 'Анализируется' + data.analysis.analyze_timestamp;
+      if (data.state === 11)
+        return 'Ошибка при анализе' + data.analysis.analyze_timestamp;
+      if (data.state === 12)
+        return (
+          'Документ не попадает под параметры Аудита' +
+          data.analysis.analyze_timestamp
+        );
+      if (data.state === 15)
+        return 'Анализ завершен' + data.analysis.analyze_timestamp;
+      return ' ';
+    }
     if (sortHeaderId in column_to_sorting_mapping) {
       const attr = column_to_sorting_mapping[sortHeaderId];
-      if (sortHeaderId === 'contract_subject')
-        return this.translate.instant(this.getAttrValue(attr, data));
+      if (sortHeaderId === 'contract_subject' || sortHeaderId === 'org_level')
+        return this.translate.instant(this.getAttrValue(attr, data) || ' ');
       return this.getAttrValue(attr, data);
     }
     if ('warnings' === sortHeaderId) {

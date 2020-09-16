@@ -69,6 +69,8 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   refreshData(needRefresh: boolean = false) {
     this.auditservice.getDoument(this.IdDocument).subscribe(data => {
       this.document = data;
+      this.document.isActive =
+        this.document.isActive === undefined || this.document.isActive;
       if (this.document.user) {
         this.attributes = Helper.json2array(this.document.user.attributes);
       } else if (this.document.analysis.attributes) {
@@ -117,5 +119,17 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
       if (atr) return atr.value;
     }
     return default_value;
+  }
+
+  onClick() {
+    this.document.isActive = !this.document.isActive;
+    this.auditservice
+      .deactivateCharter(this.document._id, this.document.isActive)
+      .subscribe(
+        () => {},
+        error => {
+          alert(error.message());
+        }
+      );
   }
 }

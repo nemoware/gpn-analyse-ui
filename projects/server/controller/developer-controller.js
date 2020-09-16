@@ -3,7 +3,7 @@ const { Document } = require('../models');
 function getAttributeName(attribute) {
   const subAttributes = attribute.split('/');
   let subAttribute = subAttributes[subAttributes.length - 1];
-  const parts = subAttribute.replace(/_/g, '-').split('-');
+  const parts = subAttribute.split('-');
   if (!Number.isNaN(+parts[parts.length - 1])) {
     parts.pop();
   }

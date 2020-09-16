@@ -17,7 +17,7 @@ export class Helper {
     let kind = key;
     let M: string[] = key.split('/');
     kind = M[M.length - 1];
-    kind = kind.replace(new RegExp('_', 'g'), '-');
+    //kind = kind.replace(new RegExp('_', 'g'), '-');
     M = kind.split('-');
     if (!isNaN(Number(M[M.length - 1]))) {
       kind = kind.substring(0, kind.lastIndexOf('-'));

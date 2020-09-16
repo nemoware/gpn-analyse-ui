@@ -437,7 +437,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     if (parentKey) {
       const parentKind = Helper.parseKind(parentKey).kind;
       N = this.attributes
-        .filter(x => x.kind === parentKind)
+        .filter(x => [parentKind, parentKey].includes(x.parent))
         .filter(x => x.kind === kind).length;
     } else N = this.attributes.filter(x => x.kind === kind).length;
     return (
@@ -450,7 +450,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.attributes.forEach(
       item =>
         (atr[item.key] = {
-          confidence: item.confidence,
+          confidence: 1,
           kind: item.key,
           span: item.span,
           span_map: item.span_map,

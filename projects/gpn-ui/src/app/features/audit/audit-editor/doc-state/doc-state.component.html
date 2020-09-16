@@ -1,3 +1,6 @@
+
 <span [class]="getDocStateClass(document)"> </span>
-            <span class="small" *ngIf="document.analysis && document.state === 15">обработан: {{ document.analysis.analyze_timestamp | date:'dd MMM yyyy' }}<br>
+<span class="small" *ngIf="document.analysis && document.state === 15">обработан: {{ document.analysis.analyze_timestamp | date:'dd MMM yyyy' }}<br>
             {{ document.analysis.analyze_timestamp | date:'HH:mm O' }}</span>
+<span class="small" *ngIf="document.user && document.user.author"><br/>
+    <mat-icon>edit</mat-icon>{{document.user.author.name}}</span>
