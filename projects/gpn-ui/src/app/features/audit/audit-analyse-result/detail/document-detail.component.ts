@@ -189,7 +189,7 @@ export class DocumentDetailComponent implements OnInit {
 
   openDocument(element) {
     window.open(
-      window.location.origin + '/#/audit/view/' + element._id,
+      window.location.origin + '/#/audit/edit/' + element._id,
       '_blank'
     );
   }

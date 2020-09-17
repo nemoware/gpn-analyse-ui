@@ -51,6 +51,12 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
     this.IdDocument = this.activatedRoute.snapshot.paramMap.get('id');
     this.editmode = this.activatedRoute.snapshot.data['editmode'];
     this.selectedAttribute = this.activatedRoute.snapshot.queryParams.attribute;
+    window.addEventListener('beforeunload', event => {
+      if (this.changed) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -109,9 +115,9 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
       this.competencecharts.refreshData(this.view_doc.attributes);
   }
 
-  editMode() {
-    this.router.navigate(['audit/edit/', this.document._id]);
-  }
+  // editMode() {
+  //   this.router.navigate(['audit/edit/', this.document._id]);
+  // }
 
   getAttrValue(attrName: string, default_value = null) {
     if (this.attributes) {
