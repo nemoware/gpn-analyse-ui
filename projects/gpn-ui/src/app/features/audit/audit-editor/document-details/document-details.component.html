@@ -15,7 +15,7 @@
 
 <section>
   <label class='field-label'>входит в аудит</label>
-  <span><a href="link to audit">{{ document.audit.subsidiaryName }}<br>
+  <span><a target="_blank" href="/#/audit/result/{{document.auditId}}">{{ document.audit.subsidiaryName }}<br>
       {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</a></span>
 </section>
 
