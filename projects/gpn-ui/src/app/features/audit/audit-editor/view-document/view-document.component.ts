@@ -460,10 +460,27 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     );
 
-    this.auditservice.updateDocument(this.document._id, atr).subscribe(data => {
-      this.changed = false;
-      this.refresh.emit();
-    });
+    const signValueCurrency = this.attributes.filter(
+      a => a.kind === 'sign_value_currency'
+    );
+    if (signValueCurrency) {
+      const value = this.attributes.filter(
+        a => a.key === 'sign_value_currency/value'
+      );
+      const currency = this.attributes.filter(
+        a => a.key === 'sign_value_currency/currency'
+      );
+      if ((value.length && currency.length) || !signValueCurrency.length) {
+        this.auditservice
+          .updateDocument(this.document._id, atr)
+          .subscribe(() => {
+            this.changed = false;
+            this.refresh.emit();
+          });
+      } else {
+        window.alert('Вы не указали валюту или значение суммы договора!');
+      }
+    }
   }
 
   ngOnDestroy(): void {
