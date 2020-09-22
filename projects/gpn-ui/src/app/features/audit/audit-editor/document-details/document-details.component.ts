@@ -217,7 +217,7 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
 
   openDocument(node) {
     if (node.index === 0) return;
-    window.open(window.location.origin + '/#/audit/view/' + node._id, '_blank');
+    window.open(window.location.origin + '/#/audit/edit/' + node._id, '_blank');
   }
 
   focusedDoc(id) {
