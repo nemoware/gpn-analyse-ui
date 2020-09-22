@@ -106,44 +106,45 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
 
   refreshData() {
     this.TREE_DATA = [];
-    this.auditservice.getLinkDocuments(this.document._id).subscribe(res => {
-      this.linkDoc = res;
-      const uniqueType = this.linkDoc.reduce(function(a, d) {
-        if (a.indexOf(d.documentType) === -1) {
-          a.push(d.documentType);
+    if (this.document.documentType !== 'CHARTER')
+      this.auditservice.getLinkDocuments(this.document._id).subscribe(res => {
+        this.linkDoc = res;
+        const uniqueType = this.linkDoc.reduce(function(a, d) {
+          if (a.indexOf(d.documentType) === -1) {
+            a.push(d.documentType);
+          }
+          return a;
+        }, []);
+        for (const t of uniqueType) {
+          let i = 0;
+          const node = { name: t, children: [], childCount: 0, type: t };
+
+          for (const d of this.linkDoc.filter(x => x.documentType === t)) {
+            i++;
+            const nodeChild = {
+              _id: d._id,
+              name: d.filename,
+              index: i,
+              documentNumber: d.documentNumber,
+              documentDate: d.documentDate,
+              type: t,
+              linkId: d.linkId
+            };
+
+            node.children.push(nodeChild);
+            node.childCount = node.children.length;
+          }
+
+          this.TREE_DATA.push(node);
         }
-        return a;
-      }, []);
-      for (const t of uniqueType) {
-        let i = 0;
-        const node = { name: t, children: [], childCount: 0, type: t };
 
-        for (const d of this.linkDoc.filter(x => x.documentType === t)) {
-          i++;
-          const nodeChild = {
-            _id: d._id,
-            name: d.filename,
-            index: i,
-            documentNumber: d.documentNumber,
-            documentDate: d.documentDate,
-            type: t,
-            linkId: d.linkId
-          };
-
-          node.children.push(nodeChild);
-          node.childCount = node.children.length;
+        for (const type of LinksDoc.getLinksType(this.document.documentType)
+          .links) {
+          this.createEmpty(type, uniqueType);
         }
 
-        this.TREE_DATA.push(node);
-      }
-
-      for (const type of LinksDoc.getLinksType(this.document.documentType)
-        .links) {
-        this.createEmpty(type, uniqueType);
-      }
-
-      this.refreshTree();
-    });
+        this.refreshTree();
+      });
   }
 
   createEmpty(type: string, uniqueType: string[]) {

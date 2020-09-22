@@ -12,7 +12,7 @@
 </section>
 
 <mat-divider></mat-divider>
-
+<ng-container *ngIf="document.documentType!=='CHARTER'">
 <section>
   <label class='field-label'>входит в аудит</label>
   <span><a target="_blank" href="/#/audit/result/{{document.auditId}}">{{ document.audit.subsidiaryName }}<br>
@@ -71,3 +71,4 @@
   </mat-tree-node>
 
 </mat-tree>
+</ng-container>
