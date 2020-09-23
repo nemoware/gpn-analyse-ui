@@ -1,6 +1,7 @@
 const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const https = require('https');
 const fs = require('fs');
@@ -14,7 +15,8 @@ global.login = !global.kerberos && (argv.login || 'admin@company.loc');
 const ssl = argv.ssl !== 'false';
 
 const ad = require('./services/ad-service');
-const authentication = require('./services/authentication-service');
+const kerberos = require('./services/kerberos-service');
+const jwt = require('./services/jwt-service');
 
 const accountRouter = require('./routers/account-router');
 const adminRouter = require('./routers/admin-router');
@@ -30,8 +32,10 @@ const app = express();
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-app.use(authentication.authenticate);
+app.use(jwt.authenticate);
+app.use(kerberos.authenticate);
 app.use(rightService);
 
 app.use(CONTEXT, express.static(path.resolve(__dirname, '../../dist/gpn-ui')));
@@ -49,7 +53,7 @@ const listen = async err => {
   console.log(`App is listening on port ${port}`);
   console.log();
 
-  await Promise.all([parser.test(), ad.test(), authentication.test()]);
+  await Promise.all([parser.test(), ad.test(), kerberos.test()]);
 };
 
 if (ssl) {

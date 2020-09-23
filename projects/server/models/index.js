@@ -5,12 +5,12 @@ const fs = require('fs');
 const path = require('path');
 const basename = path.basename(__filename);
 
-const options = require('../config/config').db;
+const options = require('../config').db;
 const host = options.host;
 const port = options.port;
 const name = options.name;
 
-const groups = require('../config/config').ad.groups;
+const groups = require('../config').ad.groups;
 const roles = require('../json/role');
 
 // подключение

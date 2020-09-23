@@ -1,6 +1,6 @@
 const path = require('path');
 const { Group } = require('../models');
-const groups = require('../config/config').ad.groups;
+const groups = require('../config').ad.groups;
 
 module.exports = async (req, res, next) => {
   const userGroups = res.locals.user.memberOf;

@@ -23,3 +23,10 @@ exports.parser = {
   pathFolder: process.env.GPN_DOC_DIRECTORY,
   url: process.env.GPN_PARSER_URL
 };
+
+exports.jwt = {
+  options: {
+    secretOrKey: process.env.GPN_JWT_SECRET
+  },
+  expiresIn: process.env.GPN_JWT_EXPIRES_IN || '1h'
+};
