@@ -640,7 +640,7 @@ exports.getChartersForTable = async (req, res) => {
       },
       // если существует только analysis
       {
-        user: { $exists: false },
+        user: null,
         // фильтр по наименованию ДО
         'analysis.attributes.org-1-name.value': mongoRegexp
       },
