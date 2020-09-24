@@ -102,42 +102,55 @@ exports.getDocument = async (req, res) => {
     ).lean();
 
     if (document) {
-      let audit = await Audit.findOne(
-        { _id: document.auditId },
-        `subsidiary.name auditStart auditEnd status -_id`
-      ).lean();
-
-      const type = types.find(t => t._id === document.parse.documentType);
-      await logger.log(
-        req,
-        res,
-        'Просмотр документа',
-        `${type && type.name} № ${document.parse.documentNumber ||
-          'н/д'} от ${document.parse.documentDate || 'н/д'}. Аудит "${
-          audit.subsidiary.name
-        }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
-          audit.auditEnd
-        ).format('DD.MM.YYYY')}`
-      );
-
-      if (audit) {
-        audit.subsidiaryName = audit.subsidiary.name;
-        delete audit.subsidiary;
-        document.statusAudit = audit.status;
-        document.documentDate = document.parse.documentDate;
+      if (document.parse.documentType === 'CHARTER') {
+        await logger.log(
+          req,
+          res,
+          'Просмотр документа',
+          `Устав № ${document.analysis.documentNumber || 'н/д'} от ${document
+            .parse.documentDate || 'н/д'}.`
+        );
         document.documentType = document.parse.documentType;
-        document.documentNumber = document.parse.documentNumber;
-        document.audit = audit;
         delete document.parse;
-
-        if (document.user) {
-          delete document.analysis.attributes;
-        }
-
         res.status(200).json(document);
       } else {
-        let err = `Can not find audit with id ${document.auditId}`;
-        logger.logError(req, res, err, 404);
+        let audit = await Audit.findOne(
+          { _id: document.auditId },
+          `subsidiary.name auditStart auditEnd status -_id`
+        ).lean();
+
+        const type = types.find(t => t._id === document.parse.documentType);
+        await logger.log(
+          req,
+          res,
+          'Просмотр документа',
+          `${type && type.name} № ${document.parse.documentNumber ||
+            'н/д'} от ${document.parse.documentDate || 'н/д'}. Аудит "${
+            audit.subsidiary.name
+          }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
+            audit.auditEnd
+          ).format('DD.MM.YYYY')}`
+        );
+
+        if (audit) {
+          audit.subsidiaryName = audit.subsidiary.name;
+          delete audit.subsidiary;
+          document.statusAudit = audit.status;
+          document.documentDate = document.parse.documentDate;
+          document.documentType = document.parse.documentType;
+          document.documentNumber = document.parse.documentNumber;
+          document.audit = audit;
+          delete document.parse;
+
+          if (document.user) {
+            delete document.analysis.attributes;
+          }
+
+          res.status(200).json(document);
+        } else {
+          let err = `Can not find audit with id ${document.auditId}`;
+          logger.logError(req, res, err, 404);
+        }
       }
     } else {
       let err = `Can not find document with id ${req.query.id}`;
@@ -218,23 +231,34 @@ exports.updateDocument = async (req, res) => {
     }
     await document.save();
 
-    const audit = await Audit.findById(document.auditId);
-    audit.status = 'InWork';
-    await audit.save();
+    if (document.parse.documentType === 'CHARTER') {
+      await logger.log(
+        req,
+        res,
+        'Изменение документа',
+        `Устав № ${document.parse.documentNumber || 'н/д'} от ${document.parse
+          .documentDate || 'н/д'}.`
+      );
+      res.status(200).json(document);
+    } else {
+      const audit = await Audit.findById(document.auditId);
+      audit.status = 'InWork';
+      await audit.save();
 
-    const type = types.find(t => t._id === document.parse.documentType);
-    await logger.log(
-      req,
-      res,
-      'Изменение документа',
-      `${type && type.name} № ${document.parse.documentNumber ||
-        'н/д'} от ${document.parse.documentDate || 'н/д'}. Аудит "${
-        audit.subsidiary.name
-      }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
-        audit.auditEnd
-      ).format('DD.MM.YYYY')}`
-    );
-    res.status(200).json(document);
+      const type = types.find(t => t._id === document.parse.documentType);
+      await logger.log(
+        req,
+        res,
+        'Изменение документа',
+        `${type && type.name} № ${document.parse.documentNumber ||
+          'н/д'} от ${document.parse.documentDate || 'н/д'}. Аудит "${
+          audit.subsidiary.name
+        }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
+          audit.auditEnd
+        ).format('DD.MM.YYYY')}`
+      );
+      res.status(200).json(document);
+    }
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

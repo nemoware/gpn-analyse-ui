@@ -110,7 +110,7 @@ export class ViolationsAuditComponent implements OnInit {
   openDocument(id, attribute?) {
     window.open(
       window.location.origin +
-        '/#/audit/view/' +
+        '/#/audit/edit/' +
         id +
         (attribute ? '?attribute=' + attribute : ''),
       '_blank'
