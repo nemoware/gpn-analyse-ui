@@ -669,11 +669,11 @@ exports.getChartersForTable = async (req, res) => {
     const result = docs.map(c => {
       return {
         _id: c._id,
-        fromDate: c.getAttributeValue('date') || '',
+        fromDate: c.getAttributeValue('date') || null,
         subsidiary:
           c.getAttributeValue('org-1-name') ||
           (!c.analysis.attributes && c.subsidiary.name) ||
-          '',
+          null,
         analyze_timestamp: c.analysis.analyze_timestamp || c.createDate,
         user: c.user.author && c.user.author.name,
         isActive: c.isActive === undefined || c.isActive,
@@ -684,40 +684,30 @@ exports.getChartersForTable = async (req, res) => {
 
     //Уставы с валидными полями
     const charters = result.filter(
-      result =>
-        result.fromDate &&
-        result.fromDate !== '' &&
-        result.subsidiary &&
-        result.subsidiary !== ''
+      result => result.fromDate && result.subsidiary
     );
 
     //Уставы с невалидными полями
     const badCharters = result.filter(
-      result =>
-        !(
-          result.fromDate &&
-          result.fromDate !== '' &&
-          result.subsidiary &&
-          result.subsidiary !== ''
-        )
+      result => !(result.fromDate && result.subsidiary)
     );
 
+    const subsidiaries = Object.keys(
+      result.reduce((previous, current) => {
+        previous[current.subsidiary] = true;
+        return previous;
+      }, {})
+    );
+
+    for (const subsidiary of subsidiaries) {
+      setToDate(charters.filter(c => c.subsidiary === subsidiary));
+    }
+
     if (allSubsidiaries) {
-      // получаем все возможные наименования ДО
-      const subsidiaries = Object.keys(
-        result.reduce((previous, current) => {
-          previous[current.subsidiary] = true;
-          return previous;
-        }, {})
-      );
-      for (const subsidiary of subsidiaries) {
-        setToDate(charters.filter(c => c.subsidiary === subsidiary));
-      }
       for (let i = 0; i < badCharters.length; i++) {
         charters.push(badCharters[i]);
       }
     } else {
-      setToDate(charters);
       const regExp = new RegExp(name);
       for (let i = 0; i < badCharters.length; i++) {
         if (regExp.test(badCharters[i].subsidiary))

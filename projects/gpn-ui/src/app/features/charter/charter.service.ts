@@ -5,6 +5,7 @@ import {
   HttpClient,
   HttpParams
 } from '@root/node_modules/@angular/common/http';
+import { Charter } from '@app/models/charter.model';
 
 const api = '/api';
 
@@ -16,14 +17,14 @@ export class CharterService {
 
   public getCharters(
     filterValue: Array<{ name: string; value: any }> = null
-  ): Observable<Document[]> {
+  ): Observable<Charter[]> {
     let httpParams = new HttpParams();
     if (filterValue) {
       for (const filter of filterValue) {
         httpParams = httpParams.append(filter.name, filter.value);
       }
     }
-    return this.http.get<Array<Document>>(`${api}/document/charter-table`, {
+    return this.http.get<Array<Charter>>(`${api}/document/charter-table`, {
       params: httpParams
     });
   }

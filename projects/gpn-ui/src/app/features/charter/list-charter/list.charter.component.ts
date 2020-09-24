@@ -15,7 +15,7 @@ import {
 } from '@root/node_modules/@angular/material';
 import { DatePipe } from '@root/node_modules/@angular/common';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Document } from '@app/models/document.model';
+import { Charter } from '@app/models/charter.model';
 import { CharterService } from '@app/features/charter/charter.service';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { CreateCharterComponent } from '@app/features/charter/create-charter/create-charter.component';
@@ -41,7 +41,7 @@ export class ListCharterComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dataSource = new MatTableDataSource();
   activePageDataChunk = [];
-  documents: Document[];
+  charters: Charter[];
   count = 0;
   pageIndex = 0;
   pageSize = 15;
@@ -76,20 +76,20 @@ export class ListCharterComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription = this.charterService
       .getCharters(filter)
       .subscribe(data => {
-        this.documents = data;
+        this.charters = data;
         this.refreshViewTable();
       });
   }
 
   refreshViewTable() {
     if (!this.showInactive) {
-      this.count = this.documents.filter(doc => doc.isActive).length;
-      this.activePageDataChunk = this.documents
+      this.count = this.charters.filter(doc => doc.isActive).length;
+      this.activePageDataChunk = this.charters
         .filter(doc => doc.isActive)
         .slice(0, this.pageSize);
     } else {
-      this.count = this.documents.length;
-      this.activePageDataChunk = this.documents.slice(0, this.pageSize);
+      this.count = this.charters.length;
+      this.activePageDataChunk = this.charters.slice(0, this.pageSize);
     }
     this.paginator.pageIndex = 0;
     this.pageIndex = 0;
@@ -112,10 +112,10 @@ export class ListCharterComponent implements OnInit, AfterViewInit, OnDestroy {
     const firstCut = event.pageIndex * event.pageSize;
     const secondCut = firstCut + event.pageSize;
     if (!this.showInactive)
-      this.activePageDataChunk = this.documents
+      this.activePageDataChunk = this.charters
         .filter(doc => doc.isActive)
         .slice(firstCut, secondCut);
-    else this.activePageDataChunk = this.documents.slice(firstCut, secondCut);
+    else this.activePageDataChunk = this.charters.slice(firstCut, secondCut);
     this.dataSource = new MatTableDataSource(this.activePageDataChunk);
     this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
     this.dataSource.sort = this.sort;
@@ -182,7 +182,7 @@ export class ListCharterComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.documents.unshift(result);
+        this.charters.unshift(result);
         this.refreshViewTable();
         this.changeDetectorRefs.detectChanges();
       }
