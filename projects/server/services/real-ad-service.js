@@ -1,5 +1,5 @@
 const ldap = require('ldapjs');
-const options = require('../config/config').ad.options;
+const options = require('../config').ad.options;
 const clientOptions = {
   url: options.url,
   reconnect: true

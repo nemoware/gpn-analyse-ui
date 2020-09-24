@@ -1,6 +1,6 @@
 const fs = require('fs-promise');
 const request = require('request');
-const url = require('../config/config').parser.url;
+const url = require('../config').parser.url;
 const { Document } = require('../models');
 const path = require('path');
 const logger = require('../core/logger');

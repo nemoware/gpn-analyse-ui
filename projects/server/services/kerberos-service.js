@@ -1,13 +1,20 @@
 const path = require('path');
 const kerberos = require('kerberos');
 const adService = require('../services/ad-service');
-const principal = require('../config/config').ad.principal;
+const jwtService = require('../services/jwt-service');
+const principal = require('../config').ad.principal;
 
-async function authenticate(req, res, next) {
+async function kerberosAuthentication(req, res, next) {
+  if (res.locals.user) return next();
+
   try {
     const login = await getLogin(req, res);
     if (!login) return;
-    res.locals.user = await adService.getUser(login, true);
+
+    const user = await adService.getUser(login, true);
+    const accessToken = jwtService.getAccessToken(user);
+    res.cookie('jwt', accessToken, { httpOnly: true });
+    res.locals.user = user;
     next();
   } catch (err) {
     res.status(401).sendFile('401.html', {
@@ -77,4 +84,4 @@ function info(status) {
   console.log();
 }
 
-module.exports = { authenticate, test };
+module.exports = { authenticate: kerberosAuthentication, test };
