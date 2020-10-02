@@ -425,7 +425,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
             newAtr.key,
             true
           );
-          console.log(this.attributes);
+          // console.log(this.attributes);
         }
         this.changeAttribute.emit(this.attributes);
       }
@@ -460,26 +460,33 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     );
 
+    let wrongMarking = false;
     const signValueCurrency = this.attributes.filter(
-      a => a.kind === 'sign_value_currency'
+      a =>
+        a.kind === 'sign_value_currency' ||
+        a.kind === 'constraint-min' ||
+        a.kind === 'constraint-max'
     );
-    if (signValueCurrency) {
+    signValueCurrency.forEach(attribute => {
       const value = this.attributes.filter(
-        a => a.key === 'sign_value_currency/value'
+        a =>
+          a.key === `${attribute.key}/value` ||
+          a.key === `${attribute.key}/value-2`
       );
       const currency = this.attributes.filter(
-        a => a.key === 'sign_value_currency/currency'
+        a => a.key === `${attribute.key}/currency`
       );
-      if ((value.length && currency.length) || !signValueCurrency.length) {
-        this.auditservice
-          .updateDocument(this.document._id, atr)
-          .subscribe(() => {
-            this.changed = false;
-            this.refresh.emit();
-          });
-      } else {
-        window.alert('Вы не указали валюту или значение суммы договора!');
+      if (!(value.length && currency.length)) {
+        wrongMarking = true;
       }
+    });
+    if (!wrongMarking) {
+      this.auditservice.updateDocument(this.document._id, atr).subscribe(() => {
+        this.changed = false;
+        this.refresh.emit();
+      });
+    } else {
+      window.alert('Вы не указали валюту или значение суммы договора!');
     }
   }
 
