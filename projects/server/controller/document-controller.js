@@ -494,7 +494,7 @@ exports.getCharters = async (req, res) => {
           },
           // если существует только analysis
           {
-            user: { $exists: false },
+            user: null,
             // существует атрибут date
             'analysis.attributes.date': { $exists: true },
             // фильтр по наименованию ДО
