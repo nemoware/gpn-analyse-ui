@@ -139,7 +139,7 @@ export class EditAttributeComponent implements OnInit, OnDestroy {
   changedKind(e) {
     this.data.value = null;
     this._change = true;
-    console.log(this.kindCtrl);
+    // console.log(this.kindCtrl);
     this.selectedKind = this.kindCtrl.value;
 
     if (this.selectedKind.dictionaryName) {
@@ -174,7 +174,7 @@ export class EditAttributeComponent implements OnInit, OnDestroy {
   setDateValue(value: string) {
     const d = value.replace('_', '0').split('.');
     this.data.value = `${d[2]}-${d[1]}-${d[0]}T00:00:00.000Z`;
-    console.log(this.data.value);
+    // console.log(this.data.value);
   }
 
   private filterValue(array, filter, filteredValue, nameField) {

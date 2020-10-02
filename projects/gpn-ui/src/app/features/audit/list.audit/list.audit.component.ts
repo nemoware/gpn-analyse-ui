@@ -83,7 +83,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit, OnDestroy {
   refreshData(filter: Array<{ name: string; value: string }> = null) {
     this.subscription = this.auditservice.getAudits(filter).subscribe(data => {
       this.audits = data;
-      console.log(data);
+      // console.log(data);
       this.refreshViewTable();
     });
   }

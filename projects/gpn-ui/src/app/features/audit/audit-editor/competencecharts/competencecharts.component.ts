@@ -78,7 +78,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
     };
 
     const toTree = xx => {
-      console.log(xx);
+      // console.log(xx);
 
       for (const x of xx) {
         const pth = keyToPieces(x.key);
@@ -122,7 +122,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
     const constraints = this.attributes.filter(isConstraint);
 
     for (const c of constraints) {
-      console.log(c);
+      // console.log(c);
       const children = collectChildrenOf(c);
       toTree(children);
     }
@@ -183,7 +183,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log(this.attributes);
+    // console.log(this.attributes);
     this.prepareData();
   }
 

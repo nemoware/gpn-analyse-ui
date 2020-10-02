@@ -53,7 +53,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    console.log(this.attributes);
+    // console.log(this.attributes);
     this.refreshView();
     document
       .getElementById('view_doc')
@@ -226,7 +226,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   removeAttribute(atr: AttributeModel) {
     const element = document.getElementById(atr.key);
     this.removeElement(element);
-    console.log(this.attributes);
+    // console.log(this.attributes);
   }
 
   removeElement(element) {

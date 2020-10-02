@@ -43,7 +43,7 @@ export class EventFilterComponent implements OnInit {
   }
 
   clearFilter() {
-    console.log(this.selectedValue);
+    // console.log(this.selectedValue);
     this._dateFrom = null;
     this._dateTo = null;
     this.selectedValue = '';
