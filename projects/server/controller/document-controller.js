@@ -7,9 +7,7 @@ const fs = require('fs-promise');
 const parser = require('../services/parser-service');
 
 const documentFields = `filename
-parse.documentDate
 parse.documentType
-parse.documentNumber
 user
 state
 analysis.analyze_timestamp
@@ -17,6 +15,16 @@ analysis.version
 analysis.warnings
 isActive
 `;
+
+function getAttributeValue(document, attribute) {
+  if (!document.analysis || !document.analysis.attributes) return;
+  if (document.user && document.user.attributes) {
+    if (document.user.attributes[attribute])
+      return document.user.attributes[attribute].value;
+  } else if (document.analysis.attributes[attribute]) {
+    return document.analysis.attributes[attribute].value;
+  }
+}
 
 exports.getDocuments = async (req, res) => {
   const auditId = req.query.auditId;
@@ -48,9 +56,7 @@ exports.getDocuments = async (req, res) => {
       let document = {
         filename: d.filename,
         state: d.state,
-        documentDate: d.parse.documentDate,
         documentType: d.parse.documentType,
-        documentNumber: d.parse.documentNumber,
         _id: d._id
       };
       if (d.analysis && d.analysis.attributes) {
@@ -107,8 +113,11 @@ exports.getDocument = async (req, res) => {
           req,
           res,
           'Просмотр документа',
-          `Устав № ${document.analysis.documentNumber || 'н/д'} от ${document
-            .parse.documentDate || 'н/д'}.`
+          `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
+            getAttributeValue(document, 'date')
+              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+              : 'н/д'
+          }.`
         );
         document.documentType = document.parse.documentType;
         delete document.parse;
@@ -120,17 +129,42 @@ exports.getDocument = async (req, res) => {
         ).lean();
 
         const type = types.find(t => t._id === document.parse.documentType);
-        await logger.log(
-          req,
-          res,
-          'Просмотр документа',
-          `${type && type.name} № ${document.parse.documentNumber ||
-            'н/д'} от ${document.parse.documentDate || 'н/д'}. Аудит "${
-            audit.subsidiary.name
-          }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
-            audit.auditEnd
-          ).format('DD.MM.YYYY')}`
-        );
+        if (document.parse.documentType === 'PROTOCOL')
+          await logger.log(
+            req,
+            res,
+            'Просмотр документа',
+            `Протокол ${getAttributeValue(document, 'org-1-name') ||
+              'н/д'} от ${
+              getAttributeValue(document, 'date')
+                ? moment(getAttributeValue(document, 'date')).format(
+                    'DD.MM.YYYY'
+                  )
+                : 'н/д'
+            }. Аудит "${audit.subsidiary.name}" ${moment(
+              audit.auditStart
+            ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
+              'DD.MM.YYYY'
+            )}`
+          );
+        else
+          await logger.log(
+            req,
+            res,
+            'Просмотр документа',
+            `${type && type.name} № ${getAttributeValue(document, 'number') ||
+              'н/д'} от ${
+              getAttributeValue(document, 'date')
+                ? moment(getAttributeValue(document, 'date')).format(
+                    'DD.MM.YYYY'
+                  )
+                : 'н/д'
+            }. Аудит "${audit.subsidiary.name}" ${moment(
+              audit.auditStart
+            ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
+              'DD.MM.YYYY'
+            )}`
+          );
 
         if (audit) {
           audit.subsidiaryName = audit.subsidiary.name;
@@ -236,9 +270,14 @@ exports.updateDocument = async (req, res) => {
         req,
         res,
         'Изменение документа',
-        `Устав № ${document.parse.documentNumber || 'н/д'} от ${document.parse
-          .documentDate || 'н/д'}.`
+        `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
+          getAttributeValue(document, 'date')
+            ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+            : 'н/д'
+        }.`
       );
+      document.documentType = document.parse.documentType;
+      delete document.parse;
       res.status(200).json(document);
     } else {
       const audit = await Audit.findById(document.auditId);
@@ -246,17 +285,33 @@ exports.updateDocument = async (req, res) => {
       await audit.save();
 
       const type = types.find(t => t._id === document.parse.documentType);
-      await logger.log(
-        req,
-        res,
-        'Изменение документа',
-        `${type && type.name} № ${document.parse.documentNumber ||
-          'н/д'} от ${document.parse.documentDate || 'н/д'}. Аудит "${
-          audit.subsidiary.name
-        }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
-          audit.auditEnd
-        ).format('DD.MM.YYYY')}`
-      );
+      if (document.parse.documentType === 'PROTOCOL')
+        await logger.log(
+          req,
+          res,
+          'Изменение документа',
+          `Протокол ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
+            getAttributeValue(document, 'date')
+              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+              : 'н/д'
+          }. Аудит "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+            'DD.MM.YYYY'
+          )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
+        );
+      else
+        await logger.log(
+          req,
+          res,
+          'Изменение документа',
+          `${type && type.name} № ${getAttributeValue(document, 'number') ||
+            'н/д'} от ${
+            getAttributeValue(document, 'date')
+              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+              : 'н/д'
+          }. Аудит "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+            'DD.MM.YYYY'
+          )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
+        );
       res.status(200).json(document);
     }
   } catch (err) {
