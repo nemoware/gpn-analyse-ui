@@ -226,7 +226,9 @@
                 "kind": "ParticipationInOtherOrganizations",
                 "hideValue": true
               },
-              { "kind": "DecisionsForSubsidiary", "hideValue": true }
+              { "kind": "DecisionsForSubsidiary", "hideValue": true },
+              { "kind": "RentingOut", "hideValue": true },
+              { "kind": "Lawsuit", "hideValue": true }
             ],
             "children": [
               {
