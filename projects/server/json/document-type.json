@@ -129,17 +129,17 @@
         "once": true
       },
       {
-        "parents": ["agenda-item"],
+        "parents": ["agenda_item"],
         "children": [
-          "contract-agent-org-1-name",
-          "contract-agent-org-1-type",
-          "contract-agent-org-1-alt-name",
-          "contract-agent-org-1-alias",
+          "contract_agent_org-1-name",
+          "contract_agent_org-1-type",
+          "contract_agent_org-1-alt_name",
+          "contract_agent_org-1-alias",
 
-          "contract-agent-org-2-name",
-          "contract-agent-org-2-type",
-          "contract-agent-org-2-alt-name",
-          "contract-agent-org-2-alias",
+          "contract_agent_org-2-name",
+          "contract_agent_org-2-type",
+          "contract_agent_org-2-alt_name",
+          "contract_agent_org-2-alias",
 
           {
             "parents": ["sign_value_currency"],
