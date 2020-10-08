@@ -17,11 +17,14 @@ isActive
 `;
 
 function getAttributeValue(document, attribute) {
-  if (!document.analysis || !document.analysis.attributes) return;
   if (document.user && document.user.attributes) {
     if (document.user.attributes[attribute])
       return document.user.attributes[attribute].value;
-  } else if (document.analysis.attributes[attribute]) {
+  } else if (
+    document.analysis &&
+    document.analysis.attributes &&
+    document.analysis.attributes[attribute]
+  ) {
     return document.analysis.attributes[attribute].value;
   }
 }
