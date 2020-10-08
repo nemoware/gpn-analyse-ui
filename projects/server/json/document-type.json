@@ -55,12 +55,6 @@
         "once": true
       },
       {
-        "kind": "subject",
-        "type": "dictionary",
-        "dictionaryName": "Subject",
-        "once": true
-      },
-      {
         "parents": [
           {
             "kind": "sign_value_currency",
@@ -84,6 +78,40 @@
             "type": "dictionary",
             "dictionaryName": "Currency",
             "once": true
+          }
+        ]
+      },
+      {
+        "parents": [
+          {
+            "kind": "subject",
+            "type": "dictionary",
+            "dictionaryName": "Subject",
+            "once": true
+          }
+        ],
+        "children": [
+          {
+            "parents": ["sign_value_currency"],
+            "children": [
+              {
+                "kind": "value",
+                "type": "number",
+                "once": true
+              },
+              {
+                "kind": "sign",
+                "type": "dictionary",
+                "dictionaryName": "Sign",
+                "once": true
+              },
+              {
+                "kind": "currency",
+                "type": "dictionary",
+                "dictionaryName": "Currency",
+                "once": true
+              }
+            ]
           }
         ]
       }
