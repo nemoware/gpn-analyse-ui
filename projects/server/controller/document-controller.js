@@ -534,7 +534,13 @@ exports.getCharters = async (req, res) => {
     analysis: { $exists: true },
     $and: [
       // признак активности
-      { $or: [{ isActive: true }, { isActive: { $exists: false } }] },
+      {
+        $or: [
+          { isActive: true },
+          { isActive: null },
+          { isActive: { $exists: false } }
+        ]
+      },
       {
         $or: [
           // если существует user
@@ -728,7 +734,7 @@ exports.getChartersForTable = async (req, res) => {
           null,
         analyze_timestamp: c.analysis.analyze_timestamp || c.createDate,
         user: c.user.author && c.user.author.name,
-        isActive: c.isActive === undefined || c.isActive,
+        isActive: c.isActive !== false,
         toDate: null,
         state: c.state || null
       };
