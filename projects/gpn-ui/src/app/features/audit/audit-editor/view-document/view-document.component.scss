@@ -62,16 +62,16 @@ $org_1_base_alt: $mat-blue;
 $org_2_base: $mat-red;
 $org_2_base_alt: $mat-pink;
 
-.contract-agent-org-1-name,
+.contract_agent_org-1-name,
 .org-1-name {
   background: mat-color($org_1_base_alt, 200);
 }
 
-.org-1-alt-name {
+.contract_agent_org-1-alt_name {
   background: mat-color($org_1_base_alt, 100);
 }
 
-.contract-agent-org-1-type,
+.contract_agent_org-1-type,
 .org-1-type {
   background: mat-color($org_1_base, 200);
 }
@@ -80,21 +80,21 @@ $org_2_base_alt: $mat-pink;
   background: mat-color($org_1_base, 100);
 }
 
-.org-1-alias {
+.contract_agent_org-1-alias {
   background: mat-color($org_1_base_alt, 200);
 }
 // -----
 
-.contract-agent-org-2-name,
+.contract_agent_org-2-name,
 .org-2-name {
   background: mat-color($org_2_base, 300);
 }
 
-.org-2-alt-name {
+.contract_agent_org-2-alt_name {
   background: mat-color($org_2_base, 200);
 }
 
-.contract-agent-org-2-type,
+.contract_agent_org-2-type,
 .org-2-type {
   background: mat-color($org_2_base_alt, 200);
 }
@@ -103,7 +103,7 @@ $org_2_base_alt: $mat-pink;
   background: mat-color($org_2_base_alt, 100);
 }
 
-.org-2-alias {
+.contract_agent_org-2-alias {
   background: mat-color($org_2_base_alt, 200);
 }
 
@@ -115,7 +115,9 @@ $org_2_base_alt: $mat-pink;
 .subject {
   background: mat-color($mat-amber, 300);
 }
-
+.sign_value_currency {
+  background: mat-color($mat-blue-gray, 200);
+}
 .value {
   background: mat-color($mat-teal, 300);
 }
@@ -156,7 +158,7 @@ $org_2_base_alt: $mat-pink;
   background: mat-color($mat-deep-purple, 100);
 }
 
-.agenda-item {
+.agenda_item {
   background: mat-color($mat-lime, 100);
 }
 
