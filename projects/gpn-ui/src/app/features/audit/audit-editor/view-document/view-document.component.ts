@@ -474,7 +474,9 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           a.key === `${attribute.key}/value-2`
       );
       const currency = this.attributes.filter(
-        a => a.key === `${attribute.key}/currency`
+        a =>
+          a.key === `${attribute.key}/currency` ||
+          a.key === `${attribute.key}/currency-2`
       );
       if (!(value.length && currency.length)) {
         wrongMarking = true;
