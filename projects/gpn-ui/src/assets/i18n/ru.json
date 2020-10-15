@@ -28,7 +28,6 @@
 
   "subject": "Предмет",
   "value": "Сумма",
-  "sign-value-currency": "Сумма договора",
   "sign_value_currency": "Сумма договора",
   "org-1-name": "Наименование ДО",
   "org-1-alt-name": "Краткое наименование ДО",
@@ -51,11 +50,6 @@
   "contract_agent_org-2-alt_name": "Краткое наименование контрагента",
   "contract_agent_org-2-alias": "Псевдоним контрагента",
   "contract_agent_org-2-type": "Форма собственности контрагента",
-
-  "contract_agent_org-3-name": "Наименование контрагента",
-  "contract_agent_org-3-alt_name": "Краткое наименование контрагента",
-  "contract_agent_org-3-alias": "Псевдоним контрагента",
-  "contract_agent_org-3-type": "Форма собственности контрагента",
 
   "currency": "Валюта",
   "sign": "Знак",
