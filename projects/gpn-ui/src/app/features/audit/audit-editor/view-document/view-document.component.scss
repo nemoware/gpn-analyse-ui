@@ -62,7 +62,6 @@ $org_1_base_alt: $mat-blue;
 $org_2_base: $mat-red;
 $org_2_base_alt: $mat-pink;
 
-
 .contract-agent-org-1-name,
 .org-1-name {
   background: mat-color($org_1_base_alt, 200);
@@ -109,7 +108,7 @@ $org_2_base_alt: $mat-pink;
 }
 
 // =========================
-.org-structural-level {
+.org_structural_level {
   background: mat-color($mat-orange, 200);
 }
 
@@ -197,8 +196,8 @@ $org_2_base_alt: $mat-pink;
 
 .changed {
   background: mat-color($mat-red, 400);
-  
-  &:after{
+
+  &:after {
     content: ' *';
   }
 }

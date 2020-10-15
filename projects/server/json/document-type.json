@@ -146,7 +146,7 @@
         "once": true
       },
       {
-        "kind": "org-structural-level",
+        "kind": "org_structural_level",
         "type": "dictionary",
         "dictionaryName": "StructuralLevel",
         "once": true

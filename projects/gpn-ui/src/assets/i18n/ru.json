@@ -60,7 +60,6 @@
   "currency": "Валюта",
   "sign": "Знак",
   "org_structural_level": "Структурный уровень",
-  "org-structural-level": "Структурный уровень",
   "constraint-min": "Порог мин.",
   "constraint-max": "Порог макс.",
   "agenda_item": "Пункт повестки дня",
