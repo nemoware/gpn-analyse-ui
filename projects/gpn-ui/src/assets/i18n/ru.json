@@ -51,7 +51,7 @@
   "contract_agent_org-2-alias": "Псевдоним контрагента",
   "contract_agent_org-2-type": "Форма собственности контрагента",
 
-  "currency": "Валюта",
+  "currency": "Ед. изм.",
   "sign": "Знак",
   "org_structural_level": "Структурный уровень",
   "constraint-min": "Порог мин.",
@@ -98,6 +98,7 @@
   "RUB": "₽",
   "EUR": "€",
   "USD": "$",
+  "Percent": "%",
 
   "Less": "Меньше",
   "Equally": "Равно",

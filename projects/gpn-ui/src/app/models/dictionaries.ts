@@ -42,7 +42,10 @@ export class Dictionaries {
         { id: 'DecisionsForSubsidiary' }
       ]
     },
-    { id: 'Currency', values: [{ id: 'RUB' }, { id: 'EUR' }, { id: 'USD' }] },
+    {
+      id: 'Currency',
+      values: [{ id: 'RUB' }, { id: 'EUR' }, { id: 'USD' }, { id: 'Percent' }]
+    },
     {
       id: 'StructuralLevel',
       values: [
