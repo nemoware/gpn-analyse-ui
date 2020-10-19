@@ -44,7 +44,18 @@ export class Dictionaries {
     },
     {
       id: 'Currency',
-      values: [{ id: 'RUB' }, { id: 'EUR' }, { id: 'USD' }, { id: 'Percent' }]
+      values: [
+        { id: 'RUB' },
+        { id: 'EUR' },
+        { id: 'USD' },
+        { id: 'Percent' },
+        { id: 'KZT' },
+        { id: 'UAH' },
+        { id: 'BYN' },
+        { id: 'TJR' },
+        { id: 'RSD' },
+        { id: 'KGS' }
+      ]
     },
     {
       id: 'StructuralLevel',

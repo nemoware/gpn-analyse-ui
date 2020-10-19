@@ -488,7 +488,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         this.refresh.emit();
       });
     } else {
-      window.alert('Вы не указали валюту или значение суммы договора!');
+      window.alert('Вы не указали значение суммы или единицу измерения!');
     }
   }
 
