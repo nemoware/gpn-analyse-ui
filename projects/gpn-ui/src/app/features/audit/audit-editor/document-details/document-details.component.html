@@ -72,3 +72,12 @@
 
 </mat-tree>
 </ng-container>
+
+<ng-container *ngIf="document.documentType==='CHARTER'">
+  <section>
+    <label class='field-label'>файл</label>
+    <a [href]='"file://" + document.filename'>
+  <span class="file-name"><span class="file-path">{{ document.filename | filePath }}
+    </span>{{ document.filename | fileName }}</span></a>
+  </section>
+</ng-container>
