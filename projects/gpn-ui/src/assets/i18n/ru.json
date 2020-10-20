@@ -56,7 +56,7 @@
   "org_structural_level": "Структурный уровень",
   "constraint-min": "Порог мин.",
   "constraint-max": "Порог макс.",
-  "constraint": "Порог",
+  "constraint": "Диапазон",
   "agenda_item": "Пункт повестки дня",
 
   "Charity": "Благотворительность",
