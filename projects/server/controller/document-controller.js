@@ -120,6 +120,7 @@ exports.getDocument = async (req, res) => {
           }.`
         );
         document.documentType = document.parse.documentType;
+        document.isActive = document.isActive !== false;
         delete document.parse;
         res.status(200).json(document);
       } else {

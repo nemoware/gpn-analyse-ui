@@ -75,8 +75,6 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   refreshData(needRefresh: boolean = false) {
     this.auditservice.getDoument(this.IdDocument).subscribe(data => {
       this.document = data;
-      this.document.isActive =
-        this.document.isActive === undefined || this.document.isActive;
       if (this.document.user) {
         this.attributes = Helper.json2array(this.document.user.attributes);
       } else if (this.document.analysis.attributes) {
