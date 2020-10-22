@@ -104,7 +104,8 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
             competence[margin_] = margin_value;
             constraint_values.push(margin_value);
           } else if ('currency' === x.kind) {
-            competence['currency'] = x.value;
+            if (x.value === 'Percent') competence['currency'] = '%';
+            else competence['currency'] = x.value;
           }
         }
       }
