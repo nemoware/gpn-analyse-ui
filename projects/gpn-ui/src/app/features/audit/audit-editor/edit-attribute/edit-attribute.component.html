@@ -32,7 +32,7 @@
     <ng-container *ngSwitchCase="'number'">
       <mat-form-field>
         <mat-label>Значение</mat-label>
-        <input (change)="change($event)" type="number" class="form-control" matInput placeholder="Значение" [(ngModel)]="data.value">
+        <input id="number" (change)="change($event)" class="form-control" [textMask]="{mask: numberMask}" matInput placeholder="Значение" [(ngModel)]="data.value">
       </mat-form-field>
     </ng-container>
 

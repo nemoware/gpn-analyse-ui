@@ -23,6 +23,7 @@ import { Dictionaries } from '@app/models/dictionaries';
 import { ReplaySubject, Subject } from '@root/node_modules/rxjs';
 import { takeUntil } from '@root/node_modules/rxjs/operators';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
+import createNumberMask from '@root/node_modules/text-mask-addons/dist/createNumberMask';
 @Component({
   selector: 'gpn-edit-attribute',
   templateUrl: './edit-attribute.component.html',
@@ -46,6 +47,7 @@ export class EditAttributeComponent implements OnInit, OnDestroy {
   _change = false;
   _new = false;
   readOnly = false;
+  numberMask: any;
   constructor(
     private translate: TranslateService,
     private fb: FormBuilder,
@@ -105,6 +107,10 @@ export class EditAttributeComponent implements OnInit, OnDestroy {
           'value'
         );
       });
+    this.numberMask = createNumberMask({
+      prefix: '',
+      thousandsSeparatorSymbol: ' '
+    });
   }
 
   closeForm() {
@@ -161,6 +167,8 @@ export class EditAttributeComponent implements OnInit, OnDestroy {
     this._change = true;
     if (e.target && e.target.id === 'stringDate') {
       this.setDateValue(e.target.value);
+    } else if (e.target && e.target.id === 'number') {
+      this.data.value = this.data.value.replace(/\s/g, '');
     } else if (dictionary) this.data.value = e;
   }
 
