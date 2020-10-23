@@ -35,6 +35,7 @@
 
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
 
+    <ng-container *ngIf="node._id!==-1">
     <div class="row" style="width: 100%" (mouseenter)="focusedDoc(node._id)" (mouseleave)="focusedDoc(null)">
       <div class="col-10" (click)="openDocument(node)" [ngClass]="{reference: node.index > 0}">
         <span *ngIf="!(node.documentNumber || node.documentDate)">н/д</span>
@@ -47,6 +48,7 @@
         ></fa-icon>
       </div>
     </div>
+    </ng-container>
   </mat-tree-node>
 
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding role="group">
