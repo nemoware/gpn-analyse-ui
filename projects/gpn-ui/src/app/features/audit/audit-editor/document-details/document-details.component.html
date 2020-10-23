@@ -37,6 +37,7 @@
 
     <div class="row" style="width: 100%" (mouseenter)="focusedDoc(node._id)" (mouseleave)="focusedDoc(null)">
       <div class="col-10" (click)="openDocument(node)" [ngClass]="{reference: node.index > 0}">
+        <span *ngIf="!(node.documentNumber || node.documentDate)">н/д</span>
           <span *ngIf="node.documentNumber">№{{ node.documentNumber}}</span> <span *ngIf="node.documentDate"> от {{node.documentDate | date}}</span>
       </div>
 
