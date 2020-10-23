@@ -374,13 +374,15 @@ exports.getLinks = async (req, res) => {
         _id: { $in: ids },
         parserResponseCode: 200
       },
-      `filename parse.documentDate parse.documentType parse.documentNumber`,
+      `filename user analysis parse.documentType`,
       { lean: true }
     );
 
     res.status(200).json(
       documents.map(d => {
-        for (let key in d.parse) d[key] = d.parse[key];
+        d.documentNumber = getAttributeValue(d, 'number');
+        d.documentDate = getAttributeValue(d, 'date');
+        d.documentType = d.parse.documentType;
         delete d.parse;
         return d;
       })
