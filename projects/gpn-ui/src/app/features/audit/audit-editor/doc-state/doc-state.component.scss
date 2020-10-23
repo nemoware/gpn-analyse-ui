@@ -6,17 +6,24 @@
   display: block;
 }
 
-.state-2 {
-  color: mat-color($mat-deep-purple, 500);
+.state-10 {
+  color: mat-color($mat-green, 500);
   &::after {
-    content: 'Ожидает анализа';
+    content: 'Анализируется';
+  }
+}
+
+.state-11 {
+  color: mat-color($mat-red, 500);
+  &::after {
+    content: 'Ошибка при анализе';
   }
 }
 
 .state-12 {
   color: mat-color($mat-orange, 500);
   &::after {
-    content: 'не анализирован';
+    content: 'Документ не попадает под параметры Аудита';
   }
 }
 
@@ -27,7 +34,6 @@
   }
 }
 
-.state-1,
 .state-0,
 .state-5,
 .state-null {
@@ -40,4 +46,13 @@
 .small {
   font-size: 85%;
   color: $gpn-labels;
+
+  mat-icon {    
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    height: auto;
+    width: 16px;
+  }
 }
+

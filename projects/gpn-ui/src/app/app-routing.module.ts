@@ -15,11 +15,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/dash/dash.module').then(m => m.FeatureListModule)
   },
-  {
+  /*{
     path: 'settings',
     loadChildren: () =>
       import('./features/settings/settings.module').then(m => m.SettingsModule)
-  },
+  },*/
   {
     path: 'analyse',
     loadChildren: () =>
@@ -42,6 +42,13 @@ const routes: Routes = [
       ),
     canActivate: [AppPageGuard],
     data: { appPage: 'events' }
+  },
+  {
+    path: 'charter',
+    loadChildren: () =>
+      import('./features/charter/charter.module').then(m => m.CharterModule),
+    canActivate: [AppPageGuard],
+    data: { appPage: 'audit' }
   },
   {
     path: '**',

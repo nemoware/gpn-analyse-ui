@@ -11,14 +11,52 @@ export class Dictionaries {
     {
       id: 'Subject',
       values: [
+        { id: 'AgencyContract' },
+        { id: 'Renting' },
+        { id: 'BankGuarantees' },
         { id: 'Charity' },
+        { id: 'RelatedTransactions' },
+        { id: 'GeneralContract' },
+        { id: 'EmployeeContracts' },
+        { id: 'Loans' },
+        { id: 'PledgeEncumbrance' },
+        { id: 'BigDeal' },
+        { id: 'Liquidation' },
+        { id: 'Service' },
+        { id: 'CashPayments' },
+        { id: 'RefusalToLeaseLand' },
+        { id: 'DealGeneralBusiness' },
+        { id: 'RevisionCommission' },
+        { id: 'Reorganization' },
         { id: 'Deal' },
+        { id: 'InterestedPartyTransaction' },
+        { id: 'RelatedPartyTransaction' },
+        { id: 'AssetTransactions' },
         { id: 'RealEstate' },
-        { id: 'Lawsuit' },
-        { id: 'Other' }
+        { id: 'DealIntellectualProperty' },
+        { id: 'RealEstateTransactions' },
+        { id: 'SecuritiesTransactions' },
+        { id: 'Insurance' },
+        { id: 'RegisteredCapital' },
+        { id: 'ParticipationInOtherOrganizations' },
+        { id: 'DecisionsForSubsidiary' }
       ]
     },
-    { id: 'Currency', values: [{ id: 'RUB' }, { id: 'EUR' }, { id: 'USD' }] },
+    {
+      id: 'Currency',
+      values: [
+        { id: 'RUB' },
+        { id: 'EUR' },
+        { id: 'USD' },
+        { id: 'Percent' },
+        { id: 'KZT' },
+        { id: 'UAH' },
+        { id: 'BYN' },
+        { id: 'TJR' },
+        { id: 'RSD' },
+        { id: 'KGS' }
+      ]
+    },
     {
       id: 'StructuralLevel',
       values: [

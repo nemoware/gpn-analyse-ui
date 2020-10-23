@@ -4,7 +4,7 @@
 
   <mat-form-field appearance="legacy" style="width: 100%">
     <mat-label>Поиск пользователя</mat-label>
-    <input matInput placeholder="ФИО или логин" [(ngModel)]="strLogin">
+    <input matInput placeholder="Логин" [(ngModel)]="strLogin">
   </mat-form-field>
 
   <mat-form-field style="width: 100%" color="accent">
@@ -16,17 +16,17 @@
   <span>Диапазон дат событий</span>
   <br>
   <mat-form-field style="width: 50%">
-    <input matInput [matDatepicker]="dateFrom" placeholder="Начало" readonly [(ngModel)]="_dateFrom">
+    <input matInput [matDatepicker]="dateFrom" placeholder="Начало" readonly [(ngModel)]="_dateTo">
     <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle >
     <mat-datepicker #dateFrom></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field style="width: 50%">
-    <input matInput [matDatepicker]="dateTo" placeholder="Окончание" readonly [(ngModel)]="_dateTo">
+    <input matInput [matDatepicker]="dateTo" placeholder="Окончание" readonly [(ngModel)]="_dateFrom">
     <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
     <mat-datepicker #dateTo></mat-datepicker>
   </mat-form-field>
 
   <button mat-raised-button (click)="applyFilter()" style="margin-right: 5px; width: 48%; float: left;">Применить</button>
-  <button mat-raised-button (click)="clearFilter()" style="margin-left: 5px; width: 48%; float: right;">Очистть</button>
+  <button mat-raised-button (click)="clearFilter()" style="margin-left: 5px; width: 48%; float: right;">Очистить</button>
 </div>

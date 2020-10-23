@@ -3,22 +3,20 @@
     <div class="col">
       <div class="search-container" style="margin-left: 15px">
         <mat-form-field appearance="legacy" >
-          <mat-label>Поиск пользователя</mat-label>
-          <input matInput placeholder="ФИО или логин" style="width: 250px" (change)="valueSearch($event.target.value)">
+          <mat-label>Поиск</mat-label>
+          <input matInput placeholder="Группа" style="width: 250px" (change)="valueSearch($event.target.value)">
           <fa-icon [icon]="faSearch" matTooltip="Поиск" style="float: right"></fa-icon>
         </mat-form-field>
       </div>
     </div>
-    <div class="col">
+    <div class="col" hidden>
 
       <button mat-raised-button style="float: right; margin-right: 20px; margin-top: 15px; width: 120px" (click)="deleteUser()">
         <span> Удалить </span>
-        <fa-icon [icon]="faUserMinus" matTooltip="Удалить пользователя" style="float: left"></fa-icon>
       </button>
 
-      <button mat-raised-button color="accent" style="float: right; margin-right: 20px; margin-top: 15px; width: 120px" (click)="addUser()">
+      <button mat-raised-button color="accent" style="float: right; margin-right: 20px; margin-top: 15px; width: 120px" (click)="addGroup()">
         <span> Добавить </span>
-        <fa-icon [icon]="faUserPlus" matTooltip="Добавить пользователя" style="float: left"></fa-icon>
       </button>
 
     </div>
@@ -29,25 +27,20 @@
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
       <td mat-cell *matCellDef="let row">
-        <mat-checkbox [checked]="row._id === selectedUser._id" disabled="true"></mat-checkbox>
+        <mat-checkbox [checked]="row._id === selectedGroup._id" disabled="true"></mat-checkbox>
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="login">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Логин </th>
-      <td mat-cell *matCellDef="let element"> {{element.login}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> ФИО </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    <ng-container matColumnDef="cn">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Группа </th>
+      <td mat-cell *matCellDef="let element"> {{element.cn}} </td>
     </ng-container>
 
     <ng-container matColumnDef="roleString">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Список прав доступа </th>
       <td mat-cell *matCellDef="let element">
         <span style="margin-left: 10px"> {{element.roleString}} </span>
-        <fa-icon [icon]="faUserCog" matTooltip="Права доступа" style="float: left" (click)="openDialogRoles(element)"></fa-icon>
+        <fa-icon [icon]="faCog" matTooltip="Права доступа" style="float: left" (click)="openDialogRoles(element)"></fa-icon>
       </td>
     </ng-container>
 

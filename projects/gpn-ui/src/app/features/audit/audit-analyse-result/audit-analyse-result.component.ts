@@ -97,8 +97,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       childCount: node.childCount,
       level: level,
       index: node.index,
-      documentDate: node.documentDate,
-      documentNumber: node.documentNumber,
+      documentDate: this.getAttrValue('date', node),
+      documentNumber: this.getAttrValue('number', node),
       documentType: node.documentType,
       _id: node._id,
       error: node.error,
@@ -283,6 +283,16 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
           approve.unsubscribe();
           this.changeDetectorRefs.detectChanges();
         });
+    }
+  }
+
+  getAttrValue(attrName: string, doc, default_value = null) {
+    if (!doc.analysis || !doc.analysis.attributes) return default_value;
+    if (doc.user && doc.user.attributes) {
+      if (doc.user.attributes[attrName])
+        return doc.user.attributes[attrName].value;
+    } else if (doc.analysis.attributes[attrName]) {
+      return doc.analysis.attributes[attrName].value;
     }
   }
 }

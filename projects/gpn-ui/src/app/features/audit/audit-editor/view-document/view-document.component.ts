@@ -53,7 +53,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    console.log(this.attributes);
+    // console.log(this.attributes);
     this.refreshView();
     document
       .getElementById('view_doc')
@@ -141,7 +141,14 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     let result = normal_text;
     for (let i = words.length - 1; i >= 0; i--) {
-      const word = normal_text.slice(words[i][0], words[i][1]);
+      let word = normal_text.slice(words[i][0], words[i][1]);
+      if (Number(word) && Number(word) >= 1000) {
+        const checkValue = normal_text.slice(words[i][1], words[i][1] + 50);
+        if (checkValue.match('руб|доллар|евро|тенге'))
+          word = Number(word)
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, '$& ');
+      }
       result =
         result.slice(0, words[i][0]) +
         `<span id = "span_${i}">` +
@@ -169,7 +176,15 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     const startWord = document.getElementById('span_' + indexStart);
 
     if (indexStart !== indexEnd - 1) {
-      const endWord = this.checkEndWord(indexEnd);
+      const lastSpan =
+        Number(
+          startWord.parentElement.children[
+            startWord.parentElement.children.length - 2
+          ].id.split('_')[1]
+        ) ===
+        indexEnd - 1;
+      let endWord = this.checkEndWord(indexEnd - Number(lastSpan));
+      if (lastSpan) endWord = endWord.nextSibling;
       const range = document.createRange();
       range.setStart(startWord, 0);
       range.setEnd(endWord, 0);
@@ -181,7 +196,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         span.previousElementSibling.textContent === ''
       )
         span.previousElementSibling.remove();
-      if (span.children[span.children.length - 1])
+      if (
+        span.children[span.children.length - 1] &&
+        span.children[span.children.length - 1].textContent === ''
+      )
         span.children[span.children.length - 1].remove();
     } else {
       startWord.parentElement.insertBefore(span, startWord);
@@ -208,7 +226,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   removeAttribute(atr: AttributeModel) {
     const element = document.getElementById(atr.key);
     this.removeElement(element);
-    console.log(this.attributes);
+    // console.log(this.attributes);
   }
 
   removeElement(element) {
@@ -407,7 +425,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
             newAtr.key,
             true
           );
-          console.log(this.attributes);
+          // console.log(this.attributes);
         }
         this.changeAttribute.emit(this.attributes);
       }
@@ -419,7 +437,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     if (parentKey) {
       const parentKind = Helper.parseKind(parentKey).kind;
       N = this.attributes
-        .filter(x => x.kind === parentKind)
+        .filter(x => [parentKind, parentKey].includes(x.parent))
         .filter(x => x.kind === kind).length;
     } else N = this.attributes.filter(x => x.kind === kind).length;
     return (
@@ -432,7 +450,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.attributes.forEach(
       item =>
         (atr[item.key] = {
-          confidence: item.confidence,
+          confidence: 1,
           kind: item.key,
           span: item.span,
           span_map: item.span_map,
@@ -442,10 +460,36 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     );
 
-    this.auditservice.updateDocument(this.document._id, atr).subscribe(data => {
-      this.changed = false;
-      this.refresh.emit();
+    let wrongMarking = false;
+    const signValueCurrency = this.attributes.filter(
+      a =>
+        a.kind === 'sign_value_currency' ||
+        a.kind === 'constraint-min' ||
+        a.kind === 'constraint-max'
+    );
+    signValueCurrency.forEach(attribute => {
+      const value = this.attributes.filter(
+        a =>
+          a.key === `${attribute.key}/value` ||
+          a.key === `${attribute.key}/value-2`
+      );
+      const currency = this.attributes.filter(
+        a =>
+          a.key === `${attribute.key}/currency` ||
+          a.key === `${attribute.key}/currency-2`
+      );
+      if (!(value.length && currency.length)) {
+        wrongMarking = true;
+      }
     });
+    if (!wrongMarking) {
+      this.auditservice.updateDocument(this.document._id, atr).subscribe(() => {
+        this.changed = false;
+        this.refresh.emit();
+      });
+    } else {
+      window.alert('Вы не указали значение суммы или единицу измерения!');
+    }
   }
 
   ngOnDestroy(): void {

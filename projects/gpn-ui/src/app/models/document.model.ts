@@ -5,9 +5,11 @@ export interface Document {
   auditId: string;
   filename: string;
   documentDate: Date; //TODO: deprecated, moved to attributes
+  documentEndDate: Date;
   documentType: string;
   documentNumber: string; //TODO: deprecated, moved to attributes
   parentId: string;
+  isActive: boolean;
   paragraphs: [{ paragraphHeader: Object; paragraphBody: Object }];
   analysis: {
     original_text: string;
@@ -20,7 +22,7 @@ export interface Document {
     checksum: number;
     attributes: Object;
     headers: [HeaderModel];
-    warnings: [];
+    warnings: any[];
   };
   user: {
     attributes: Object;
@@ -37,4 +39,5 @@ export interface Document {
   };
   statusAudit: string;
   starred: boolean;
+  state?: number;
 }

@@ -8,6 +8,9 @@
         <div class="container">
           <gpn-document-details [document]="document" [editable]="editmode">
           </gpn-document-details>
+          <ng-container *ngIf="document.documentType==='CHARTER'">
+          <mat-checkbox [checked]="document.isActive" (change)="onClick()">Устав активен</mat-checkbox>
+          </ng-container>
         </div>
       </mat-tab>
 
@@ -43,16 +46,17 @@
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
 
-      <button (click)="saveChanges()" color="primary" class='floating-button' mat-mini-fab [disabled]="!editmode || document.statusAudit === 'Approved'"
+      <button (click)="saveChanges()" color="primary" class='floating-button' mat-mini-fab [disabled]="!editmode || document.statusAudit === 'Approved' || changed===false"
         matTooltip="Сохранить изменения">
         <mat-icon>save_alt</mat-icon>
       </button>
-
+<!--
       <button (click)="editMode()" class='floating-button' mat-mini-fab [disabled]="editmode || document.statusAudit === 'Approved'"
         matTooltip="Режим обучения, корректировка атрибутов">
         <mat-icon>edit</mat-icon>
       </button>
 
+-->
     </div>
 
     <!-- HEADER -->
@@ -74,7 +78,6 @@
           </h3>
         </div>
       </div>
-
     </div>
 
     <div *ngIf="hasWarnings()" class="balloon warnings">
@@ -88,7 +91,7 @@
     <ng-container *ngIf="document.documentType == 'CHARTER' && attributes">
       <div class="chart-container">
         <label>компетенции органов управления и пороговые суммы</label>
-        <gpn-competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
+        <gpn-competencecharts #competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
           (goToAttribute)="goToAttribute($event)" [attributes]="attributes"></gpn-competencecharts>
       </div>
 

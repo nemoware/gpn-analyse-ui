@@ -16,6 +16,7 @@ import { AttributeModel } from '@app/models/attribute-model';
 import { Helper } from '@app/features/audit/helper';
 // import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { ResizedEvent } from 'angular-resize-event';
+import { CompetencechartsComponent } from '@app/features/audit/audit-editor/competencecharts/competencecharts.component';
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -33,6 +34,8 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   view_doc: ViewDocumentComponent;
   @ViewChild(TreeAttributesComponent, { static: false })
   tree: TreeAttributesComponent;
+  @ViewChild(CompetencechartsComponent, { static: false })
+  competencecharts: CompetencechartsComponent;
   documentType: string[];
   changed = false;
   selectedAttribute: string;
@@ -48,6 +51,12 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
     this.IdDocument = this.activatedRoute.snapshot.paramMap.get('id');
     this.editmode = this.activatedRoute.snapshot.data['editmode'];
     this.selectedAttribute = this.activatedRoute.snapshot.queryParams.attribute;
+    window.addEventListener('beforeunload', event => {
+      if (this.changed) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -100,11 +109,13 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
 
   saveChanges() {
     this.view_doc.saveChanges();
+    if (this.competencecharts)
+      this.competencecharts.refreshData(this.view_doc.attributes);
   }
 
-  editMode() {
-    this.router.navigate(['audit/edit/', this.document._id]);
-  }
+  // editMode() {
+  //   this.router.navigate(['audit/edit/', this.document._id]);
+  // }
 
   getAttrValue(attrName: string, default_value = null) {
     if (this.attributes) {
@@ -112,5 +123,17 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
       if (atr) return atr.value;
     }
     return default_value;
+  }
+
+  onClick() {
+    this.document.isActive = !this.document.isActive;
+    this.auditservice
+      .deactivateCharter(this.document._id, this.document.isActive)
+      .subscribe(
+        () => {},
+        error => {
+          alert(error.message());
+        }
+      );
   }
 }

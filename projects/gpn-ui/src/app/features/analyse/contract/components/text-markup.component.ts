@@ -36,7 +36,7 @@ export class TextMarkupComponent {
       i += 1;
     }
 
-    console.log(tokens);
+    // console.log(tokens);
     for (const tag of _tags) {
       const _start_i = tag.span[0];
       const _stop_i = tag.span[1];

@@ -51,6 +51,8 @@ import {
 } from '@app/format/file-path.pipe';
 import { ViolationsAuditComponent } from './audit-analyse-result/violations-audit/violations-audit.component';
 import { MaskDateDirective } from './create-audit/mask-date.directive';
+import { SortValuePipe } from './audit-editor/competencecharts/sort-value.pipe';
+import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
 
 @NgModule({
   declarations: [
@@ -73,7 +75,8 @@ import { MaskDateDirective } from './create-audit/mask-date.directive';
     ChildDetailComponent,
     DocStateComponent,
     ViolationsAuditComponent,
-    MaskDateDirective
+    MaskDateDirective,
+    SortValuePipe
   ],
   imports: [
     CommonModule,
@@ -92,7 +95,8 @@ import { MaskDateDirective } from './create-audit/mask-date.directive';
     NgxSpinnerModule,
     MatExpansionModule,
     AngularResizedEventModule,
-    MatRippleModule
+    MatRippleModule,
+    TextMaskModule
   ],
   entryComponents: [
     CreateAuditComponent,
@@ -100,7 +104,7 @@ import { MaskDateDirective } from './create-audit/mask-date.directive';
     EditAttributeComponent,
     SearchDocumentComponent
   ],
-  exports: [ViewDocumentComponent],
+  exports: [ViewDocumentComponent, DocStateComponent],
   providers: [
     {
       provide: DateAdapter,

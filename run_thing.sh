@@ -1,7 +1,17 @@
 #mon god???
-mongod --config /usr/local/etc/mongod.conf
+# mongod --config /usr/local/etc/mongod.conf
 export GPN_DB_PORT=27017
 export GPN_DB_HOST=localhost
 export GPN_DB_NAME=gpn
 
-node ./projects/server/server.js false
+export GPN_PARSER_URL=http://localhost:8889
+
+export GPN_ADMIN_GROUP=CN=Admin,OU=department2,OU=department1,OU=Company,DC=company,DC=loc
+export GPN_AUDIT_GROUP=CN=Group1,OU=Company,DC=company,DC=loc
+export GPN_EVENT_GROUP=CN=Group2,OU=Company,DC=company,DC=loc
+export GPN_JWT_SECRET='gpn-dev'
+
+
+node ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc
+#nodemon ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc
+#node --inspect ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc

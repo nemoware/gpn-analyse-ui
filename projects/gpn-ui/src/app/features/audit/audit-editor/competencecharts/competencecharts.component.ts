@@ -78,12 +78,14 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
     };
 
     const toTree = xx => {
-      console.log(xx);
+      // console.log(xx);
 
       for (const x of xx) {
         const pth = keyToPieces(x.key);
 
         const org_level = pth[0];
+        if (org_level.toLowerCase().includes('constraint')) break;
+
         const competence_name = pth[1];
 
         if (!(org_level in constraintsTree)) {
@@ -102,7 +104,8 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
             competence[margin_] = margin_value;
             constraint_values.push(margin_value);
           } else if ('currency' === x.kind) {
-            competence['currency'] = x.value;
+            if (x.value === 'Percent') competence['currency'] = '%';
+            else competence['currency'] = x.value;
           }
         }
       }
@@ -120,23 +123,53 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
     const constraints = this.attributes.filter(isConstraint);
 
     for (const c of constraints) {
-      console.log(c);
+      // console.log(c);
       const children = collectChildrenOf(c);
       toTree(children);
     }
 
     //TODO: get rid of this list, this is very temporal solution
     const deal_kinds = [
-      'Deal',
+      /*'Deal',
       'BigDeal',
       'Charity',
       'Lawsuit',
       'RealEstate',
-      'Loans',
+      'LoansLoans',
       'Insurance',
       'Consulting',
-      'RentingOut',
-      'Renting'
+      'RentingOutRentingOut',
+      'Renting'*/
+      // temporal labels
+      'AgencyContract',
+      'Renting',
+      'BankGuarantees',
+      'Charity',
+      'RelatedTransactions',
+      'GeneralContract',
+      'EmployeeContracts',
+      'Loans',
+      'PledgeEncumbrance',
+      'BigDeal',
+      'Liquidation',
+      'Service',
+      'CashPayments',
+      'RefusalToLeaseLand',
+      'DealGeneralBusiness',
+      'Deal',
+      'RevisionCommission',
+      'Reorganization',
+      'InterestedPartyTransaction',
+      'RelatedPartyTransaction',
+      'AssetTransactions',
+      'RealEstate',
+      'DealIntellectualProperty',
+      'RealEstateTransactions',
+      'SecuritiesTransactions',
+      'Insurance',
+      'RegisteredCapital',
+      'ParticipationInOtherOrganizations',
+      'DecisionsForSubsidiary'
     ];
     this.attributes
       .filter(a => deal_kinds.includes(a.kind))
@@ -151,11 +184,16 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log(this.attributes);
+    // console.log(this.attributes);
     this.prepareData();
   }
 
   scrollToSpan(span) {
     this.goToAttribute.emit('span_' + span[0]);
+  }
+
+  public refreshData(attributes) {
+    this.attributes = attributes;
+    this.prepareData();
   }
 }

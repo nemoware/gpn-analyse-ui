@@ -8,12 +8,10 @@ import {
 } from '@angular/core';
 
 import { EventViewerService } from '@app/features/events/event.viewer.service';
-import {
-  MatPaginator,
-  MatSort,
-  MatTableDataSource
-} from '@root/node_modules/@angular/material';
-import { EventApp } from '@app/models/event.model';
+import { MatPaginator, MatSort } from '@root/node_modules/@angular/material';
+import { EventDataSource } from '@app/features/events/event-data-source';
+import { tap } from 'rxjs/operators';
+import { merge } from '@root/node_modules/rxjs';
 
 @Component({
   selector: 'gpn-event.viewer',
@@ -23,72 +21,49 @@ import { EventApp } from '@app/models/event.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventViewerComponent implements OnInit, AfterViewInit {
-  constructor(
-    private eventviewerservice: EventViewerService,
-    private changeDetectorRefs: ChangeDetectorRef
-  ) {}
-  isLoadingResults = true;
-  eventsApp: EventApp[];
-  resultsLength = 0;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  dataSource = new MatTableDataSource();
-  activePageDataChunk = [];
+  constructor(private eventviewerservice: EventViewerService) {}
+
   count = 0;
-  pageIndex = 0;
-  pageSize = 15;
-  lowValue = 0;
-  highValue = 15;
-  _filterVlaue: Array<{ name: string; value: any }>;
-  displayedColumns: string[] = ['date', 'login', 'name'];
-  eventsType: Array<{ _id: string; name: string }>;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
+  defPageSize = 20;
+  dataSource: EventDataSource;
+  displayedColumns: string[] = ['time', 'login', 'name', 'details'];
+  eventsType = [];
+  _filterValue: [];
 
   ngOnInit() {
-    this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
-    this.refreshData();
-  }
+    this.dataSource = new EventDataSource(this.eventviewerservice);
+    this.dataSource.loadEvents([], 'time', 'desc', 0, this.defPageSize);
 
-  refreshData(filter: Array<{ name: string; value: string }> = null) {
-    this.eventviewerservice.getEventsApp(filter).subscribe(data => {
-      this.eventsApp = data;
-      this.refreshViewTable();
-    });
-  }
-
-  refreshViewTable() {
-    this.count = this.eventsApp.length;
-    this.activePageDataChunk = this.eventsApp.slice(0, this.pageSize);
-    this.dataSource = new MatTableDataSource(this.activePageDataChunk);
-    this.dataSource.sort = this.sort;
-    this.changeDetectorRefs.detectChanges();
-  }
-
-  ngAfterViewInit() {
-    this.refreshData();
     this.eventviewerservice
       .getEventsType()
       .subscribe(value => (this.eventsType = value));
   }
 
-  onApplyFilter(filterVlaue: Array<{ name: string; value: any }>) {
-    this.refreshData(filterVlaue);
+  ngAfterViewInit() {
+    this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(tap(() => this.loadEventsPage()))
+      .subscribe();
   }
 
-  getPaginatorData(event) {
-    if (event.pageIndex === this.pageIndex + 1) {
-      this.lowValue = this.lowValue + this.pageSize;
-      this.highValue = this.highValue + this.pageSize;
-    } else if (event.pageIndex === this.pageIndex - 1) {
-      this.lowValue = this.lowValue - this.pageSize;
-      this.highValue = this.highValue - this.pageSize;
-    }
-    this.pageIndex = event.pageIndex;
+  loadEventsPage() {
+    this.dataSource.loadEvents(
+      this._filterValue,
+      this.sort.active,
+      this.sort.direction,
+      this.paginator.pageIndex,
+      this.paginator.pageSize
+    );
+  }
 
-    const firstCut = event.pageIndex * event.pageSize;
-    const secondCut = firstCut + event.pageSize;
-
-    this.activePageDataChunk = this.eventsApp.slice(firstCut, secondCut);
-    this.dataSource = new MatTableDataSource(this.activePageDataChunk);
-    this.dataSource.sort = this.sort;
+  onApplyFilter(filterVlaue) {
+    this._filterValue = filterVlaue;
+    this.paginator.pageIndex = 0;
+    this.loadEventsPage();
   }
 }

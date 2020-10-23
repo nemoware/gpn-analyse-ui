@@ -8,7 +8,7 @@
       <td></td>
     </tr>
 
-    <tr *ngFor="let competence of org_level.value | keyvalue" class="competence-row">
+    <tr *ngFor="let competence of org_level.value | keyvalue | sortValue" class="competence-row">
       <td class='competence'>
         <a (click)='scrollToSpan(competence.value.span)'>{{competence.key | translate}}</a>
       </td>

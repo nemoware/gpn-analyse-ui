@@ -33,15 +33,16 @@ export class AppComponent implements OnInit {
   logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
     { link: 'audit', label: 'Аудит' },
+    { link: 'charter', label: 'Уставы' },
     // { link: 'dash', label: 'Дэшборд' },
     // { link: 'analyse', label: 'Анализ' },
-    { link: 'admin', label: 'Администрирование' }
-    //{ link: 'events', label: 'Журнал событий' }
+    { link: 'admin', label: 'Администрирование' },
+    { link: 'events', label: 'Журнал событий' }
   ];
 
   navigationSideMenu = [
-    ...this.navigation,
-    { link: 'settings', label: 'Настройки' }
+    ...this.navigation /*,
+    { link: 'settings', label: 'Настройки' }*/
   ];
 
   isAuthenticated$: Observable<boolean>;

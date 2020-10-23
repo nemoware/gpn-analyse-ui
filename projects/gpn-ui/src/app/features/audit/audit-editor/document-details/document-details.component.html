@@ -12,10 +12,10 @@
 </section>
 
 <mat-divider></mat-divider>
-
+<ng-container *ngIf="document.documentType!=='CHARTER'">
 <section>
   <label class='field-label'>входит в аудит</label>
-  <span><a href="link to audit">{{ document.audit.subsidiaryName }}<br>
+  <span><a target="_blank" href="/#/audit/result/{{document.auditId}}">{{ document.audit.subsidiaryName }}<br>
       {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</a></span>
 </section>
 
@@ -35,8 +35,10 @@
 
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
 
+    <ng-container *ngIf="node._id!==-1">
     <div class="row" style="width: 100%" (mouseenter)="focusedDoc(node._id)" (mouseleave)="focusedDoc(null)">
       <div class="col-10" (click)="openDocument(node)" [ngClass]="{reference: node.index > 0}">
+        <span *ngIf="!(node.documentNumber || node.documentDate)">н/д</span>
           <span *ngIf="node.documentNumber">№{{ node.documentNumber}}</span> <span *ngIf="node.documentDate"> от {{node.documentDate | date}}</span>
       </div>
 
@@ -46,6 +48,7 @@
         ></fa-icon>
       </div>
     </div>
+    </ng-container>
   </mat-tree-node>
 
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding role="group">
@@ -71,3 +74,13 @@
   </mat-tree-node>
 
 </mat-tree>
+</ng-container>
+
+<ng-container *ngIf="document.documentType==='CHARTER'">
+  <section>
+    <label class='field-label'>файл</label>
+    <a [href]='"file://" + document.filename'>
+  <span class="file-name"><span class="file-path">{{ document.filename | filePath }}
+    </span>{{ document.filename | fileName }}</span></a>
+  </section>
+</ng-container>
