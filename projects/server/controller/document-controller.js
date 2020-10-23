@@ -424,16 +424,17 @@ async function getLinkInfo(fromId, toId) {
   const document1 = await Document.findById(fromId).lean();
   const document2 = await Document.findById(toId).lean();
 
-  if (
-    !document1 ||
-    !document2 ||
-    document1.auditId.toString() !== document2.auditId.toString()
-  ) {
-    return {
-      error:
-        'One of documents is not found or documents belong to different audits'
-    };
-  }
+  if (document2 && document2.documentType !== 'CHARTER')
+    if (
+      !document1 ||
+      !document2 ||
+      document1.auditId.toString() !== document2.auditId.toString()
+    ) {
+      return {
+        error:
+          'One of documents is not found or documents belong to different audits'
+      };
+    }
 
   const audit = await Audit.findById(document1.auditId).lean();
 
@@ -492,27 +493,69 @@ exports.getDocumentsByType = async (req, res) => {
   }
 
   try {
-    let documents = await Document.find(
-      {
-        auditId: req.query.auditId,
-        'parse.documentType': req.query.type,
-        parserResponseCode: 200
-      },
-      `parse.documentDate
+    let documents;
+    if (req.query.type !== 'CHARTER')
+      documents = await Document.find(
+        {
+          auditId: req.query.auditId,
+          'parse.documentType': req.query.type,
+          parserResponseCode: 200
+        },
+        `parse.documentDate
     filename
     parse.documentNumber
     analysis.attributes
     `,
-      { lean: true }
-    );
+        { lean: true }
+      );
+    else {
+      const where = {
+        'parse.documentType': 'CHARTER',
+        parserResponseCode: 200,
+        analysis: { $exists: true },
+        $and: [
+          // признак активности
+          {
+            $or: [
+              { isActive: true },
+              { isActive: null },
+              { isActive: { $exists: false } }
+            ]
+          },
+          {
+            $or: [
+              // если существует user
+              {
+                // существует атрибут date
+                'user.attributes.date': { $exists: true }
+              },
+              // если существует только analysis
+              {
+                user: null,
+                // существует атрибут date
+                'analysis.attributes.date': { $exists: true }
+              }
+            ]
+          }
+        ]
+      };
+      documents = await Document.find(
+        where,
+        `filename user analysis parse.documentType`,
+        { lean: true }
+      );
+    }
 
     documents = documents.map(d => {
       return {
         filename: d.filename,
-        documentDate: d.parse.documentDate,
+        documentDate: getAttributeValue(d, 'date'),
         documentType: d.parse.documentType,
-        documentNumber: d.parse.documentNumber,
-        attributes: (d.analysis && d.analysis.attributes) || {},
+        documentNumber: getAttributeValue(d, 'number'),
+        attributes:
+          (d.user && d.user.attributes) ||
+          (d.analysis && d.analysis.attributes) ||
+          {},
         _id: d._id
       };
     });
