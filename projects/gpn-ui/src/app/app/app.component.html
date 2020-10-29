@@ -28,7 +28,7 @@
 
           <span class="d-none d-md-inline" *ngIf="loadedUser">
             <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
-              routerLinkActive="active" gpnHide [appPage] = "item.link">
+              routerLinkActive="mat-accent" gpnHide [appPage] = "item.link">
               {{ item.label }}
             </button>
           </span>
