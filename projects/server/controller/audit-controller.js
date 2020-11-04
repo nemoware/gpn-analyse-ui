@@ -30,8 +30,8 @@ exports.postAudit = async (req, res) => {
     await logger.log(
       req,
       res,
-      'Создание аудита',
-      `Аудит "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+      'Создание Проверки',
+      `Проверка "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
         'DD.MM.YYYY'
       )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
     );
@@ -310,7 +310,7 @@ exports.approve = async (req, res) => {
 
     audit.status = 'Approved';
     await audit.save();
-    await logger.log(req, res, 'Подтверждение аудита');
+    await logger.log(req, res, 'Подтверждение проверки');
     res.end();
   } catch (err) {
     logger.logError(req, res, err, 500);

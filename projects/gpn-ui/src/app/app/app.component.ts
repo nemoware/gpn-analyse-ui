@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
   year = new Date().getFullYear();
   logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
-    { link: 'audit', label: 'Аудит' },
+    { link: 'audit', label: 'Проверка' },
     { link: 'charter', label: 'Уставы' },
     // { link: 'dash', label: 'Дэшборд' },
     // { link: 'analyse', label: 'Анализ' },

@@ -1,6 +1,6 @@
 <div class="container position-relative">
 
-  <h4>Новое задание на аудит</h4>
+  <h4>Новое задание на проверку</h4>
   <mat-form-field color="accent">
     <mat-select [formControl]="subsidiaryCtrl" placeholder="Выбрать Дочернее Общество" #selectSubsidiary (selectionChange)="changeSubsidiary($event)">
       <mat-option>
@@ -64,7 +64,7 @@
       <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
     </div>
     <div class="col">
-      <button mat-raised-button color="accent" (click)="CreateAudit()" [disabled]="!valid()">Новое задание на аудит
+      <button mat-raised-button color="accent" (click)="CreateAudit()" [disabled]="!valid()">Новое задание
       </button>
     </div>
   </div>

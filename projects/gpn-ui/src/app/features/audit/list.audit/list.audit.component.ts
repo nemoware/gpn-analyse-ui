@@ -115,7 +115,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit, OnDestroy {
     if (element != null) {
       if (
         confirm(
-          `Вы действительно хотите удалить "Аудит ДО от ${this.datepipe.transform(
+          `Вы действительно хотите удалить "Проверка ДО от ${this.datepipe.transform(
             element.createDate,
             'dd.MM.yyyy'
           )}"?`

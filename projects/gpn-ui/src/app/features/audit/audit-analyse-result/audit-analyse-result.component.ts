@@ -273,7 +273,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   approveAudit() {
     if (
       confirm(
-        'Вы действительно хотите подтвердить аудит? После подтверждения режим обучения и корректировки атрибутов будет недоступен!'
+        'Вы действительно хотите подтвердить проверку? После подтверждения режим обучения и корректировки атрибутов будет недоступен!'
       )
     ) {
       const approve = this.auditservice

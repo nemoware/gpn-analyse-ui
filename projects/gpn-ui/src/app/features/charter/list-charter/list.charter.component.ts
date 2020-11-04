@@ -150,7 +150,7 @@ export class ListCharterComponent implements OnInit, AfterViewInit, OnDestroy {
         return 'Ошибка при анализе' + data.analyze_timestamp;
       if (data.state === 12)
         return (
-          'Документ не попадает под параметры Аудита' + data.analyze_timestamp
+          'Документ не попадает под параметры Проверки' + data.analyze_timestamp
         );
       if (data.state === 15) return 'Анализ завершен' + data.analyze_timestamp;
       return ' ';

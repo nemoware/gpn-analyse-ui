@@ -23,7 +23,7 @@
 .state-12 {
   color: mat-color($mat-orange, 500);
   &::after {
-    content: 'Документ не попадает под параметры Аудита';
+    content: 'Документ не попадает под параметры Проверки';
   }
 }
 
@@ -47,7 +47,7 @@
   font-size: 85%;
   color: $gpn-labels;
 
-  mat-icon {    
+  mat-icon {
     margin: 0;
     padding: 0;
     font-size: 12px;
@@ -55,4 +55,3 @@
     width: 16px;
   }
 }
-

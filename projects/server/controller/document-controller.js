@@ -142,7 +142,7 @@ exports.getDocument = async (req, res) => {
                     'DD.MM.YYYY'
                   )
                 : 'н/д'
-            }. Аудит "${audit.subsidiary.name}" ${moment(
+            }. Проверка "${audit.subsidiary.name}" ${moment(
               audit.auditStart
             ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
               'DD.MM.YYYY'
@@ -160,7 +160,7 @@ exports.getDocument = async (req, res) => {
                     'DD.MM.YYYY'
                   )
                 : 'н/д'
-            }. Аудит "${audit.subsidiary.name}" ${moment(
+            }. Проверка "${audit.subsidiary.name}" ${moment(
               audit.auditStart
             ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
               'DD.MM.YYYY'
@@ -295,9 +295,11 @@ exports.updateDocument = async (req, res) => {
             getAttributeValue(document, 'date')
               ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
               : 'н/д'
-          }. Аудит "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+          }. Проверка "${audit.subsidiary.name}" ${moment(
+            audit.auditStart
+          ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
             'DD.MM.YYYY'
-          )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
+          )}`
         );
       else
         await logger.log(
@@ -309,9 +311,11 @@ exports.updateDocument = async (req, res) => {
             getAttributeValue(document, 'date')
               ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
               : 'н/д'
-          }. Аудит "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+          }. Проверка "${audit.subsidiary.name}" ${moment(
+            audit.auditStart
+          ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
             'DD.MM.YYYY'
-          )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
+          )}`
         );
       res.status(200).json(document);
     }

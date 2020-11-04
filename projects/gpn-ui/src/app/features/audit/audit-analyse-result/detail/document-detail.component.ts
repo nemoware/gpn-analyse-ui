@@ -109,7 +109,7 @@ export class DocumentDetailComponent implements OnInit {
         return 'Ошибка при анализе' + data.analysis.analyze_timestamp;
       if (data.state === 12)
         return (
-          'Документ не попадает под параметры Аудита' +
+          'Документ не попадает под параметры Проверки' +
           data.analysis.analyze_timestamp
         );
       if (data.state === 15)
