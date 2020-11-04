@@ -158,6 +158,7 @@ exports.setResult = async audit => {
       auditId: audit._id,
       parserResponseCode: 200
     });
+    if (audit.charters) count += audit.charters.length;
     audit.status = 'InWork';
     audit.checkedDocumentCount = count;
   }

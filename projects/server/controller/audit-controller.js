@@ -159,11 +159,14 @@ exports.getFiles = async (req, res) => {
     if (audit.status === 'New' || audit.status === 'Loading') {
       filePaths = await parser.getPaths(audit.ftpUrl);
     } else {
-      filePaths = await Document.find({ auditId: auditId }).distinct(
-        'filename'
-      );
+      filePaths = await Document.find({
+        $or: [{ auditId }, { _id: { $in: audit.charters } }]
+      }).distinct('filename');
       errors = await Document.find(
-        { auditId: auditId, parserResponseCode: { $ne: 200 } },
+        {
+          $or: [{ auditId }, { _id: { $in: audit.charters } }],
+          parserResponseCode: { $ne: 200 }
+        },
         null,
         { lean: true }
       );
