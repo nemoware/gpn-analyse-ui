@@ -17,6 +17,8 @@
   <mat-tab label="Документы" [disabled]="maxPageIndex < 1"></mat-tab>
   <mat-tab label="Анализ" [disabled]="maxPageIndex < 2"></mat-tab>
   <mat-tab label="Нарушения" [disabled]="maxPageIndex < 3"></mat-tab>
+  <mat-tab label="Заключение" [disabled]="maxPageIndex < 4"></mat-tab>
+
 </mat-tab-group>
 
 </div>
@@ -126,6 +128,10 @@
   <div *ngIf="selectedPage === 3">
     <gpn-violations-audit [idAudit]="IdAudit"></gpn-violations-audit>
   </div>
-</div>
+
+  <div *ngIf="selectedPage == 4">
+    <button mat-raised-button color="accent" style="float: left; margin-left: 20px; margin-top: 15px" (click)="exportDocument()"> Экспортировать </button>
+  </div>
+  </div>
 
 

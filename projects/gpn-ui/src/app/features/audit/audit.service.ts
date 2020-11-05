@@ -9,6 +9,7 @@ import { KindAttributeModel } from '@app/models/kind-attribute-model';
 import { FileModel } from '@app/models/file-model';
 import { LinksDocumentModel } from '@app/models/links-document-model';
 import { ViolationModel } from '@app/models/violation-model';
+import { ExportDocumentModel } from '@app/models/export-document.model';
 
 const api = '/api';
 
@@ -173,6 +174,13 @@ export class AuditService {
       `${api}/document/activate-charter`,
       { id: id, action: action },
       { responseType: 'text' as 'json' }
+    );
+  }
+
+  public exportConclusion(id: string): Observable<ExportDocumentModel> {
+    return this.http.post<ExportDocumentModel>(
+      `${api}/audit/exportConclusion`,
+      { id }
     );
   }
 }

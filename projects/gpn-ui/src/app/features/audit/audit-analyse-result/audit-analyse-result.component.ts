@@ -1,9 +1,10 @@
 import {
-  Component,
-  OnInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  AfterViewInit
+  Component,
+  ErrorHandler,
+  OnInit
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@root/node_modules/@angular/router';
 import { AuditService } from '@app/features/audit/audit.service';
@@ -15,13 +16,13 @@ import { Tag } from '@app/models/legal-document';
 import {
   faChevronDown,
   faChevronUp,
-  faEye,
   faClock,
-  faFlagCheckered,
   faExclamationTriangle,
+  faEye,
+  faFile,
+  faFlagCheckered,
   faFolder,
-  faFolderOpen,
-  faFile
+  faFolderOpen
 } from '@fortawesome/free-solid-svg-icons';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 import { Document } from '@app/models/document.model';
@@ -29,6 +30,7 @@ import { Helper } from '@app/features/audit/helper';
 import { Audit } from '@app/models/audit.model';
 
 import { FileModel } from '@app/models/file-model';
+import { DatePipe } from '@root/node_modules/@angular/common';
 
 interface Node {
   _id?: string;
@@ -59,7 +61,7 @@ const orderTypes = ['CHARTER', 'CONTRACT', 'PROTOCOL'];
   selector: 'gpn-audit-analyse-result',
   templateUrl: './audit-analyse-result.component.html',
   styleUrls: ['./audit-analyse-result.component.scss'],
-  providers: [AuditService],
+  providers: [AuditService, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
@@ -111,7 +113,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private auditservice: AuditService,
     private changeDetectorRefs: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    public datepipe: DatePipe
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
@@ -294,5 +297,33 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     } else if (doc.analysis.attributes[attrName]) {
       return doc.analysis.attributes[attrName].value;
     }
+  }
+
+  exportDocument() {
+    const conclusion = this.auditservice
+      .exportConclusion(this.IdAudit)
+      .subscribe(data => {
+        const a = document.createElement('a');
+        const blob = this.base64toBlob(atob(data.base64Document));
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = `Заключение по проведенной проверке ${
+          data.subsidiary
+        } за период от ${this.datepipe.transform(
+          data.auditStart,
+          'dd-MM-yyyy'
+        )} по ${this.datepipe.transform(data.auditEnd, 'dd-MM-yyyy')}.docx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        conclusion.unsubscribe();
+      });
+  }
+
+  base64toBlob(byteString) {
+    const ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ia], { type: 'octet/stream' });
   }
 }

@@ -1,6 +1,8 @@
 const fs = require('fs-promise');
 const request = require('request');
 const url = require('../config').parser.url;
+const logo = require('../config').conclusion.logo;
+const riskMatrix = require('../json/riskMatrix.json');
 const { Document } = require('../models');
 const path = require('path');
 const logger = require('../core/logger');
@@ -272,3 +274,38 @@ exports.getFiles = fileObjects => {
 
   return files;
 };
+
+async function exportConclusion(
+  subsidiaryName,
+  createDate,
+  charterOrgLevels,
+  violations
+) {
+  const body = {
+    base64Logo: logo,
+    subsidiaryName: subsidiaryName,
+    auditDate: createDate,
+    riskMatrix: riskMatrix,
+    orgLevels: charterOrgLevels,
+    violations: violations
+  };
+
+  const options = {
+    url: `${url}/document-generator/conclusion`,
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body)
+  };
+  let response = {};
+  try {
+    response = await post(options);
+  } catch (err) {
+    if (err.code !== 'ECONNREFUSED') return logger.logLocalError(err);
+    charter.parse = {
+      documentType: err.code,
+      message: 'Parser module is off'
+    };
+  }
+  return JSON.parse(response.body);
+}
+
+exports.exportConclusion = exportConclusion;

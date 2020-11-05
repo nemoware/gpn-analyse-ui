@@ -96,7 +96,7 @@ exports.getAudits = async (req, res) => {
       audits[0] &&
       ['Finalizing', 'Done', 'Approved'].includes(audits[0].status)
     ) {
-      audits[0].typeViewResult = 3;
+      audits[0].typeViewResult = 4;
     } else {
       for (let audit of audits) {
         audit.typeViewResult = checks.length;
@@ -312,6 +312,75 @@ exports.approve = async (req, res) => {
     await audit.save();
     await logger.log(req, res, 'Подтверждение проверки');
     res.end();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.exportConclusion = async (req, res) => {
+  const id = req.body.id;
+  if (!id) {
+    return res.status(400).send(`Required parameter 'id' is not passed`);
+  }
+
+  try {
+    const audit = await Audit.findById(id);
+    if (!audit) {
+      return res.status(404).send(`No audit found with id = ${id}`);
+    }
+
+    if (!audit.charters[0]) {
+      return res.status(400).send('В проверке нет уставов!');
+    }
+
+    let date = 0;
+    let charterId;
+    let desiredCharter = {};
+    for (const c of audit.charters) {
+      const doc = await Document.findOne(
+        { _id: c, state: 15 },
+        `state
+        analysis.attributes
+        user.attributes`
+      );
+      const charterDate = doc.getAttributeValue('date');
+      if (
+        charterDate > audit.auditStart &&
+        charterDate < audit.auditEnd &&
+        charterDate > date
+      ) {
+        date = charterDate;
+        charterId = c;
+        desiredCharter = doc;
+      }
+    }
+
+    const orgLevels = [
+      'AllMembers',
+      'ShareholdersGeneralMeeting',
+      'BoardOfDirectors',
+      'BoardOfCompany',
+      'CEO',
+      'competence_CEO'
+    ];
+    let charterOrgLevels = [];
+
+    for (const orgLevel of orgLevels) {
+      const level = desiredCharter.getAttributeValue(orgLevel);
+      if (level) charterOrgLevels.push(level);
+    }
+
+    const response = await parser.exportConclusion(
+      audit.subsidiaryName,
+      audit.createDate,
+      charterOrgLevels,
+      audit.violations
+    );
+    await logger.log(req, res, 'Экспорт заключения');
+    response.subsidiary = audit.subsidiaryName;
+    response.auditStart = audit.auditStart;
+    response.auditEnd = audit.auditEnd;
+    res.send(response);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
