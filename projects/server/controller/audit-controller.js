@@ -367,14 +367,14 @@ exports.exportConclusion = async (req, res) => {
 
     for (const orgLevel of orgLevels) {
       const level = desiredCharter.getAttributeValue(orgLevel);
-      if (level) charterOrgLevels.push(level);
+      if (level) charterOrgLevels.push(orgLevel);
     }
 
     const response = await parser.exportConclusion(
       audit.subsidiaryName,
       audit.createDate,
       charterOrgLevels,
-      audit.violations
+      JSON.stringify(audit.violations)
     );
     await logger.log(req, res, 'Экспорт заключения');
     response.subsidiary = audit.subsidiaryName;
