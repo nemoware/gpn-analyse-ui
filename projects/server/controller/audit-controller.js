@@ -3,6 +3,7 @@ const moment = require('moment');
 const logger = require('../core/logger');
 const { Audit, Document, Subsidiary } = require('../models');
 const parser = require('../services/parser-service');
+const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
@@ -370,11 +371,154 @@ exports.exportConclusion = async (req, res) => {
       if (level) charterOrgLevels.push(orgLevel);
     }
 
+    let violations = audit.violations;
+    let documents = await Document.find(
+      {
+        auditId: id,
+        'analysis.warnings': { $exists: true },
+        parserResponseCode: 200,
+        $where: 'this.analysis.warnings.length > 0'
+      },
+      'analysis.warnings analysis.attributes.number parse.documentType'
+    );
+
+    if (!violations) violations = [];
+
+    documents.forEach(doc => {
+      const v = violations.find(
+        x => x.document.id.toString() === doc._id.toString()
+      );
+      if (v) v.document.warnings = doc.analysis.warnings;
+      else {
+        violations.push({
+          document: {
+            id: doc._id,
+            number: doc.analysis.attributes.number
+              ? doc.analysis.attributes.number.value
+              : '',
+            type: doc.parse.documentType,
+            warnings: doc.analysis.warnings
+          }
+        });
+      }
+    });
+
+    let violationModel = [];
+    violations.map(v => {
+      const violation = {};
+
+      if (v.founding_document) {
+        violation.foundingDocument =
+          'Устав от ' + moment(v.founding_document.date).format('DD.MM.YYYY');
+      } else {
+        violation.foundingDocument = null;
+      }
+
+      if (v.reference) {
+        violation.reference = v.reference.text;
+      } else {
+        violation.reference = null;
+      }
+
+      let violationText = '';
+      if (v.violation_type) {
+        violationText += getViolation(v);
+        if (v.violation_type.type) {
+          violationText +=
+            '\nОтсутствует одобрение ' +
+            translations[v.violation_type.org_structural_level] +
+            ' на совершение ' +
+            translations[v.violation_type.subject] +
+            ' ';
+        }
+        if (v.violation_type.min || v.violation_type.max) {
+          if (v.violation_type.min) {
+            violationText +=
+              'превышающих ' +
+              v.violation_type.min.value +
+              ' ' +
+              translations[v.violation_type.min.currency];
+          }
+          if (v.violation_type.min && v.violation_type.max) {
+            violationText += ' и';
+          }
+          if (v.violation_type.min) {
+            violationText +=
+              ' не превышающих ' +
+              v.violation_type.max.value +
+              ' ' +
+              translations[v.violation_type.min.value];
+          }
+        }
+        violationText += '\n';
+      }
+      if (v.document.warnings) {
+        violationText +=
+          'В результате выполненного анализа в документах были определены не все атрибуты\n';
+        for (const warning of v.document.warnings) {
+          violationText += translations[warning.code] + '\n';
+        }
+      }
+      violation.violation_type = violationText;
+
+      let violationReason = '';
+      if (v.violation_reason) {
+        if (v.violation_reason.contract) {
+          violationReason +=
+            'Договор № ' +
+            (v.violation_reason.contract.number || 'н/д') +
+            ' от ' +
+            moment(v.violation_reason.contract.date).format('DD.MM.YYYY') +
+            ' с ' +
+            (v.violation_reason.contract.org_type || '') +
+            ' ' +
+            (v.violation_reason.contract.org_name || 'н/д');
+          if (v.violation_reason.contract.value) {
+            violationReason +=
+              ', цена сделки - ' +
+              v.violation_reason.contract.value +
+              translations[v.violation_reason.contract.currency];
+          }
+        }
+
+        if (v.violation_reason.protocol) {
+          violationReason += '\n';
+          violationReason +=
+            'Протокол ' +
+            translations[v.violation_reason.protocol.org_structural_level] +
+            ' от ' +
+            moment(v.violation_reason.protocol.date).format('DD.MM.YYYY') +
+            ' с ' +
+            v.violation_reason.contract.org_type +
+            ' ' +
+            v.violation_reason.contract.org_name;
+          if (v.violation_reason.protocol.value) {
+            violationReason +=
+              ', сумма - ' +
+              v.violation_reason.protocol.value +
+              translations[v.violation_reason.protocol.currency];
+          }
+        }
+
+        if (v.violation_reason.charters) {
+          violationReason += '\n';
+          for (const charter of v.violation_reason.charters) {
+            violationReason +=
+              'Устав в редакции от ' +
+              moment(charter.date).format('DD.MM.YYYY') +
+              '\n';
+          }
+        }
+      }
+      violation.violation_reason = violationReason;
+      violationModel.push(violation);
+    });
+
     const response = await parser.exportConclusion(
       audit.subsidiaryName,
       audit.createDate,
       charterOrgLevels,
-      JSON.stringify(audit.violations)
+      violationModel
     );
     await logger.log(req, res, 'Экспорт заключения');
     response.subsidiary = audit.subsidiaryName;
@@ -385,3 +529,14 @@ exports.exportConclusion = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+function getViolation(violation) {
+  if (
+    Object.prototype.toString.call(violation.violation_type) ===
+    '[object String]'
+  )
+    return translations[violation.violation_type];
+  else {
+    return translations[violation.violation_type.type];
+  }
+}
