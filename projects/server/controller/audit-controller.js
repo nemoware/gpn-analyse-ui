@@ -344,15 +344,17 @@ exports.exportConclusion = async (req, res) => {
         analysis.attributes
         user.attributes`
       );
-      const charterDate = doc.getAttributeValue('date');
-      if (
-        charterDate > audit.auditStart &&
-        charterDate < audit.auditEnd &&
-        charterDate > date
-      ) {
-        date = charterDate;
-        charterId = c;
-        desiredCharter = doc;
+      if (doc) {
+        const charterDate = doc.getAttributeValue('date');
+        if (
+          charterDate > audit.auditStart &&
+          charterDate < audit.auditEnd &&
+          charterDate > date
+        ) {
+          date = charterDate;
+          charterId = c;
+          desiredCharter = doc;
+        }
       }
     }
 
