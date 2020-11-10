@@ -278,6 +278,8 @@ exports.getFiles = fileObjects => {
 async function exportConclusion(
   subsidiaryName,
   createDate,
+  auditStart,
+  auditEnd,
   charterOrgLevels,
   violations
 ) {
@@ -285,10 +287,16 @@ async function exportConclusion(
     base64Logo: logo,
     subsidiaryName: subsidiaryName,
     auditDate: createDate,
+    auditStart: auditStart,
+    auditEnd: auditEnd,
     riskMatrix: riskMatrix,
     orgLevels: charterOrgLevels,
     violations: violations
   };
+
+  // const fs = require('fs');
+  // let data = JSON.stringify(body, null, 2);
+  // fs.writeFileSync('test.json', data);
 
   const options = {
     url: `${url}/document-generator/conclusion`,

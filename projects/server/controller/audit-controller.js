@@ -459,7 +459,7 @@ exports.exportConclusion = async (req, res) => {
           violationText += translations[warning.code] + '\n';
         }
       }
-      violation.violation_type = violationText;
+      violation.violationType = violationText;
 
       let violationReason = '';
       if (v.violation_reason) {
@@ -510,20 +510,24 @@ exports.exportConclusion = async (req, res) => {
           }
         }
       }
-      violation.violation_reason = violationReason;
+      violation.violationReason = violationReason;
       violationModel.push(violation);
     });
 
     const response = await parser.exportConclusion(
       audit.subsidiaryName,
       audit.createDate,
+      audit.auditStart,
+      audit.auditEnd,
       charterOrgLevels,
       violationModel
     );
-    await logger.log(req, res, 'Экспорт заключения');
+
+    //Данные для формирования наименования файла .docx
     response.subsidiary = audit.subsidiaryName;
     response.auditStart = audit.auditStart;
     response.auditEnd = audit.auditEnd;
+
     res.send(response);
   } catch (err) {
     logger.logError(req, res, err, 500);
