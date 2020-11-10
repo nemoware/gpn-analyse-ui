@@ -444,12 +444,12 @@ exports.exportConclusion = async (req, res) => {
           if (v.violation_type.min && v.violation_type.max) {
             violationText += ' и';
           }
-          if (v.violation_type.min) {
+          if (v.violation_type.max) {
             violationText +=
               ' не превышающих ' +
               v.violation_type.max.value +
               ' ' +
-              translations[v.violation_type.min.value];
+              translations[v.violation_type.max.currency];
           }
         }
         violationText += '\n';
