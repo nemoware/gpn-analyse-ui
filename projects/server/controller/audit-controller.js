@@ -386,25 +386,6 @@ exports.exportConclusion = async (req, res) => {
 
     if (!violations) violations = [];
 
-    documents.forEach(doc => {
-      const v = violations.find(
-        x => x.document.id.toString() === doc._id.toString()
-      );
-      if (v) v.document.warnings = doc.analysis.warnings;
-      else {
-        violations.push({
-          document: {
-            id: doc._id,
-            number: doc.analysis.attributes.number
-              ? doc.analysis.attributes.number.value
-              : '',
-            type: doc.parse.documentType,
-            warnings: doc.analysis.warnings
-          }
-        });
-      }
-    });
-
     let violationModel = [];
     violations.map(v => {
       const violation = {};
@@ -453,13 +434,6 @@ exports.exportConclusion = async (req, res) => {
           }
         }
         violationText += '\n';
-      }
-      if (v.document.warnings) {
-        violationText +=
-          'В результате выполненного анализа в документах были определены не все атрибуты\n';
-        for (const warning of v.document.warnings) {
-          violationText += translations[warning.code] + '\n';
-        }
       }
       violation.violationType = violationText;
 
