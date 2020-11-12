@@ -127,7 +127,7 @@
   "number": "Номер",
   "date": "Дата",
 
-  "protocol_not_found": "Протокол не найден",
+  "protocol_not_found": "Отсутствует документ, подтверждающий принятие решения",
   "charter_not_found": "Устав не найден",
   "contract_value_great_than_protocol_value": "Стоимость договора больше значения в протоколе",
   "contract_value_not_equal_protocol_value": "Стоимость договора не равно значению в протоколе",
