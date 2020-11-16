@@ -74,7 +74,15 @@ export class RiskMatrixFormComponent implements OnInit {
     'contract_date_less_than_protocol_date',
     'provision_date_less_than_protocol_date',
     'hire_date_less_than_protocol_date',
-    'charity_policy_date_less_than_protocol_date'
+    'charity_policy_date_less_than_protocol_date',
+    'provision_not_found',
+    'person_list_not found',
+    'interested_party_transactions_found',
+    'attribute_not_found',
+    'sum_not_found',
+    'book_value_not_found',
+    'currency_data_not_found',
+    'agent_bounty_not_found'
   ];
   //Форма контроля ввода
   controlForm: FormGroup;
