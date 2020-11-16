@@ -1,7 +1,7 @@
 const fs = require('fs-promise');
 const moment = require('moment');
 const logger = require('../core/logger');
-const { Audit, Document, Subsidiary } = require('../models');
+const { Audit, Document, Subsidiary, Risk } = require('../models');
 const parser = require('../services/parser-service');
 const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
 
@@ -370,15 +370,6 @@ exports.exportConclusion = async (req, res) => {
     }
 
     let violations = audit.violations;
-    let documents = await Document.find(
-      {
-        auditId: id,
-        'analysis.warnings': { $exists: true },
-        parserResponseCode: 200,
-        $where: 'this.analysis.warnings.length > 0'
-      },
-      'analysis.warnings analysis.attributes.number parse.documentType'
-    );
 
     if (!violations) violations = [];
 
@@ -486,13 +477,47 @@ exports.exportConclusion = async (req, res) => {
       violationModel.push(violation);
     });
 
+    let riskMatrix = await Risk.find(
+      {},
+      `
+    violation
+    subject
+    risk
+    recommendation
+    disadvantage
+    `
+    ).lean();
+
+    riskMatrix = await filter(riskMatrix, async risk => {
+      for (let violation of audit.violations) {
+        if (violation.violation_type)
+          if (risk.violation === getViolationEn(violation)) {
+            if (violation.document.type === 'CONTRACT') {
+              let document = await Document.findOne(
+                { _id: violation.document.id },
+                `
+                analysis.attributes
+                user.attributes
+                `
+              );
+              if (
+                document.getAttributeValue('subject') === risk.subject ||
+                risk.subject === 'AllDeals'
+              )
+                return risk;
+            }
+          }
+      }
+    });
+
     const response = await parser.exportConclusion(
       audit.subsidiaryName,
       audit.createDate,
       audit.auditStart,
       audit.auditEnd,
       charterOrgLevels,
-      violationModel
+      violationModel,
+      riskMatrix
     );
 
     //Данные для формирования наименования файла .docx
@@ -515,4 +540,24 @@ function getViolation(violation) {
   else {
     return translations[violation.violation_type.type];
   }
+}
+
+function getViolationEn(violation) {
+  if (
+    Object.prototype.toString.call(violation.violation_type) ===
+    '[object String]'
+  )
+    return violation.violation_type;
+  else {
+    return violation.violation_type.type;
+  }
+}
+
+async function filter(arr, callback) {
+  const fail = Symbol();
+  return (
+    await Promise.all(
+      arr.map(async item => ((await callback(item)) ? item : fail))
+    )
+  ).filter(i => i !== fail);
 }

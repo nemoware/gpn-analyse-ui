@@ -2,7 +2,6 @@ const fs = require('fs-promise');
 const request = require('request');
 const url = require('../config').parser.url;
 const logo = require('../config').conclusion.logo;
-const riskMatrix = require('../json/riskMatrix.json');
 const { Document } = require('../models');
 const path = require('path');
 const logger = require('../core/logger');
@@ -281,7 +280,8 @@ async function exportConclusion(
   auditStart,
   auditEnd,
   charterOrgLevels,
-  violations
+  violations,
+  riskMatrix
 ) {
   const body = {
     base64Logo: logo,
