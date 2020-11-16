@@ -14,6 +14,7 @@ import {
   ChangeDetectorRef
 } from '@root/node_modules/@angular/core';
 import { RiskMatrixFormComponent } from '@app/features/handbook/risk-matrix/risk-matrix-form/risk-matrix-form.component';
+import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 @Component({
   selector: 'gpn-risk-matrix-table',
   templateUrl: './risk-matrix-table.component.html',
@@ -47,7 +48,8 @@ export class RiskMatrixTableComponent implements OnInit {
     private handBookService: HandBookService,
     private router: Router,
     public dialog: MatDialog,
-    private changeDetectorRefs: ChangeDetectorRef
+    private changeDetectorRefs: ChangeDetectorRef,
+    private translateService: TranslateService
   ) {}
 
   LocalRefreshTable(data: any[]) {
@@ -61,7 +63,6 @@ export class RiskMatrixTableComponent implements OnInit {
 
   GetRefreshTable() {
     this.handBookService.getRiskMatrix().subscribe((data: any[]) => {
-      console.log(data);
       this.data = data;
       this.LocalRefreshTable(this.data);
     });
@@ -72,7 +73,9 @@ export class RiskMatrixTableComponent implements OnInit {
     if (element != null) {
       if (
         confirm(
-          `Вы действительно хотите удалить Нарушение "${element.violation}"?`
+          `Вы действительно хотите удалить Нарушение "${this.translateService.instant(
+            element.violation
+          )}"?`
         )
       ) {
         this.handBookService.deleteRisk(element._id).subscribe(

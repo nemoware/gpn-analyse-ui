@@ -19,10 +19,8 @@ import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field'
 // tslint:disable-next-line:import-blacklist
 import { take } from '@root/node_modules/rxjs/internal/operators';
 import { HandBookService } from '@app/features/handbook/hand-book.service';
-import { TranslateService } from '@root/node_modules/@ngx-translate/core';
-import { Audit } from '@app/models/audit.model';
 import { RiskMatrix } from '@app/models/riskMatrix.model';
-import { Subscription, SubscriptionLike } from '@root/node_modules/rxjs';
+import { Subscription } from '@root/node_modules/rxjs';
 
 @Component({
   selector: 'gpn-risk-matrix-form',
@@ -66,6 +64,17 @@ export class RiskMatrixFormComponent implements OnInit {
     'RegisteredCapital',
     'AssetTransactions',
     'RealEstateTransactions'
+  ];
+  listOfViolations = [
+    'charter_not_found',
+    'protocol_not_found',
+    'contract_value_great_than_protocol_value',
+    'contract_value_not_equal_protocol_value',
+    'contract_value_less_than_protocol_value',
+    'contract_date_less_than_protocol_date',
+    'provision_date_less_than_protocol_date',
+    'hire_date_less_than_protocol_date',
+    'charity_policy_date_less_than_protocol_date'
   ];
   //Форма контроля ввода
   controlForm: FormGroup;

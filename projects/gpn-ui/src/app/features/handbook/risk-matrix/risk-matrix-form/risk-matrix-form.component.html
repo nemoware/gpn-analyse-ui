@@ -6,11 +6,11 @@
   <p>
     <mat-form-field color="accent">
       <mat-label>Нарушение</mat-label>
-        <textarea matInput
-                  cdkTextareaAutosize
-                  #autosize="cdkTextareaAutosize"
-                  cdkAutosizeMinRows="1"
-                  formControlName="violationControl"></textarea>
+      <mat-select formControlName="violationControl">
+        <mat-option *ngFor="let violation of listOfViolations" [value]="violation">
+          {{violation | translate}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
   </p>
 
