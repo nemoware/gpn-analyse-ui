@@ -23,6 +23,7 @@ const adminRouter = require('./routers/admin-router');
 const auditRouter = require('./routers/audit-router');
 const documentRouter = require('./routers/document-router');
 const eventRouter = require('./routers/event-router');
+const handBookRouter = require('./routers/handBook-router');
 
 const CONTEXT = `/${process.env.CONTEXT || 'gpn-ui'}`;
 
@@ -46,6 +47,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api/audit', auditRouter);
 app.use('/api/document', documentRouter);
 app.use('/api/event', eventRouter);
+app.use('/api/handbook', handBookRouter);
 
 const listen = async err => {
   if (err) return console.log(err);

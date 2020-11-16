@@ -1,0 +1,88 @@
+<div class="container position-relative" xmlns="http://www.w3.org/1999/html">
+
+  <h4>{{data.new?'Новый риск':'Редактирование риска'}}</h4>
+
+<form [formGroup]="controlForm">
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Нарушение</mat-label>
+        <textarea matInput
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="violationControl"></textarea>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Тип документа</mat-label>
+        <mat-select [(value)]="selectedType">
+          <mat-option *ngFor="let type of listOfDocumentTypes" [value]="type">
+            {{type }}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+  </p>
+
+<ng-container *ngIf="selectedType==='Договор'|| !data.new">
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Предмет договора</mat-label>
+      <mat-select formControlName="subjectControl">
+        <mat-option *ngFor="let subject of listOfSubjects" [value]="subject">
+          {{subject | translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+</ng-container>
+
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Риск</mat-label>
+        <textarea matInput
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="riskControl">
+        </textarea>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Рекомендация</mat-label>
+        <textarea matInput
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="recommendationControl">
+        </textarea>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Недостаток</mat-label>
+        <textarea matInput
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="disadvantageControl">
+        </textarea>
+    </mat-form-field>
+  </p>
+
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+    </div>
+    <div class="col">
+      <button mat-raised-button color="accent" [disabled]="controlForm.invalid" (click)="addRisk()">{{data.new?'Добавить':'Сохранить'}}
+      </button>
+    </div>
+  </div>
+
+</form>
+</div>

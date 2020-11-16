@@ -13,6 +13,8 @@ const name = options.name;
 const groups = require('../config').ad.groups;
 const roles = require('../json/role');
 
+const riskMatrix = require('../json/riskMatrix.json');
+
 // подключение
 mongoose
   .connect(`mongodb://${host}:${port}/${name}`, {
@@ -36,6 +38,13 @@ mongoose
         await group.save();
       }
     }
+
+    db.Risk.countDocuments((err, count) => {
+      if (count === 0) {
+        db.Risk.insertMany(riskMatrix);
+      }
+    });
+
     info();
   })
   .catch(err => info(err));

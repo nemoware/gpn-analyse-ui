@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
   navigation = [
     { link: 'audit', label: 'Проверка' },
     { link: 'charter', label: 'Уставы' },
+    { link: 'handbook', label: 'Справочники' },
     // { link: 'dash', label: 'Дэшборд' },
     // { link: 'analyse', label: 'Анализ' },
     { link: 'admin', label: 'Администрирование' },
@@ -44,6 +45,8 @@ export class AppComponent implements OnInit {
     ...this.navigation /*,
     { link: 'settings', label: 'Настройки' }*/
   ];
+
+  handbookMenu = [{ link: 'riskMatrix', label: 'Матрица рисков' }];
 
   isAuthenticated$: Observable<boolean>;
   stickyHeader$: Observable<boolean>;

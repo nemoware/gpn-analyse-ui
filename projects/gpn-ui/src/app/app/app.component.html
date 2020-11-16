@@ -6,7 +6,7 @@
       <div class="branding"><img [src]="logo" /></div>
       <mat-nav-list>
         <a mat-list-item *ngFor="let item of navigationSideMenu" (click)="sidenav.close()" [routerLink]="[item.link]"
-          routerLinkActive="active">
+           routerLinkActive="active">
           {{ item.label  }}
         </a>
       </mat-nav-list>
@@ -27,12 +27,22 @@
           <span routerLink="" class="branding spacer d-none d-md-inline"><img [src]="logo" /> Система корпоративного контроля</span>
 
           <span class="d-none d-md-inline" *ngIf="loadedUser">
-            <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
-              routerLinkActive="mat-accent" gpnHide [appPage] = "item.link">
-              {{ item.label }}
-            </button>
+            <ng-container *ngFor="let item of navigation">
+              <button mat-button *ngIf="item.link!== 'handbook'" class="nav-button"  [routerLink]="[item.link]"
+                      routerLinkActive="mat-accent" gpnHide [appPage] = "item.link">
+                {{ item.label }}
+              </button>
+              <button mat-button *ngIf="item.link=== 'handbook'" class="nav-button"
+                      gpnHide [appPage] = "item.link" [matMenuTriggerFor]="menu">
+                {{ item.label }}
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item *ngFor="let item of handbookMenu" class="nav-button" [routerLink]="[item.link]"
+                          routerLinkActive="mat-accent">{{ item.label }}
+                  </button>
+                </mat-menu>
+              </button>
+            </ng-container>
           </span>
-
           <button
             mat-icon-button
             [matMenuTriggerFor]="toolbarUserMenu">
