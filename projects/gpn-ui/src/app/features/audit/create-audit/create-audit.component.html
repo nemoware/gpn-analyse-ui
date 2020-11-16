@@ -33,8 +33,13 @@
   <br>
 
   <section>
-    <label class='field-label'>Диапазон дат документов</label>
     <form [formGroup]="auditForm">
+      <div *ngIf="aliases.controls" formArrayName="aliases">
+        <mat-form-field *ngFor="let alias of aliases.controls; let i=index">
+            <input matInput [formControlName]="i" [placeholder]="'Балансовая стоимость за ' + years[i] + ' год'">
+        </mat-form-field>
+      </div>
+      <label class='field-label'>Диапазон дат документов</label>
       <mat-form-field>
         <input id="_auditStart"
                matInput [matDatepicker]="auditStart" placeholder="Начало диапазона" [(ngModel)]="_auditStart"

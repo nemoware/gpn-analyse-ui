@@ -16,6 +16,7 @@ import {
   MatSelect
 } from '@root/node_modules/@angular/material';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -67,7 +68,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   _auditEnd: Date = null;
   _ftpUrl: string = null;
   allSubs = { name: '* Все ДО' };
-
+  years = [];
   constructor(
     private dateAdapter: DateAdapter<Date>,
     private auditservice: AuditService,
@@ -82,12 +83,21 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.auditForm = this.fb.group(
       {
         auditStart: Date,
-        auditEnd: Date
+        auditEnd: Date,
+        aliases: this.fb.array([])
       },
       {
         validator: this.dateValidator
       }
     );
+  }
+
+  get aliases() {
+    return this.auditForm.get('aliases') as FormArray;
+  }
+
+  addAlias() {
+    this.aliases.push(this.fb.control(''));
   }
 
   dateValidator(form: FormGroup) {
@@ -200,6 +210,21 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     if (event.target.id === '_auditStart')
       this._auditStart = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
     else this._auditEnd = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
+
+    if (
+      this._auditStart != null &&
+      this._auditEnd != null &&
+      this._auditStart < this._auditEnd
+    ) {
+      const startYear = this._auditStart.getFullYear() - 1;
+      const endYear = this._auditEnd.getFullYear() - 1;
+      this.years = [];
+      this.aliases.clear();
+      for (let i = startYear; i <= endYear; i++) {
+        this.years.push(i);
+        this.addAlias();
+      }
+    }
   }
 
   changeSubsidiary(e) {
