@@ -7,7 +7,7 @@
     <mat-form-field color="accent">
       <mat-label>Нарушение</mat-label>
       <mat-select formControlName="violationControl">
-        <mat-option *ngFor="let violation of listOfViolations" [value]="violation">
+        <mat-option [matTooltip]="violation | translate" *ngFor="let violation of listOfViolations" [value]="violation">
           {{violation | translate}}
         </mat-option>
       </mat-select>
@@ -41,7 +41,7 @@
   <p>
     <mat-form-field color="accent">
       <mat-label>Риск</mat-label>
-        <textarea matInput
+        <textarea matInput style="overflow: hidden"
                   cdkTextareaAutosize
                   #autosize="cdkTextareaAutosize"
                   cdkAutosizeMinRows="1"
@@ -53,7 +53,7 @@
   <p>
     <mat-form-field color="accent">
       <mat-label>Рекомендация</mat-label>
-        <textarea matInput
+        <textarea matInput style="overflow: hidden"
                   cdkTextareaAutosize
                   #autosize="cdkTextareaAutosize"
                   cdkAutosizeMinRows="1"
@@ -65,7 +65,7 @@
   <p>
     <mat-form-field color="accent">
       <mat-label>Недостаток</mat-label>
-        <textarea matInput
+        <textarea matInput style="overflow: hidden"
                   cdkTextareaAutosize
                   #autosize="cdkTextareaAutosize"
                   cdkAutosizeMinRows="1"

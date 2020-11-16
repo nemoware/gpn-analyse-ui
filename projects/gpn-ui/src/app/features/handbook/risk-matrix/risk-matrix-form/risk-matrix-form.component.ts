@@ -108,9 +108,9 @@ export class RiskMatrixFormComponent implements OnInit {
           Validators.required
         ]),
         subjectControl: new FormControl(data.risk.subject),
-        riskControl: new FormControl(data.risk.risk),
-        recommendationControl: new FormControl(data.risk.recommendation),
-        disadvantageControl: new FormControl(data.risk.disadvantage)
+        riskControl: new FormControl(data.risk.risk + '\n'),
+        recommendationControl: new FormControl(data.risk.recommendation + '\n'),
+        disadvantageControl: new FormControl(data.risk.disadvantage + '\n')
       });
     }
   }

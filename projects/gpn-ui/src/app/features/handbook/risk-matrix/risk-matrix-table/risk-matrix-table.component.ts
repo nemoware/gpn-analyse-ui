@@ -119,7 +119,8 @@ export class RiskMatrixTableComponent implements OnInit {
   addRisk() {
     const dialogRef = this.dialog.open(RiskMatrixFormComponent, {
       width: '50%',
-      data: { new: true }
+      data: { new: true },
+      maxHeight: '90vh'
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -145,7 +146,8 @@ export class RiskMatrixTableComponent implements OnInit {
       data: {
         new: false,
         risk
-      }
+      },
+      maxHeight: '90vh'
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
