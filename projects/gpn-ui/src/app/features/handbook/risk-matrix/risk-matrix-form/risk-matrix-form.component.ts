@@ -63,7 +63,8 @@ export class RiskMatrixFormComponent implements OnInit {
     'EmployeeContracts',
     'RegisteredCapital',
     'AssetTransactions',
-    'RealEstateTransactions'
+    'RealEstateTransactions',
+    'RealEstate'
   ];
   listOfViolations = [
     'charter_not_found',
@@ -142,6 +143,9 @@ export class RiskMatrixFormComponent implements OnInit {
         .toString()
         .trim()
     };
+    if (this.selectedType !== 'Договор') {
+      newRisk.subject = '';
+    }
     if (this.data.new) {
       this.subscriptions.push(
         this.handBookService.postRisk(newRisk).subscribe(
