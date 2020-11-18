@@ -487,9 +487,10 @@ exports.exportConclusion = async (req, res) => {
     disadvantage
     `
     ).lean();
-
-    riskMatrix = await filter(riskMatrix, async risk => {
-      for (let violation of audit.violations) {
+    const filteredRiskMatrix = [];
+    for (let violation of audit.violations) {
+      const riskArray = [];
+      await filter(riskMatrix, async risk => {
         if (violation.violation_type)
           if (risk.violation === getViolationEn(violation)) {
             if (violation.document.type === 'CONTRACT') {
@@ -502,13 +503,25 @@ exports.exportConclusion = async (req, res) => {
               );
               if (
                 document.getAttributeValue('subject') === risk.subject ||
-                risk.subject === 'AllDeals'
+                risk.subject === 'AllDeals' ||
+                risk.subject === ''
               )
-                return risk;
+                riskArray.push(risk);
             }
           }
+      });
+      if (riskArray.length > 0) {
+        if (riskArray.length === 1) {
+          filteredRiskMatrix.push(riskArray[0]);
+        } else {
+          filteredRiskMatrix.push(
+            riskArray.filter(risk => {
+              if (risk.subject !== 'AllDeals') return risk;
+            })[0]
+          );
+        }
       }
-    });
+    }
 
     const response = await parser.exportConclusion(
       audit.subsidiaryName,
@@ -517,7 +530,7 @@ exports.exportConclusion = async (req, res) => {
       audit.auditEnd,
       charterOrgLevels,
       violationModel,
-      riskMatrix
+      filteredRiskMatrix
     );
 
     //Данные для формирования наименования файла .docx
