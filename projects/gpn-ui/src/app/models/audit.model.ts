@@ -13,4 +13,5 @@ export interface Audit {
   createDate: Date;
   author: { _id: string; login: string; name: string };
   typeViewResult: number;
+  bookValues: any[];
 }

@@ -34,9 +34,9 @@
 
   <section>
     <form [formGroup]="auditForm">
-      <div *ngIf="aliases.controls" formArrayName="aliases">
-        <mat-form-field *ngFor="let alias of aliases.controls; let i=index">
-            <input matInput [formControlName]="i" [placeholder]="'Балансовая стоимость за ' + years[i] + ' год'">
+      <div *ngIf="bookValues.controls" formArrayName="bookValues">
+        <mat-form-field *ngFor="let bookValue of bookValues.controls; let i=index">
+            <input [errorStateMatcher]="errorMatcher" matInput [formControlName]="i" [placeholder]="'Балансовая стоимость за ' + years[i] + ' год'">
         </mat-form-field>
       </div>
       <label class='field-label'>Диапазон дат документов</label>

@@ -21,7 +21,8 @@ import {
   FormControl,
   FormGroup,
   FormGroupDirective,
-  NgForm
+  NgForm,
+  Validators
 } from '@root/node_modules/@angular/forms';
 import { ReplaySubject, Subject, SubscriptionLike } from 'rxjs';
 
@@ -84,7 +85,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
       {
         auditStart: Date,
         auditEnd: Date,
-        aliases: this.fb.array([])
+        bookValues: this.fb.array([])
       },
       {
         validator: this.dateValidator
@@ -92,12 +93,12 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  get aliases() {
-    return this.auditForm.get('aliases') as FormArray;
+  get bookValues() {
+    return this.auditForm.get('bookValues') as FormArray;
   }
 
-  addAlias() {
-    this.aliases.push(this.fb.control(''));
+  addBookValue() {
+    this.bookValues.push(this.fb.control('', [Validators.required]));
   }
 
   dateValidator(form: FormGroup) {
@@ -168,6 +169,15 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   CreateAudit() {
+    const values = [];
+    for (let i = 0; i < this.years.length; i++) {
+      const bookValue = {
+        year: this.years[i],
+        value: this.bookValues.value[i]
+      };
+      values.push(bookValue);
+    }
+
     const newAudit: Audit = {
       subsidiaryName: this.subsidiaryCtrl.value.name,
       subsidiary: this.subsidiaryCtrl.value,
@@ -181,7 +191,8 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
       comments: [],
       createDate: new Date(),
       author: null,
-      charters: this.selectedCharters
+      charters: this.selectedCharters,
+      bookValues: values
     };
 
     this.subscriptions.push(
@@ -195,13 +206,19 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   valid(): boolean {
+    // console.log(this.bookValues);
+    let bookValueValidator = true;
+    this.bookValues.controls.forEach(control => {
+      if (!control.value) bookValueValidator = false;
+    });
     return (
       this._ftpUrl != null &&
       this._ftpUrl.toString().length > 0 &&
       this._auditEnd != null &&
       this._auditStart != null &&
       this.subsidiaryCtrl.value != null &&
-      this._auditStart <= this._auditEnd
+      this._auditStart <= this._auditEnd &&
+      bookValueValidator
     );
   }
 
@@ -219,10 +236,10 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
       const startYear = this._auditStart.getFullYear() - 1;
       const endYear = this._auditEnd.getFullYear() - 1;
       this.years = [];
-      this.aliases.clear();
+      this.bookValues.clear();
       for (let i = startYear; i <= endYear; i++) {
         this.years.push(i);
-        this.addAlias();
+        this.addBookValue();
       }
     }
   }
