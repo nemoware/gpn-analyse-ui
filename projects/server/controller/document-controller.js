@@ -679,7 +679,8 @@ function setToDate(charters) {
   // дата "по" будет равна следующей дате из массива
   for (const charter of charters) {
     charter.toDate =
-      dates[dates.indexOf(charter.fromDate.getTime().toString()) + 1];
+      dates[dates.indexOf(charter.fromDate.getTime().toString()) + 1] -
+      86400000;
   }
 }
 
