@@ -530,7 +530,7 @@ exports.exportConclusion = async (req, res) => {
       audit.auditEnd,
       charterOrgLevels,
       violationModel,
-      filteredRiskMatrix
+      [...new Set(filteredRiskMatrix)]
     );
 
     //Данные для формирования наименования файла .docx
