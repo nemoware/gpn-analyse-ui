@@ -171,10 +171,8 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   CreateAudit() {
     const values = [];
     for (let i = 0; i < this.years.length; i++) {
-      const bookValue = {
-        year: this.years[i],
-        value: this.bookValues.value[i]
-      };
+      const bookValue = {};
+      bookValue[this.years[i]] = this.bookValues.value[i];
       values.push(bookValue);
     }
 

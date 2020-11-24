@@ -13,12 +13,7 @@ module.exports = (mongoose, Schema) => {
       createDate: Date,
       violations: [Object],
       author: Object,
-      bookValues: [
-        {
-          year: String,
-          value: String
-        }
-      ],
+      bookValues: Object,
       links: [
         {
           fromId: ObjectId,
