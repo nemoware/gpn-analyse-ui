@@ -12,6 +12,7 @@ import {
   DateAdapter,
   ErrorStateMatcher,
   MAT_DIALOG_DATA,
+  MatDatepickerInputEvent,
   MatDialogRef,
   MatSelect
 } from '@root/node_modules/@angular/material';
@@ -220,9 +221,26 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  changeDate(event) {
-    const d = event.target.value.replace('_', '0').split('.');
-    if (event.target.id === '_auditStart')
+  changeSubsidiary(e) {
+    if (e) {
+      this.selectedSubsidiary = e.value;
+      this.selectedCharters = [];
+      this.selectCharters.writeValue(null);
+      this.charters = [];
+      this.subscriptions.push(
+        this.auditservice
+          .getCharter(e.value.id !== this.allSubs.name ? e.value.id : null)
+          .subscribe(data => {
+            this.charters = data;
+          })
+      );
+    }
+  }
+
+  matDateChange(event: MatDatepickerInputEvent<unknown>) {
+    // @ts-ignore
+    const d = event.targetElement.value.replace('_', '0').split('.');
+    if (event.targetElement.id === '_auditStart')
       this._auditStart = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
     else this._auditEnd = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
 
@@ -239,22 +257,6 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.years.push(i);
         this.addBookValue();
       }
-    }
-  }
-
-  changeSubsidiary(e) {
-    if (e) {
-      this.selectedSubsidiary = e.value;
-      this.selectedCharters = [];
-      this.selectCharters.writeValue(null);
-      this.charters = [];
-      this.subscriptions.push(
-        this.auditservice
-          .getCharter(e.value.id !== this.allSubs.name ? e.value.id : null)
-          .subscribe(data => {
-            this.charters = data;
-          })
-      );
     }
   }
 }
