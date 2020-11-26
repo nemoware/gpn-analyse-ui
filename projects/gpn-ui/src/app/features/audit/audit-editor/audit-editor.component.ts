@@ -39,7 +39,8 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   documentType: string[];
   changed = false;
   selectedAttribute: string;
-
+  selectedType: string;
+  listOfDocumentTypes = ['CONTRACT', 'CHARTER', 'PROTOCOL'];
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -81,6 +82,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
         this.attributes = Helper.json2array(this.document.analysis.attributes);
       } else this.attributes = [];
       if (needRefresh) this.view_doc.refreshView(this.attributes);
+      this.selectedType = this.document.documentType;
       this.changeDetectorRefs.detectChanges();
     });
   }
@@ -108,7 +110,11 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   }
 
   saveChanges() {
-    this.view_doc.saveChanges();
+    if (this.selectedType === this.document.documentType) {
+      this.view_doc.saveChanges();
+    } else {
+      this.view_doc.saveChanges(this.selectedType);
+    }
     if (this.competencecharts)
       this.competencecharts.refreshData(this.view_doc.attributes);
   }
@@ -135,5 +141,10 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
           alert(error.message());
         }
       );
+  }
+
+  selectionChanged() {
+    this.changed = this.selectedType !== this.document.documentType;
+    console.log(this.changed);
   }
 }

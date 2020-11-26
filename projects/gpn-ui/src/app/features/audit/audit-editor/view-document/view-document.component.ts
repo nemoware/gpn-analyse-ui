@@ -445,7 +445,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  saveChanges() {
+  saveChanges(documentType: string = null) {
     const atr = {};
     this.attributes.forEach(
       item =>
@@ -483,10 +483,12 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     if (!wrongMarking) {
-      this.auditservice.updateDocument(this.document._id, atr).subscribe(() => {
-        this.changed = false;
-        this.refresh.emit();
-      });
+      this.auditservice
+        .updateDocument(this.document._id, atr, documentType)
+        .subscribe(() => {
+          this.changed = false;
+          this.refresh.emit();
+        });
     } else {
       window.alert('Вы не указали значение суммы или единицу измерения!');
     }

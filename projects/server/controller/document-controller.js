@@ -205,6 +205,10 @@ exports.updateDocument = async (req, res) => {
     return logger.logError(req, res, 'Document not found', 404);
   }
 
+  // if (req.body.documentType && document.parse.documentType!==req.body.documentType){
+  //   document.parse.documentType = req.body.documentType;
+  // }
+
   if (req.body.user) {
     const user = req.body.user;
     document.user.attributes = {};

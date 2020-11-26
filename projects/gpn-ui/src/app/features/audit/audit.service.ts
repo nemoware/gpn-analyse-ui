@@ -84,12 +84,16 @@ export class AuditService {
     });
   }
 
-  public updateDocument(id: string, attributes: {}): Observable<Document> {
+  public updateDocument(
+    id: string,
+    attributes: {},
+    documentType
+  ): Observable<Document> {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('_id', id);
     return this.http.put<Document>(
       `${api}/document`,
-      { user: attributes },
+      { user: attributes, documentType },
       { params: httpParams }
     );
   }
