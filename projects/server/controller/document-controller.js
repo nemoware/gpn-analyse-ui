@@ -267,6 +267,14 @@ exports.updateDocument = async (req, res) => {
     await document.save();
 
     if (document.parse.documentType === 'CHARTER') {
+      const audits = await Audit.find({
+        charters: document._id,
+        status: { $ne: 'Approved' }
+      });
+      for (const audit of audits) {
+        audit.status = 'InWork';
+        await audit.save();
+      }
       await logger.log(
         req,
         res,
