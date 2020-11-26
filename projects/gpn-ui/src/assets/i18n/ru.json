@@ -114,8 +114,8 @@
 
   "PARSE_ERROR": "С ОШИБКАМИ",
 
-  "AllMembers": "Общее собрание участников",
-  "ShareholdersGeneralMeeting": "Общее собрание акционеров",
+  "AllMembers": "Общее собрание участников/Единственный участник",
+  "ShareholdersGeneralMeeting": "Общее собрание акционеров/Единственный акционер",
   "BoardOfDirectors": "Совет директоров",
   "BoardOfCompany": "Правление общества",
   "CEO": "Генеральный директор",
