@@ -13,6 +13,8 @@ import {
 import {
   FormControl,
   FormGroup,
+  ValidationErrors,
+  ValidatorFn,
   Validators
 } from '@root/node_modules/@angular/forms';
 import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field';
@@ -33,7 +35,11 @@ export class RiskMatrixFormComponent implements OnInit {
 
   listOfDocumentTypes = ['CONTRACT', 'CHARTER', 'PROTOCOL'];
   subscriptions: Subscription[] = [];
-
+  risk: string = null;
+  recommendation: string = null;
+  disadvantage: string = null;
+  violation: string = null;
+  subject: string = null;
   listOfSubjects = [
     'AllDeals',
     'Charity',
@@ -99,9 +105,11 @@ export class RiskMatrixFormComponent implements OnInit {
       this.controlForm = new FormGroup({
         violationControl: new FormControl('', [Validators.required]),
         subjectControl: new FormControl('AllDeals'),
-        riskControl: new FormControl(''),
-        recommendationControl: new FormControl(''),
-        disadvantageControl: new FormControl('')
+        riskControl: new FormControl('', [this.ValidateRisk()]),
+        recommendationControl: new FormControl('', [
+          this.ValidateRecommendation()
+        ]),
+        disadvantageControl: new FormControl('', [this.ValidateDisadvantage()])
       });
     } else {
       this.controlForm = new FormGroup({
@@ -109,14 +117,27 @@ export class RiskMatrixFormComponent implements OnInit {
           Validators.required
         ]),
         subjectControl: new FormControl(data.risk.subject),
-        riskControl: new FormControl(data.risk.risk + '\n'),
-        recommendationControl: new FormControl(data.risk.recommendation + '\n'),
-        disadvantageControl: new FormControl(data.risk.disadvantage + '\n')
+        riskControl: new FormControl(data.risk.risk + '\n', [
+          this.ValidateRisk()
+        ]),
+        recommendationControl: new FormControl(
+          data.risk.recommendation + '\n',
+          [this.ValidateRecommendation()]
+        ),
+        disadvantageControl: new FormControl(data.risk.disadvantage + '\n', [
+          this.ValidateDisadvantage()
+        ])
       });
       if (data.risk.subject) {
         this.selectedType = 'CONTRACT';
       }
+      this.risk = data.risk.risk;
+      this.disadvantage = data.risk.disadvantage;
+      this.recommendation = data.risk.recommendation;
+      this.violation = data.risk.violation;
+      this.subject = data.risk.subject;
     }
+    this.controlForm.setValidators(this.uniqueValidator());
   }
 
   ngOnInit() {}
@@ -169,5 +190,94 @@ export class RiskMatrixFormComponent implements OnInit {
         )
       );
     }
+  }
+
+  ValidateRisk(): ValidatorFn {
+    return (control: FormControl): ValidationErrors => {
+      if (control.value === '') {
+        return;
+      }
+      let flag = true;
+      for (const array of this.data.dataSource) {
+        if (
+          control.value.trim() === array.risk &&
+          control.value.trim() !== this.risk
+        ) {
+          flag = false;
+        }
+      }
+      if (!flag) {
+        return { RepeatedRisk: true };
+      }
+      return;
+    };
+  }
+
+  ValidateRecommendation(): ValidatorFn {
+    return (control: FormControl): ValidationErrors => {
+      if (control.value === '') {
+        return;
+      }
+      let flag = true;
+      for (const array of this.data.dataSource) {
+        if (
+          control.value.trim() === array.recommendation &&
+          control.value.trim() !== this.recommendation
+        ) {
+          flag = false;
+        }
+      }
+      if (!flag) {
+        return { RepeatedRecommendation: true };
+      }
+      return;
+    };
+  }
+
+  ValidateDisadvantage(): ValidatorFn {
+    return (control: FormControl): ValidationErrors => {
+      if (control.value === '') {
+        return;
+      }
+      let flag = true;
+      for (const array of this.data.dataSource) {
+        if (
+          control.value.trim() === array.disadvantage.trim() &&
+          control.value.trim() !== this.disadvantage
+        ) {
+          flag = false;
+        }
+      }
+      if (!flag) {
+        return { RepeatedDisadvantage: true };
+      }
+      return;
+    };
+  }
+
+  public uniqueValidator(): ValidatorFn {
+    return (group: FormGroup): ValidationErrors => {
+      if (
+        group.controls['violationControl'].value != null &&
+        group.controls['subjectControl'].value != null
+      ) {
+        const control1 = group.controls['violationControl'].value;
+        const control2 = group.controls['subjectControl'].value;
+        let flag = true;
+        for (const array of this.data.dataSource) {
+          if (
+            control1 === array.violation &&
+            control2 === array.subject &&
+            !(control1 === this.violation && control2 === this.subject)
+          ) {
+            flag = false;
+          }
+        }
+        if (!flag) {
+          return { isError: true };
+        }
+        return;
+      }
+    };
   }
 }

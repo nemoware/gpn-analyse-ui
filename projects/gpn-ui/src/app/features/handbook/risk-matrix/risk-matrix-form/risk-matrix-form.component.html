@@ -12,6 +12,9 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <mat-error *ngIf="controlForm.hasError('isError')">
+      Такое нарушение уже описано
+    </mat-error>
   </p>
 
   <p>
@@ -25,7 +28,7 @@
     </mat-form-field>
   </p>
 
-<ng-container *ngIf="selectedType==='Договор'|| !data.new">
+<ng-container *ngIf="selectedType==='CONTRACT'|| !data.new">
   <p>
     <mat-form-field color="accent">
       <mat-label>Предмет договора</mat-label>
@@ -47,6 +50,9 @@
                   cdkAutosizeMinRows="1"
                   formControlName="riskControl">
         </textarea>
+      <mat-error *ngIf="controlForm.controls['riskControl'].hasError('RepeatedRisk')">
+        Такое описание риска уже существует
+      </mat-error>
     </mat-form-field>
   </p>
 
@@ -59,6 +65,9 @@
                   cdkAutosizeMinRows="1"
                   formControlName="recommendationControl">
         </textarea>
+      <mat-error *ngIf="controlForm.controls['recommendationControl'].hasError('RepeatedRecommendation')">
+        Такое описание рекомендации уже существует
+      </mat-error>
     </mat-form-field>
   </p>
 
@@ -71,6 +80,9 @@
                   cdkAutosizeMinRows="1"
                   formControlName="disadvantageControl">
         </textarea>
+      <mat-error *ngIf="controlForm.controls['disadvantageControl'].hasError('RepeatedDisadvantage')">
+        Такое описание недостатка уже существует
+      </mat-error>
     </mat-form-field>
   </p>
 
