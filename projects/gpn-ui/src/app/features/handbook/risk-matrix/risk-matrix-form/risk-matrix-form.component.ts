@@ -31,7 +31,7 @@ import { Subscription } from '@root/node_modules/rxjs';
 export class RiskMatrixFormComponent implements OnInit {
   @ViewChild('autosize', { static: false }) autosize: CdkTextareaAutosize;
 
-  listOfDocumentTypes = ['Договор', 'Устав', 'Протокол'];
+  listOfDocumentTypes = ['CONTRACT', 'CHARTER', 'PROTOCOL'];
   subscriptions: Subscription[] = [];
 
   listOfSubjects = [
@@ -113,6 +113,9 @@ export class RiskMatrixFormComponent implements OnInit {
         recommendationControl: new FormControl(data.risk.recommendation + '\n'),
         disadvantageControl: new FormControl(data.risk.disadvantage + '\n')
       });
+      if (data.risk.subject) {
+        this.selectedType = 'CONTRACT';
+      }
     }
   }
 
@@ -143,7 +146,7 @@ export class RiskMatrixFormComponent implements OnInit {
         .toString()
         .trim()
     };
-    if (this.selectedType !== 'Договор') {
+    if (this.selectedType !== 'CONTRACT') {
       newRisk.subject = '';
     }
     if (this.data.new) {

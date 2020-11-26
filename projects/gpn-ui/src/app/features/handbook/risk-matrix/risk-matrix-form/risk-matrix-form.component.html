@@ -19,7 +19,7 @@
       <mat-label>Тип документа</mat-label>
         <mat-select [(value)]="selectedType">
           <mat-option *ngFor="let type of listOfDocumentTypes" [value]="type">
-            {{type }}
+            {{type | translate}}
           </mat-option>
         </mat-select>
     </mat-form-field>
