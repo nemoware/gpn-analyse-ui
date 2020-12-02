@@ -31,6 +31,11 @@ import { Audit } from '@app/models/audit.model';
 
 import { FileModel } from '@app/models/file-model';
 import { DatePipe } from '@root/node_modules/@angular/common';
+import { ConclusionModel } from '@app/models/conclusion-model';
+// tslint:disable-next-line:import-blacklist
+import { take } from '@root/node_modules/rxjs/internal/operators';
+import { NgZone, ViewChild } from '@root/node_modules/@angular/core';
+import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field';
 
 interface Node {
   _id?: string;
@@ -65,6 +70,7 @@ const orderTypes = ['CHARTER', 'CONTRACT', 'PROTOCOL'];
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
+  @ViewChild('autosize', { static: false }) autosize: CdkTextareaAutosize;
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   faEye = faEye;
@@ -89,6 +95,9 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   files: FileModel[];
   loading = false;
   mouseOverID = '';
+  conclusion: ConclusionModel;
+  loadingConclusion = true;
+  changed = false;
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   private _transformer = (node: Node, level: number) => {
@@ -114,7 +123,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     private auditservice: AuditService,
     private changeDetectorRefs: ChangeDetectorRef,
     private router: Router,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private _ngZone: NgZone
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
@@ -237,6 +247,11 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         }
         this.refreshTree();
       });
+    } else if (this.selectedPage === 4) {
+      this.auditservice.getConclusion(this.IdAudit).subscribe(data => {
+        this.conclusion = data;
+        this.loadingConclusion = false;
+      });
     }
     this.loading = false;
   }
@@ -325,5 +340,34 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       ia[i] = byteString.charCodeAt(i);
     }
     return new Blob([ia], { type: 'octet/stream' });
+  }
+
+  triggerResize() {
+    // Wait for changes to be applied, then trigger textarea resize.
+    this._ngZone.onStable
+      .pipe(take(1))
+      .subscribe(() => this.autosize.resizeToFitContent(true));
+  }
+
+  saveConclusion() {
+    this.auditservice
+      .postConclusion(this.IdAudit, this.conclusion)
+      .subscribe(() => {
+        this.changed = false;
+      });
+  }
+
+  setChanged() {
+    this.changed = true;
+  }
+
+  public goToAttribute(id) {
+    const element = document.getElementById(id);
+    if (element != null)
+      element.scrollIntoView({
+        block: 'center',
+        behavior: 'smooth'
+      });
+    return false;
   }
 }

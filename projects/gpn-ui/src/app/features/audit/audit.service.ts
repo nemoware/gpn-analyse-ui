@@ -10,6 +10,7 @@ import { FileModel } from '@app/models/file-model';
 import { LinksDocumentModel } from '@app/models/links-document-model';
 import { ViolationModel } from '@app/models/violation-model';
 import { ExportDocumentModel } from '@app/models/export-document.model';
+import { ConclusionModel } from '@app/models/conclusion-model';
 
 const api = '/api';
 
@@ -185,6 +186,25 @@ export class AuditService {
     return this.http.post<ExportDocumentModel>(
       `${api}/audit/exportConclusion`,
       { id }
+    );
+  }
+
+  public getConclusion(id: string): Observable<ConclusionModel> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('id', id);
+    return this.http.get<ConclusionModel>(`${api}/audit/conclusion`, {
+      params: httpParams
+    });
+  }
+
+  public postConclusion(
+    id: string,
+    conclusion: ConclusionModel
+  ): Observable<any> {
+    return this.http.put<ConclusionModel>(
+      `${api}/audit/conclusion`,
+      { id, conclusion },
+      { responseType: 'text' as 'json' }
     );
   }
 }

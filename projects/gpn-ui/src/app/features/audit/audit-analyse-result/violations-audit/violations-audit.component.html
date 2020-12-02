@@ -46,7 +46,7 @@
         </div>
       </div>
 
-      <div *ngIf="row.document.warnings">
+      <div *ngIf="row.document.warnings && !conclusion">
         <span class='warning'><b>В результате выполненного анализа в документах были определены не все атрибуты</b></span>
         <li *ngFor="let w of row.document.warnings"> {{w.code | translate}}</li>
       </div>

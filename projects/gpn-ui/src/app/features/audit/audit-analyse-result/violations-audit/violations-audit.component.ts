@@ -44,6 +44,7 @@ export class ViolationsAuditComponent implements OnInit {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input() idAudit: string;
+  @Input() conclusion: boolean;
   constructor(
     private auditservice: AuditService,
     private changeDetectorRefs: ChangeDetectorRef,
@@ -79,7 +80,12 @@ export class ViolationsAuditComponent implements OnInit {
       if (data) {
         this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
         this.dataSource.sort = this.sort;
-        this.dataSource.data = data;
+        this.dataSource.data = data.filter(x => {
+          return x.violation_type;
+        });
+        if (this.conclusion) {
+          this.col.shift();
+        }
         this.changeDetectorRefs.detectChanges();
       }
     });

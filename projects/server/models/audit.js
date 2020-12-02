@@ -20,7 +20,15 @@ module.exports = (mongoose, Schema) => {
           toId: ObjectId
         }
       ],
-      charters: [ObjectId]
+      charters: [ObjectId],
+      conclusion: {
+        intro: String,
+        shortSummary: String,
+        strengths: String,
+        disadvantages: String,
+        recommendations: String,
+        risks: String
+      }
     },
     { toJSON: { virtuals: true } }
   );
