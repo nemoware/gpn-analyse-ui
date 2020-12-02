@@ -147,7 +147,11 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       .subscribe(data => {
         this.audit = data[0];
         this.maxPageIndex = this.audit.typeViewResult;
-        this.selectedPage = this.audit.typeViewResult;
+        if (this.maxPageIndex === 4) {
+          this.selectedPage = 3;
+        } else {
+          this.selectedPage = this.audit.typeViewResult;
+        }
       });
   }
 
