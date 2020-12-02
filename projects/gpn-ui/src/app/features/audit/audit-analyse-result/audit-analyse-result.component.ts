@@ -36,6 +36,7 @@ import { ConclusionModel } from '@app/models/conclusion-model';
 import { take } from '@root/node_modules/rxjs/internal/operators';
 import { NgZone, ViewChild } from '@root/node_modules/@angular/core';
 import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field';
+import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 
 interface Node {
   _id?: string;
@@ -124,7 +125,8 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     private changeDetectorRefs: ChangeDetectorRef,
     private router: Router,
     public datepipe: DatePipe,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    private spinner: NgxSpinnerService
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
@@ -354,10 +356,12 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   }
 
   saveConclusion() {
+    this.spinner.show();
     this.auditservice
       .postConclusion(this.IdAudit, this.conclusion)
       .subscribe(() => {
         this.changed = false;
+        this.spinner.hide();
       });
   }
 

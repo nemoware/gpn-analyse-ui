@@ -27,7 +27,8 @@ module.exports = (mongoose, Schema) => {
         strengths: String,
         disadvantages: String,
         recommendations: String,
-        risks: String
+        risks: String,
+        corporateStructure1: String
       }
     },
     { toJSON: { virtuals: true } }

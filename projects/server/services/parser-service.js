@@ -1,7 +1,7 @@
 const fs = require('fs-promise');
 const request = require('request');
 const url = require('../config').parser.url;
-const logo = require('../config').conclusion.logo;
+const template = require('../config').conclusion.template;
 const { Document } = require('../models');
 const path = require('path');
 const logger = require('../core/logger');
@@ -279,19 +279,26 @@ async function exportConclusion(
   createDate,
   auditStart,
   auditEnd,
-  charterOrgLevels,
   violations,
-  riskMatrix
+  conclusion
 ) {
   const body = {
-    base64Logo: logo,
+    base64Template: template,
     subsidiaryName: subsidiaryName,
     auditDate: createDate,
+    violations: violations,
     auditStart: auditStart,
     auditEnd: auditEnd,
-    riskMatrix: riskMatrix,
-    orgLevels: charterOrgLevels,
-    violations: violations
+    intro: conclusion.intro,
+    shortSummary: conclusion.shortSummary,
+    corporateStructure1: conclusion.corporateStructure1,
+    corporateStructure2: conclusion.corporateStructure2,
+    results1: conclusion.results1,
+    results2: conclusion.results2,
+    strengths: conclusion.strengths,
+    disadvantages: conclusion.disadvantages,
+    risks: conclusion.risks,
+    recommendations: conclusion.recommendations
   };
 
   // const fs = require('fs');

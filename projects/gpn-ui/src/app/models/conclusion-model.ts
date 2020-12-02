@@ -5,4 +5,5 @@ export interface ConclusionModel {
   disadvantages: string;
   recommendations: string;
   risks: string;
+  corporateStructure1: string;
 }
