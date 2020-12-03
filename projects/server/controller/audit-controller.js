@@ -568,7 +568,7 @@ async function generateConclusion(audit) {
   });
   conclusion.risks = '';
   risks.forEach(x => (conclusion.risks += x + '\n'));
-  console.log(conclusion);
+  // console.log(conclusion);
   return conclusion;
 }
 
