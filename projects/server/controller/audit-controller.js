@@ -506,6 +506,7 @@ async function generateConclusion(audit) {
   const subsidiary = await Subsidiary.findOne({ _id: audit.subsidiaryName });
   const entity_type = subsidiary.legal_entity_type;
   const conclusion = {};
+  conclusion.legal_entity_type = entity_type;
   conclusion.intro = `В целях исполнения решения Совета директоров ОАО «Газпром» от 05.09.2013 г. № 2243, поручения начальника Департамента по управлению имуществом и корпоративными отношениями ОАО «Газпром» Михайловой Е.В. от 25.11.2013 г. № 01/05-9226, руководством ПАО «Газпром нефть» (далее – «Компания», «ГПН») было принято решение о проведении Департаментом корпоративного и проектного сопровождения ГПН (далее – «ДКиПС») в период ${moment(
     audit.auditStart
   ).format('MMMM YYYY')} г. по ${moment(audit.auditEnd).format(
@@ -567,6 +568,7 @@ async function generateConclusion(audit) {
   });
   conclusion.risks = '';
   risks.forEach(x => (conclusion.risks += x + '\n'));
+  console.log(conclusion);
   return conclusion;
 }
 

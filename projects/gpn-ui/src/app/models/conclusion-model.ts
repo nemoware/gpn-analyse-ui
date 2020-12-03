@@ -6,4 +6,5 @@ export interface ConclusionModel {
   recommendations: string;
   risks: string;
   corporateStructure1: string;
+  legal_entity_type: string;
 }

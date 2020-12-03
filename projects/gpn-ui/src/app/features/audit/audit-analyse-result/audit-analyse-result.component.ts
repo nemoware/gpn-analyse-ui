@@ -254,10 +254,18 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         this.refreshTree();
       });
     } else if (this.selectedPage === 4) {
-      this.auditservice.getConclusion(this.IdAudit).subscribe(data => {
-        this.conclusion = data;
-        this.loadingConclusion = false;
-      });
+      this.spinner.show();
+      this.auditservice.getConclusion(this.IdAudit).subscribe(
+        data => {
+          this.conclusion = data;
+          this.loadingConclusion = false;
+          this.spinner.hide();
+        },
+        error => {
+          this.spinner.hide();
+          window.alert('В проверке нет уставов!');
+        }
+      );
     }
     this.loading = false;
   }
