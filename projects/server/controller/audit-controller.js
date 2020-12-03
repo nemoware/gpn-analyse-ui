@@ -511,7 +511,7 @@ async function generateConclusion(audit) {
     audit.auditStart
   ).format('MMMM YYYY')} г. - ${moment(audit.auditEnd).format(
     'MMMM YYYY'
-  )} аудита практики корпоративного управления (далее – «Корпоративный аудит») в дочерних обществах (далее – «ДО») Компании, в частности ${entity_type} «${
+  )} г. аудита практики корпоративного управления (далее – «Корпоративный аудит») в дочерних обществах (далее – «ДО») Компании, в частности ${entity_type} «${
     audit.subsidiaryName
   }» (далее – «Общество»).
 Цель Корпоративного аудита – выявление сильных и слабых сторон существующей в ${entity_type} «${
@@ -521,7 +521,7 @@ async function generateConclusion(audit) {
   }» требований системы корпоративного управления; выявление задач, которые необходимо решить в области корпоративного управления; подготовка конкретных рекомендаций комплексного плана по совершенствованию системы корпоративного управления ${entity_type} «${
     audit.subsidiaryName
   }»; распространение лучших практик в группе Газпром нефть.
-В период с ${moment(audit.createDate).format('DD.MM.YYYY')} г. по «${
+В период с ${moment(audit.createDate).format('DD.MM.YYYY')} г. по ${
     audit.status === 'Approved'
       ? moment(audit.auditEnd).format('DD.MM.YYYY')
       : moment(Date.now()).format('DD.MM.YYYY')
