@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { Audit } from '@app/models/audit.model';
+import { Audit, DataSourceAudit } from '@app/models/audit.model';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { Document } from '@app/models/document.model';
 import { KindAttributeModel } from '@app/models/kind-attribute-model';
@@ -206,5 +206,29 @@ export class AuditService {
       { id, conclusion },
       { responseType: 'text' as 'json' }
     );
+  }
+
+  fetch(
+    filterValue: Array<{ name: string; value: any }>,
+    take: number,
+    pageIndex: number,
+    column: string,
+    sort: string
+  ): Observable<DataSourceAudit> {
+    let httpParams = new HttpParams();
+    if (filterValue) {
+      for (const filter of filterValue) {
+        httpParams = httpParams.append(filter.name, filter.value);
+      }
+    }
+    if (take) httpParams = httpParams.append('take', take.toString());
+    if (pageIndex)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+    if (column) httpParams = httpParams.append('column', column.toString());
+    if (sort) httpParams = httpParams.append('sort', sort.toString());
+
+    return this.http.get<DataSourceAudit>(`${api}/audit/fetch`, {
+      params: httpParams
+    });
   }
 }

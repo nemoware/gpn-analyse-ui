@@ -1,33 +1,19 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  ViewChild,
-  AfterViewInit,
-  ChangeDetectorRef,
-  OnDestroy
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AuditService } from '@app/features/audit/audit.service';
+import { ViewChild } from '@root/node_modules/@angular/core';
 import {
   MatDialog,
   MatPaginator,
-  MatSort,
-  MatTableDataSource
+  MatSort
 } from '@root/node_modules/@angular/material';
-import { Audit } from '@app/models/audit.model';
-import { AuditService } from '@app/features/audit/audit.service';
-import { CreateAuditComponent } from '@app/features/audit/create-audit/create-audit.component';
+import { AuditDataSource } from '@app/features/audit/audit-data-source';
+import { merge } from '@root/node_modules/rxjs';
+import { tap } from '@root/node_modules/rxjs/operators';
 import { DatePipe } from '@root/node_modules/@angular/common';
-import {
-  faSearch,
-  faAngleDown,
-  faCommentDots,
-  faTrashAlt,
-  faCircle
-} from '@fortawesome/free-solid-svg-icons';
-import { AuditResultComponent } from '@app/features/audit/audit-parser-result/audit-parser-result.component';
+import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { CreateAuditComponent } from '@app/features/audit/create-audit/create-audit.component';
 import { Router } from '@root/node_modules/@angular/router';
-import { SubscriptionLike } from '@root/node_modules/rxjs';
-
 @Component({
   selector: 'gpn-list.audit',
   templateUrl: './list.audit.component.html',
@@ -35,11 +21,21 @@ import { SubscriptionLike } from '@root/node_modules/rxjs';
   providers: [AuditService, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListAuditComponent implements OnInit, AfterViewInit, OnDestroy {
-  faSearch = faSearch;
-  faAngleDown = faAngleDown;
-  faTrashAlt = faTrashAlt;
-  faCircle = faCircle;
+export class ListAuditComponent implements OnInit {
+  constructor(
+    private auditService: AuditService,
+    private spinner: NgxSpinnerService,
+    private auditservice: AuditService,
+    public datepipe: DatePipe,
+    public dialog: MatDialog,
+    private router: Router
+  ) {}
+
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
+  defPageSize = 15;
+  dataSource: AuditDataSource;
   columns: string[] = [
     'subsidiaryName',
     'auditStart',
@@ -49,65 +45,53 @@ export class ListAuditComponent implements OnInit, AfterViewInit, OnDestroy {
     'status',
     'events'
   ];
-
-  dataSource = new MatTableDataSource();
-  activePageDataChunk = [];
-  audits: Audit[];
-  count = 0;
-  pageIndex = 0;
-  pageSize = 15;
-  lowValue = 0;
-  highValue = 15;
+  auditStatuses: string[] = [
+    'InWork',
+    'Loading',
+    'Finalizing',
+    'Done',
+    'New',
+    'Approved'
+  ];
+  _filterValue: [];
+  faTrashAlt = faTrashAlt;
   mouseOverIndex = -1;
-  delete = false;
-  subscription: SubscriptionLike;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
-  constructor(
-    private auditservice: AuditService,
-    public dialog: MatDialog,
-    private changeDetectorRefs: ChangeDetectorRef,
-    public datepipe: DatePipe,
-    private router: Router
-  ) {}
   ngOnInit() {
-    this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
-  }
-
-  ngAfterViewInit(): void {
-    this.refreshData();
-  }
-
-  refreshData(filter: Array<{ name: string; value: string }> = null) {
-    this.subscription = this.auditservice.getAudits(filter).subscribe(data => {
-      this.audits = data;
-      // console.log(data);
-      this.refreshViewTable();
-    });
-  }
-
-  refreshViewTable(audit: any = null) {
-    this.count = this.audits.length;
-    this.activePageDataChunk = this.audits.slice(0, this.pageSize);
-    this.dataSource = new MatTableDataSource(this.activePageDataChunk);
-    this.dataSource.sort = this.sort;
-    this.changeDetectorRefs.detectChanges();
-  }
-
-  createAudit() {
-    const dialogRef = this.dialog.open(CreateAuditComponent, {
-      width: '500px',
-      data: {}
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.audits.push(result);
-        this.refreshViewTable(result);
-        this.changeDetectorRefs.detectChanges();
+    this.dataSource = new AuditDataSource(this.auditService);
+    this.dataSource.loadAudits([], 'createDate', 'desc', 0, this.defPageSize);
+    this.dataSource.getLoadingState().subscribe(res => {
+      if (res) {
+        this.spinner.show();
+      } else {
+        this.spinner.hide();
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(tap(() => this.loadAuditsPage()))
+      .subscribe();
+  }
+
+  loadAuditsPage() {
+    this.dataSource.loadAudits(
+      this._filterValue,
+      this.sort.active,
+      this.sort.direction,
+      this.paginator.pageIndex,
+      this.paginator.pageSize
+    );
+  }
+
+  onApplyFilter(filterValue) {
+    this._filterValue = filterValue;
+    this.paginator.pageIndex = 0;
+    this.loadAuditsPage();
   }
 
   deleteAudit(element, event) {
@@ -122,12 +106,7 @@ export class ListAuditComponent implements OnInit, AfterViewInit, OnDestroy {
         )
       ) {
         this.auditservice.deleteAudit(element._id).subscribe(
-          data => {
-            this.audits = this.arrayRemove(this.audits, element);
-            this.refreshViewTable(
-              this.audits.length > 0 ? this.audits[0] : null
-            );
-          },
+          () => this.loadAuditsPage(),
           error => {
             alert(error.message());
           }
@@ -136,36 +115,16 @@ export class ListAuditComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  arrayRemove(arr, value) {
-    return arr.filter(item => {
-      return item !== value;
+  createAudit() {
+    const dialogRef = this.dialog.open(CreateAuditComponent, {
+      width: '500px',
+      data: {}
     });
-  }
-
-  getPaginatorData(event) {
-    if (event.pageIndex === this.pageIndex + 1) {
-      this.lowValue = this.lowValue + this.pageSize;
-      this.highValue = this.highValue + this.pageSize;
-    } else if (event.pageIndex === this.pageIndex - 1) {
-      this.lowValue = this.lowValue - this.pageSize;
-      this.highValue = this.highValue - this.pageSize;
-    }
-    this.pageIndex = event.pageIndex;
-
-    const firstCut = event.pageIndex * event.pageSize;
-    const secondCut = firstCut + event.pageSize;
-
-    this.activePageDataChunk = this.audits.slice(firstCut, secondCut);
-    this.dataSource = new MatTableDataSource(this.activePageDataChunk);
-    this.dataSource.sort = this.sort;
-  }
-
-  valueSearch(value: string) {
-    const filterVlaue = new Array<{ name: string; value: string }>();
-    if (value.length > 0) {
-      filterVlaue.push({ name: 'name', value: value });
-    }
-    this.refreshData(filterVlaue);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadAuditsPage();
+      }
+    });
   }
 
   openAuditResult(element) {
@@ -176,9 +135,5 @@ export class ListAuditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onMouseOver(index) {
     this.mouseOverIndex = index;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

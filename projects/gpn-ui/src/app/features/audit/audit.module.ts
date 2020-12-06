@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ListAuditComponent } from '@app/features/audit/list.audit/list.audit.component';
 import { SharedModule } from '@shared/shared.module';
 import { ListAuditRoutingModule } from '@app/features/audit/audit-routing.module';
+import { AuditFilterComponent } from './audit-filter/audit-filter.component';
 import { CreateAuditComponent } from './create-audit/create-audit.component';
 import { NgxMatSelectSearchModule } from '@root/node_modules/ngx-mat-select-search';
 import { ReactiveFormsModule } from '@root/node_modules/@angular/forms';
@@ -76,7 +77,8 @@ import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
     DocStateComponent,
     ViolationsAuditComponent,
     MaskDateDirective,
-    SortValuePipe
+    SortValuePipe,
+    AuditFilterComponent
   ],
   imports: [
     CommonModule,

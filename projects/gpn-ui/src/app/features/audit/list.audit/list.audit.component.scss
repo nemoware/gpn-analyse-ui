@@ -1,3 +1,55 @@
+@import '../../../../styles-variables';
+@import '../../../../themes/default-theme';
+
+.table-container {
+  padding-top: 5px;
+  position: relative;
+  max-height: 85vh;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-subsidiaryName {
+  width: 50% !important;
+}
+
+.mat-column-auditStart {
+  width: 10% !important;
+}
+
+.mat-column-auditEnd {
+  width: 10% !important;
+}
+
+.mat-column-checkedDocumentCount {
+  width: 5% !important;
+}
+
+.mat-column-createDate {
+  width: 15% !important;
+}
+
+.left_group {
+  margin-left: 10px;
+  height: 80vh;
+  width: 20%;
+  float: left;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.right_group {
+  margin-right: 10px;
+  height: 80vh;
+  width: 78%;
+  float: right;
+}
+
 .search-container > * {
   width: 50%;
 }

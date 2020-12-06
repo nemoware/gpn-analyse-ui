@@ -120,6 +120,95 @@ exports.getAudits = async (req, res) => {
   }
 };
 
+exports.fetchAudits = async (req, res) => {
+  try {
+    let sort;
+    if (req.query.column) {
+      sort = {
+        [req.query.column === 'subsidiaryName'
+          ? 'subsidiary.name'
+          : req.query.column]: req.query.sort === 'asc' ? 1 : -1
+      };
+    }
+    const where = [];
+    const subsidiaryName = req.query.subsidiaryName;
+    const auditStatuses = req.query.auditStatuses;
+    let dateTo = req.query.dateTo;
+    const dateFrom = req.query.dateFrom;
+    const createDate = req.query.createDate;
+
+    if (auditStatuses) {
+      where.push({ status: { $in: auditStatuses.split(',') } });
+    }
+
+    if (dateTo) {
+      dateTo = toDate(dateTo);
+      dateTo.setDate(dateTo.getDate() + 1);
+      where.push({ auditEnd: { $lt: dateTo } });
+    }
+
+    if (dateFrom) {
+      where.push({ auditStart: { $gte: toDate(dateFrom) } });
+    }
+
+    if (createDate) {
+      const dateTo = toDate(createDate);
+      dateTo.setDate(dateTo.getDate() + 1);
+      where.push({
+        $and: [
+          { createDate: { $lt: dateTo } },
+          { createDate: { $gte: toDate(createDate) } }
+        ]
+      });
+    }
+
+    if (subsidiaryName) {
+      where.push({
+        'subsidiary.name': {
+          $regex: `.*${subsidiaryName}.*`,
+          $options: 'i'
+        }
+      });
+    }
+
+    let count;
+    let audits;
+
+    if (where.length) {
+      count = await Audit.countDocuments({ $and: where });
+      audits = await Audit.find({ $and: where })
+        .lean()
+        .setOptions({
+          skip: +req.query.skip,
+          limit: +req.query.take,
+          sort
+        });
+    } else {
+      count = await Audit.countDocuments();
+      audits = await Audit.find()
+        .lean()
+        .setOptions({
+          skip: +req.query.skip,
+          limit: +req.query.take,
+          sort
+        });
+    }
+    audits = audits.map(a => {
+      a.subsidiaryName = a.subsidiary.name;
+      return a;
+    });
+
+    res.send({ count, audits });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+function toDate(s) {
+  const parts = s.split('.');
+  return new Date(parts[2], parts[1] - 1, parts[0], 3);
+}
+
 exports.deleteAudit = async (req, res) => {
   if (!req.query.id) {
     let msg = 'Cannot delete audit because id is null';

@@ -15,3 +15,8 @@ export interface Audit {
   typeViewResult: number;
   bookValues: any[];
 }
+
+export interface DataSourceAudit {
+  count: number;
+  items: Audit[];
+}
