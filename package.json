@@ -1,6 +1,6 @@
 {
   "name": "gpn-ui",
-  "version": "v0.09",
+  "version": "v0.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

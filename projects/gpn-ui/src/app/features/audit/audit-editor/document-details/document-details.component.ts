@@ -224,4 +224,18 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
   focusedDoc(id) {
     this.focusedId = id;
   }
+
+  getAttrValue(attrName: string, default_value = null) {
+    let attributes;
+    if (this.document.user && this.document.user.attributes)
+      attributes = this.document.user.attributes;
+    else {
+      attributes = this.document.analysis.attributes;
+    }
+    const atr = attributes.subject;
+    if (atr) {
+      return atr.value;
+    }
+    return default_value;
+  }
 }

@@ -84,3 +84,11 @@
     </span>{{ document.filename | fileName }}</span></a>
   </section>
 </ng-container>
+
+<mat-divider></mat-divider>
+<ng-container *ngIf="document.documentType==='CONTRACT'">
+  <section>
+    <label class='field-label'>Предмет договора</label>
+    <span>{{getAttrValue('subject', 'н/д') | translate}}</span>
+  </section>
+</ng-container>
