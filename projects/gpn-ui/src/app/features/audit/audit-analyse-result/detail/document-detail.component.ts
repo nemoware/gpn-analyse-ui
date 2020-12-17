@@ -37,7 +37,31 @@ const cols_by_type = {
     'analyze_state'
   ],
   CHARTER: ['star', 'date', 'shevron', 'org', 'warnings', 'analyze_state'],
-  PROTOCOL: ['star', 'date', 'org', 'org_level', 'warnings', 'analyze_state']
+  PROTOCOL: ['star', 'date', 'org', 'org_level', 'warnings', 'analyze_state'],
+  ANNEX: [
+    'star',
+    'date',
+    'number',
+    'value',
+    'org1',
+    'org2',
+    'contract_subject',
+    'spacer',
+    'warnings',
+    'analyze_state'
+  ],
+  SUPPLEMENTARY_AGREEMENT: [
+    'star',
+    'date',
+    'number',
+    'value',
+    'org1',
+    'org2',
+    'contract_subject',
+    'spacer',
+    'warnings',
+    'analyze_state'
+  ]
 };
 
 const column_to_sorting_mapping = {

@@ -61,7 +61,13 @@ interface ExampleFlatNode {
   level: number;
 }
 
-const orderTypes = ['CHARTER', 'CONTRACT', 'PROTOCOL'];
+const orderTypes = [
+  'CHARTER',
+  'CONTRACT',
+  'PROTOCOL',
+  'SUPPLEMENTARY_AGREEMENT',
+  'ANNEX'
+];
 
 @Component({
   selector: 'gpn-audit-analyse-result',
