@@ -182,10 +182,13 @@ export class AuditService {
     );
   }
 
-  public exportConclusion(id: string): Observable<ExportDocumentModel> {
+  public exportConclusion(
+    id: string,
+    selectedRows
+  ): Observable<ExportDocumentModel> {
     return this.http.post<ExportDocumentModel>(
       `${api}/audit/exportConclusion`,
-      { id }
+      { id, selectedRows }
     );
   }
 

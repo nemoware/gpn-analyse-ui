@@ -437,6 +437,7 @@ exports.getConclusion = async (req, res) => {
 
 exports.exportConclusion = async (req, res) => {
   const id = req.body.id;
+  const selectedRows = req.body.selectedRows;
   if (!id) {
     return res.status(400).send(`Required parameter 'id' is not passed`);
   }
@@ -450,8 +451,10 @@ exports.exportConclusion = async (req, res) => {
     if (!audit.charters[0]) {
       return res.status(400).send('В проверке нет уставов!');
     }
-
-    const violationModel = getViolations(audit);
+    let violationModel = [];
+    if (selectedRows) {
+      violationModel = getViolations(selectedRows);
+    }
 
     let conclusion;
     if (audit.conclusion.intro) {
@@ -459,6 +462,10 @@ exports.exportConclusion = async (req, res) => {
     } else {
       conclusion = await generateConclusion(audit);
     }
+
+    // const fs = require('fs');
+    // let data = JSON.stringify(violationModel, null, 2);
+    // fs.writeFileSync('test.json', data);
 
     const response = await parser.exportConclusion(
       audit.subsidiaryName,
@@ -682,8 +689,8 @@ exports.postConclusion = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
-getViolations = audit => {
-  let violations = audit.violations;
+getViolations = selectedRows => {
+  let violations = selectedRows;
 
   if (!violations) violations = [];
 

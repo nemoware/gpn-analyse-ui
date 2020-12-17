@@ -235,7 +235,7 @@
         </textarea>
         </mat-form-field>
       </p>        <h3 id="results">Результаты проверки документов {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» на предмет наличия/отсутствия корпоративных одобрений и их достоверности</h3>
-        <gpn-violations-audit [idAudit]="IdAudit" [conclusion]="true"></gpn-violations-audit>
+        <gpn-violations-audit [idAudit]="IdAudit" [conclusion]="true" (selectedRowsEvent)="onUpdateViolations($event)"></gpn-violations-audit>
 
       <h3 id="risks">Риски</h3>
       <p>

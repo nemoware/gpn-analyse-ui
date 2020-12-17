@@ -302,7 +302,7 @@ async function exportConclusion(
   };
 
   // const fs = require('fs');
-  // let data = JSON.stringify(body, null, 2);
+  // let data = JSON.stringify(violations, null, 2);
   // fs.writeFileSync('test.json', data);
 
   const options = {

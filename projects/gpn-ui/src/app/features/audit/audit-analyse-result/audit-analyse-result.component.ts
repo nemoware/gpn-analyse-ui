@@ -99,6 +99,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   conclusion: ConclusionModel;
   loadingConclusion = true;
   changed = false;
+  selectedRows: string[] = [];
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   private _transformer = (node: Node, level: number) => {
@@ -330,7 +331,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
 
   exportDocument() {
     const conclusion = this.auditservice
-      .exportConclusion(this.IdAudit)
+      .exportConclusion(this.IdAudit, this.selectedRows)
       .subscribe(data => {
         const a = document.createElement('a');
         const blob = this.base64toBlob(atob(data.base64Document));
@@ -385,5 +386,10 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         behavior: 'smooth'
       });
     return false;
+  }
+
+  onUpdateViolations(selectedRows) {
+    this.selectedRows = selectedRows;
+    console.log(this.selectedRows);
   }
 }
