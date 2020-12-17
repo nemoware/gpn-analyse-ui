@@ -9,4 +9,5 @@ export interface UserInfo {
     description: string;
     appPage: string;
   }>;
+  userPrincipalName: string;
 }

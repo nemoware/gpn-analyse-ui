@@ -83,6 +83,12 @@ export class AppComponent implements OnInit {
     else return '';
   }
 
+  getEmailUser() {
+    if (this.authorizationData.userInfo) {
+      return this.authorizationData.userInfo.userPrincipalName;
+    } else return '';
+  }
+
   getRolesUser() {
     if (this.authorizationData.userInfo)
       return this.authorizationData.userInfo.roles;
