@@ -286,5 +286,241 @@
         ]
       }
     ]
+  },
+  {
+    "_id": "ANNEX",
+    "name": "Договор",
+    "attributes": [
+      {
+        "kind": "org-1-type",
+        "once": true
+      },
+      {
+        "kind": "org-1-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-alias",
+        "once": true
+      },
+      {
+        "kind": "org-2-type",
+        "once": true
+      },
+      {
+        "kind": "org-2-name",
+        "once": true
+      },
+      {
+        "kind": "org-2-alias",
+        "once": true
+      },
+      {
+        "kind": "org-1-alt-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-type-ext",
+        "once": true,
+        "hide": true
+      },
+      {
+        "kind": "org-2-alt-name",
+        "once": true
+      },
+      {
+        "kind": "org-2-type-ext",
+        "once": true,
+        "hide": true
+      },
+      {
+        "kind": "number",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
+        "once": true
+      },
+      {
+        "parents": [
+          {
+            "kind": "sign_value_currency",
+            "once": true
+          }
+        ],
+        "children": [
+          {
+            "kind": "value",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "sign",
+            "type": "dictionary",
+            "dictionaryName": "Sign",
+            "once": true
+          },
+          {
+            "kind": "currency",
+            "type": "dictionary",
+            "dictionaryName": "Currency",
+            "once": true
+          }
+        ]
+      },
+      {
+        "parents": [
+          {
+            "kind": "subject",
+            "type": "dictionary",
+            "dictionaryName": "Subject",
+            "once": true
+          }
+        ],
+        "children": [
+          {
+            "parents": ["sign_value_currency"],
+            "children": [
+              {
+                "kind": "value",
+                "type": "number",
+                "once": true
+              },
+              {
+                "kind": "sign",
+                "type": "dictionary",
+                "dictionaryName": "Sign",
+                "once": true
+              },
+              {
+                "kind": "currency",
+                "type": "dictionary",
+                "dictionaryName": "Currency",
+                "once": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "SUPPLEMENTARY_AGREEMENT",
+    "name": "Договор",
+    "attributes": [
+      {
+        "kind": "org-1-type",
+        "once": true
+      },
+      {
+        "kind": "org-1-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-alias",
+        "once": true
+      },
+      {
+        "kind": "org-2-type",
+        "once": true
+      },
+      {
+        "kind": "org-2-name",
+        "once": true
+      },
+      {
+        "kind": "org-2-alias",
+        "once": true
+      },
+      {
+        "kind": "org-1-alt-name",
+        "once": true
+      },
+      {
+        "kind": "org-1-type-ext",
+        "once": true,
+        "hide": true
+      },
+      {
+        "kind": "org-2-alt-name",
+        "once": true
+      },
+      {
+        "kind": "org-2-type-ext",
+        "once": true,
+        "hide": true
+      },
+      {
+        "kind": "number",
+        "once": true
+      },
+      {
+        "kind": "date",
+        "type": "date",
+        "once": true
+      },
+      {
+        "parents": [
+          {
+            "kind": "sign_value_currency",
+            "once": true
+          }
+        ],
+        "children": [
+          {
+            "kind": "value",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "sign",
+            "type": "dictionary",
+            "dictionaryName": "Sign",
+            "once": true
+          },
+          {
+            "kind": "currency",
+            "type": "dictionary",
+            "dictionaryName": "Currency",
+            "once": true
+          }
+        ]
+      },
+      {
+        "parents": [
+          {
+            "kind": "subject",
+            "type": "dictionary",
+            "dictionaryName": "Subject",
+            "once": true
+          }
+        ],
+        "children": [
+          {
+            "parents": ["sign_value_currency"],
+            "children": [
+              {
+                "kind": "value",
+                "type": "number",
+                "once": true
+              },
+              {
+                "kind": "sign",
+                "type": "dictionary",
+                "dictionaryName": "Sign",
+                "once": true
+              },
+              {
+                "kind": "currency",
+                "type": "dictionary",
+                "dictionaryName": "Currency",
+                "once": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]

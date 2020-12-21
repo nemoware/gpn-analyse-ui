@@ -17,7 +17,8 @@ module.exports = (mongoose, Schema) => {
       links: [
         {
           fromId: ObjectId,
-          toId: ObjectId
+          toId: ObjectId,
+          type: String
         }
       ],
       charters: [ObjectId],
@@ -32,7 +33,7 @@ module.exports = (mongoose, Schema) => {
         legal_entity_type: String
       }
     },
-    { toJSON: { virtuals: true } }
+    { toJSON: { virtuals: true }, typeKey: '$type' }
   );
 
   auditSchema.virtual('subsidiaryName').get(function() {

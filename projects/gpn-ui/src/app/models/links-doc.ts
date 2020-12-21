@@ -2,7 +2,7 @@ export class LinksDoc {
   private static typeDocs = [
     {
       type: 'CONTRACT',
-      links: ['CHARTER', 'PROTOCOL']
+      links: ['CHARTER', 'PROTOCOL', 'ANNEX']
     },
     {
       type: 'PROTOCOL',
@@ -11,6 +11,14 @@ export class LinksDoc {
     {
       type: 'CHARTER',
       links: ['CONTRACT']
+    },
+    {
+      type: 'ANNEX',
+      links: ['CONTRACT']
+    },
+    {
+      type: 'SUPPLEMENTARY_AGREEMENT',
+      links: []
     }
   ];
 

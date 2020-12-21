@@ -75,8 +75,28 @@ async function parse(root, filename, audit) {
     const result = JSON.parse(response.body);
     const version = result.version;
     if (result.documents) {
-      for (let document of result.documents) {
-        await postDocument(document, audit, filename, response.code, version);
+      for (let i = 0; i < result.documents.length; i++) {
+        let doc = null;
+        const document = result.documents[i];
+        if (document.documentType === 'ANNEX') {
+          for (let j = i - 1; j >= 0; j--) {
+            const contract = result.documents[j];
+            if (contract.documentType === 'CONTRACT') {
+              doc = await Document.findOne({
+                auditId: audit._id,
+                filename: filename
+              });
+            }
+          }
+        }
+        await postDocument(
+          document,
+          audit,
+          filename,
+          response.code,
+          version,
+          doc
+        );
       }
     } else {
       await postDocument(result, audit, filename, response.code);
@@ -113,7 +133,7 @@ function post(options) {
   });
 }
 
-async function postDocument(data, audit, filename, responseCode, version) {
+async function postDocument(data, audit, filename, responseCode, version, doc) {
   if (!data.version) {
     data.version = version;
   }
@@ -123,6 +143,14 @@ async function postDocument(data, audit, filename, responseCode, version) {
     parse: data,
     parserResponseCode: responseCode
   });
+
+  if (data.documentType === 'ANNEX') {
+    audit.links.push({
+      fromId: document._id,
+      toId: doc._id,
+      type: 'parser'
+    });
+  }
 
   if (data.documentType !== 'CHARTER') {
     document.auditId = audit._id;

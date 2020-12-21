@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <div *ngIf="hasWarnings()" class="balloon warnings">
+    <div *ngIf="document.documentType!=='ANNEX' && document.documentType!=='SUPPLEMENTARY_AGREEMENT' && hasWarnings()" class="balloon warnings">
       <div *ngFor="let warning of document.analysis.warnings" class='warning'>
         {{ warning.code | translate }} <span class="warning-comment">{{ warning.comment }}</span>
       </div>
