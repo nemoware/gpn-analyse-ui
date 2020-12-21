@@ -62,7 +62,7 @@
     <!-- HEADER -->
     <div class="chart-container">
       <h2>
-        <mat-form-field color="accent" *ngIf="document.statusAudit!=='Approved'">
+        <mat-form-field style="width: 25%" color="accent" *ngIf="document.statusAudit!=='Approved'">
           <mat-label>Тип документа</mat-label>
           <mat-select [(value)]="selectedType" (selectionChange)="selectionChanged()">
             <mat-option *ngFor="let type of listOfDocumentTypes" [value]="type">
@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <div *ngIf="document.documentType!=='ANNEX' && document.documentType!=='SUPPLEMENTARY_AGREEMENT' && hasWarnings()" class="balloon warnings">
+    <div *ngIf="document.documentType!=='ANNEX' && hasWarnings()" class="balloon warnings">
       <div *ngFor="let warning of document.analysis.warnings" class='warning'>
         {{ warning.code | translate }} <span class="warning-comment">{{ warning.comment }}</span>
       </div>

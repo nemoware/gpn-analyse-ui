@@ -204,6 +204,11 @@ export class DocumentDetailComponent implements OnInit {
   }
 
   getAttrValue(attrName: string, doc, default_value = null) {
+    if (attrName === 'subject') {
+      if (doc.primary_subject) {
+        return doc.primary_subject;
+      }
+    }
     if (doc && doc.attributes) {
       const atr = doc.attributes.find(x => x.key === attrName);
       if (atr) return atr.value;

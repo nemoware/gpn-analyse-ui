@@ -89,6 +89,8 @@
 <ng-container *ngIf="document.documentType==='CONTRACT'">
   <section>
     <label class='field-label'>Предмет договора</label>
-    <span>{{getAttrValue('subject', 'н/д') | translate}}</span>
+    <ng-container *ngFor="let subject of subjects; let isLast=last">
+      {{subject | translate}}{{isLast ? '' : ', '}}
+    </ng-container>
   </section>
 </ng-container>

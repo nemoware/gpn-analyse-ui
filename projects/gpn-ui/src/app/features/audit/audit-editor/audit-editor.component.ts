@@ -40,7 +40,13 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   changed = false;
   selectedAttribute: string;
   selectedType: string;
-  listOfDocumentTypes = ['CONTRACT', 'CHARTER', 'PROTOCOL'];
+  listOfDocumentTypes = [
+    'CONTRACT',
+    'CHARTER',
+    'PROTOCOL',
+    'SUPPLEMENTARY_AGREEMENT',
+    'ANNEX'
+  ];
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -145,6 +151,5 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
 
   selectionChanged() {
     this.changed = this.selectedType !== this.document.documentType;
-    console.log(this.changed);
   }
 }

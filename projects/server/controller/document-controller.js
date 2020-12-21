@@ -40,7 +40,7 @@ exports.getDocuments = async (req, res) => {
   try {
     let include;
     if (req.query.full === 'false') {
-      include = documentFields + `analysis.attributes`;
+      include = documentFields + `analysis.attributes primary_subject`;
     }
 
     const audit = await Audit.findById(auditId, `charters`, { lean: true });
@@ -60,7 +60,8 @@ exports.getDocuments = async (req, res) => {
         filename: d.filename,
         state: d.state,
         documentType: d.parse.documentType,
-        _id: d._id
+        _id: d._id,
+        primary_subject: d.primary_subject
       };
       if (d.analysis && d.analysis.attributes) {
         if (d.user) {
@@ -104,7 +105,7 @@ exports.getDocument = async (req, res) => {
 
     let document = await Document.findOne(
       { _id: req.query.id, parserResponseCode: 200 },
-      documentFields + `analysis auditId`
+      documentFields + `analysis auditId primary_subject`
     ).lean();
 
     if (document) {
