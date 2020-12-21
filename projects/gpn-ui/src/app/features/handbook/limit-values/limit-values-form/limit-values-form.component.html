@@ -1,0 +1,53 @@
+<div class="container position-relative" xmlns="http://www.w3.org/1999/html">
+
+  <h4>{{data.new?'Новые предельные значения':'Редактирование предельных значений'}}</h4>
+
+  <form [formGroup]="controlForm">
+    <section>
+      <mat-form-field color="accent" class='float-left'>
+        <mat-label>Дата</mat-label>
+        <input id="startDate" matInput [matDatepicker]="startDate" placeholder="Дата вступления предельных значений в силу"
+               formControlName="startDate" gpnMaskDate  (dateChange)="matDateChange($event)">
+        <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+        <mat-datepicker #startDate></mat-datepicker>
+      </mat-form-field>
+      <button mat-raised-button color="accent" style="margin: 15px 20px 15px 30%;" (click)="addLimitValue(getGroup(limits.controls.length - 1).controls['upperLimit'].value)">
+        Добавить предельное значение
+      </button>
+    </section>
+    <ng-container formArrayName="limits">
+      <section *ngFor="let item of limits.controls; let i=index" [formGroupName]="i">
+        <mat-form-field class='p-3'><input matInput placeholder="Балансовая стоимость активов от (более)" formControlName="lowerLimit">
+          <mat-error *ngIf="getGroup(i).controls['lowerLimit'].errors?.pattern">
+            Должна быть неотрицательным числом
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class='p-3'><input matInput placeholder='Балансовая стоимость активов до (не более)' formControlName='upperLimit'>
+          <mat-error *ngIf="getGroup(i).controls['upperLimit'].errors?.pattern">
+            Должна быть неотрицательным числом
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class='p-3'><input matInput placeholder='Предельное значение' formControlName='limitValue'>
+          <mat-error *ngIf="getGroup(i).controls['limitValue'].errors?.pattern">
+            Должно быть неотрицательным числом
+          </mat-error>
+        </mat-form-field>
+        <fa-icon *ngIf='limits.controls.length > 1' class="p-3" id="td_events" [icon]="faTrashAlt" matTooltip="Удалить" (click)="removeLimitValue(i, $event)"></fa-icon>
+        <mat-error *ngIf="limits.controls[i].hasError('InvalidDiapason')">
+          Некорректный диапазон
+        </mat-error>
+      </section>
+    </ng-container>
+
+    <div class="row">
+      <div class="col">
+        <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+      </div>
+      <div class="col">
+        <button mat-raised-button color="accent" [disabled]="controlForm.invalid" (click)="saveLimitValue()">{{data.new?'Добавить':'Сохранить'}}
+        </button>
+      </div>
+    </div>
+
+  </form>
+</div>
