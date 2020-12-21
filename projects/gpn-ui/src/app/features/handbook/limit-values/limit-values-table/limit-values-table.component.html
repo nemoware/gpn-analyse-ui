@@ -20,7 +20,7 @@
       <td mat-cell *matCellDef="let row">
         <mat-list>
           <mat-list-item *ngFor='let item of row.limits; last as last'>
-            {{item.lowerLimit}}
+            {{item.lowerLimit | currency:'RUB'}}
             <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
           </mat-list-item>
         </mat-list>
@@ -32,7 +32,7 @@
       <td mat-cell *matCellDef="let row">
         <mat-list>
           <mat-list-item *ngFor='let item of row.limits; last as last'>
-            {{item.upperLimit}}
+            {{item.upperLimit | currency:'RUB'}}
             <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
           </mat-list-item>
         </mat-list>
@@ -44,7 +44,7 @@
       <td mat-cell *matCellDef="let row">
         <mat-list>
           <mat-list-item *ngFor='let item of row.limits; last as last'>
-            {{item.limitValue}}
+            {{item.limitValue | currency:'RUB'}}
             <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
           </mat-list-item>
         </mat-list>

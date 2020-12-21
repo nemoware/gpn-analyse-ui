@@ -28,7 +28,7 @@ import { LimitValue, SubLimit } from '@app/models/limitValue.model';
 import { Subscription } from '@root/node_modules/rxjs';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
-import { ValidateFn } from '@root/node_modules/codelyzer/walkerFactory/walkerFn';
+import createNumberMask from '@root/node_modules/text-mask-addons/dist/createNumberMask';
 
 @Component({
   selector: 'gpn-limit-values-form',
@@ -40,15 +40,10 @@ export class LimitValuesFormComponent implements OnInit {
   @ViewChild('autosize', { static: false }) autosize: CdkTextareaAutosize;
 
   subscriptions: Subscription[] = [];
-  // startDate: Date = null;
-  // limits: SubLimit[];
-  // lowerLimit: number = null;
-  // upperLimit: number = null;
-  // limitValue: number = null;
-  //Форма контроля ввода
   controlForm: FormGroup;
   faTrashAlt = faTrashAlt;
   mouseOverIndex = -1;
+  numberMask: any;
 
   constructor(
     private dialogRef: MatDialogRef<LimitValuesFormComponent>,
@@ -75,7 +70,12 @@ export class LimitValuesFormComponent implements OnInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.numberMask = createNumberMask({
+      prefix: '',
+      thousandsSeparatorSymbol: ' '
+    });
+  }
 
   triggerResize() {
     // Wait for changes to be applied, then trigger textarea resize.
