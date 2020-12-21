@@ -60,6 +60,15 @@ const routes: Routes = [
     data: { appPage: 'audit' }
   },
   {
+    path: 'limitValues',
+    loadChildren: () =>
+      import('./features/handbook/limit-values/limit-values.module').then(
+        m => m.LimitValuesModule
+      ),
+    canActivate: [AppPageGuard],
+    data: { appPage: 'audit' }
+  },
+  {
     path: '**',
     redirectTo: 'audit'
   }

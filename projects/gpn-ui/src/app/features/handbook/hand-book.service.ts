@@ -6,6 +6,7 @@ import {
   HttpParams
 } from '@root/node_modules/@angular/common/http';
 import { Observable } from '@root/node_modules/rxjs';
+import { LimitValue } from '@app/models/limitValue.model';
 
 const api = '/api';
 
@@ -32,5 +33,27 @@ export class HandBookService {
 
   public updateRisk(risk: any): Observable<RiskMatrix> {
     return this.http.put<RiskMatrix>(`${api}/handbook/riskMatrix`, risk);
+  }
+
+  public getLimitValues(): Observable<LimitValue[]> {
+    return this.http.get<Array<LimitValue>>(`${api}/handbook/limitValues`);
+  }
+
+  public deleteLimitValue(id: string) {
+    const urlParams = new HttpParams().set('id', id.toString());
+    return this.http.delete(`${api}/handbook/limitValues`, {
+      params: urlParams
+    });
+  }
+
+  public postLimitValue(limitValue: any): Observable<LimitValue> {
+    return this.http.post<LimitValue>(
+      `${api}/handbook/limitValues`,
+      limitValue
+    );
+  }
+
+  public updateLimitValue(limitValue: any): Observable<LimitValue> {
+    return this.http.put<LimitValue>(`${api}/handbook/limitValues`, limitValue);
   }
 }

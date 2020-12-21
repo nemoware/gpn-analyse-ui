@@ -14,6 +14,7 @@ const groups = require('../config').ad.groups;
 const roles = require('../json/role');
 
 const riskMatrix = require('../json/riskMatrix.json');
+const limitValues = require('../json/limit-values.json');
 
 // подключение
 mongoose
@@ -42,6 +43,12 @@ mongoose
     db.Risk.countDocuments((err, count) => {
       if (count === 0) {
         db.Risk.insertMany(riskMatrix);
+      }
+    });
+
+    db.LimitValue.countDocuments((err, count) => {
+      if (count === 0) {
+        db.LimitValue.insertMany(limitValues);
       }
     });
 

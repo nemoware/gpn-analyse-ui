@@ -46,7 +46,10 @@ export class AppComponent implements OnInit {
     { link: 'settings', label: 'Настройки' }*/
   ];
 
-  handbookMenu = [{ link: 'riskMatrix', label: 'Матрица рисков' }];
+  handbookMenu = [
+    { link: 'riskMatrix', label: 'Матрица рисков' },
+    { link: 'limitValues', label: 'Предельные значения' }
+  ];
 
   isAuthenticated$: Observable<boolean>;
   stickyHeader$: Observable<boolean>;

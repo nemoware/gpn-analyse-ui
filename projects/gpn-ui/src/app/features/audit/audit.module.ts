@@ -106,7 +106,7 @@ import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
     EditAttributeComponent,
     SearchDocumentComponent
   ],
-  exports: [ViewDocumentComponent, DocStateComponent],
+  exports: [ViewDocumentComponent, DocStateComponent, MaskDateDirective],
   providers: [
     {
       provide: DateAdapter,
