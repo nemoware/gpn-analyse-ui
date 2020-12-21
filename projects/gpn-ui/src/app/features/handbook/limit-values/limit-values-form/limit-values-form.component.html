@@ -11,24 +11,24 @@
         <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
         <mat-datepicker #startDate></mat-datepicker>
       </mat-form-field>
-      <button mat-raised-button color="accent" style="margin: 15px 20px 15px 30%;" (click)="addLimitValue(limits.controls[limits.controls.length - 1].controls['upperLimit'].value)">
+      <button mat-raised-button color="accent" style="margin: 15px 20px 15px 30%;" (click)="addLimitValue(getGroup(limits.controls.length - 1).controls['upperLimit'].value)">
         Добавить предельное значение
       </button>
     </section>
     <ng-container formArrayName="limits">
       <section *ngFor="let item of limits.controls; let i=index" [formGroupName]="i">
         <mat-form-field class='p-3'><input matInput placeholder="Балансовая стоимость активов от (более)" formControlName="lowerLimit">
-          <mat-error *ngIf="limits.controls[i].controls['lowerLimit'].errors?.pattern">
+          <mat-error *ngIf="getGroup(i).controls['lowerLimit'].errors?.pattern">
             Должна быть неотрицательным числом
           </mat-error>
         </mat-form-field>
         <mat-form-field class='p-3'><input matInput placeholder='Балансовая стоимость активов до (не более)' formControlName='upperLimit'>
-          <mat-error *ngIf="limits.controls[i].controls['upperLimit'].errors?.pattern">
+          <mat-error *ngIf="getGroup(i).controls['upperLimit'].errors?.pattern">
             Должна быть неотрицательным числом
           </mat-error>
         </mat-form-field>
         <mat-form-field class='p-3'><input matInput placeholder='Предельное значение' formControlName='limitValue'>
-          <mat-error *ngIf="limits.controls[i].controls['limitValue'].errors?.pattern">
+          <mat-error *ngIf="getGroup(i).controls['limitValue'].errors?.pattern">
             Должно быть неотрицательным числом
           </mat-error>
         </mat-form-field>

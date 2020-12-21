@@ -100,6 +100,10 @@ export class LimitValuesFormComponent implements OnInit {
     return this.controlForm.get('limits') as FormArray;
   }
 
+  getGroup(i): FormGroup {
+    return this.limits.controls[i] as FormGroup;
+  }
+
   addLimitValue(lowerLimit = '', upperLimit = '', limitValue = '') {
     const limit = this.fb.group({
       lowerLimit: [lowerLimit],
