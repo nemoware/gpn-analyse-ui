@@ -270,7 +270,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         },
         error => {
           this.spinner.hide();
-          window.alert('В проверке нет уставов!');
+          window.alert(error);
         }
       );
     }

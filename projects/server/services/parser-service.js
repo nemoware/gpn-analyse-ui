@@ -326,7 +326,9 @@ async function exportConclusion(
     strengths: conclusion.strengths,
     disadvantages: conclusion.disadvantages,
     risks: conclusion.risks,
-    recommendations: conclusion.recommendations
+    recommendations: conclusion.recommendations,
+    result1: conclusion.result1,
+    result2: conclusion.result2
   };
 
   // const fs = require('fs');

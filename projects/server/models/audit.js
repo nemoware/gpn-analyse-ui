@@ -30,7 +30,9 @@ module.exports = (mongoose, Schema) => {
         recommendations: String,
         risks: String,
         corporateStructure1: String,
-        legal_entity_type: String
+        legal_entity_type: String,
+        result1: String,
+        result2: String
       },
       selectedRows: Object
     },
