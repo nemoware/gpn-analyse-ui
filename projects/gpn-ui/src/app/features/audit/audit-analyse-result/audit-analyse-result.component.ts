@@ -373,7 +373,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   saveConclusion() {
     this.spinner.show();
     this.auditservice
-      .postConclusion(this.IdAudit, this.conclusion)
+      .postConclusion(this.IdAudit, this.conclusion, this.selectedRows)
       .subscribe(() => {
         this.changed = false;
         this.spinner.hide();
@@ -395,7 +395,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   }
 
   onUpdateViolations(selectedRows) {
+    this.changed = true;
     this.selectedRows = selectedRows;
-    console.log(this.selectedRows);
   }
 }

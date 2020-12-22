@@ -31,7 +31,8 @@ module.exports = (mongoose, Schema) => {
         risks: String,
         corporateStructure1: String,
         legal_entity_type: String
-      }
+      },
+      selectedRows: Object
     },
     { toJSON: { virtuals: true }, typeKey: '$type' }
   );

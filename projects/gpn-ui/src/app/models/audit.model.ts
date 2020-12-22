@@ -1,3 +1,5 @@
+import { ViolationModel } from '@app/models/violation-model';
+
 export interface Audit {
   _id: string;
   subsidiaryName: string;
@@ -14,6 +16,7 @@ export interface Audit {
   author: { _id: string; login: string; name: string };
   typeViewResult: number;
   bookValues: any[];
+  selectedRows: ViolationModel[];
 }
 
 export interface DataSourceAudit {

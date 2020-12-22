@@ -202,11 +202,12 @@ export class AuditService {
 
   public postConclusion(
     id: string,
-    conclusion: ConclusionModel
+    conclusion: ConclusionModel,
+    selectedRows
   ): Observable<any> {
     return this.http.put<ConclusionModel>(
       `${api}/audit/conclusion`,
-      { id, conclusion },
+      { id, conclusion, selectedRows },
       { responseType: 'text' as 'json' }
     );
   }

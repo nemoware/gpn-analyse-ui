@@ -50,6 +50,7 @@ export class ViolationsAuditComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input() idAudit: string;
   @Input() conclusion: boolean;
+  @Input() selectedRows: ViolationModel[];
   @Output() selectedRowsEvent = new EventEmitter<ViolationModel[]>();
 
   constructor(
@@ -116,7 +117,17 @@ export class ViolationsAuditComponent implements OnInit {
         this.dataSource.data = data.filter(x => {
           return x.violation_type;
         });
-        this.masterToggle();
+        if (this.selectedRows) {
+          this.dataSource.data.forEach(row => {
+            for (let i = 0; i < this.selectedRows.length; i++) {
+              if (this.compareDocs(row, this.selectedRows[i])) {
+                this.selection.select(row);
+              }
+            }
+          });
+        } else {
+          this.masterToggle();
+        }
         this.changeDetectorRefs.detectChanges();
       }
     });
@@ -152,5 +163,18 @@ export class ViolationsAuditComponent implements OnInit {
         (attribute ? '?attribute=' + attribute : ''),
       '_blank'
     );
+  }
+
+  compareDocs(doc1: ViolationModel, doc2: ViolationModel) {
+    return (
+      doc1.document.id === doc2.document.id &&
+      doc1.founding_document.id === doc2.founding_document.id &&
+      doc1.reference.id === doc2.reference.id
+    );
+  }
+
+  toggleSelection(row) {
+    this.selection.toggle(row);
+    this.emitSelected();
   }
 }

@@ -675,6 +675,7 @@ exports.postConclusion = async (req, res) => {
       return res.status(404).send(`No audit found with id = ${id}`);
     }
     audit.conclusion = req.body.conclusion;
+    audit.selectedRows = req.body.selectedRows;
     await audit.save();
     await logger.log(
       req,
