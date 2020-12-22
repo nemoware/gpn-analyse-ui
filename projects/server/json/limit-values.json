@@ -1,0 +1,32 @@
+[
+  {
+    "startDate": "2017-05-02 00:00:00Z",
+    "limits": [
+      {
+        "lowerLimit": 0,
+        "upperLimit": 25000000000,
+        "limitValue": 20000000
+      },
+      {
+        "lowerLimit": 25000000000,
+        "upperLimit": 100000000000,
+        "limitValue": 50000000
+      },
+      {
+        "lowerLimit": 100000000000,
+        "upperLimit": 1000000000000,
+        "limitValue": 500000000
+      },
+      {
+        "lowerLimit": 1000000000000,
+        "upperLimit": 2000000000000,
+        "limitValue": 1000000000
+      },
+      {
+        "lowerLimit": 2000000000000,
+        "upperLimit": null,
+        "limitValue": 2000000000
+      }
+    ]
+  }
+]

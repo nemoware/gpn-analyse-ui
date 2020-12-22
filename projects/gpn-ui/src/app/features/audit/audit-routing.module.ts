@@ -8,12 +8,12 @@ const routes: Routes = [
   {
     path: '',
     component: ListAuditComponent,
-    data: { title: 'Аудит' }
+    data: { title: 'Главная' }
   },
   {
     path: 'result/:id',
     component: AuditAnalyseResultComponent,
-    data: { title: 'Результаты аудит' }
+    data: { title: 'Результаты проверки' }
   },
   {
     path: 'view/:id',

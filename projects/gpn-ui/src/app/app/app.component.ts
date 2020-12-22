@@ -32,8 +32,9 @@ export class AppComponent implements OnInit {
   year = new Date().getFullYear();
   logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
-    { link: 'audit', label: 'Аудит' },
+    { link: 'audit', label: 'Проверка' },
     { link: 'charter', label: 'Уставы' },
+    { link: 'handbook', label: 'Справочники' },
     // { link: 'dash', label: 'Дэшборд' },
     // { link: 'analyse', label: 'Анализ' },
     { link: 'admin', label: 'Администрирование' },
@@ -43,6 +44,11 @@ export class AppComponent implements OnInit {
   navigationSideMenu = [
     ...this.navigation /*,
     { link: 'settings', label: 'Настройки' }*/
+  ];
+
+  handbookMenu = [
+    { link: 'riskMatrix', label: 'Матрица рисков' },
+    { link: 'limitValues', label: 'Предельные значения' }
   ];
 
   isAuthenticated$: Observable<boolean>;
@@ -78,6 +84,12 @@ export class AppComponent implements OnInit {
     if (this.authorizationData.userInfo)
       return this.authorizationData.userInfo.name;
     else return '';
+  }
+
+  getEmailUser() {
+    if (this.authorizationData.userInfo) {
+      return this.authorizationData.userInfo.userPrincipalName;
+    } else return '';
   }
 
   getRolesUser() {

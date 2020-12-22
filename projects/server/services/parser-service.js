@@ -1,6 +1,7 @@
 const fs = require('fs-promise');
 const request = require('request');
 const url = require('../config').parser.url;
+const template = require('../config').conclusion.template;
 const { Document } = require('../models');
 const path = require('path');
 const logger = require('../core/logger');
@@ -74,8 +75,28 @@ async function parse(root, filename, audit) {
     const result = JSON.parse(response.body);
     const version = result.version;
     if (result.documents) {
-      for (let document of result.documents) {
-        await postDocument(document, audit, filename, response.code, version);
+      for (let i = 0; i < result.documents.length; i++) {
+        let doc = null;
+        const document = result.documents[i];
+        if (document.documentType === 'ANNEX') {
+          for (let j = i - 1; j >= 0; j--) {
+            const contract = result.documents[j];
+            if (contract.documentType === 'CONTRACT') {
+              doc = await Document.findOne({
+                auditId: audit._id,
+                filename: filename
+              });
+            }
+          }
+        }
+        await postDocument(
+          document,
+          audit,
+          filename,
+          response.code,
+          version,
+          doc
+        );
       }
     } else {
       await postDocument(result, audit, filename, response.code);
@@ -112,7 +133,7 @@ function post(options) {
   });
 }
 
-async function postDocument(data, audit, filename, responseCode, version) {
+async function postDocument(data, audit, filename, responseCode, version, doc) {
   if (!data.version) {
     data.version = version;
   }
@@ -122,6 +143,14 @@ async function postDocument(data, audit, filename, responseCode, version) {
     parse: data,
     parserResponseCode: responseCode
   });
+
+  if (data.documentType === 'ANNEX') {
+    audit.links.push({
+      fromId: document._id,
+      toId: doc._id,
+      type: 'parser'
+    });
+  }
 
   if (data.documentType !== 'CHARTER') {
     document.auditId = audit._id;
@@ -158,6 +187,7 @@ exports.setResult = async audit => {
       auditId: audit._id,
       parserResponseCode: 200
     });
+    if (audit.charters) count += audit.charters.length;
     audit.status = 'InWork';
     audit.checkedDocumentCount = count;
   }
@@ -271,3 +301,56 @@ exports.getFiles = fileObjects => {
 
   return files;
 };
+
+async function exportConclusion(
+  subsidiaryName,
+  createDate,
+  auditStart,
+  auditEnd,
+  violations,
+  conclusion
+) {
+  const body = {
+    base64Template: template,
+    subsidiaryName: subsidiaryName,
+    auditDate: createDate,
+    violations: violations,
+    auditStart: auditStart,
+    auditEnd: auditEnd,
+    intro: conclusion.intro,
+    shortSummary: conclusion.shortSummary,
+    corporateStructure1: conclusion.corporateStructure1,
+    corporateStructure2: conclusion.corporateStructure2,
+    results1: conclusion.results1,
+    results2: conclusion.results2,
+    strengths: conclusion.strengths,
+    disadvantages: conclusion.disadvantages,
+    risks: conclusion.risks,
+    recommendations: conclusion.recommendations,
+    result1: conclusion.result1,
+    result2: conclusion.result2
+  };
+
+  // const fs = require('fs');
+  // let data = JSON.stringify(violations, null, 2);
+  // fs.writeFileSync('test.json', data);
+
+  const options = {
+    url: `${url}/document-generator/conclusion`,
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body)
+  };
+  let response = {};
+  try {
+    response = await post(options);
+  } catch (err) {
+    if (err.code !== 'ECONNREFUSED') return logger.logLocalError(err);
+    charter.parse = {
+      documentType: err.code,
+      message: 'Parser module is off'
+    };
+  }
+  return JSON.parse(response.body);
+}
+
+exports.exportConclusion = exportConclusion;

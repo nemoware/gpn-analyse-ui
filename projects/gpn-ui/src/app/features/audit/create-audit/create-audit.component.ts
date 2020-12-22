@@ -12,15 +12,18 @@ import {
   DateAdapter,
   ErrorStateMatcher,
   MAT_DIALOG_DATA,
+  MatDatepickerInputEvent,
   MatDialogRef,
   MatSelect
 } from '@root/node_modules/@angular/material';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
   FormGroupDirective,
-  NgForm
+  NgForm,
+  Validators
 } from '@root/node_modules/@angular/forms';
 import { ReplaySubject, Subject, SubscriptionLike } from 'rxjs';
 
@@ -67,7 +70,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   _auditEnd: Date = null;
   _ftpUrl: string = null;
   allSubs = { name: '* Все ДО' };
-
+  years = [];
   constructor(
     private dateAdapter: DateAdapter<Date>,
     private auditservice: AuditService,
@@ -82,12 +85,21 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.auditForm = this.fb.group(
       {
         auditStart: Date,
-        auditEnd: Date
+        auditEnd: Date,
+        bookValues: this.fb.array([])
       },
       {
         validator: this.dateValidator
       }
     );
+  }
+
+  get bookValues() {
+    return this.auditForm.get('bookValues') as FormArray;
+  }
+
+  addBookValue() {
+    this.bookValues.push(this.fb.control('', [Validators.required]));
   }
 
   dateValidator(form: FormGroup) {
@@ -158,6 +170,13 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   CreateAudit() {
+    const values = [];
+    for (let i = 0; i < this.years.length; i++) {
+      const bookValue = {};
+      bookValue[this.years[i]] = this.bookValues.value[i];
+      values.push(bookValue);
+    }
+
     const newAudit: Audit = {
       subsidiaryName: this.subsidiaryCtrl.value.name,
       subsidiary: this.subsidiaryCtrl.value,
@@ -171,7 +190,8 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
       comments: [],
       createDate: new Date(),
       author: null,
-      charters: this.selectedCharters
+      charters: this.selectedCharters,
+      bookValues: values
     };
 
     this.subscriptions.push(
@@ -185,21 +205,20 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   valid(): boolean {
+    // console.log(this.bookValues);
+    let bookValueValidator = true;
+    this.bookValues.controls.forEach(control => {
+      if (!control.value) bookValueValidator = false;
+    });
     return (
       this._ftpUrl != null &&
       this._ftpUrl.toString().length > 0 &&
       this._auditEnd != null &&
       this._auditStart != null &&
       this.subsidiaryCtrl.value != null &&
-      this._auditStart <= this._auditEnd
+      this._auditStart <= this._auditEnd &&
+      bookValueValidator
     );
-  }
-
-  changeDate(event) {
-    const d = event.target.value.replace('_', '0').split('.');
-    if (event.target.id === '_auditStart')
-      this._auditStart = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
-    else this._auditEnd = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
   }
 
   changeSubsidiary(e) {
@@ -215,6 +234,29 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
             this.charters = data;
           })
       );
+    }
+  }
+
+  matDateChange(event: MatDatepickerInputEvent<unknown>) {
+    // @ts-ignore
+    const d = event.targetElement.value.replace('_', '0').split('.');
+    if (event.targetElement.id === '_auditStart')
+      this._auditStart = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
+    else this._auditEnd = new Date(Date.parse(d[1] + '.' + d[0] + '.' + d[2]));
+
+    if (
+      this._auditStart != null &&
+      this._auditEnd != null &&
+      this._auditStart < this._auditEnd
+    ) {
+      const startYear = this._auditStart.getFullYear() - 1;
+      const endYear = this._auditEnd.getFullYear() - 1;
+      this.years = [];
+      this.bookValues.clear();
+      for (let i = startYear; i <= endYear; i++) {
+        this.years.push(i);
+        this.addBookValue();
+      }
     }
   }
 }

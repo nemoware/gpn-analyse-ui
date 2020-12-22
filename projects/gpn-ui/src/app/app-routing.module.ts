@@ -51,6 +51,24 @@ const routes: Routes = [
     data: { appPage: 'audit' }
   },
   {
+    path: 'riskMatrix',
+    loadChildren: () =>
+      import('./features/handbook/risk-matrix/risk-matrix.module').then(
+        m => m.RiskMatrixModule
+      ),
+    canActivate: [AppPageGuard],
+    data: { appPage: 'audit' }
+  },
+  {
+    path: 'limitValues',
+    loadChildren: () =>
+      import('./features/handbook/limit-values/limit-values.module').then(
+        m => m.LimitValuesModule
+      ),
+    canActivate: [AppPageGuard],
+    data: { appPage: 'audit' }
+  },
+  {
     path: '**',
     redirectTo: 'audit'
   }

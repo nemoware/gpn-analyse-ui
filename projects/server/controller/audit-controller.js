@@ -1,8 +1,10 @@
 const fs = require('fs-promise');
 const moment = require('moment');
+moment.locale('ru');
 const logger = require('../core/logger');
-const { Audit, Document, Subsidiary } = require('../models');
+const { Audit, Document, Subsidiary, Risk } = require('../models');
 const parser = require('../services/parser-service');
+const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
@@ -30,8 +32,8 @@ exports.postAudit = async (req, res) => {
     await logger.log(
       req,
       res,
-      'Создание аудита',
-      `Аудит "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+      'Создание Проверки',
+      `Проверка "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
         'DD.MM.YYYY'
       )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
     );
@@ -96,7 +98,7 @@ exports.getAudits = async (req, res) => {
       audits[0] &&
       ['Finalizing', 'Done', 'Approved'].includes(audits[0].status)
     ) {
-      audits[0].typeViewResult = 3;
+      audits[0].typeViewResult = 4;
     } else {
       for (let audit of audits) {
         audit.typeViewResult = checks.length;
@@ -117,6 +119,95 @@ exports.getAudits = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+exports.fetchAudits = async (req, res) => {
+  try {
+    let sort;
+    if (req.query.column) {
+      sort = {
+        [req.query.column === 'subsidiaryName'
+          ? 'subsidiary.name'
+          : req.query.column]: req.query.sort === 'asc' ? 1 : -1
+      };
+    }
+    const where = [];
+    const subsidiaryName = req.query.subsidiaryName;
+    const auditStatuses = req.query.auditStatuses;
+    let dateTo = req.query.dateTo;
+    const dateFrom = req.query.dateFrom;
+    const createDate = req.query.createDate;
+
+    if (auditStatuses) {
+      where.push({ status: { $in: auditStatuses.split(',') } });
+    }
+
+    if (dateTo) {
+      dateTo = toDate(dateTo);
+      dateTo.setDate(dateTo.getDate() + 1);
+      where.push({ auditEnd: { $lt: dateTo } });
+    }
+
+    if (dateFrom) {
+      where.push({ auditStart: { $gte: toDate(dateFrom) } });
+    }
+
+    if (createDate) {
+      const dateTo = toDate(createDate);
+      dateTo.setDate(dateTo.getDate() + 1);
+      where.push({
+        $and: [
+          { createDate: { $lt: dateTo } },
+          { createDate: { $gte: toDate(createDate) } }
+        ]
+      });
+    }
+
+    if (subsidiaryName) {
+      where.push({
+        'subsidiary.name': {
+          $regex: `.*${subsidiaryName}.*`,
+          $options: 'i'
+        }
+      });
+    }
+
+    let count;
+    let audits;
+
+    if (where.length) {
+      count = await Audit.countDocuments({ $and: where });
+      audits = await Audit.find({ $and: where })
+        .lean()
+        .setOptions({
+          skip: +req.query.skip,
+          limit: +req.query.take,
+          sort
+        });
+    } else {
+      count = await Audit.countDocuments();
+      audits = await Audit.find()
+        .lean()
+        .setOptions({
+          skip: +req.query.skip,
+          limit: +req.query.take,
+          sort
+        });
+    }
+    audits = audits.map(a => {
+      a.subsidiaryName = a.subsidiary.name;
+      return a;
+    });
+
+    res.send({ count, audits });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+function toDate(s) {
+  const parts = s.split('.');
+  return new Date(parts[2], parts[1] - 1, parts[0], 3);
+}
 
 exports.deleteAudit = async (req, res) => {
   if (!req.query.id) {
@@ -159,11 +250,14 @@ exports.getFiles = async (req, res) => {
     if (audit.status === 'New' || audit.status === 'Loading') {
       filePaths = await parser.getPaths(audit.ftpUrl);
     } else {
-      filePaths = await Document.find({ auditId: auditId }).distinct(
-        'filename'
-      );
+      filePaths = await Document.find({
+        $or: [{ auditId }, { _id: { $in: audit.charters } }]
+      }).distinct('filename');
       errors = await Document.find(
-        { auditId: auditId, parserResponseCode: { $ne: 200 } },
+        {
+          $or: [{ auditId }, { _id: { $in: audit.charters } }],
+          parserResponseCode: { $ne: 200 }
+        },
         null,
         { lean: true }
       );
@@ -307,9 +401,407 @@ exports.approve = async (req, res) => {
 
     audit.status = 'Approved';
     await audit.save();
-    await logger.log(req, res, 'Подтверждение аудита');
+    await logger.log(req, res, 'Подтверждение проверки');
     res.end();
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
+};
+
+exports.getConclusion = async (req, res) => {
+  const id = req.query.id;
+  if (!id) {
+    return res.status(400).send(`Required parameter 'id' is not passed`);
+  }
+  try {
+    const audit = await Audit.findById(id);
+    if (!audit) {
+      return res.status(404).send(`No audit found with id = ${id}`);
+    }
+
+    if (!audit.charters[0]) {
+      return res.status(400).send('В проверке нет уставов!');
+    }
+
+    let conclusion;
+    if (audit.conclusion.intro) {
+      conclusion = audit.conclusion;
+    } else {
+      conclusion = await generateConclusion(audit);
+    }
+    res.send(conclusion);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.exportConclusion = async (req, res) => {
+  const id = req.body.id;
+  const selectedRows = req.body.selectedRows;
+  if (!id) {
+    return res.status(400).send(`Required parameter 'id' is not passed`);
+  }
+
+  try {
+    const audit = await Audit.findById(id);
+    if (!audit) {
+      return res.status(404).send(`No audit found with id = ${id}`);
+    }
+
+    if (!audit.charters[0]) {
+      return res.status(400).send('В проверке нет уставов!');
+    }
+    let violationModel = [];
+    if (selectedRows) {
+      violationModel = getViolations(selectedRows);
+    }
+
+    let conclusion;
+    if (audit.conclusion.intro) {
+      conclusion = audit.conclusion;
+    } else {
+      conclusion = await generateConclusion(audit);
+    }
+
+    // const fs = require('fs');
+    // let data = JSON.stringify(violationModel, null, 2);
+    // fs.writeFileSync('test.json', data);
+
+    const response = await parser.exportConclusion(
+      audit.subsidiaryName,
+      audit.createDate,
+      audit.auditStart,
+      audit.auditEnd,
+      violationModel,
+      conclusion
+    );
+
+    //Данные для формирования наименования файла .docx
+    response.subsidiary = audit.subsidiaryName;
+    response.auditStart = audit.auditStart;
+    response.auditEnd = audit.auditEnd;
+
+    res.send(response);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+function getViolation(violation) {
+  if (
+    Object.prototype.toString.call(violation.violation_type) ===
+    '[object String]'
+  )
+    return translations[violation.violation_type];
+  else {
+    return translations[violation.violation_type.type];
+  }
+}
+
+function getViolationEn(violation) {
+  if (
+    Object.prototype.toString.call(violation.violation_type) ===
+    '[object String]'
+  )
+    return violation.violation_type;
+  else {
+    return violation.violation_type.type;
+  }
+}
+
+async function filter(arr, callback) {
+  const fail = Symbol();
+  return (
+    await Promise.all(
+      arr.map(async item => ((await callback(item)) ? item : fail))
+    )
+  ).filter(i => i !== fail);
+}
+
+async function generateConclusion(audit) {
+  let date = 0;
+  let charterId;
+  let desiredCharter = {};
+  for (const c of audit.charters) {
+    const doc = await Document.findOne(
+      { _id: c, state: 15 },
+      `state
+        analysis.attributes
+        user.attributes`
+    );
+    if (doc) {
+      const charterDate = doc.getAttributeValue('date');
+      if (charterDate < audit.auditEnd && charterDate > date) {
+        date = charterDate;
+        charterId = c;
+        desiredCharter = doc;
+      }
+    }
+  }
+
+  const orgLevels = [
+    'AllMembers',
+    'ShareholdersGeneralMeeting',
+    'BoardOfDirectors',
+    'BoardOfCompany',
+    'CEO',
+    'competence_CEO'
+  ];
+  let charterOrgLevels = [];
+
+  for (const orgLevel of orgLevels) {
+    const level = desiredCharter.getAttributeValue(orgLevel);
+    if (level) charterOrgLevels.push(orgLevel);
+  }
+
+  let riskMatrix = await Risk.find(
+    {},
+    `
+    violation
+    subject
+    risk
+    recommendation
+    disadvantage
+    `
+  ).lean();
+  const filteredRiskMatrix = [];
+  for (let violation of audit.violations) {
+    const riskArray = [];
+    await filter(riskMatrix, async risk => {
+      if (violation.violation_type)
+        if (risk.violation === getViolationEn(violation)) {
+          if (violation.document.type === 'CONTRACT') {
+            let document = await Document.findOne(
+              { _id: violation.document.id },
+              `
+                analysis.attributes
+                user.attributes
+                `
+            );
+            if (
+              document.getAttributeValue('subject') === risk.subject ||
+              risk.subject === 'AllDeals' ||
+              risk.subject === ''
+            )
+              riskArray.push(risk);
+          }
+        }
+    });
+    if (riskArray.length > 0) {
+      if (riskArray.length === 1) {
+        filteredRiskMatrix.push(riskArray[0]);
+      } else {
+        filteredRiskMatrix.push(
+          riskArray.filter(risk => {
+            if (risk.subject !== 'AllDeals') return risk;
+          })[0]
+        );
+      }
+    }
+  }
+  const subsidiary = await Subsidiary.findOne({ _id: audit.subsidiaryName });
+  const entity_type = subsidiary.legal_entity_type;
+  const conclusion = {};
+  conclusion.legal_entity_type = entity_type;
+  conclusion.intro = `В целях исполнения решения Совета директоров ОАО «Газпром» от 05.09.2013 г. № 2243, поручения начальника Департамента по управлению имуществом и корпоративными отношениями ОАО «Газпром» Михайловой Е.В. от 25.11.2013 г. № 01/05-9226, руководством ПАО «Газпром нефть» (далее – «Компания», «ГПН») было принято решение о проведении Департаментом корпоративного и проектного сопровождения ГПН (далее – «ДКиПС») в период ${moment(
+    audit.auditStart
+  ).format('MMMM YYYY')} г. - ${moment(audit.auditEnd).format(
+    'MMMM YYYY'
+  )} г. аудита практики корпоративного управления (далее – «Корпоративный аудит») в дочерних обществах (далее – «ДО») Компании, в частности ${entity_type} «${
+    audit.subsidiaryName
+  }» (далее – «Общество»).
+Цель Корпоративного аудита – выявление сильных и слабых сторон существующей в ${entity_type} «${
+    audit.subsidiaryName
+  }» практики корпоративного управления в сравнении со стратегическими целями Компании; подтверждение соблюдения ${entity_type} «${
+    audit.subsidiaryName
+  }» требований системы корпоративного управления; выявление задач, которые необходимо решить в области корпоративного управления; подготовка конкретных рекомендаций комплексного плана по совершенствованию системы корпоративного управления ${entity_type} «${
+    audit.subsidiaryName
+  }»; распространение лучших практик в группе Газпром нефть.
+В период с ${moment(audit.createDate).format('DD.MM.YYYY')} г. по ${
+    audit.status === 'Approved'
+      ? moment(audit.auditEnd).format('DD.MM.YYYY')
+      : moment(Date.now()).format('DD.MM.YYYY')
+  } г. на основании обращения Заместителя генерального директора по правовым и корпоративным вопросам ПАО «Газпром нефть» Илюхиной Е.А. № НК-ХХ от ХХ.ХХ.ХХХХ г. (Приложение № 1) ДКиПС был проведен Корпоративный аудит ${entity_type} «${
+    audit.subsidiaryName
+  }».
+Процедура Корпоративного аудита включала в себя:
+1. Получение информации об исходном состоянии корпоративного управления.
+2. Документальную проверку ${entity_type} «${
+    audit.subsidiaryName
+  }», в том числе:
+2.1. выборочную  проверку представленной документации на предмет полноты, достоверности, правильности оформления (соответствие объема представленной документации электронной базе ДКПС).
+2.2. выборочную проверку договорных документов Общества на предмет наличия/отсутствия корпоративных одобрений и их достоверности.
+2.3.	проверку соблюдения Обществом требований действующего законодательства РФ по размещению информации на федеральных ресурсах.
+2.4. 	проверку соблюдения Обществом требований действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации.
+3. Полную проверку, представленных документов ${entity_type} «${
+    audit.subsidiaryName
+  }» на предмет наличия/отсутствия корпоративных одобрений и их достоверности.
+4. Анализ внутренних документов ${entity_type} «${
+    audit.subsidiaryName
+  }», регулирующих все компоненты корпоративного управления.
+По результатам проведенного Корпоративного аудита подготовлен настоящий отчет, содержащий основные результаты Корпоративного аудита, а также рекомендации ДКиПС относительно усовершенствования практики корпоративного управления ${entity_type} «${
+    audit.subsidiaryName
+  }».\n`;
+  conclusion.shortSummary = `Ниже перечислены наиболее существенные сильные стороны и недостатки системы корпоративного управления ${entity_type} «${audit.subsidiaryName}» согласно результатам Корпоративного аудита, проведенного ДКиПС.\n`;
+  conclusion.strengths = `Утверждено Положение о распределении прибыли Общества.
+Утверждено Положение о Генеральном директоре Общества.
+Утверждено Положение о Совете директоров Общества (в период действия СД).
+Сформирован состав Совета директоров ${entity_type} «${audit.subsidiaryName}» из членов, обладающих соответствующими знаниями, навыками, профессиональным и практическим опытом, необходимыми для успешного выполнения функций Совета директоров по управлению Обществом и принятия решений по вопросам, отнесенным к компетенции Совета директоров.\n`;
+  // conclusion.corporateStructure1 = `Органами управления КН являются ${charterOrgLevels}`;
+  conclusion.result1 = `В рамках проведения проверки соблюдения Обществом требований по размещению на федеральном информационном ресурсе – в Едином федеральном реестре (ЕФРСФДЮЛ) юридически значимых сведений о фактах деятельности Общества нарушения не выявлены – вся содержащаяся в ЕФРСФДЮЛ информация об Обществе является актуальной и достоверной.`;
+  conclusion.result2 = `В рамках проведения проверки соблюдения Обществом положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации нарушения не выявлены – вся содержащаяся в ЕГРЮЛ информация об Обществе является актуальной и достоверной.`;
+  const riskMatrixSet = [...new Set(filteredRiskMatrix)];
+
+  const disadvantages = riskMatrixSet.map(x => {
+    return x.disadvantage;
+  });
+  conclusion.disadvantages = '';
+  disadvantages.forEach(x => (conclusion.disadvantages += x + '\n'));
+
+  const recommendations = riskMatrixSet.map(x => {
+    return x.recommendation;
+  });
+  conclusion.recommendations = '';
+  recommendations.forEach(x => (conclusion.recommendations += x + '\n'));
+
+  const risks = riskMatrixSet.map(x => {
+    return x.risk;
+  });
+  conclusion.risks = '';
+  risks.forEach(x => (conclusion.risks += x + '\n'));
+  // console.log(conclusion);
+  return conclusion;
+}
+
+exports.postConclusion = async (req, res) => {
+  try {
+    const audit = await Audit.findById(req.body.id);
+    if (!audit) {
+      return res.status(404).send(`No audit found with id = ${id}`);
+    }
+    audit.conclusion = req.body.conclusion;
+    audit.selectedRows = req.body.selectedRows;
+    await audit.save();
+    await logger.log(
+      req,
+      res,
+      'Обновление заключения аудита',
+      `Проверка "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+        'DD.MM.YYYY'
+      )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
+    );
+    res.send(audit.conclusion);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+getViolations = selectedRows => {
+  let violations = selectedRows;
+
+  if (!violations) violations = [];
+
+  let violationModel = [];
+  violations.map(v => {
+    const violation = {};
+
+    if (v.founding_document) {
+      violation.foundingDocument =
+        'Устав от ' + moment(v.founding_document.date).format('DD.MM.YYYY');
+    } else {
+      violation.foundingDocument = null;
+    }
+
+    if (v.reference) {
+      violation.reference = v.reference.text;
+    } else {
+      violation.reference = null;
+    }
+
+    let violationText = '';
+    if (v.violation_type) {
+      violationText += getViolation(v);
+      if (v.violation_type.type) {
+        violationText +=
+          '\nОтсутствует одобрение ' +
+          translations[v.violation_type.org_structural_level] +
+          ' на совершение ' +
+          translations[v.violation_type.subject] +
+          ' ';
+      }
+      if (v.violation_type.min || v.violation_type.max) {
+        if (v.violation_type.min) {
+          violationText +=
+            'превышающих ' +
+            v.violation_type.min.value +
+            ' ' +
+            translations[v.violation_type.min.currency];
+        }
+        if (v.violation_type.min && v.violation_type.max) {
+          violationText += ' и';
+        }
+        if (v.violation_type.max) {
+          violationText +=
+            ' не превышающих ' +
+            v.violation_type.max.value +
+            ' ' +
+            translations[v.violation_type.max.currency];
+        }
+      }
+      violationText += '\n';
+    }
+    violation.violationType = violationText;
+
+    let violationReason = '';
+    if (v.violation_reason) {
+      if (v.violation_reason.contract) {
+        violationReason +=
+          'Договор № ' +
+          (v.violation_reason.contract.number || 'н/д') +
+          ' от ' +
+          moment(v.violation_reason.contract.date).format('DD.MM.YYYY') +
+          ' с ' +
+          (v.violation_reason.contract.org_type || '') +
+          ' ' +
+          (v.violation_reason.contract.org_name || 'н/д');
+        if (v.violation_reason.contract.value) {
+          violationReason +=
+            ', цена сделки - ' +
+            v.violation_reason.contract.value +
+            translations[v.violation_reason.contract.currency];
+        }
+      }
+
+      if (v.violation_reason.protocol) {
+        violationReason += '\n';
+        violationReason +=
+          'Протокол ' +
+          translations[v.violation_reason.protocol.org_structural_level] +
+          ' от ' +
+          moment(v.violation_reason.protocol.date).format('DD.MM.YYYY') +
+          ' с ' +
+          v.violation_reason.contract.org_type +
+          ' ' +
+          v.violation_reason.contract.org_name;
+        if (v.violation_reason.protocol.value) {
+          violationReason +=
+            ', сумма - ' +
+            v.violation_reason.protocol.value +
+            translations[v.violation_reason.protocol.currency];
+        }
+      }
+
+      if (v.violation_reason.charters) {
+        violationReason += '\n';
+        for (const charter of v.violation_reason.charters) {
+          violationReason +=
+            'Устав в редакции от ' +
+            moment(charter.date).format('DD.MM.YYYY') +
+            '\n';
+        }
+      }
+    }
+    violation.violationReason = violationReason;
+    violationModel.push(violation);
+  });
+  return violationModel;
 };

@@ -6,7 +6,7 @@
       <div class="branding"><img [src]="logo" /></div>
       <mat-nav-list>
         <a mat-list-item *ngFor="let item of navigationSideMenu" (click)="sidenav.close()" [routerLink]="[item.link]"
-          routerLinkActive="active">
+           routerLinkActive="active">
           {{ item.label  }}
         </a>
       </mat-nav-list>
@@ -24,15 +24,25 @@
           <span routerLink="" class="branding spacer center d-inline d-sm-none">
             <img [src]="logo" width='253' /></span>
           <span routerLink="" class="branding spacer center d-none d-sm-inline d-md-none"><img [src]="logo" /></span>
-          <span routerLink="" class="branding spacer d-none d-md-inline"><img [src]="logo" /> Корпоративный аудит ДО</span>
+          <span routerLink="" class="branding spacer d-none d-md-inline"><img [src]="logo" /> Система корпоративного контроля</span>
 
           <span class="d-none d-md-inline" *ngIf="loadedUser">
-            <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
-              routerLinkActive="active" gpnHide [appPage] = "item.link">
-              {{ item.label }}
-            </button>
+            <ng-container *ngFor="let item of navigation">
+              <button mat-button *ngIf="item.link!== 'handbook'" class="nav-button"  [routerLink]="[item.link]"
+                      routerLinkActive="mat-accent" gpnHide [appPage] = "item.link">
+                {{ item.label }}
+              </button>
+              <button mat-button *ngIf="item.link=== 'handbook'" class="nav-button"
+                      gpnHide [appPage] = "item.link" [matMenuTriggerFor]="menu">
+                {{ item.label }}
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item *ngFor="let item of handbookMenu" class="nav-button" [routerLink]="[item.link]"
+                          routerLinkActive="mat-accent">{{ item.label }}
+                  </button>
+                </mat-menu>
+              </button>
+            </ng-container>
           </span>
-
           <button
             mat-icon-button
             [matMenuTriggerFor]="toolbarUserMenu">
@@ -41,6 +51,7 @@
 
           <mat-menu #toolbarUserMenu="matMenu">
             <span style="margin-left: 5px; font-size: 20px;">{{ getNameUser() }} &nbsp;</span>
+            <span style="font-size: 20px;">{{ getEmailUser() }} &nbsp;</span>
             <hr>
             <span style="margin-left: 5px; font-size: 15px;">Роли:</span>
             <ol>
@@ -59,7 +70,7 @@
       <div class="content" >
         <router-outlet #o="outlet"></router-outlet>
       </div>
-
+      <div>v{{version}}</div>
     </div>
 
   </mat-sidenav-container>

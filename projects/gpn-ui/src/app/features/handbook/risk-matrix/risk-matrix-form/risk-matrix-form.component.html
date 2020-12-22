@@ -1,0 +1,100 @@
+<div class="container position-relative" xmlns="http://www.w3.org/1999/html">
+
+  <h4>{{data.new?'Новый риск':'Редактирование риска'}}</h4>
+
+<form [formGroup]="controlForm">
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Нарушение</mat-label>
+      <mat-select formControlName="violationControl">
+        <mat-option [matTooltip]="violation | translate" *ngFor="let violation of listOfViolations" [value]="violation">
+          {{violation | translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-error *ngIf="controlForm.hasError('isError')">
+      Такое нарушение уже описано
+    </mat-error>
+  </p>
+
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Тип документа</mat-label>
+        <mat-select [(value)]="selectedType">
+          <mat-option *ngFor="let type of listOfDocumentTypes" [value]="type">
+            {{type | translate}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+  </p>
+
+<ng-container *ngIf="selectedType==='CONTRACT'|| !data.new">
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Предмет договора</mat-label>
+      <mat-select formControlName="subjectControl">
+        <mat-option *ngFor="let subject of listOfSubjects" [value]="subject">
+          {{subject | translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+</ng-container>
+
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Риск</mat-label>
+        <textarea matInput style="overflow: hidden"
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="riskControl">
+        </textarea>
+      <mat-error *ngIf="controlForm.controls['riskControl'].hasError('RepeatedRisk')">
+        Такое описание риска уже существует
+      </mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Рекомендация</mat-label>
+        <textarea matInput style="overflow: hidden"
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="recommendationControl">
+        </textarea>
+      <mat-error *ngIf="controlForm.controls['recommendationControl'].hasError('RepeatedRecommendation')">
+        Такое описание рекомендации уже существует
+      </mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field color="accent">
+      <mat-label>Недостаток</mat-label>
+        <textarea matInput style="overflow: hidden"
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="disadvantageControl">
+        </textarea>
+      <mat-error *ngIf="controlForm.controls['disadvantageControl'].hasError('RepeatedDisadvantage')">
+        Такое описание недостатка уже существует
+      </mat-error>
+    </mat-form-field>
+  </p>
+
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+    </div>
+    <div class="col">
+      <button mat-raised-button color="accent" [disabled]="controlForm.invalid" (click)="addRisk()">{{data.new?'Добавить':'Сохранить'}}
+      </button>
+    </div>
+  </div>
+
+</form>
+</div>

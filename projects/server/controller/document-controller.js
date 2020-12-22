@@ -40,7 +40,7 @@ exports.getDocuments = async (req, res) => {
   try {
     let include;
     if (req.query.full === 'false') {
-      include = documentFields + `analysis.attributes`;
+      include = documentFields + `analysis.attributes primary_subject`;
     }
 
     const audit = await Audit.findById(auditId, `charters`, { lean: true });
@@ -60,7 +60,8 @@ exports.getDocuments = async (req, res) => {
         filename: d.filename,
         state: d.state,
         documentType: d.parse.documentType,
-        _id: d._id
+        _id: d._id,
+        primary_subject: d.primary_subject
       };
       if (d.analysis && d.analysis.attributes) {
         if (d.user) {
@@ -104,7 +105,7 @@ exports.getDocument = async (req, res) => {
 
     let document = await Document.findOne(
       { _id: req.query.id, parserResponseCode: 200 },
-      documentFields + `analysis auditId`
+      documentFields + `analysis auditId primary_subject`
     ).lean();
 
     if (document) {
@@ -142,7 +143,7 @@ exports.getDocument = async (req, res) => {
                     'DD.MM.YYYY'
                   )
                 : 'н/д'
-            }. Аудит "${audit.subsidiary.name}" ${moment(
+            }. Проверка "${audit.subsidiary.name}" ${moment(
               audit.auditStart
             ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
               'DD.MM.YYYY'
@@ -160,7 +161,7 @@ exports.getDocument = async (req, res) => {
                     'DD.MM.YYYY'
                   )
                 : 'н/д'
-            }. Аудит "${audit.subsidiary.name}" ${moment(
+            }. Проверка "${audit.subsidiary.name}" ${moment(
               audit.auditStart
             ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
               'DD.MM.YYYY'
@@ -204,6 +205,10 @@ exports.updateDocument = async (req, res) => {
   if (!document) {
     return logger.logError(req, res, 'Document not found', 404);
   }
+
+  // if (req.body.documentType && document.parse.documentType!==req.body.documentType){
+  //   document.parse.documentType = req.body.documentType;
+  // }
 
   if (req.body.user) {
     const user = req.body.user;
@@ -267,6 +272,14 @@ exports.updateDocument = async (req, res) => {
     await document.save();
 
     if (document.parse.documentType === 'CHARTER') {
+      const audits = await Audit.find({
+        charters: document._id,
+        status: { $ne: 'Approved' }
+      });
+      for (const audit of audits) {
+        audit.status = 'InWork';
+        await audit.save();
+      }
       await logger.log(
         req,
         res,
@@ -295,9 +308,11 @@ exports.updateDocument = async (req, res) => {
             getAttributeValue(document, 'date')
               ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
               : 'н/д'
-          }. Аудит "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+          }. Проверка "${audit.subsidiary.name}" ${moment(
+            audit.auditStart
+          ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
             'DD.MM.YYYY'
-          )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
+          )}`
         );
       else
         await logger.log(
@@ -309,9 +324,11 @@ exports.updateDocument = async (req, res) => {
             getAttributeValue(document, 'date')
               ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
               : 'н/д'
-          }. Аудит "${audit.subsidiary.name}" ${moment(audit.auditStart).format(
+          }. Проверка "${audit.subsidiary.name}" ${moment(
+            audit.auditStart
+          ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
             'DD.MM.YYYY'
-          )} - ${moment(audit.auditEnd).format('DD.MM.YYYY')}`
+          )}`
         );
       res.status(200).json(document);
     }
@@ -424,16 +441,17 @@ async function getLinkInfo(fromId, toId) {
   const document1 = await Document.findById(fromId).lean();
   const document2 = await Document.findById(toId).lean();
 
-  if (
-    !document1 ||
-    !document2 ||
-    document1.auditId.toString() !== document2.auditId.toString()
-  ) {
-    return {
-      error:
-        'One of documents is not found or documents belong to different audits'
-    };
-  }
+  if (document2 && document2.documentType !== 'CHARTER')
+    if (
+      !document1 ||
+      !document2 ||
+      document1.auditId.toString() !== document2.auditId.toString()
+    ) {
+      return {
+        error:
+          'One of documents is not found or documents belong to different audits'
+      };
+    }
 
   const audit = await Audit.findById(document1.auditId).lean();
 
@@ -492,27 +510,69 @@ exports.getDocumentsByType = async (req, res) => {
   }
 
   try {
-    let documents = await Document.find(
-      {
-        auditId: req.query.auditId,
-        'parse.documentType': req.query.type,
-        parserResponseCode: 200
-      },
-      `parse.documentDate
+    let documents;
+    if (req.query.type !== 'CHARTER')
+      documents = await Document.find(
+        {
+          auditId: req.query.auditId,
+          'parse.documentType': req.query.type,
+          parserResponseCode: 200
+        },
+        `parse.documentDate
     filename
     parse.documentNumber
     analysis.attributes
     `,
-      { lean: true }
-    );
+        { lean: true }
+      );
+    else {
+      const where = {
+        'parse.documentType': 'CHARTER',
+        parserResponseCode: 200,
+        analysis: { $exists: true },
+        $and: [
+          // признак активности
+          {
+            $or: [
+              { isActive: true },
+              { isActive: null },
+              { isActive: { $exists: false } }
+            ]
+          },
+          {
+            $or: [
+              // если существует user
+              {
+                // существует атрибут date
+                'user.attributes.date': { $exists: true }
+              },
+              // если существует только analysis
+              {
+                user: null,
+                // существует атрибут date
+                'analysis.attributes.date': { $exists: true }
+              }
+            ]
+          }
+        ]
+      };
+      documents = await Document.find(
+        where,
+        `filename user analysis parse.documentType`,
+        { lean: true }
+      );
+    }
 
     documents = documents.map(d => {
       return {
         filename: d.filename,
-        documentDate: d.parse.documentDate,
+        documentDate: getAttributeValue(d, 'date'),
         documentType: d.parse.documentType,
-        documentNumber: d.parse.documentNumber,
-        attributes: (d.analysis && d.analysis.attributes) || {},
+        documentNumber: getAttributeValue(d, 'number'),
+        attributes:
+          (d.user && d.user.attributes) ||
+          (d.analysis && d.analysis.attributes) ||
+          {},
         _id: d._id
       };
     });
@@ -632,7 +692,8 @@ function setToDate(charters) {
   // дата "по" будет равна следующей дате из массива
   for (const charter of charters) {
     charter.toDate =
-      dates[dates.indexOf(charter.fromDate.getTime().toString()) + 1];
+      dates[dates.indexOf(charter.fromDate.getTime().toString()) + 1] -
+      86400000;
   }
 }
 

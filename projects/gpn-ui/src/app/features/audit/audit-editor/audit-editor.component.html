@@ -61,7 +61,18 @@
 
     <!-- HEADER -->
     <div class="chart-container">
-      <h2>{{document.documentType|translate}} <span class="doc-number">{{getAttrValue('number')|docNumber}}</span> <span class="heder-footer">{{getAttrValue('date') | date: 'dd LLL yyyy г.'}}</span></h2>
+      <mat-form-field style="width: 25%" color="accent" *ngIf="document.statusAudit!=='Approved'">
+        <mat-label>Тип документа</mat-label>
+        <mat-select [(value)]="selectedType" (selectionChange)="selectionChanged()">
+          <mat-option *ngFor="let type of listOfDocumentTypes" [value]="type">
+            {{type | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <h2>
+        <div *ngIf="document.statusAudit==='Approved'">{{document.documentType|translate}}</div>
+
+        <span class="doc-number">{{getAttrValue('number')|docNumber}}</span> <span class="heder-footer">{{getAttrValue('date') | date: 'dd LLL yyyy г.'}}</span></h2>
 
       <div class="row">
         <div class="col-4">
@@ -80,7 +91,7 @@
       </div>
     </div>
 
-    <div *ngIf="hasWarnings()" class="balloon warnings">
+    <div *ngIf="document.documentType!=='ANNEX' && hasWarnings()" class="balloon warnings">
       <div *ngFor="let warning of document.analysis.warnings" class='warning'>
         {{ warning.code | translate }} <span class="warning-comment">{{ warning.comment }}</span>
       </div>

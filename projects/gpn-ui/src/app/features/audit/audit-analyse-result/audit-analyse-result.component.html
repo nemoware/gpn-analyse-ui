@@ -1,4 +1,4 @@
-<div style="position: fixed; z-index: 10; width: 100%">
+<div style="position: fixed; z-index: 10; width: 100%" >
 <mat-toolbar *ngIf="this.audit">
   <span>
   <h2>
@@ -17,6 +17,8 @@
   <mat-tab label="Документы" [disabled]="maxPageIndex < 1"></mat-tab>
   <mat-tab label="Анализ" [disabled]="maxPageIndex < 2"></mat-tab>
   <mat-tab label="Нарушения" [disabled]="maxPageIndex < 3"></mat-tab>
+  <mat-tab label="Заключение" [disabled]="maxPageIndex < 4"></mat-tab>
+
 </mat-tab-group>
 
 </div>
@@ -126,6 +128,159 @@
   <div *ngIf="selectedPage === 3">
     <gpn-violations-audit [idAudit]="IdAudit"></gpn-violations-audit>
   </div>
+
+  <mat-sidenav-container class="fixed-layout" autosize *ngIf="selectedPage == 4">
+
+    <mat-sidenav mode="side" opened class="left_group">
+      <ngx-spinner
+        bdColor="rgba(250,250,250,0.2)"
+        size="large"
+        color="#0074D9"
+        type="timer"
+      >
+        <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
+      </ngx-spinner>
+      <div *ngIf="!loadingConclusion" class="container" style="padding-top: 60%">
+        <h2>Оглавление</h2>
+        <a href="#" (click)="goToAttribute('intro')">•	Вводная часть</a><br>
+        <a href="#" (click)="goToAttribute('shortSummary')">•	Краткие выводы</a><br>
+        <a href="#" (click)="goToAttribute('strengths')">•	Сильные стороны</a><br>
+        <a href="#" (click)="goToAttribute('disadvantages')">•	Недостатки</a><br>
+        <a href="#" (click)="goToAttribute('recommendations')">•	Рекомендации по усовершенствованию системы корпоративного управления {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}», как инструмента повышения общеуправленческой эффективности</a><br>
+        <a href="#" (click)="goToAttribute('corporateStructure')">•	Текущая корпоративная структура и управление {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}»</a><br>
+        <a href="#" (click)="goToAttribute('result_0')">•	Результаты проверки документов {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» на предмет наличия/отсутствия корпоративных одобрений и их достоверности</a><br>
+        <a href="#" (click)="goToAttribute('result_1')">•	Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ о размещении юридически значимых сведений о фактах деятельности Общества</a><br>
+        <a href="#" (click)="goToAttribute('result_2')">•	Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации</a><br>
+        <a href="#" (click)="goToAttribute('risks')">•	Риски</a><br>
+      <button mat-raised-button color="accent" style=" margin-right: 20px; margin-top: 15px" (click)="exportDocument()"> Экспортировать </button><br>
+      <button mat-raised-button color="accent" style=" margin-right: 20px; margin-top: 15px" [disabled]="!changed" (click)="saveConclusion()"> Сохранить </button>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content style="text-align: center; background-color: white!important;">
+    <ng-container *ngIf="!loadingConclusion">
+        <h3 id="intro" style="margin-top: 15px;text-align: center">Вводная часть</h3>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.intro"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+          </mat-form-field>
+        </p>
+        <h3 id="shortSummary">Краткие выводы</h3>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.shortSummary"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+          </mat-form-field>
+        </p>
+        <h3 id="strengths">Сильные стороны</h3>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.strengths"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+          </mat-form-field>
+        </p>
+        <h3 id="disadvantages">Недостатки</h3>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.disadvantages"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+          </mat-form-field>
+        </p>
+        <h3 id="recommendations">Рекомендации по усовершенствованию системы корпоративного управления {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}», как инструмента повышения общеуправленческой эффективности:</h3>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.recommendations"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+          </mat-form-field>
+        </p>
+        <h2>Полный отчет</h2>
+        <h3 id="corporateStructure">Текущая корпоративная структура и управление {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}»</h3>
+      <p>
+        <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.corporateStructure1"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+        </mat-form-field>
+      </p>        <h3 id="result_0">Результаты проверки документов {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» на предмет наличия/отсутствия корпоративных одобрений и их достоверности</h3>
+        <gpn-violations-audit [idAudit]="IdAudit" [conclusion]="true" (selectedRowsEvent)="onUpdateViolations($event)" [selectedRows]="audit.selectedRows" ></gpn-violations-audit>
+      <span>В результате полной проверки иных видов дополнительных нарушений не выявлено.</span>
+      <br>
+      <h3 id="result_1">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ о размещении юридически значимых сведений о фактах деятельности Общества</h3>
+      <p>
+        <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.result1"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+        </mat-form-field>
+
+      <h3 id="result_2">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации</h3>
+      <p>
+        <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.result2"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+        </mat-form-field>
+
+      <h3 id="risks">Риски</h3>
+      <p>
+        <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.risks"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+        </mat-form-field>
+      </p>
+
+    </ng-container>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>
-
-

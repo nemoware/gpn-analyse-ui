@@ -12,5 +12,8 @@ router.get('/files', controller.getFiles);
 router.put('/parse', controller.parse);
 router.get('/violations', controller.getViolations);
 router.post('/approve', controller.approve);
-
+router.post('/exportConclusion', controller.exportConclusion);
+router.get('/conclusion', controller.getConclusion);
+router.put('/conclusion', controller.postConclusion);
+router.get('/fetch', controller.fetchAudits);
 module.exports = router;

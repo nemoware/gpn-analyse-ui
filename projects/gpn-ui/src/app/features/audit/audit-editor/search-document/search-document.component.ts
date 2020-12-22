@@ -21,7 +21,9 @@ import { Helper } from '@app/features/audit/helper';
 const cols_by_type = {
   CONTRACT: ['date', 'number', 'value', 'org1', 'org2', 'contract_subject'],
   CHARTER: ['date', 'org'],
-  PROTOCOL: ['date', 'org', 'org_level']
+  PROTOCOL: ['date', 'org', 'org_level'],
+  ANNEX: ['date', 'number', 'value', 'org1', 'org2', 'contract_subject'],
+  SUPPLEMENTARY_AGREEMENT: ['date', 'number']
 };
 
 @Component({

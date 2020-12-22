@@ -1,0 +1,35 @@
+<div class="mat-elevation-z10 container">
+  <label style="margin-top: 5px; font-size:16px; font-weight: bold;">Панель фильтров</label>
+  <hr>
+  <mat-form-field appearance="legacy" style="width: 100%">
+    <input matInput placeholder="Наименование ДО" [(ngModel)]="subsidiaryName">
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <input matInput [matDatepicker]="createDate" placeholder="Дата создания" readonly [(ngModel)]="_createDate">
+    <mat-datepicker-toggle matSuffix [for]="createDate"></mat-datepicker-toggle >
+    <mat-datepicker #createDate></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field style="width: 100%" color="accent">
+    <mat-label>Статус проверки</mat-label>
+    <mat-select [(ngModel)]="selectedStatuses" [formControl]="filter" multiple>
+      <mat-option *ngFor="let status of auditStatuses" [value]="status">{{status | translate}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <span>Период проверки</span>
+  <br>
+  <mat-form-field style="width: 50%">
+    <input matInput [matDatepicker]="dateFrom" placeholder="Начало" readonly [(ngModel)]="_dateFrom">
+    <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle >
+    <mat-datepicker #dateFrom></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field style="width: 50%">
+    <input matInput [matDatepicker]="dateTo" placeholder="Окончание" readonly [(ngModel)]="_dateTo">
+    <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+    <mat-datepicker #dateTo></mat-datepicker>
+  </mat-form-field>
+
+  <button mat-raised-button (click)="applyFilter()" style="margin-right: 5px; width: 48%; float: left;">Применить</button>
+  <button mat-raised-button (click)="clearFilter()" style="margin-left: 5px; width: 48%; float: right;">Очистить</button>
+</div>

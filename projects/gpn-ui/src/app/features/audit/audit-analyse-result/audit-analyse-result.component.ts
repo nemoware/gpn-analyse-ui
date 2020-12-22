@@ -1,9 +1,10 @@
 import {
-  Component,
-  OnInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  AfterViewInit
+  Component,
+  ErrorHandler,
+  OnInit
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@root/node_modules/@angular/router';
 import { AuditService } from '@app/features/audit/audit.service';
@@ -15,13 +16,13 @@ import { Tag } from '@app/models/legal-document';
 import {
   faChevronDown,
   faChevronUp,
-  faEye,
   faClock,
-  faFlagCheckered,
   faExclamationTriangle,
+  faEye,
+  faFile,
+  faFlagCheckered,
   faFolder,
-  faFolderOpen,
-  faFile
+  faFolderOpen
 } from '@fortawesome/free-solid-svg-icons';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 import { Document } from '@app/models/document.model';
@@ -29,6 +30,13 @@ import { Helper } from '@app/features/audit/helper';
 import { Audit } from '@app/models/audit.model';
 
 import { FileModel } from '@app/models/file-model';
+import { DatePipe } from '@root/node_modules/@angular/common';
+import { ConclusionModel } from '@app/models/conclusion-model';
+// tslint:disable-next-line:import-blacklist
+import { take } from '@root/node_modules/rxjs/internal/operators';
+import { NgZone, ViewChild } from '@root/node_modules/@angular/core';
+import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field';
+import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 
 interface Node {
   _id?: string;
@@ -53,16 +61,23 @@ interface ExampleFlatNode {
   level: number;
 }
 
-const orderTypes = ['CHARTER', 'CONTRACT', 'PROTOCOL'];
+const orderTypes = [
+  'CHARTER',
+  'CONTRACT',
+  'PROTOCOL',
+  'SUPPLEMENTARY_AGREEMENT',
+  'ANNEX'
+];
 
 @Component({
   selector: 'gpn-audit-analyse-result',
   templateUrl: './audit-analyse-result.component.html',
   styleUrls: ['./audit-analyse-result.component.scss'],
-  providers: [AuditService],
+  providers: [AuditService, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
+  @ViewChild('autosize', { static: false }) autosize: CdkTextareaAutosize;
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   faEye = faEye;
@@ -87,6 +102,10 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   files: FileModel[];
   loading = false;
   mouseOverID = '';
+  conclusion: ConclusionModel;
+  loadingConclusion = true;
+  changed = false;
+  selectedRows: string[] = [];
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   private _transformer = (node: Node, level: number) => {
@@ -111,7 +130,10 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private auditservice: AuditService,
     private changeDetectorRefs: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    public datepipe: DatePipe,
+    private _ngZone: NgZone,
+    private spinner: NgxSpinnerService
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
@@ -134,7 +156,11 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       .subscribe(data => {
         this.audit = data[0];
         this.maxPageIndex = this.audit.typeViewResult;
-        this.selectedPage = this.audit.typeViewResult;
+        if (this.maxPageIndex === 4) {
+          this.selectedPage = 3;
+        } else {
+          this.selectedPage = this.audit.typeViewResult;
+        }
       });
   }
 
@@ -234,6 +260,19 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         }
         this.refreshTree();
       });
+    } else if (this.selectedPage === 4) {
+      this.spinner.show();
+      this.auditservice.getConclusion(this.IdAudit).subscribe(
+        data => {
+          this.conclusion = data;
+          this.loadingConclusion = false;
+          this.spinner.hide();
+        },
+        error => {
+          this.spinner.hide();
+          window.alert(error);
+        }
+      );
     }
     this.loading = false;
   }
@@ -273,7 +312,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   approveAudit() {
     if (
       confirm(
-        'Вы действительно хотите подтвердить аудит? После подтверждения режим обучения и корректировки атрибутов будет недоступен!'
+        'Вы действительно хотите подтвердить проверку? После подтверждения режим обучения и корректировки атрибутов будет недоступен!'
       )
     ) {
       const approve = this.auditservice
@@ -294,5 +333,69 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     } else if (doc.analysis.attributes[attrName]) {
       return doc.analysis.attributes[attrName].value;
     }
+  }
+
+  exportDocument() {
+    const conclusion = this.auditservice
+      .exportConclusion(this.IdAudit, this.selectedRows)
+      .subscribe(data => {
+        const a = document.createElement('a');
+        const blob = this.base64toBlob(atob(data.base64Document));
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = `Заключение по проведенной проверке ${
+          data.subsidiary
+        } за период от ${this.datepipe.transform(
+          data.auditStart,
+          'dd-MM-yyyy'
+        )} по ${this.datepipe.transform(data.auditEnd, 'dd-MM-yyyy')}.docx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        conclusion.unsubscribe();
+      });
+  }
+
+  base64toBlob(byteString) {
+    const ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ia], { type: 'octet/stream' });
+  }
+
+  triggerResize() {
+    // Wait for changes to be applied, then trigger textarea resize.
+    this._ngZone.onStable
+      .pipe(take(1))
+      .subscribe(() => this.autosize.resizeToFitContent(true));
+  }
+
+  saveConclusion() {
+    this.spinner.show();
+    this.auditservice
+      .postConclusion(this.IdAudit, this.conclusion, this.selectedRows)
+      .subscribe(() => {
+        this.changed = false;
+        this.spinner.hide();
+      });
+  }
+
+  setChanged() {
+    this.changed = true;
+  }
+
+  public goToAttribute(id) {
+    const element = document.getElementById(id);
+    if (element != null)
+      element.scrollIntoView({
+        block: 'center',
+        behavior: 'smooth'
+      });
+    return false;
+  }
+
+  onUpdateViolations(selectedRows) {
+    this.changed = true;
+    this.selectedRows = selectedRows;
   }
 }

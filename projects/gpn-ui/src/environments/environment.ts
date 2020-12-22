@@ -6,7 +6,7 @@
 const packageJson = require('@root/package.json');
 
 export const environment = {
-  appName: 'Корпоративный аудит ДО',
+  appName: 'Система корпоративного контроля',
   envName: 'DEV',
   production: false,
   test: false,

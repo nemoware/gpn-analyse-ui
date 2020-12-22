@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { Audit } from '@app/models/audit.model';
+import { Audit, DataSourceAudit } from '@app/models/audit.model';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { Document } from '@app/models/document.model';
 import { KindAttributeModel } from '@app/models/kind-attribute-model';
 import { FileModel } from '@app/models/file-model';
 import { LinksDocumentModel } from '@app/models/links-document-model';
 import { ViolationModel } from '@app/models/violation-model';
+import { ExportDocumentModel } from '@app/models/export-document.model';
+import { ConclusionModel } from '@app/models/conclusion-model';
 
 const api = '/api';
 
@@ -83,12 +85,16 @@ export class AuditService {
     });
   }
 
-  public updateDocument(id: string, attributes: {}): Observable<Document> {
+  public updateDocument(
+    id: string,
+    attributes: {},
+    documentType
+  ): Observable<Document> {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('_id', id);
     return this.http.put<Document>(
       `${api}/document`,
-      { user: attributes },
+      { user: attributes, documentType },
       { params: httpParams }
     );
   }
@@ -174,5 +180,59 @@ export class AuditService {
       { id: id, action: action },
       { responseType: 'text' as 'json' }
     );
+  }
+
+  public exportConclusion(
+    id: string,
+    selectedRows
+  ): Observable<ExportDocumentModel> {
+    return this.http.post<ExportDocumentModel>(
+      `${api}/audit/exportConclusion`,
+      { id, selectedRows }
+    );
+  }
+
+  public getConclusion(id: string): Observable<ConclusionModel> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('id', id);
+    return this.http.get<ConclusionModel>(`${api}/audit/conclusion`, {
+      params: httpParams
+    });
+  }
+
+  public postConclusion(
+    id: string,
+    conclusion: ConclusionModel,
+    selectedRows
+  ): Observable<any> {
+    return this.http.put<ConclusionModel>(
+      `${api}/audit/conclusion`,
+      { id, conclusion, selectedRows },
+      { responseType: 'text' as 'json' }
+    );
+  }
+
+  fetch(
+    filterValue: Array<{ name: string; value: any }>,
+    take: number,
+    pageIndex: number,
+    column: string,
+    sort: string
+  ): Observable<DataSourceAudit> {
+    let httpParams = new HttpParams();
+    if (filterValue) {
+      for (const filter of filterValue) {
+        httpParams = httpParams.append(filter.name, filter.value);
+      }
+    }
+    if (take) httpParams = httpParams.append('take', take.toString());
+    if (pageIndex)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+    if (column) httpParams = httpParams.append('column', column.toString());
+    if (sort) httpParams = httpParams.append('sort', sort.toString());
+
+    return this.http.get<DataSourceAudit>(`${api}/audit/fetch`, {
+      params: httpParams
+    });
   }
 }

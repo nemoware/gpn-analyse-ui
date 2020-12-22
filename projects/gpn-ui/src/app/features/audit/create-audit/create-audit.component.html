@@ -1,6 +1,6 @@
 <div class="container position-relative">
 
-  <h4>Новое задание на аудит</h4>
+  <h4>Новое задание на проверку</h4>
   <mat-form-field color="accent">
     <mat-select [formControl]="subsidiaryCtrl" placeholder="Выбрать Дочернее Общество" #selectSubsidiary (selectionChange)="changeSubsidiary($event)">
       <mat-option>
@@ -33,12 +33,17 @@
   <br>
 
   <section>
-    <label class='field-label'>Диапазон дат документов</label>
     <form [formGroup]="auditForm">
+      <div *ngIf="bookValues.controls" formArrayName="bookValues">
+        <mat-form-field *ngFor="let bookValue of bookValues.controls; let i=index">
+            <input [errorStateMatcher]="errorMatcher" matInput [formControlName]="i" [placeholder]="'Балансовая стоимость за ' + years[i] + ' год'">
+        </mat-form-field>
+      </div>
+      <label class='field-label'>Диапазон дат документов</label>
       <mat-form-field>
         <input id="_auditStart"
                matInput [matDatepicker]="auditStart" placeholder="Начало диапазона" [(ngModel)]="_auditStart"
-               formControlName='auditStart' [errorStateMatcher]="errorMatcher" gpnMaskDate (change)="changeDate($event)"
+               formControlName='auditStart' [errorStateMatcher]="errorMatcher" gpnMaskDate  (dateChange)="matDateChange($event)"
         >
         <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
         <mat-datepicker #auditStart></mat-datepicker>
@@ -47,7 +52,7 @@
 
       <mat-form-field>
         <input id="_auditEnd" matInput [matDatepicker]="auditEnd" placeholder="Конец диапазона" [(ngModel)]="_auditEnd"
-               formControlName='auditEnd' [errorStateMatcher]="errorMatcher" gpnMaskDate (change)="changeDate($event)"
+               formControlName='auditEnd' [errorStateMatcher]="errorMatcher" gpnMaskDate (dateChange)="matDateChange($event)"
         >
         <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
         <mat-datepicker #auditEnd></mat-datepicker>
@@ -64,7 +69,7 @@
       <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
     </div>
     <div class="col">
-      <button mat-raised-button color="accent" (click)="CreateAudit()" [disabled]="!valid()">Новое задание на аудит
+      <button mat-raised-button color="accent" (click)="CreateAudit()" [disabled]="!valid()">Новое задание
       </button>
     </div>
   </div>

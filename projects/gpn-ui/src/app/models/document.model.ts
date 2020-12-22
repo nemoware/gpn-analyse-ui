@@ -40,4 +40,5 @@ export interface Document {
   statusAudit: string;
   starred: boolean;
   state?: number;
+  primary_subject?: string;
 }

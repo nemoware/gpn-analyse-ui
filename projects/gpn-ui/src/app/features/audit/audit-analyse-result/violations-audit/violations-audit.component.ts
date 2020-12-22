@@ -4,7 +4,9 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   MatSort,
@@ -21,6 +23,7 @@ import {
 } from '@root/node_modules/@angular/animations';
 import { Helper } from '@app/features/audit/helper';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
+import { SelectionModel } from '@root/node_modules/@angular/cdk/collections';
 
 @Component({
   selector: 'gpn-violations-audit',
@@ -37,18 +40,45 @@ export class ViolationsAuditComponent implements OnInit {
     'founding_document',
     'reference',
     'violation_type',
-    'violation_reason'
+    'violation_reason',
+    'select'
   ];
   dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
   violations: ViolationModel[];
+  selection = new SelectionModel<ViolationModel>(true, []);
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input() idAudit: string;
+  @Input() conclusion: boolean;
+  @Input() selectedRows: ViolationModel[];
+  @Output() selectedRowsEvent = new EventEmitter<ViolationModel[]>();
+
   constructor(
     private auditservice: AuditService,
     private changeDetectorRefs: ChangeDetectorRef,
     private translate: TranslateService
   ) {}
+
+  emitSelected() {
+    this.selectedRowsEvent.emit(this.selection.selected);
+    return true;
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    this.emitSelected();
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach(row => this.selection.select(row));
+    this.emitSelected();
+  }
 
   _sortingDataAccessor: (data, sortHeaderId: string) => string | number = (
     data,
@@ -75,11 +105,29 @@ export class ViolationsAuditComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.conclusion) {
+      this.col.shift();
+    } else {
+      this.col.pop();
+    }
     this.auditservice.getViolations(this.idAudit).subscribe(data => {
       if (data) {
         this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
         this.dataSource.sort = this.sort;
-        this.dataSource.data = data;
+        this.dataSource.data = data.filter(x => {
+          return x.violation_type;
+        });
+        if (this.selectedRows) {
+          this.dataSource.data.forEach(row => {
+            for (let i = 0; i < this.selectedRows.length; i++) {
+              if (this.compareDocs(row, this.selectedRows[i])) {
+                this.selection.select(row);
+              }
+            }
+          });
+        } else {
+          this.masterToggle();
+        }
         this.changeDetectorRefs.detectChanges();
       }
     });
@@ -115,5 +163,18 @@ export class ViolationsAuditComponent implements OnInit {
         (attribute ? '?attribute=' + attribute : ''),
       '_blank'
     );
+  }
+
+  compareDocs(doc1: ViolationModel, doc2: ViolationModel) {
+    return (
+      doc1.document.id === doc2.document.id &&
+      doc1.founding_document.id === doc2.founding_document.id &&
+      doc1.reference.id === doc2.reference.id
+    );
+  }
+
+  toggleSelection(row) {
+    this.selection.toggle(row);
+    this.emitSelected();
   }
 }

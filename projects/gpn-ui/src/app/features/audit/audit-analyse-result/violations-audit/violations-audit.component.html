@@ -1,5 +1,23 @@
 <table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows matSortActive="document" matSortDirection="desc">
 
+
+  <ng-container *ngIf="conclusion" matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+      >
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? toggleSelection(row) : null"
+                    [checked]="selection.isSelected(row)"
+      >
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
   <!-- Документ -->
   <ng-container matColumnDef="document">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Документ, имеющий нарушение</th>
@@ -46,7 +64,7 @@
         </div>
       </div>
 
-      <div *ngIf="row.document.warnings">
+      <div *ngIf="row.document.warnings && !conclusion">
         <span class='warning'><b>В результате выполненного анализа в документах были определены не все атрибуты</b></span>
         <li *ngFor="let w of row.document.warnings"> {{w.code | translate}}</li>
       </div>

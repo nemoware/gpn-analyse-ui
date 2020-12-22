@@ -37,7 +37,31 @@ const cols_by_type = {
     'analyze_state'
   ],
   CHARTER: ['star', 'date', 'shevron', 'org', 'warnings', 'analyze_state'],
-  PROTOCOL: ['star', 'date', 'org', 'org_level', 'warnings', 'analyze_state']
+  PROTOCOL: ['star', 'date', 'org', 'org_level', 'warnings', 'analyze_state'],
+  ANNEX: [
+    'star',
+    'date',
+    'number',
+    'value',
+    'org1',
+    'org2',
+    'contract_subject',
+    'spacer',
+    'warnings',
+    'analyze_state'
+  ],
+  SUPPLEMENTARY_AGREEMENT: [
+    'star',
+    'date',
+    'number',
+    'value',
+    'org1',
+    'org2',
+    'contract_subject',
+    'spacer',
+    'warnings',
+    'analyze_state'
+  ]
 };
 
 const column_to_sorting_mapping = {
@@ -109,7 +133,7 @@ export class DocumentDetailComponent implements OnInit {
         return 'Ошибка при анализе' + data.analysis.analyze_timestamp;
       if (data.state === 12)
         return (
-          'Документ не попадает под параметры Аудита' +
+          'Документ не попадает под параметры Проверки' +
           data.analysis.analyze_timestamp
         );
       if (data.state === 15)
@@ -180,6 +204,11 @@ export class DocumentDetailComponent implements OnInit {
   }
 
   getAttrValue(attrName: string, doc, default_value = null) {
+    if (attrName === 'subject') {
+      if (doc.primary_subject) {
+        return doc.primary_subject;
+      }
+    }
     if (doc && doc.attributes) {
       const atr = doc.attributes.find(x => x.key === attrName);
       if (atr) return atr.value;
