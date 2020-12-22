@@ -10,6 +10,7 @@ import { SharedModule } from '@shared/shared.module';
 import { LimitValuesFormComponent } from './limit-values-form/limit-values-form.component';
 import { TranslateModule } from '@root/node_modules/@ngx-translate/core';
 import { AuditModule } from '@app/features/audit/audit.module';
+import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
 
 @NgModule({
   declarations: [LimitValuesTableComponent, LimitValuesFormComponent],
@@ -21,7 +22,8 @@ import { AuditModule } from '@app/features/audit/audit.module';
     MatSortModule,
     SharedModule,
     TranslateModule,
-    AuditModule
+    AuditModule,
+    TextMaskModule
   ],
   entryComponents: [LimitValuesFormComponent]
 })
