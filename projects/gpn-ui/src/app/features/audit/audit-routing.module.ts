@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',
     component: ListAuditComponent,
-    data: { title: 'Проверка' }
+    data: { title: 'Главная' }
   },
   {
     path: 'result/:id',
