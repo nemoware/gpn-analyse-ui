@@ -213,7 +213,9 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
 
   deleteDocument(node) {
     if (
-      confirm('Вы действительно изъять данный документ из списка связанных?')
+      confirm(
+        'Вы действительно хотите изъять данный документ из списка связанных?'
+      )
     ) {
       this.auditservice
         .deleteLinks(this.document._id, node._id)
