@@ -61,15 +61,15 @@
 
     <!-- HEADER -->
     <div class="chart-container">
+      <mat-form-field style="width: 25%" color="accent" *ngIf="document.statusAudit!=='Approved'">
+        <mat-label>Тип документа</mat-label>
+        <mat-select [(value)]="selectedType" (selectionChange)="selectionChanged()">
+          <mat-option *ngFor="let type of listOfDocumentTypes" [value]="type">
+            {{type | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <h2>
-        <mat-form-field style="width: 25%" color="accent" *ngIf="document.statusAudit!=='Approved'">
-          <mat-label>Тип документа</mat-label>
-          <mat-select [(value)]="selectedType" (selectionChange)="selectionChanged()">
-            <mat-option *ngFor="let type of listOfDocumentTypes" [value]="type">
-              {{type | translate }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
         <div *ngIf="document.statusAudit==='Approved'">{{document.documentType|translate}}</div>
 
         <span class="doc-number">{{getAttrValue('number')|docNumber}}</span> <span class="heder-footer">{{getAttrValue('date') | date: 'dd LLL yyyy г.'}}</span></h2>
