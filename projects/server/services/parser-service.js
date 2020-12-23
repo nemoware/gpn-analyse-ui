@@ -323,16 +323,16 @@ async function exportConclusion(
     corporateStructure2: conclusion.corporateStructure2,
     results1: conclusion.results1,
     results2: conclusion.results2,
+    results3: conclusion.results3,
+    results4: conclusion.results4,
     strengths: conclusion.strengths,
     disadvantages: conclusion.disadvantages,
     risks: conclusion.risks,
-    recommendations: conclusion.recommendations,
-    result1: conclusion.result1,
-    result2: conclusion.result2
+    recommendations: conclusion.recommendations
   };
 
   // const fs = require('fs');
-  // let data = JSON.stringify(violations, null, 2);
+  // let data = JSON.stringify(body, null, 2);
   // fs.writeFileSync('test.json', data);
 
   const options = {

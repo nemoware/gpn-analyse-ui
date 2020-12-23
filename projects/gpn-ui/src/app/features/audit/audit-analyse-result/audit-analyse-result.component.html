@@ -148,9 +148,9 @@
         <a href="#" (click)="goToAttribute('disadvantages')">•	Недостатки</a><br>
         <a href="#" (click)="goToAttribute('recommendations')">•	Рекомендации по усовершенствованию системы корпоративного управления {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}», как инструмента повышения общеуправленческой эффективности</a><br>
         <a href="#" (click)="goToAttribute('corporateStructure')">•	Текущая корпоративная структура и управление {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}»</a><br>
-        <a href="#" (click)="goToAttribute('result_0')">•	Результаты проверки документов {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» на предмет наличия/отсутствия корпоративных одобрений и их достоверности</a><br>
-        <a href="#" (click)="goToAttribute('result_1')">•	Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ о размещении юридически значимых сведений о фактах деятельности Общества</a><br>
-        <a href="#" (click)="goToAttribute('result_2')">•	Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации</a><br>
+        <a href="#" (click)="goToAttribute('results_1')">•	Результаты проверки документов {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» на предмет наличия/отсутствия корпоративных одобрений и их достоверности</a><br>
+        <a href="#" (click)="goToAttribute('results_3')">•	Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ о размещении юридически значимых сведений о фактах деятельности Общества</a><br>
+        <a href="#" (click)="goToAttribute('results_4')">•	Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации</a><br>
         <a href="#" (click)="goToAttribute('risks')">•	Риски</a><br>
       <button mat-raised-button color="accent" style=" margin-right: 20px; margin-top: 15px" (click)="exportDocument()"> Экспортировать </button><br>
       <button mat-raised-button color="accent" style=" margin-right: 20px; margin-top: 15px" [disabled]="!changed" (click)="saveConclusion()"> Сохранить </button>
@@ -236,31 +236,53 @@
           >
         </textarea>
         </mat-form-field>
-      </p>        <h3 id="result_0">Результаты проверки документов {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» на предмет наличия/отсутствия корпоративных одобрений и их достоверности</h3>
-        <gpn-violations-audit [idAudit]="IdAudit" [conclusion]="true" (selectedRowsEvent)="onUpdateViolations($event)" [selectedRows]="audit.selectedRows" ></gpn-violations-audit>
-      <span>В результате полной проверки иных видов дополнительных нарушений не выявлено.</span>
-      <br>
-      <h3 id="result_1">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ о размещении юридически значимых сведений о фактах деятельности Общества</h3>
+      </p>
+      <h3 id="results_1">Результаты проверки документов {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» на предмет наличия/отсутствия корпоративных одобрений и их достоверности</h3>
       <p>
         <mat-form-field color="accent" appearance="outline">
           <textarea matInput style="overflow: hidden"
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
                     cdkAutosizeMinRows="1"
-                    [(ngModel)]="conclusion.result1"
+                    [(ngModel)]="conclusion.results1"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+        </mat-form-field>
+        <p>
+      <gpn-violations-audit [idAudit]="IdAudit" [conclusion]="true" (selectedRowsEvent)="onUpdateViolations($event)" [selectedRows]="audit.selectedRows" ></gpn-violations-audit>
+      <p>
+        <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.results2"
+                    (ngModelChange)="setChanged()"
+          >
+        </textarea>
+        </mat-form-field>
+      <h3 id="results_3">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ о размещении юридически значимых сведений о фактах деятельности Общества</h3>
+      <p>
+        <mat-form-field color="accent" appearance="outline">
+          <textarea matInput style="overflow: hidden"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    [(ngModel)]="conclusion.results3"
                     (ngModelChange)="setChanged()"
           >
         </textarea>
         </mat-form-field>
 
-      <h3 id="result_2">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации</h3>
+      <h3 id="results_4">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации</h3>
       <p>
         <mat-form-field color="accent" appearance="outline">
           <textarea matInput style="overflow: hidden"
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
                     cdkAutosizeMinRows="1"
-                    [(ngModel)]="conclusion.result2"
+                    [(ngModel)]="conclusion.results4"
                     (ngModelChange)="setChanged()"
           >
         </textarea>
