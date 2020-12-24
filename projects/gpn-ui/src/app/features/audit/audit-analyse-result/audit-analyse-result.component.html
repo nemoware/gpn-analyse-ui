@@ -126,7 +126,7 @@
   </div>
 
   <div *ngIf="selectedPage === 3">
-    <gpn-violations-audit [idAudit]="IdAudit"></gpn-violations-audit>
+    <gpn-violations-audit [idAudit]="IdAudit" [selectedRows]="selectedRows" (selectedRowsEvent)="onUpdateViolations($event)"></gpn-violations-audit>
   </div>
 
   <mat-sidenav-container class="fixed-layout" autosize *ngIf="selectedPage == 4">
@@ -250,7 +250,7 @@
         </textarea>
         </mat-form-field>
         <p>
-      <gpn-violations-audit [idAudit]="IdAudit" [conclusion]="true" (selectedRowsEvent)="onUpdateViolations($event)" [selectedRows]="audit.selectedRows" ></gpn-violations-audit>
+      <gpn-violations-audit [idAudit]="IdAudit" [conclusion]="true" [selectedRows]="selectedRows"></gpn-violations-audit>
       <p>
         <mat-form-field color="accent" appearance="outline">
           <textarea matInput style="overflow: hidden"

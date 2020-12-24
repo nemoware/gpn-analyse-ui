@@ -1,7 +1,7 @@
 <table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows matSortActive="document" matSortDirection="desc">
 
 
-  <ng-container *ngIf="conclusion" matColumnDef="select">
+  <ng-container *ngIf="!conclusion" matColumnDef="select">
     <th mat-header-cell *matHeaderCellDef>
       <mat-checkbox (change)="$event ? masterToggle() : null"
                     [checked]="selection.hasValue() && isAllSelected()"

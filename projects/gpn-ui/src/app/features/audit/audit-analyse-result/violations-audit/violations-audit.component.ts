@@ -60,6 +60,9 @@ export class ViolationsAuditComponent implements OnInit {
   ) {}
 
   emitSelected() {
+    this.auditservice
+      .postSelectedViolations(this.idAudit, this.selection.selected)
+      .subscribe(x => console.log(x));
     this.selectedRowsEvent.emit(this.selection.selected);
     return true;
   }
@@ -68,7 +71,6 @@ export class ViolationsAuditComponent implements OnInit {
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    this.emitSelected();
     return numSelected === numRows;
   }
 
@@ -107,30 +109,36 @@ export class ViolationsAuditComponent implements OnInit {
   ngOnInit() {
     if (this.conclusion) {
       this.col.shift();
-    } else {
       this.col.pop();
     }
-    this.auditservice.getViolations(this.idAudit).subscribe(data => {
-      if (data) {
-        this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
-        this.dataSource.sort = this.sort;
-        this.dataSource.data = data.filter(x => {
-          return x.violation_type;
-        });
-        if (this.selectedRows) {
-          this.dataSource.data.forEach(row => {
-            for (let i = 0; i < this.selectedRows.length; i++) {
-              if (this.compareDocs(row, this.selectedRows[i])) {
-                this.selection.select(row);
-              }
-            }
+    if (this.conclusion && this.selectedRows) {
+      this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
+      this.dataSource.sort = this.sort;
+      this.dataSource.data = this.selectedRows.filter(x => {
+        return x.violation_type;
+      });
+    } else
+      this.auditservice.getViolations(this.idAudit).subscribe(data => {
+        if (data) {
+          this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
+          this.dataSource.sort = this.sort;
+          this.dataSource.data = data.filter(x => {
+            return x.violation_type;
           });
-        } else {
-          this.masterToggle();
+          if (this.selectedRows) {
+            this.dataSource.data.forEach(row => {
+              for (let i = 0; i < this.selectedRows.length; i++) {
+                if (this.compareDocs(row, this.selectedRows[i])) {
+                  this.selection.select(row);
+                }
+              }
+            });
+          } else if (!this.conclusion) {
+            this.masterToggle();
+          }
+          this.changeDetectorRefs.detectChanges();
         }
-        this.changeDetectorRefs.detectChanges();
-      }
-    });
+      });
   }
 
   getKindAttribute(key: string) {

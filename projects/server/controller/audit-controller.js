@@ -703,6 +703,22 @@ exports.postConclusion = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+exports.postSelectedViolations = async (req, res) => {
+  try {
+    const audit = await Audit.findById(req.body.id);
+    if (!audit) {
+      return res.status(404).send(`No audit found with id = ${id}`);
+    }
+    audit.selectedRows = req.body.selectedRows;
+    // console.log(audit.selectedRows);
+    await audit.save();
+    res.status(200);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
 getViolations = selectedRows => {
   let violations = selectedRows;
 

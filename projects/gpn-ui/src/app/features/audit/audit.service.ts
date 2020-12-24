@@ -199,15 +199,24 @@ export class AuditService {
       params: httpParams
     });
   }
+  public postSelectedViolations(
+    id: string,
+    selectedRows: ViolationModel[]
+  ): Observable<any> {
+    return this.http.put<ViolationModel[]>(
+      `${api}/audit/selectedViolations`,
+      { id, selectedRows },
+      { responseType: 'text' as 'json' }
+    );
+  }
 
   public postConclusion(
     id: string,
-    conclusion: ConclusionModel,
-    selectedRows
+    conclusion: ConclusionModel
   ): Observable<any> {
     return this.http.put<ConclusionModel>(
       `${api}/audit/conclusion`,
-      { id, conclusion, selectedRows },
+      { id, conclusion },
       { responseType: 'text' as 'json' }
     );
   }

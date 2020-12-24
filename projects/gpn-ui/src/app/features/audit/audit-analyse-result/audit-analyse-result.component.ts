@@ -37,6 +37,7 @@ import { take } from '@root/node_modules/rxjs/internal/operators';
 import { NgZone, ViewChild } from '@root/node_modules/@angular/core';
 import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field';
 import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
+import { ViolationModel } from '@app/models/violation-model';
 
 interface Node {
   _id?: string;
@@ -105,7 +106,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   conclusion: ConclusionModel;
   loadingConclusion = true;
   changed = false;
-  selectedRows: string[] = [];
+  selectedRows: ViolationModel[];
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   private _transformer = (node: Node, level: number) => {
@@ -158,6 +159,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
         this.maxPageIndex = this.audit.typeViewResult;
         if (this.maxPageIndex === 4) {
           this.selectedPage = 3;
+          this.selectedRows = this.audit.selectedRows;
         } else {
           this.selectedPage = this.audit.typeViewResult;
         }
@@ -373,7 +375,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   saveConclusion() {
     this.spinner.show();
     this.auditservice
-      .postConclusion(this.IdAudit, this.conclusion, this.selectedRows)
+      .postConclusion(this.IdAudit, this.conclusion)
       .subscribe(() => {
         this.changed = false;
         this.spinner.hide();
