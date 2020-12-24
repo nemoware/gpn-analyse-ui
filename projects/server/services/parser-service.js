@@ -328,7 +328,8 @@ async function exportConclusion(
     strengths: conclusion.strengths,
     disadvantages: conclusion.disadvantages,
     risks: conclusion.risks,
-    recommendations: conclusion.recommendations
+    recommendations: conclusion.recommendations,
+    legalEntityType: conclusion.legal_entity_type
   };
 
   // const fs = require('fs');
