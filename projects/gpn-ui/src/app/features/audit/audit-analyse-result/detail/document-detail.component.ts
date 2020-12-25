@@ -13,13 +13,13 @@ import { Router } from '@root/node_modules/@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from '@root/node_modules/@angular/animations';
+// import {
+//   animate,
+//   state,
+//   style,
+//   transition,
+//   trigger
+// } from '@root/node_modules/@angular/animations';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { AuditService } from '@app/features/audit/audit.service';
 
@@ -80,17 +80,17 @@ const column_to_sorting_mapping = {
   templateUrl: './document-detail.component.html',
   styleUrls: ['./document-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DatePipe],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      )
-    ])
-  ]
+  providers: [DatePipe]//,
+  // animations: [
+  //   trigger('detailExpand', [
+  //     state('collapsed', style({ height: '0px', minHeight: '0' })),
+  //     state('expanded', style({ height: '*' })),
+  //     transition(
+  //       'expanded <=> collapsed',
+  //       animate('100ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+  //     )
+  //   ])
+  // ]
 })
 export class DocumentDetailComponent implements OnInit {
   @Input() documents: any;
