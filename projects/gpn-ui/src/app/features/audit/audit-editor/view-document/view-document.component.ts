@@ -140,8 +140,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     normal_text: string
   ) {
     let result = normal_text;
-    for (let i = words.length - 1; i >= 0; i--) {
+    let pieces=[]
+    for (let i = 0; i < words.length; i++) {
       let word = normal_text.slice(words[i][0], words[i][1]);
+       
+      if (i>0){        
+        pieces.push(normal_text.slice(words[i-1][1], words[i][0])) //delimiter
+      }
       if (Number(word) && Number(word) >= 1000) {
         const checkValue = normal_text.slice(words[i][1], words[i][1] + 50);
         if (checkValue.match('руб|доллар|евро|тенге'))
@@ -149,14 +154,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, '$& ');
       }
-      result =
-        result.slice(0, words[i][0]) +
-        `<span id = "span_${i}">` +
-        word +
-        '</span>' +
-        result.slice(words[i][1]);
+      
+      pieces.push(`<span id = "span_${i}">`)
+      pieces.push(word)
+      pieces.push('</span>')
+      
     }
-    return '<span id="top"></span>' + result + '<span id ="foot"></span>';
+    return '<span id="top"></span>' + pieces.join('') + '<span id ="foot"></span>';
   }
 
   setAttribute(
