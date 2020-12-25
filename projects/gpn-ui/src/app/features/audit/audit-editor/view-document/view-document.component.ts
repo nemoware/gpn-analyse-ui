@@ -69,14 +69,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   refreshView(attributes?: Array<AttributeModel>) {
-    this.spinner.show();
+    // this.spinner.show();
     if (attributes) this.attributes = attributes;
 
     const myObservables = new Observable((observer: Observer<string>) => {
       setTimeout(() => {
         observer.next(
           this.wrapWords(
-            this.attributes,
             this.document.analysis.tokenization_maps.words,
             this.document.analysis.normal_text
           )
@@ -122,7 +121,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         }
 
-        this.spinner.hide();
+        // this.spinner.hide();
 
         if (this.selectedAttribute) {
           this.goToAttribute(this.selectedAttribute);
@@ -135,7 +134,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   wrapWords(
-    attributes: Array<AttributeModel>,
+    
     words: [[number, number]],
     normal_text: string
   ) {
