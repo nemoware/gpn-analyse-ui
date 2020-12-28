@@ -149,12 +149,10 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
       node => node.level,
       node => node.expandable
     );
-  }
-
-  ngAfterViewInit(): void {
     this.auditservice
       .getAudits([{ name: 'id', value: this.IdAudit }])
-      .subscribe(data => {
+      .toPromise()
+      .then(data => {
         this.audit = data[0];
         this.maxPageIndex = this.audit.typeViewResult;
         if (this.maxPageIndex === 4) {
@@ -164,6 +162,10 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
           this.selectedPage = this.audit.typeViewResult;
         }
       });
+  }
+
+  ngAfterViewInit(): void {
+    this.refreshData();
   }
 
   fillNodes(files: FileModel, parentNode: Node = null) {
