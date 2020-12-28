@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ErrorHandler,
+  OnDestroy,
   OnInit
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@root/node_modules/@angular/router';
@@ -33,11 +34,12 @@ import { FileModel } from '@app/models/file-model';
 import { DatePipe } from '@root/node_modules/@angular/common';
 import { ConclusionModel } from '@app/models/conclusion-model';
 // tslint:disable-next-line:import-blacklist
-import { take } from '@root/node_modules/rxjs/internal/operators';
+import { take, takeUntil } from '@root/node_modules/rxjs/internal/operators';
 import { NgZone, ViewChild } from '@root/node_modules/@angular/core';
 import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field';
 import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { ViolationModel } from '@app/models/violation-model';
+import { Subject } from '@root/node_modules/rxjs';
 
 interface Node {
   _id?: string;
@@ -77,7 +79,8 @@ const orderTypes = [
   providers: [AuditService, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
+export class AuditAnalyseResultComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('autosize', { static: false }) autosize: CdkTextareaAutosize;
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
@@ -107,6 +110,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   loadingConclusion = true;
   changed = false;
   selectedRows: ViolationModel[];
+  private destroyStream = new Subject<void>();
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   private _transformer = (node: Node, level: number) => {
@@ -154,6 +158,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.auditservice
       .getAudits([{ name: 'id', value: this.IdAudit }])
+      .pipe(takeUntil(this.destroyStream))
       .subscribe(data => {
         this.audit = data[0];
         this.maxPageIndex = this.audit.typeViewResult;
@@ -197,84 +202,93 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     this.TREE_DATA = [];
 
     if (this.selectedPage === 0) {
-      this.auditservice.getFiles(this.IdAudit).subscribe(data => {
-        this.files = data;
-        for (const n of this.files) this.fillNodes(n);
-        this.refreshTree();
-      });
+      this.auditservice
+        .getFiles(this.IdAudit)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe(data => {
+          this.files = data;
+          for (const n of this.files) this.fillNodes(n);
+          this.refreshTree();
+        });
     } else if (this.selectedPage <= 2) {
-      this.auditservice.getDouments(this.IdAudit, false).subscribe(data => {
-        this.docs = data;
+      this.auditservice
+        .getDouments(this.IdAudit, false)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe(data => {
+          this.docs = data;
 
-        if (this.audit.typeViewResult === 2) {
-          this.docs = this.docs.filter(
-            x => x.analysis != null || x.user != null
-          );
-        }
-        const uniqueType =
-          this.selectedPage === 2
-            ? orderTypes
-            : this.docs.reduce(function(a, d) {
-                if (a.indexOf(d.documentType) === -1) {
-                  a.push(d.documentType);
-                }
-                return a;
-              }, []);
-        for (const t of uniqueType) {
-          let i = 0;
-          const node = { name: t, children: [], childCount: 0 };
-          const docs = { docs: [] };
-          for (const d of this.docs.filter(x => x.documentType === t)) {
-            i++;
+          if (this.audit.typeViewResult === 2) {
+            this.docs = this.docs.filter(
+              x => x.analysis != null || x.user != null
+            );
+          }
+          const uniqueType =
+            this.selectedPage === 2
+              ? orderTypes
+              : this.docs.reduce(function(a, d) {
+                  if (a.indexOf(d.documentType) === -1) {
+                    a.push(d.documentType);
+                  }
+                  return a;
+                }, []);
+          for (const t of uniqueType) {
+            let i = 0;
+            const node = { name: t, children: [], childCount: 0 };
+            const docs = { docs: [] };
+            for (const d of this.docs.filter(x => x.documentType === t)) {
+              i++;
 
-            const addon = {
-              //TODO: why ?? we need to convert doc to this wtf?
-              name: d.filename,
-              index: i,
-              children: [],
-              childCount: 0,
-              parseError: d.parseError,
-              documentType: t,
-              attributes: null,
-              starred: d.starred
-            };
+              const addon = {
+                //TODO: why ?? we need to convert doc to this wtf?
+                name: d.filename,
+                index: i,
+                children: [],
+                childCount: 0,
+                parseError: d.parseError,
+                documentType: t,
+                attributes: null,
+                starred: d.starred
+              };
 
-            const nodeChild = Object.assign({}, d, addon);
+              const nodeChild = Object.assign({}, d, addon);
+
+              if (this.selectedPage === 2) {
+                nodeChild.attributes =
+                  d.user != null
+                    ? Helper.json2array(d.user.attributes)
+                    : d.analysis && d.analysis.attributes
+                    ? Helper.json2array(d.analysis.attributes)
+                    : [];
+                docs.docs.push(nodeChild);
+              } else node.children.push(nodeChild);
+            }
 
             if (this.selectedPage === 2) {
-              nodeChild.attributes =
-                d.user != null
-                  ? Helper.json2array(d.user.attributes)
-                  : d.analysis && d.analysis.attributes
-                  ? Helper.json2array(d.analysis.attributes)
-                  : [];
-              docs.docs.push(nodeChild);
-            } else node.children.push(nodeChild);
+              node.children.push(docs);
+              node.childCount = docs.docs.length;
+            } else node.childCount = node.children.length;
+
+            if (this.selectedPage !== 2 || docs.docs.length > 0)
+              this.TREE_DATA.push(node);
           }
-
-          if (this.selectedPage === 2) {
-            node.children.push(docs);
-            node.childCount = docs.docs.length;
-          } else node.childCount = node.children.length;
-
-          if (this.selectedPage !== 2 || docs.docs.length > 0)
-            this.TREE_DATA.push(node);
-        }
-        this.refreshTree();
-      });
+          this.refreshTree();
+        });
     } else if (this.selectedPage === 4) {
       this.spinner.show();
-      this.auditservice.getConclusion(this.IdAudit).subscribe(
-        data => {
-          this.conclusion = data;
-          this.loadingConclusion = false;
-          this.spinner.hide();
-        },
-        error => {
-          this.spinner.hide();
-          window.alert(error);
-        }
-      );
+      this.auditservice
+        .getConclusion(this.IdAudit)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe(
+          data => {
+            this.conclusion = data;
+            this.loadingConclusion = false;
+            this.spinner.hide();
+          },
+          error => {
+            this.spinner.hide();
+            window.alert(error);
+          }
+        );
     }
     this.loading = false;
   }
@@ -319,7 +333,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     ) {
       const approve = this.auditservice
         .postApprove(this.IdAudit)
-        .subscribe(data => {
+        .subscribe(() => {
           this.audit.status = 'Approved';
           approve.unsubscribe();
           this.changeDetectorRefs.detectChanges();
@@ -376,6 +390,7 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     this.auditservice
       .postConclusion(this.IdAudit, this.conclusion)
+      .pipe(takeUntil(this.destroyStream))
       .subscribe(() => {
         this.changed = false;
         this.spinner.hide();
@@ -399,5 +414,9 @@ export class AuditAnalyseResultComponent implements OnInit, AfterViewInit {
   onUpdateViolations(selectedRows) {
     this.changed = true;
     this.selectedRows = selectedRows;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

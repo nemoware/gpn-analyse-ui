@@ -4,14 +4,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   AfterViewInit,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 
 import { EventViewerService } from '@app/features/events/event.viewer.service';
 import { MatPaginator, MatSort } from '@root/node_modules/@angular/material';
 import { EventDataSource } from '@app/features/events/event-data-source';
 import { tap } from 'rxjs/operators';
-import { merge } from '@root/node_modules/rxjs';
+import { merge, Subject } from '@root/node_modules/rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gpn-event.viewer',
@@ -20,7 +22,7 @@ import { merge } from '@root/node_modules/rxjs';
   providers: [EventViewerService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventViewerComponent implements OnInit, AfterViewInit {
+export class EventViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private eventviewerservice: EventViewerService) {}
 
   count = 0;
@@ -32,6 +34,7 @@ export class EventViewerComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['time', 'login', 'name', 'details'];
   eventsType = [];
   _filterValue: [];
+  private destroyStream = new Subject<void>();
 
   ngOnInit() {
     this.dataSource = new EventDataSource(this.eventviewerservice);
@@ -39,6 +42,7 @@ export class EventViewerComponent implements OnInit, AfterViewInit {
 
     this.eventviewerservice
       .getEventsType()
+      .pipe(takeUntil(this.destroyStream))
       .subscribe(value => (this.eventsType = value));
   }
 
@@ -65,5 +69,9 @@ export class EventViewerComponent implements OnInit, AfterViewInit {
     this._filterValue = filterVlaue;
     this.paginator.pageIndex = 0;
     this.loadEventsPage();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

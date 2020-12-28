@@ -5,7 +5,8 @@ import {
   Inject,
   ViewChild,
   ChangeDetectorRef,
-  AfterViewInit
+  AfterViewInit,
+  OnDestroy
 } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -18,6 +19,8 @@ import { Audit } from '@app/models/audit.model';
 import { AuditService } from '@app/features/audit/audit.service';
 import { LinksDocumentModel } from '@app/models/links-document-model';
 import { Helper } from '@app/features/audit/helper';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from '@root/node_modules/rxjs';
 const cols_by_type = {
   CONTRACT: ['date', 'number', 'value', 'org1', 'org2', 'contract_subject'],
   CHARTER: ['date', 'org'],
@@ -33,10 +36,12 @@ const cols_by_type = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [AuditService]
 })
-export class SearchDocumentComponent implements OnInit, AfterViewInit {
+export class SearchDocumentComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   faTimes = faTimes;
   columns: string[];
   strDocument: string;
+  private destroyStream = new Subject<void>();
 
   documents: LinksDocumentModel[];
   documentsFiltered: LinksDocumentModel[];
@@ -86,6 +91,7 @@ export class SearchDocumentComponent implements OnInit, AfterViewInit {
     this.columns = cols_by_type[this.data.type].map(x => x);
     this.auditservice
       .getDocumentsByType(this.data.auditId, this.data.type)
+      .pipe(takeUntil(this.destroyStream))
       .subscribe(data => {
         this.documents = data;
         if (this.data.Docs && this.data.Docs.length > 0) {
@@ -110,5 +116,9 @@ export class SearchDocumentComponent implements OnInit, AfterViewInit {
       if (atr) return atr.value;
     }
     return default_value;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

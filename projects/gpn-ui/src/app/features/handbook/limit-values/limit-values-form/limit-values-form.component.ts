@@ -4,7 +4,8 @@ import {
   ChangeDetectionStrategy,
   Inject,
   NgZone,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import {
   MatDialogRef,
@@ -25,10 +26,11 @@ import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field'
 import { take } from '@root/node_modules/rxjs/internal/operators';
 import { HandBookService } from '@app/features/handbook/hand-book.service';
 import { LimitValue, SubLimit } from '@app/models/limitValue.model';
-import { Subscription } from '@root/node_modules/rxjs';
+import { Subject, Subscription } from '@root/node_modules/rxjs';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import createNumberMask from '@root/node_modules/text-mask-addons/dist/createNumberMask';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gpn-limit-values-form',
@@ -36,7 +38,7 @@ import createNumberMask from '@root/node_modules/text-mask-addons/dist/createNum
   styleUrls: ['./limit-values-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LimitValuesFormComponent implements OnInit {
+export class LimitValuesFormComponent implements OnInit, OnDestroy {
   @ViewChild('autosize', { static: false }) autosize: CdkTextareaAutosize;
 
   subscriptions: Subscription[] = [];
@@ -44,6 +46,7 @@ export class LimitValuesFormComponent implements OnInit {
   faTrashAlt = faTrashAlt;
   mouseOverIndex = -1;
   numberMask: any;
+  private destroyStream = new Subject<void>();
 
   constructor(
     private dialogRef: MatDialogRef<LimitValuesFormComponent>,
@@ -181,16 +184,22 @@ export class LimitValuesFormComponent implements OnInit {
 
     if (this.data.new) {
       this.subscriptions.push(
-        this.handBookService.postLimitValue(newValues).subscribe(data => {
-          this.dialogRef.close(data);
-        })
+        this.handBookService
+          .postLimitValue(newValues)
+          .pipe(takeUntil(this.destroyStream))
+          .subscribe(data => {
+            this.dialogRef.close(data);
+          })
       );
     } else {
       newValues._id = this.data.limitValue._id;
       this.subscriptions.push(
-        this.handBookService.updateLimitValue(newValues).subscribe(data => {
-          this.dialogRef.close(data);
-        })
+        this.handBookService
+          .updateLimitValue(newValues)
+          .pipe(takeUntil(this.destroyStream))
+          .subscribe(data => {
+            this.dialogRef.close(data);
+          })
       );
     }
   }
@@ -204,5 +213,9 @@ export class LimitValuesFormComponent implements OnInit {
       }
       return;
     };
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

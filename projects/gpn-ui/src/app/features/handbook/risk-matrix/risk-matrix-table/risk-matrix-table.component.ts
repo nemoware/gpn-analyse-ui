@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
@@ -15,6 +15,8 @@ import {
 } from '@root/node_modules/@angular/core';
 import { RiskMatrixFormComponent } from '@app/features/handbook/risk-matrix/risk-matrix-form/risk-matrix-form.component';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
+import { Subject } from '@root/node_modules/rxjs';
+import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gpn-risk-matrix-table',
   templateUrl: './risk-matrix-table.component.html',
@@ -22,7 +24,7 @@ import { TranslateService } from '@root/node_modules/@ngx-translate/core';
   providers: [HandBookService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RiskMatrixTableComponent implements OnInit {
+export class RiskMatrixTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatTable, { static: false }) table: MatTable<RiskMatrix>;
@@ -39,6 +41,7 @@ export class RiskMatrixTableComponent implements OnInit {
   ];
   faTrashAlt = faTrashAlt;
   mouseOverIndex = -1;
+  private destroyStream = new Subject<void>();
 
   ngOnInit() {
     this.GetRefreshTable();
@@ -62,10 +65,13 @@ export class RiskMatrixTableComponent implements OnInit {
   }
 
   GetRefreshTable() {
-    this.handBookService.getRiskMatrix().subscribe((data: any[]) => {
-      this.data = data;
-      this.LocalRefreshTable(this.data);
-    });
+    this.handBookService
+      .getRiskMatrix()
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe((data: any[]) => {
+        this.data = data;
+        this.LocalRefreshTable(this.data);
+      });
   }
 
   deleteRisk(element: any, event: MouseEvent) {
@@ -78,15 +84,18 @@ export class RiskMatrixTableComponent implements OnInit {
           )}"?`
         )
       ) {
-        this.handBookService.deleteRisk(element._id).subscribe(
-          data => {
-            this.data = this.arrayRemove(this.data, element);
-            this.LocalRefreshTable(this.data);
-          },
-          error => {
-            alert(error.message());
-          }
-        );
+        this.handBookService
+          .deleteRisk(element._id)
+          .pipe(takeUntil(this.destroyStream))
+          .subscribe(
+            data => {
+              this.data = this.arrayRemove(this.data, element);
+              this.LocalRefreshTable(this.data);
+            },
+            error => {
+              alert(error.message());
+            }
+          );
       }
     }
   }
@@ -157,5 +166,9 @@ export class RiskMatrixTableComponent implements OnInit {
         this.changeDetectorRefs.detectChanges();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

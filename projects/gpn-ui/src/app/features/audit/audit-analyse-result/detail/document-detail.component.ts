@@ -4,7 +4,8 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import { ViewDetailDoc } from '@app/models/view.detail.doc';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
@@ -22,6 +23,8 @@ import {
 } from '@root/node_modules/@angular/animations';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { AuditService } from '@app/features/audit/audit.service';
+import { Subject } from '@root/node_modules/rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 const cols_by_type = {
   CONTRACT: [
@@ -92,7 +95,7 @@ const column_to_sorting_mapping = {
     ])
   ]
 })
-export class DocumentDetailComponent implements OnInit {
+export class DocumentDetailComponent implements OnInit, OnDestroy {
   @Input() documents: any;
   @Input() subsidiaryName: string;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -105,6 +108,7 @@ export class DocumentDetailComponent implements OnInit {
   faChevronUp = faChevronUp;
   documentTypeName = null;
   focusedId: string;
+  private destroyStream = new Subject<void>();
 
   constructor(
     private translate: TranslateService,
@@ -232,18 +236,28 @@ export class DocumentDetailComponent implements OnInit {
   starDoc(a, event) {
     event.stopPropagation();
     if (a.starred) {
-      this.auditService.deleteStart(a._id).subscribe(() => {
-        a.starred = false;
-      });
+      this.auditService
+        .deleteStart(a._id)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe(() => {
+          a.starred = false;
+        });
     } else {
-      this.auditService.postStar(a._id).subscribe(() => {
-        a.starred = true;
-      });
+      this.auditService
+        .postStar(a._id)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe(() => {
+          a.starred = true;
+        });
     }
     this.changeDetectorRefs.detectChanges();
   }
 
   focusedDoc(id) {
     this.focusedId = id;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

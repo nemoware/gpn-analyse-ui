@@ -1,7 +1,7 @@
 import browser from 'browser-detect';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { environment as env } from '@environments/environment';
 import { HideDirective } from '../core/authorization/hide.directive';
@@ -18,13 +18,14 @@ import {
 import { AuthorizationData } from '@core/authorization/authorization.data';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { Dictionaries } from '@app/models/dictionaries';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gpn-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   isProd = env.production;
   envName = env.envName;
   version = env.versions.app;
@@ -53,6 +54,7 @@ export class AppComponent implements OnInit {
 
   isAuthenticated$: Observable<boolean>;
   stickyHeader$: Observable<boolean>;
+  private destroyStream = new Subject<void>();
 
   constructor(
     private store: Store<AppState>,
@@ -75,9 +77,12 @@ export class AppComponent implements OnInit {
     this.storageService.testLocalStorage();
     this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));
-    this.authorizationData.getUserInfo().subscribe(value => {
-      if (value) this.loadedUser = true;
-    });
+    this.authorizationData
+      .getUserInfo()
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(value => {
+        if (value) this.loadedUser = true;
+      });
   }
 
   getNameUser() {
@@ -96,5 +101,9 @@ export class AppComponent implements OnInit {
     if (this.authorizationData.userInfo)
       return this.authorizationData.userInfo.roles;
     else return [];
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

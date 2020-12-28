@@ -230,6 +230,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
       this.subscriptions.push(
         this.auditservice
           .getCharter(e.value.id !== this.allSubs.name ? e.value.id : null)
+          .pipe(takeUntil(this._onDestroy))
           .subscribe(data => {
             this.charters = data;
           })

@@ -4,7 +4,8 @@ import {
   ChangeDetectionStrategy,
   Inject,
   AfterViewInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -25,6 +26,8 @@ import {
   faClock
 } from '@fortawesome/free-solid-svg-icons';
 import { Tag } from '@app/models/legal-document';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from '@root/node_modules/rxjs';
 
 interface Node {
   name: string;
@@ -51,7 +54,7 @@ interface ExampleFlatNode {
   providers: [AuditService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuditResultComponent implements OnInit, AfterViewInit {
+export class AuditResultComponent implements OnInit, AfterViewInit, OnDestroy {
   faSearch = faSearch;
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
@@ -59,6 +62,7 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
   faClock = faClock;
   docs: Document[];
   TREE_DATA: Node[] = [];
+  private destroyStream = new Subject<void>();
 
   treeControl;
   treeFlattener;
@@ -110,41 +114,48 @@ export class AuditResultComponent implements OnInit, AfterViewInit {
   }
 
   refreshData() {
-    this.auditservice.getDouments(this.data.auditId, false).subscribe(data => {
-      const uniqueType = data.reduce(function(a, d) {
-        if (a.indexOf(d.documentType) === -1) {
-          a.push(d.documentType);
+    this.auditservice
+      .getDouments(this.data.auditId, false)
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(data => {
+        const uniqueType = data.reduce(function(a, d) {
+          if (a.indexOf(d.documentType) === -1) {
+            a.push(d.documentType);
+          }
+          return a;
+        }, []);
+        this.docs = data;
+        for (const t of uniqueType) {
+          let i = 0;
+          const node = { name: t, children: [], childCount: 0 };
+          for (const d of this.docs.filter(x => x.documentType === t)) {
+            i++;
+            node.children.push({
+              name: d.filename,
+              index: i,
+              documentNumber: d.documentNumber,
+              documentDate: d.documentDate
+            });
+          }
+          node.childCount = node.children.length;
+          this.TREE_DATA.push(node);
         }
-        return a;
-      }, []);
-      this.docs = data;
-      for (const t of uniqueType) {
-        let i = 0;
-        const node = { name: t, children: [], childCount: 0 };
-        for (const d of this.docs.filter(x => x.documentType === t)) {
-          i++;
-          node.children.push({
-            name: d.filename,
-            index: i,
-            documentNumber: d.documentNumber,
-            documentDate: d.documentDate
-          });
-        }
-        node.childCount = node.children.length;
-        this.TREE_DATA.push(node);
-      }
-      this.dataSource = new MatTreeFlatDataSource(
-        this.treeControl,
-        this.treeFlattener
-      );
-      this.dataSource.data = this.TREE_DATA;
-      this.changeDetectorRefs.detectChanges();
-    });
+        this.dataSource = new MatTreeFlatDataSource(
+          this.treeControl,
+          this.treeFlattener
+        );
+        this.dataSource.data = this.TREE_DATA;
+        this.changeDetectorRefs.detectChanges();
+      });
   }
 
   valueSearch(value: string) {}
 
   closeForm() {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

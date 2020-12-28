@@ -4,7 +4,8 @@ import {
   ChangeDetectionStrategy,
   AfterViewInit,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import {
   MatDialog,
@@ -28,6 +29,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { SearchDocumentComponent } from '@app/features/audit/audit-editor/search-document/search-document.component';
 import { LinksDoc } from '@app/models/links-doc';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from '@root/node_modules/rxjs';
 
 interface Node {
   _id?: string;
@@ -56,13 +59,15 @@ interface ExampleFlatNode {
   styleUrls: ['./document-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocumentDetailsComponent implements OnInit, AfterViewInit {
+export class DocumentDetailsComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   @Input() document: Document;
   @Input() editable: boolean;
 
   faTimes = faTimes;
   faPlus = faPlus;
   focusedId = '';
+  private destroyStream = new Subject<void>();
 
   subjects = [];
   TREE_DATA: Node[] = [];
@@ -114,44 +119,47 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
   refreshData() {
     this.TREE_DATA = [];
     if (this.document.documentType !== 'CHARTER')
-      this.auditservice.getLinkDocuments(this.document._id).subscribe(res => {
-        this.linkDoc = res;
-        const uniqueType = this.linkDoc.reduce(function(a, d) {
-          if (a.indexOf(d.documentType) === -1) {
-            a.push(d.documentType);
+      this.auditservice
+        .getLinkDocuments(this.document._id)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe(res => {
+          this.linkDoc = res;
+          const uniqueType = this.linkDoc.reduce(function(a, d) {
+            if (a.indexOf(d.documentType) === -1) {
+              a.push(d.documentType);
+            }
+            return a;
+          }, []);
+          for (const t of uniqueType) {
+            let i = 0;
+            const node = { name: t, children: [], childCount: 0, type: t };
+
+            for (const d of this.linkDoc.filter(x => x.documentType === t)) {
+              i++;
+              const nodeChild = {
+                _id: d._id,
+                name: d.filename,
+                index: i,
+                documentNumber: d.documentNumber,
+                documentDate: d.documentDate,
+                type: t,
+                linkId: d.linkId
+              };
+
+              node.children.push(nodeChild);
+              node.childCount = node.children.length;
+            }
+
+            this.TREE_DATA.push(node);
           }
-          return a;
-        }, []);
-        for (const t of uniqueType) {
-          let i = 0;
-          const node = { name: t, children: [], childCount: 0, type: t };
 
-          for (const d of this.linkDoc.filter(x => x.documentType === t)) {
-            i++;
-            const nodeChild = {
-              _id: d._id,
-              name: d.filename,
-              index: i,
-              documentNumber: d.documentNumber,
-              documentDate: d.documentDate,
-              type: t,
-              linkId: d.linkId
-            };
-
-            node.children.push(nodeChild);
-            node.childCount = node.children.length;
+          for (const type of LinksDoc.getLinksType(this.document.documentType)
+            .links) {
+            this.createEmpty(type, uniqueType);
           }
 
-          this.TREE_DATA.push(node);
-        }
-
-        for (const type of LinksDoc.getLinksType(this.document.documentType)
-          .links) {
-          this.createEmpty(type, uniqueType);
-        }
-
-        this.refreshTree();
-      });
+          this.refreshTree();
+        });
   }
 
   createEmpty(type: string, uniqueType: string[]) {
@@ -219,6 +227,7 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
     ) {
       this.auditservice
         .deleteLinks(this.document._id, node._id)
+        .pipe(takeUntil(this.destroyStream))
         .subscribe(data => {
           this.refreshData();
         });
@@ -246,5 +255,9 @@ export class DocumentDetailsComponent implements OnInit, AfterViewInit {
       return atr.value;
     }
     return default_value;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy
+} from '@angular/core';
 import { AuditService } from '@app/features/audit/audit.service';
 import { ViewChild } from '@root/node_modules/@angular/core';
 import {
@@ -7,13 +12,15 @@ import {
   MatSort
 } from '@root/node_modules/@angular/material';
 import { AuditDataSource } from '@app/features/audit/audit-data-source';
-import { merge } from '@root/node_modules/rxjs';
+import { merge, Subject } from '@root/node_modules/rxjs';
 import { tap } from '@root/node_modules/rxjs/operators';
 import { DatePipe } from '@root/node_modules/@angular/common';
 import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { CreateAuditComponent } from '@app/features/audit/create-audit/create-audit.component';
 import { Router } from '@root/node_modules/@angular/router';
+import { takeUntil } from 'rxjs/operators';
+
 @Component({
   selector: 'gpn-list.audit',
   templateUrl: './list.audit.component.html',
@@ -21,7 +28,7 @@ import { Router } from '@root/node_modules/@angular/router';
   providers: [AuditService, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListAuditComponent implements OnInit {
+export class ListAuditComponent implements OnInit, OnDestroy {
   constructor(
     private auditService: AuditService,
     private spinner: NgxSpinnerService,
@@ -56,17 +63,21 @@ export class ListAuditComponent implements OnInit {
   _filterValue: [];
   faTrashAlt = faTrashAlt;
   mouseOverIndex = -1;
+  private destroyStream = new Subject<void>();
 
   ngOnInit() {
     this.dataSource = new AuditDataSource(this.auditService);
     this.dataSource.loadAudits([], 'createDate', 'desc', 0, this.defPageSize);
-    this.dataSource.getLoadingState().subscribe(res => {
-      if (res) {
-        this.spinner.show();
-      } else {
-        this.spinner.hide();
-      }
-    });
+    this.dataSource
+      .getLoadingState()
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(res => {
+        if (res) {
+          this.spinner.show();
+        } else {
+          this.spinner.hide();
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -105,12 +116,15 @@ export class ListAuditComponent implements OnInit {
           )}"?`
         )
       ) {
-        this.auditservice.deleteAudit(element._id).subscribe(
-          () => this.loadAuditsPage(),
-          error => {
-            alert(error.message());
-          }
-        );
+        this.auditservice
+          .deleteAudit(element._id)
+          .pipe(takeUntil(this.destroyStream))
+          .subscribe(
+            () => this.loadAuditsPage(),
+            error => {
+              alert(error.message());
+            }
+          );
       }
     }
   }
@@ -135,5 +149,9 @@ export class ListAuditComponent implements OnInit {
 
   onMouseOver(index) {
     this.mouseOverIndex = index;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

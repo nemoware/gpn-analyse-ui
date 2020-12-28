@@ -5,7 +5,8 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   ViewChild,
-  Input
+  Input,
+  OnDestroy
 } from '@angular/core';
 import { AuditService } from '@app/features/audit/audit.service';
 import { ActivatedRoute, Router } from '@root/node_modules/@angular/router';
@@ -17,6 +18,8 @@ import { Helper } from '@app/features/audit/helper';
 // import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { ResizedEvent } from 'angular-resize-event';
 import { CompetencechartsComponent } from '@app/features/audit/audit-editor/competencecharts/competencecharts.component';
+import { takeUntil } from '@root/node_modules/rxjs/operators';
+import { Subject } from '@root/node_modules/rxjs';
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -25,7 +28,7 @@ import { CompetencechartsComponent } from '@app/features/audit/audit-editor/comp
   providers: [AuditService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuditEditorComponent implements OnInit, AfterViewInit {
+export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   IdDocument;
   document: Document;
   attributes: Array<AttributeModel>;
@@ -40,6 +43,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   changed = false;
   selectedAttribute: string;
   selectedType: string;
+  private destroyStream = new Subject<void>();
   listOfDocumentTypes = [
     'CONTRACT',
     'CHARTER',
@@ -80,17 +84,22 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
   }
 
   refreshData(needRefresh: boolean = false) {
-    this.auditservice.getDoument(this.IdDocument).subscribe(data => {
-      this.document = data;
-      if (this.document.user) {
-        this.attributes = Helper.json2array(this.document.user.attributes);
-      } else if (this.document.analysis.attributes) {
-        this.attributes = Helper.json2array(this.document.analysis.attributes);
-      } else this.attributes = [];
-      if (needRefresh) this.view_doc.refreshView(this.attributes);
-      this.selectedType = this.document.documentType;
-      this.changeDetectorRefs.detectChanges();
-    });
+    this.auditservice
+      .getDoument(this.IdDocument)
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(data => {
+        this.document = data;
+        if (this.document.user) {
+          this.attributes = Helper.json2array(this.document.user.attributes);
+        } else if (this.document.analysis.attributes) {
+          this.attributes = Helper.json2array(
+            this.document.analysis.attributes
+          );
+        } else this.attributes = [];
+        if (needRefresh) this.view_doc.refreshView(this.attributes);
+        this.selectedType = this.document.documentType;
+        this.changeDetectorRefs.detectChanges();
+      });
   }
 
   goToAttribute(id: string) {
@@ -141,6 +150,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
     this.document.isActive = !this.document.isActive;
     this.auditservice
       .deactivateCharter(this.document._id, this.document.isActive)
+      .pipe(takeUntil(this.destroyStream))
       .subscribe(
         () => {},
         error => {
@@ -151,5 +161,9 @@ export class AuditEditorComponent implements OnInit, AfterViewInit {
 
   selectionChanged() {
     this.changed = this.selectedType !== this.document.documentType;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }

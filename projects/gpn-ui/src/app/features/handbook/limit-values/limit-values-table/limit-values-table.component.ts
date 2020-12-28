@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
@@ -7,6 +7,7 @@ import { HandBookService } from '@app/features/handbook/hand-book.service';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@root/node_modules/@angular/router';
 import { MatDialog } from '@root/node_modules/@angular/material';
+import { takeUntil } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -16,6 +17,7 @@ import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { LimitValue, SubLimit } from '@app/models/limitValue.model';
 import { LimitValuesFormComponent } from '@app/features/handbook/limit-values/limit-values-form/limit-values-form.component';
 import { element } from 'protractor';
+import { Subject } from '@root/node_modules/rxjs';
 @Component({
   selector: 'gpn-limit-values-table',
   templateUrl: './limit-values-table.component.html',
@@ -23,7 +25,7 @@ import { element } from 'protractor';
   providers: [HandBookService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LimitValuesTableComponent implements OnInit {
+export class LimitValuesTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatTable, { static: false }) table: MatTable<LimitValue>;
@@ -39,6 +41,7 @@ export class LimitValuesTableComponent implements OnInit {
   ];
   faTrashAlt = faTrashAlt;
   mouseOverIndex = -1;
+  private destroyStream = new Subject<void>();
 
   ngOnInit() {
     this.GetRefreshTable();
@@ -62,25 +65,31 @@ export class LimitValuesTableComponent implements OnInit {
   }
 
   GetRefreshTable() {
-    this.handBookService.getLimitValues().subscribe((data: any[]) => {
-      this.data = data;
-      this.LocalRefreshTable(this.data);
-    });
+    this.handBookService
+      .getLimitValues()
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe((data: any[]) => {
+        this.data = data;
+        this.LocalRefreshTable(this.data);
+      });
   }
 
   deleteLimitValue(elem: any, event: MouseEvent) {
     event.stopPropagation();
     if (elem != null) {
       if (confirm(`Вы действительно хотите удалить предельное значение?`)) {
-        this.handBookService.deleteLimitValue(elem._id).subscribe(
-          data => {
-            this.data = this.arrayRemove(this.data, elem);
-            this.LocalRefreshTable(this.data);
-          },
-          error => {
-            alert(error.message());
-          }
-        );
+        this.handBookService
+          .deleteLimitValue(elem._id)
+          .pipe(takeUntil(this.destroyStream))
+          .subscribe(
+            data => {
+              this.data = this.arrayRemove(this.data, elem);
+              this.LocalRefreshTable(this.data);
+            },
+            error => {
+              alert(error.message());
+            }
+          );
       }
     }
   }
@@ -157,5 +166,9 @@ export class LimitValuesTableComponent implements OnInit {
         this.changeDetectorRefs.detectChanges();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyStream.next();
   }
 }
