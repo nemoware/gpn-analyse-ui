@@ -25,6 +25,7 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { AuditService } from '@app/features/audit/audit.service';
 import { Subject } from '@root/node_modules/rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Helper } from '@app/features/audit/helper';
 
 const cols_by_type = {
   CONTRACT: [
@@ -255,6 +256,16 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   focusedDoc(id) {
     this.focusedId = id;
+  }
+
+  convertAttributes(document) {
+    let attributes;
+    if (document.user) {
+      attributes = Helper.json2array(document.user.attributes);
+    } else if (document.analysis.attributes) {
+      attributes = Helper.json2array(document.analysis.attributes);
+    } else attributes = [];
+    return attributes;
   }
 
   ngOnDestroy(): void {

@@ -91,11 +91,8 @@
       </div>
     </div>
 
-    <div *ngIf="document.documentType!=='ANNEX' && hasWarnings()" class="balloon warnings">
-      <div *ngFor="let warning of document.analysis.warnings" class='warning'>
-        {{ warning.code | translate }} <span class="warning-comment">{{ warning.comment }}</span>
-      </div>
-    </div>
+    <gpn-document-warnings [documentType]="document.documentType" [analysisWarnings]="document.analysis.warnings"
+    [attributes]="attributes"></gpn-document-warnings>
 
     <mat-divider></mat-divider>
 

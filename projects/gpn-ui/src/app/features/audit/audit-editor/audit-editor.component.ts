@@ -74,15 +74,6 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.refreshData();
   }
 
-  hasWarnings(): boolean {
-    return (
-      this.document &&
-      this.document.analysis &&
-      this.document.analysis.warnings &&
-      this.document.analysis.warnings.length > 0
-    );
-  }
-
   refreshData(needRefresh: boolean = false) {
     this.auditservice
       .getDoument(this.IdDocument)
