@@ -54,7 +54,6 @@ import { ViolationsAuditComponent } from './audit-analyse-result/violations-audi
 import { MaskDateDirective } from './create-audit/mask-date.directive';
 import { SortValuePipe } from './audit-editor/competencecharts/sort-value.pipe';
 import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
-import { DocumentWarningsComponent } from './audit-editor/document-warnings/document-warnings.component';
 
 @NgModule({
   declarations: [
@@ -79,8 +78,7 @@ import { DocumentWarningsComponent } from './audit-editor/document-warnings/docu
     ViolationsAuditComponent,
     MaskDateDirective,
     SortValuePipe,
-    AuditFilterComponent,
-    DocumentWarningsComponent
+    AuditFilterComponent
   ],
   imports: [
     CommonModule,
