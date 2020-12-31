@@ -109,7 +109,8 @@ export class EditAttributeComponent implements OnInit, OnDestroy {
       });
     this.numberMask = createNumberMask({
       prefix: '',
-      thousandsSeparatorSymbol: ' '
+      thousandsSeparatorSymbol: ' ',
+      allowDecimal: true
     });
   }
 

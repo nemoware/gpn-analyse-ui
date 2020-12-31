@@ -36,7 +36,7 @@
     <form [formGroup]="auditForm">
       <div *ngIf="bookValues.controls" formArrayName="bookValues">
         <mat-form-field *ngFor="let bookValue of bookValues.controls; let i=index">
-            <input type= "number" [errorStateMatcher]="errorMatcher" matInput [formControlName]="i" [placeholder]="'Балансовая стоимость за ' + years[i] + ' год'">
+            <input [textMask]="{mask: numberMask}" [errorStateMatcher]="errorMatcher" matInput [formControlName]="i" [placeholder]="'Балансовая стоимость за ' + years[i] + ' год'">
         </mat-form-field>
       </div>
       <label class='field-label'>Диапазон дат документов</label>

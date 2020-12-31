@@ -31,6 +31,7 @@ import { take, takeUntil } from 'rxjs/operators';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { Audit } from '@app/models/audit.model';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import createNumberMask from '@root/node_modules/text-mask-addons/dist/createNumberMask';
 
 class CrossFieldErrorMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -71,6 +72,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   _ftpUrl: string = null;
   allSubs = { name: '* Все ДО' };
   years = [];
+  numberMask;
   constructor(
     private dateAdapter: DateAdapter<Date>,
     private auditservice: AuditService,
@@ -114,6 +116,11 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dateAdapter.getFirstDayOfWeek = () => {
       return 1;
     };
+    this.numberMask = createNumberMask({
+      prefix: '',
+      thousandsSeparatorSymbol: ' ',
+      allowDecimal: true
+    });
   }
 
   ngAfterViewInit(): void {
