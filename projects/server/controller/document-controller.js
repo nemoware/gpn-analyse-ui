@@ -219,6 +219,11 @@ exports.updateDocument = async (req, res) => {
       if (
         (warning.code === 'date_not_found' && user.date) ||
         (warning.code === 'number_not_found' && user.number) ||
+        (warning.code === 'contract_value_not_found' &&
+          user['sign_value_currency/value']) ||
+        (warning.code === 'contract_value_not_found' &&
+          user['subject/sign_value_currency/currency']) ||
+        (warning.code === 'protocol_agenda_not_found' && user['agenda_item']) ||
         (warning.code === 'org_name_not_found' &&
           (user['org-1-name'] || user['org-2-name'])) ||
         (warning.code === 'org_type_not_found' &&
