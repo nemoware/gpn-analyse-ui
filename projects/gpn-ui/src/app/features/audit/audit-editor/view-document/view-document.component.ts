@@ -76,7 +76,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       setTimeout(() => {
         observer.next(
           this.wrapWords(
-            this.attributes,
             this.document.analysis.tokenization_maps.words,
             this.document.analysis.normal_text
           )
@@ -86,9 +85,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const customSubscrition = myObservables.subscribe(
       (response: string) => {
-        const view_doc = document.getElementById('view_doc');
-        if (view_doc.innerHTML) view_doc.innerHTML = response;
-        else view_doc.insertAdjacentHTML('afterbegin', response);
+ 
         customSubscrition.unsubscribe();
 
         for (const atr of this.document.analysis.headers) {
@@ -134,14 +131,32 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  wrapWords(
-    attributes: Array<AttributeModel>,
+  wrapWords(    
     words: [[number, number]],
     normal_text: string
   ) {
-    let result = normal_text;
-    for (let i = words.length - 1; i >= 0; i--) {
+
+    const view_doc = document.getElementById('view_doc');
+    view_doc.innerHTML = '';
+
+    // HEADER
+    let node = document.createElement("span");
+    node.setAttribute('id', `top`)
+    view_doc.appendChild(node);
+
+    // FOOTER TODO: move to html?
+    node = document.createElement("span");
+    node.setAttribute('id', `foot`)
+    view_doc.appendChild(node);
+
+    for (let i = 0; i < words.length; i++) {
       let word = normal_text.slice(words[i][0], words[i][1]);
+
+      if (i > 0) {
+        let delimiter = document.createTextNode(normal_text.slice(words[i - 1][1], words[i][0]));         // Create a text node
+        view_doc.appendChild(delimiter);
+
+      }
       if (Number(word) && Number(word) >= 1000) {
         const checkValue = normal_text.slice(words[i][1], words[i][1] + 50);
         if (checkValue.match('руб|доллар|евро|тенге'))
@@ -149,14 +164,16 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, '$& ');
       }
-      result =
-        result.slice(0, words[i][0]) +
-        `<span id = "span_${i}">` +
-        word +
-        '</span>' +
-        result.slice(words[i][1]);
+
+
+      let node = document.createElement("span");
+      node.setAttribute('id', `span_${i}`)
+      let wordnode = document.createTextNode(word);         // Create a text node
+      node.appendChild(wordnode);
+      view_doc.appendChild(node);
+
     }
-    return '<span id="top"></span>' + result + '<span id ="foot"></span>';
+    return '';
   }
 
   setAttribute(
