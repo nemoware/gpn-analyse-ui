@@ -32,9 +32,9 @@ async function getLogin(req, res) {
   } else {
     try {
       let ticket = req.headers.authorization.substring('Negotiate '.length);
-      console.log(ticket);
+      // console.log(ticket);
       const server = await initializeServer(principal);
-      console.log(server);
+      // console.log(server);
       await step(server, ticket);
       console.log(server.username);
       return server.username;
