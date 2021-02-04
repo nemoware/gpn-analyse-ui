@@ -1,25 +1,25 @@
 <div style="position: fixed; z-index: 10; width: 100%" >
-<mat-toolbar *ngIf="this.audit">
+  <mat-toolbar *ngIf="this.audit">
   <span>
   <h2>
-      <span class="headline-date">  {{ audit.auditStart | date :'dd LLL yyyy'}} - {{audit.auditEnd | date : 'dd LLL yyyy'}}</span><br>
-      {{ audit.subsidiary.name }}
+      <span class="headline-date">{{audit.auditStart | date :'dd LLL yyyy'}} - {{audit.auditEnd | date : 'dd LLL yyyy'}}</span><br>
+    <button mat-button (click)="openDialog()">{{audit.subsidiary.name }}</button>
   </h2>
 
   </span>
-  <span class="fill-remaining-space"></span>
-  <span class="headline-status"><span [class]="audit.status">{{ audit.status | translate}}</span></span>
-  <button [disabled] = "audit.status !== 'Done'" mat-raised-button color="accent" class="approve" (click)="approveAudit()"> Подтвердить </button>
-</mat-toolbar>
+    <span class="fill-remaining-space"></span>
+    <span class="headline-status"><span [class]="audit.status">{{ audit.status | translate}}</span></span>
+    <button [disabled] = "audit.status !== 'Done'" mat-raised-button color="accent" class="approve" (click)="approveAudit()"> Подтвердить </button>
+  </mat-toolbar>
 
-<mat-tab-group color="accent" (selectedTabChange)="changePage($event)" [(selectedIndex)]="selectedPage">
-  <mat-tab label="Файлы"></mat-tab>
-  <mat-tab label="Документы" [disabled]="maxPageIndex < 1"></mat-tab>
-  <mat-tab label="Анализ" [disabled]="maxPageIndex < 2"></mat-tab>
-  <mat-tab label="Нарушения" [disabled]="maxPageIndex < 3"></mat-tab>
-  <mat-tab label="Заключение" [disabled]="maxPageIndex < 4"></mat-tab>
+  <mat-tab-group color="accent" (selectedTabChange)="changePage($event)" [(selectedIndex)]="selectedPage">
+    <mat-tab label="Файлы"></mat-tab>
+    <mat-tab label="Документы" [disabled]="maxPageIndex < 1"></mat-tab>
+    <mat-tab label="Анализ" [disabled]="maxPageIndex < 2"></mat-tab>
+    <mat-tab label="Нарушения" [disabled]="maxPageIndex < 3"></mat-tab>
+    <mat-tab label="Заключение" [disabled]="maxPageIndex < 4"></mat-tab>
 
-</mat-tab-group>
+  </mat-tab-group>
 
 </div>
 
@@ -152,12 +152,12 @@
         <a href="#" (click)="goToAttribute('results_3')">•	Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ о размещении юридически значимых сведений о фактах деятельности Общества</a><br>
         <a href="#" (click)="goToAttribute('results_4')">•	Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации</a><br>
         <a href="#" (click)="goToAttribute('risks')">•	Риски</a><br>
-      <button mat-raised-button color="accent" style=" margin-right: 20px; margin-top: 15px" (click)="exportDocument()"> Экспортировать </button><br>
-      <button mat-raised-button color="accent" style=" margin-right: 20px; margin-top: 15px" [disabled]="!changed" (click)="saveConclusion()"> Сохранить </button>
+        <button mat-raised-button color="accent" style=" margin-right: 20px; margin-top: 15px" (click)="exportDocument()"> Экспортировать </button><br>
+        <button mat-raised-button color="accent" style=" margin-right: 20px; margin-top: 15px" [disabled]="!changed" (click)="saveConclusion()"> Сохранить </button>
       </div>
     </mat-sidenav>
     <mat-sidenav-content style="text-align: center; background-color: white!important;">
-    <ng-container *ngIf="!loadingConclusion">
+      <ng-container *ngIf="!loadingConclusion">
         <h3 id="intro" style="margin-top: 15px;text-align: center">Вводная часть</h3>
         <p>
           <mat-form-field color="accent" appearance="outline">
@@ -225,8 +225,8 @@
         </p>
         <h2>Полный отчет</h2>
         <h3 id="corporateStructure">Текущая корпоративная структура и управление {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}»</h3>
-      <p>
-        <mat-form-field color="accent" appearance="outline">
+        <p>
+          <mat-form-field color="accent" appearance="outline">
           <textarea matInput style="overflow: hidden"
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
@@ -235,11 +235,11 @@
                     (ngModelChange)="setChanged()"
           >
         </textarea>
-        </mat-form-field>
-      </p>
-      <h3 id="results_1">Результаты проверки документов {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» на предмет наличия/отсутствия корпоративных одобрений и их достоверности</h3>
-      <p>
-        <mat-form-field color="accent" appearance="outline">
+          </mat-form-field>
+        </p>
+        <h3 id="results_1">Результаты проверки документов {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» на предмет наличия/отсутствия корпоративных одобрений и их достоверности</h3>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
           <textarea matInput style="overflow: hidden"
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
@@ -248,11 +248,11 @@
                     (ngModelChange)="setChanged()"
           >
         </textarea>
-        </mat-form-field>
+          </mat-form-field>
         <p>
-      <gpn-violations-audit [idAudit]="IdAudit" [conclusion]="true" [selectedRows]="selectedRows"></gpn-violations-audit>
-      <p>
-        <mat-form-field color="accent" appearance="outline">
+          <gpn-violations-audit [idAudit]="IdAudit" [conclusion]="true" [selectedRows]="selectedRows"></gpn-violations-audit>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
           <textarea matInput style="overflow: hidden"
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
@@ -261,10 +261,10 @@
                     (ngModelChange)="setChanged()"
           >
         </textarea>
-        </mat-form-field>
-      <h3 id="results_3">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ о размещении юридически значимых сведений о фактах деятельности Общества</h3>
-      <p>
-        <mat-form-field color="accent" appearance="outline">
+          </mat-form-field>
+        <h3 id="results_3">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ о размещении юридически значимых сведений о фактах деятельности Общества</h3>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
           <textarea matInput style="overflow: hidden"
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
@@ -273,11 +273,11 @@
                     (ngModelChange)="setChanged()"
           >
         </textarea>
-        </mat-form-field>
+          </mat-form-field>
 
-      <h3 id="results_4">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации</h3>
-      <p>
-        <mat-form-field color="accent" appearance="outline">
+        <h3 id="results_4">Результаты проверки соблюдения {{conclusion.legal_entity_type}} «{{audit.subsidiaryName}}» положений действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации</h3>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
           <textarea matInput style="overflow: hidden"
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
@@ -286,11 +286,11 @@
                     (ngModelChange)="setChanged()"
           >
         </textarea>
-        </mat-form-field>
+          </mat-form-field>
 
-      <h3 id="risks">Риски</h3>
-      <p>
-        <mat-form-field color="accent" appearance="outline">
+        <h3 id="risks">Риски</h3>
+        <p>
+          <mat-form-field color="accent" appearance="outline">
           <textarea matInput style="overflow: hidden"
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
@@ -299,10 +299,10 @@
                     (ngModelChange)="setChanged()"
           >
         </textarea>
-        </mat-form-field>
-      </p>
+          </mat-form-field>
+        </p>
 
-    </ng-container>
+      </ng-container>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

@@ -10,6 +10,7 @@ import {
 import { ActivatedRoute, Router } from '@root/node_modules/@angular/router';
 import { AuditService } from '@app/features/audit/audit.service';
 import {
+  MatDialog,
   MatTreeFlatDataSource,
   MatTreeFlattener
 } from '@root/node_modules/@angular/material';
@@ -40,6 +41,10 @@ import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field'
 import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { ViolationModel } from '@app/models/violation-model';
 import { Subject } from '@root/node_modules/rxjs';
+import { CreateCharterComponent } from '@app/features/charter/create-charter/create-charter.component';
+import { CreateAuditComponent } from '@app/features/audit/create-audit/create-audit.component';
+import { SubsidiaryDetailComponent } from '@app/features/audit/audit-analyse-result/subsidiary-detail/subsidiary-detail.component';
+import { SearchDocumentComponent } from '@app/features/audit/audit-editor/search-document/search-document.component';
 
 interface Node {
   _id?: string;
@@ -138,7 +143,8 @@ export class AuditAnalyseResultComponent
     private router: Router,
     public datepipe: DatePipe,
     private _ngZone: NgZone,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    public dialog: MatDialog
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
@@ -418,5 +424,15 @@ export class AuditAnalyseResultComponent
 
   ngOnDestroy(): void {
     this.destroyStream.next();
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(SubsidiaryDetailComponent, {
+      data: {
+        audit: this.audit
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {});
   }
 }
