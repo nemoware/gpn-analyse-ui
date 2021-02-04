@@ -69,7 +69,6 @@ export class DocumentDetailsComponent
   focusedId = '';
   private destroyStream = new Subject<void>();
 
-  subjects = [];
   TREE_DATA: Node[] = [];
   treeControl;
   treeFlattener;
@@ -108,12 +107,6 @@ export class DocumentDetailsComponent
       node => node.level,
       node => node.expandable
     );
-    if (this.document.primary_subject) {
-      this.subjects.push(this.document.primary_subject);
-    }
-    if (this.getAttrValue('subject')) {
-      this.subjects.push(this.getAttrValue('subject'));
-    }
   }
 
   refreshData() {
@@ -241,20 +234,6 @@ export class DocumentDetailsComponent
 
   focusedDoc(id) {
     this.focusedId = id;
-  }
-
-  getAttrValue(attrName: string, default_value = null) {
-    let attributes;
-    if (this.document.user && this.document.user.attributes)
-      attributes = this.document.user.attributes;
-    else {
-      attributes = this.document.analysis.attributes;
-    }
-    const atr = attributes.subject;
-    if (atr) {
-      return atr.value;
-    }
-    return default_value;
   }
 
   ngOnDestroy(): void {

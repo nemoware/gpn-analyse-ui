@@ -51,6 +51,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     'SUPPLEMENTARY_AGREEMENT',
     'ANNEX'
   ];
+  subjects = [];
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -98,6 +99,13 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         } else this.attributes = [];
         if (needRefresh) this.view_doc.refreshView(this.attributes);
         this.selectedType = this.document.documentType;
+        if (this.document.primary_subject) {
+          this.subjects.push(this.document.primary_subject);
+        }
+        if (this.getAttrValue('subject')) {
+          this.subjects.push(this.getAttrValue('subject'));
+        }
+        console.log(this.subjects.length === 0);
         this.changeDetectorRefs.detectChanges();
       });
   }

@@ -75,6 +75,28 @@
         <span class="doc-number">{{getAttrValue('number')|docNumber}}</span> <span class="heder-footer">{{getAttrValue('date') | date: 'dd LLL yyyy г.'}}</span></h2>
 
       <div class="row">
+        <ng-container *ngIf="document.documentType === 'CONTRACT'">
+        <div class="col-4">
+          <label>Предмет договора</label>
+          <h3>
+            <ng-container *ngIf="subjects.length === 0">
+              Не обнаружен
+            </ng-container>
+            <ng-container *ngFor="let subject of subjects; let isLast=last">
+              {{subject | translate}}{{isLast ? '' : ', '}}
+            </ng-container>
+          </h3>
+        </div>
+          <div class="col-4">
+            <label>Стоимость договора</label>
+            <h3>
+              <ng-container *ngIf="!getAttrValue('sign_value_currency/value')">
+                Не обнаружена
+              </ng-container>
+              <div>{{ getAttrValue('sign_value_currency/value') | currency:getAttrValue('sign_value_currency/currency')}}</div>
+            </h3>
+          </div>
+        </ng-container>
         <div class="col-4">
           <label *ngIf="getAttrValue('org-1-alias')">{{getAttrValue('org-1-alias')}}</label>
           <h3>

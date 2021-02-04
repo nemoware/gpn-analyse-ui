@@ -86,11 +86,3 @@
 </ng-container>
 
 <mat-divider></mat-divider>
-<ng-container *ngIf="document.documentType==='CONTRACT'">
-  <section>
-    <label class='field-label'>Предмет договора</label>
-    <ng-container *ngFor="let subject of subjects; let isLast=last">
-      {{subject | translate}}{{isLast ? '' : ', '}}
-    </ng-container>
-  </section>
-</ng-container>
