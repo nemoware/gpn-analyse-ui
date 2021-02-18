@@ -170,7 +170,7 @@ exports.parseAudit = async audit => {
   audit.status = 'Loading';
   await audit.save();
 
-  await parseDirectory(audit);
+  if (!global.robot) await parseDirectory(audit);
 
   await this.setResult(audit);
 };
@@ -180,7 +180,9 @@ exports.setResult = async audit => {
     auditId: audit._id,
     parserResponseCode: 504
   });
-  if (count) {
+  if (global.robot) {
+    audit.status = 'Collecting';
+  } else if (count) {
     audit.status = 'LoadingFailed';
   } else {
     count = await Document.countDocuments({

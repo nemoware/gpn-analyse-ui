@@ -27,7 +27,7 @@
   </mat-form-field>
   <div *ngIf="!!charters.length && !selectedCharters.length" id="charter-message">По выбранному ДО в системе имеются устав(ы)</div>
 
-  <mat-form-field color="accent">
+  <mat-form-field color="accent" *ngIf="robotState === false">
     <input matInput placeholder="Путь к файлам (FTP URL)" [(ngModel)]="_ftpUrl">
   </mat-form-field>
   <br>

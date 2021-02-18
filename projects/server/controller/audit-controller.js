@@ -10,22 +10,22 @@ exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
   audit.status = 'New';
   audit.author = res.locals.user;
-
-  try {
-    await fs.access(audit.ftpUrl);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      logger.logError(
-        req,
-        res,
-        `No such file or directory: ${audit.ftpUrl}`,
-        400
-      );
-    } else {
-      logger.logError(req, res, err, 500);
+  if (audit.ftpUrl !== null)
+    try {
+      await fs.access(audit.ftpUrl);
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        logger.logError(
+          req,
+          res,
+          `No such file or directory: ${audit.ftpUrl}`,
+          400
+        );
+      } else {
+        logger.logError(req, res, err, 500);
+      }
+      return;
     }
-    return;
-  }
 
   try {
     await audit.save();
@@ -828,4 +828,8 @@ getViolations = selectedRows => {
     violationModel.push(violation);
   });
   return violationModel;
+};
+
+exports.getRobotState = (req, res) => {
+  res.send({ state: global.robot });
 };

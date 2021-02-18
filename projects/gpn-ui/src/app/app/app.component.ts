@@ -83,6 +83,9 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(value => {
         if (value) this.loadedUser = true;
       });
+    this.authorizationData.getRobotState().subscribe(data => {
+      env.robotState = data.state;
+    });
   }
 
   getNameUser() {

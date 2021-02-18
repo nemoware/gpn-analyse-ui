@@ -17,4 +17,5 @@ router.get('/conclusion', controller.getConclusion);
 router.put('/conclusion', controller.postConclusion);
 router.get('/fetch', controller.fetchAudits);
 router.put('/selectedViolations', controller.postSelectedViolations);
+router.get('/robot', controller.getRobotState);
 module.exports = router;

@@ -26,7 +26,7 @@ import {
   Validators
 } from '@root/node_modules/@angular/forms';
 import { ReplaySubject, Subject, SubscriptionLike } from 'rxjs';
-
+import { environment as env } from '@environments/environment';
 import { take, takeUntil } from 'rxjs/operators';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { Audit } from '@app/models/audit.model';
@@ -73,6 +73,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   allSubs = { name: '* Все ДО' };
   years = [];
   numberMask;
+  robotState: boolean;
   constructor(
     private dateAdapter: DateAdapter<Date>,
     private auditservice: AuditService,
@@ -121,6 +122,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
       thousandsSeparatorSymbol: ' ',
       allowDecimal: true
     });
+    this.robotState = env.robotState;
   }
 
   ngAfterViewInit(): void {
@@ -217,15 +219,24 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.bookValues.controls.forEach(control => {
       if (!control.value) bookValueValidator = false;
     });
-    return (
-      this._ftpUrl != null &&
-      this._ftpUrl.toString().length > 0 &&
-      this._auditEnd != null &&
-      this._auditStart != null &&
-      this.subsidiaryCtrl.value != null &&
-      this._auditStart <= this._auditEnd &&
-      bookValueValidator
-    );
+    if (this.robotState) {
+      return (
+        this._auditEnd != null &&
+        this._auditStart != null &&
+        this.subsidiaryCtrl.value != null &&
+        this._auditStart <= this._auditEnd &&
+        bookValueValidator
+      );
+    } else
+      return (
+        this._ftpUrl != null &&
+        this._ftpUrl.toString().length > 0 &&
+        this._auditEnd != null &&
+        this._auditStart != null &&
+        this.subsidiaryCtrl.value != null &&
+        this._auditStart <= this._auditEnd &&
+        bookValueValidator
+      );
   }
 
   changeSubsidiary(e) {

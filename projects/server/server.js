@@ -12,6 +12,7 @@ const argv = require('yargs').argv;
 global.kerberos = argv.kerberos !== 'false';
 global.ad = argv.ad !== 'false';
 global.login = !global.kerberos && (argv.login || 'admin@company.loc');
+global.robot = argv.robot !== 'false';
 const ssl = argv.ssl !== 'false';
 
 const ad = require('./services/ad-service');
