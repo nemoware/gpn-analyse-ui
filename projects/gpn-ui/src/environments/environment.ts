@@ -10,7 +10,7 @@ export const environment = {
   envName: 'DEV',
   production: false,
   test: false,
-  robotState: true,
+  robotState: false,
 
   versions: {
     app: packageJson.version,

@@ -5,6 +5,7 @@ export const environment = {
   envName: 'PROD',
   production: true,
   test: false,
+  robotState: false,
 
   versions: {
     app: packageJson.version,
