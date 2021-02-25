@@ -4,15 +4,15 @@ import { EventEmitter, Input, Output } from '@root/node_modules/@angular/core';
 import { DateAdapter } from '@root/node_modules/@angular/material';
 
 @Component({
-  selector: 'gpn-audit-filter',
-  templateUrl: './audit-filter.component.html',
-  styleUrls: ['./audit-filter.component.scss'],
+  selector: 'gpn-charter-filter',
+  templateUrl: './charter-filter.component.html',
+  styleUrls: ['./charter-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuditFilterComponent implements OnInit {
+export class CharterFilterComponent implements OnInit {
   filter = new FormControl();
 
-  @Input() auditStatuses: string[];
+  @Input() charterStates: string[];
   @Output() ApplyFilter = new EventEmitter<
     Array<{ name: string; value: any }>
   >();
@@ -43,7 +43,10 @@ export class AuditFilterComponent implements OnInit {
       value: string;
     }>();
     if (this.selectedStatuses) {
-      filterValue.push({ name: 'auditStatuses', value: this.selectedStatuses });
+      filterValue.push({
+        name: 'charterStatuses',
+        value: this.selectedStatuses
+      });
     }
     if (this._dateFrom)
       filterValue.push({

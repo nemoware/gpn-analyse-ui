@@ -2,7 +2,6 @@ import browser from 'browser-detect';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-
 import { environment as env } from '@environments/environment';
 import { HideDirective } from '../core/authorization/hide.directive';
 
