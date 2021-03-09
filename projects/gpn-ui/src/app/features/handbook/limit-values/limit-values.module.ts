@@ -11,6 +11,7 @@ import { LimitValuesFormComponent } from './limit-values-form/limit-values-form.
 import { TranslateModule } from '@root/node_modules/@ngx-translate/core';
 import { AuditModule } from '@app/features/audit/audit.module';
 import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
+import { NgxMaskModule } from '@root/node_modules/ngx-mask';
 
 @NgModule({
   declarations: [LimitValuesTableComponent, LimitValuesFormComponent],
@@ -23,7 +24,8 @@ import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
     SharedModule,
     TranslateModule,
     AuditModule,
-    TextMaskModule
+    TextMaskModule,
+    NgxMaskModule
   ],
   entryComponents: [LimitValuesFormComponent]
 })

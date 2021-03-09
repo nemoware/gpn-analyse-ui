@@ -3,7 +3,9 @@
   "version": "0.2.5",
   "license": "MIT",
   "nodemonConfig": {
-    "ignore": ["*.json"]
+    "ignore": [
+      "*.json"
+    ]
   },
   "scripts": {
     "ng": "ng",
@@ -81,6 +83,7 @@
     "ldapjs": "^1.0.2",
     "moment": "^2.24.0",
     "mongoose": "^5.8.3",
+    "ngx-mask": "^11.1.4",
     "ngx-mat-select-search": "^1.8.0",
     "ngx-spinner": "^8.0.3",
     "passport": "^0.4.1",

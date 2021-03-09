@@ -17,17 +17,17 @@
     </section>
     <ng-container formArrayName="limits">
       <section *ngFor="let item of limits.controls; let i=index" [formGroupName]="i">
-        <mat-form-field class='p-3'><input [textMask]="{mask: numberMask}" matInput placeholder="Балансовая стоимость активов от (более)" formControlName="lowerLimit">
+        <mat-form-field class='p-3'><input mask='separator' matInput placeholder="Балансовая стоимость активов от (более)" formControlName="lowerLimit">
           <mat-error *ngIf="getGroup(i).controls['lowerLimit'].errors?.pattern">
             Должна быть неотрицательным числом
           </mat-error>
         </mat-form-field>
-        <mat-form-field class='p-3'><input [textMask]="{mask: numberMask}" matInput placeholder='Балансовая стоимость активов до (не более)' formControlName='upperLimit'>
+        <mat-form-field class='p-3'><input  mask='separator' matInput placeholder='Балансовая стоимость активов до (не более)' formControlName='upperLimit'>
           <mat-error *ngIf="getGroup(i).controls['upperLimit'].errors?.pattern">
             Должна быть неотрицательным числом
           </mat-error>
         </mat-form-field>
-        <mat-form-field class='p-3'><input [textMask]="{mask: numberMask}" matInput placeholder='Предельное значение' formControlName='limitValue'>
+        <mat-form-field class='p-3'><input  mask='separator' matInput placeholder='Предельное значение' formControlName='limitValue'>
           <mat-error *ngIf="getGroup(i).controls['limitValue'].errors?.pattern">
             Должно быть неотрицательным числом
           </mat-error>

@@ -29,7 +29,6 @@ import { LimitValue, SubLimit } from '@app/models/limitValue.model';
 import { Subject, Subscription } from '@root/node_modules/rxjs';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
-import createNumberMask from '@root/node_modules/text-mask-addons/dist/createNumberMask';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -73,12 +72,7 @@ export class LimitValuesFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
-    this.numberMask = createNumberMask({
-      prefix: '',
-      thousandsSeparatorSymbol: ' '
-    });
-  }
+  ngOnInit() {}
 
   triggerResize() {
     // Wait for changes to be applied, then trigger textarea resize.
@@ -114,17 +108,9 @@ export class LimitValuesFormComponent implements OnInit, OnDestroy {
       limitValue: [limitValue]
     });
     this.limits.push(limit);
-    limit.controls['lowerLimit'].setValidators([
-      Validators.pattern('^[0-9]+(\\.?[0-9]+)?$'),
-      Validators.required
-    ]);
-    limit.controls['upperLimit'].setValidators([
-      Validators.pattern('^[0-9]+(\\.?[0-9]+)?$')
-    ]);
-    limit.controls['limitValue'].setValidators([
-      Validators.pattern('^[0-9]+(\\.?[0-9]+)?$'),
-      Validators.required
-    ]);
+    limit.controls['lowerLimit'].setValidators([Validators.required]);
+    limit.controls['upperLimit'].setValidators([]);
+    limit.controls['limitValue'].setValidators([Validators.required]);
   }
 
   removeLimitValue(index: any, event: MouseEvent) {
