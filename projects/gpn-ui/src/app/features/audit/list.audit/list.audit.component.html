@@ -46,7 +46,26 @@
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef> Статус </th>
         <td mat-cell *matCellDef="let audit"> {{audit.status | translate}}
-          <br> <span class="small">  </span>
+          <br> <span class="small">{{audit.secondaryStatus.name | translate}} </span>
+          <span class="small">
+            <ng-container *ngIf="audit.secondaryStatus.name === 'not_all_data_collected' || audit.secondaryStatus.name === 'not_all_data_recognized'"
+            >({{audit.secondaryStatus.count}})
+            </ng-container>
+
+            <ng-container *ngIf="audit.secondaryStatus.request === 'mapping/recognition'"
+            >, предельный срок:
+            </ng-container>
+            {{audit.secondaryStatus.date | date}}
+
+            <ng-container *ngIf="audit.secondaryStatus.extra_data"
+            >, присутствуют документы, не указанные в реестре
+            </ng-container>
+
+            <ng-container *ngIf="audit.secondaryStatus.recognition_started"
+            >, {{audit.secondaryStatus.recognition_started.name | translate}}
+            </ng-container>
+
+            </span>
         </td>
       </ng-container>
 

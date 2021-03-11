@@ -14,6 +14,7 @@ module.exports = (mongoose, Schema) => {
       violations: [Object],
       author: Object,
       bookValues: Object,
+      robot: [Object],
       links: [
         {
           fromId: ObjectId,

@@ -180,18 +180,18 @@ exports.setResult = async audit => {
     auditId: audit._id,
     parserResponseCode: 504
   });
-  if (global.robot) {
-    audit.status = 'Collecting';
-  } else if (count) {
-    audit.status = 'LoadingFailed';
-  } else {
-    count = await Document.countDocuments({
-      auditId: audit._id,
-      parserResponseCode: 200
-    });
-    if (audit.charters) count += audit.charters.length;
-    audit.status = 'InWork';
-    audit.checkedDocumentCount = count;
+  if (!global.robot) {
+    if (count) {
+      audit.status = 'LoadingFailed';
+    } else {
+      count = await Document.countDocuments({
+        auditId: audit._id,
+        parserResponseCode: 200
+      });
+      if (audit.charters) count += audit.charters.length;
+      audit.status = 'InWork';
+      audit.checkedDocumentCount = count;
+    }
   }
   await audit.save();
 };

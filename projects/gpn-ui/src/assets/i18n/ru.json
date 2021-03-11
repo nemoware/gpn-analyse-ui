@@ -162,5 +162,20 @@
   "contract_subject_section_not_found": "Раздел предмета договора не обнаружен",
 
   "protocol_agenda_not_found": "Не обнаружен вопрос повестки дня",
-  "boring_agenda_questions": "Вопрос повестки дня не связать с договором"
+  "boring_agenda_questions": "Вопрос повестки дня не связать с договором",
+
+  "curator_request_sent": "Запрос отправлен куратору",
+  "curator_request_not_sent": "Запрос не отправлен куратору",
+  "confirmed": "Запрос получен куратором",
+  "not_confirmed": "Запрос не получен куратором",
+  "register_provided": "Реестр предоставлен",
+  "register_not_provided": "Реестр не предоставлен",
+  "documents_collected": "Все документы собраны",
+  "documents_not_collected": "Некоторые документы не были собраны",
+  "all_data_collected": "Все документы по реестру собраны",
+  "not_all_data_collected": "Некоторые документы по реестру отсутствуют",
+  "all_data_recognized": "Все документы распознаны",
+  "not_all_data_recognized": "Некоторые документы не распознаны",
+  "recognition_started": "распознавание запущено",
+  "recognition_not_started": "распознавание не запущено"
 }

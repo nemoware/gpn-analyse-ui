@@ -195,6 +195,67 @@ exports.fetchAudits = async (req, res) => {
     }
     audits = audits.map(a => {
       a.subsidiaryName = a.subsidiary.name;
+      a.secondaryStatus = {};
+      if (a.robot) {
+        const robot = a.robot[a.robot.length - 1];
+        a.secondaryStatus.name = robot.request_path.split('/')[2];
+
+        if (a.secondaryStatus.name === 'curator_request') {
+          if (robot.request_sent) {
+            a.secondaryStatus.name = 'curator_request_sent';
+            a.secondaryStatus.date = robot.sending_date;
+          } else {
+            a.secondaryStatus.name = 'curator_request_not_sent';
+          }
+        } else if (a.secondaryStatus.name === 'confirmed') {
+          if (!robot.confirmed) {
+            a.secondaryStatus.name = 'not_confirmed';
+          } else a.secondaryStatus.date = robot.confirmation_date;
+        } else if (a.secondaryStatus.name === 'manual_register_status') {
+          if (robot.register_provided) {
+            a.secondaryStatus.name = 'register_provided';
+            a.secondaryStatus.date = robot.register_date;
+          } else {
+            a.secondaryStatus.name = 'register_not_provided';
+          }
+        } else if (a.secondaryStatus.name === 'register_status') {
+          if (robot.documents_collected) {
+            a.secondaryStatus.name = 'documents_collected';
+            a.secondaryStatus.date = robot.register_date;
+          } else {
+            a.secondaryStatus.name = 'documents_not_collected';
+          }
+        } else if (a.secondaryStatus.name === 'registers_mapping') {
+          a.secondaryStatus.request = 'mapping/recognition';
+          if (robot.all_data_collected) {
+            a.secondaryStatus.name = 'all_data_collected';
+            a.secondaryStatus.date = robot.new_deadline;
+          } else {
+            a.secondaryStatus.name = 'not_all_data_collected';
+            a.secondaryStatus.count = robot.lack_of_data;
+          }
+          if (robot.extra_data) {
+            a.secondaryStatus.extra_data = true;
+          }
+
+          a.secondaryStatus.recognition_started = {};
+          if (robot.recognition_started) {
+            a.secondaryStatus.recognition_started.name = 'recognition_started';
+          } else {
+            a.secondaryStatus.recognition_started.name =
+              'recognition_not_started';
+          }
+        } else if (a.secondaryStatus.name === 'recognition') {
+          a.secondaryStatus.request = 'mapping/recognition';
+          if (robot.all_data_recognized) {
+            a.secondaryStatus.name = 'all_data_recognized';
+          } else {
+            a.secondaryStatus.name = 'not_all_data_recognized';
+            a.secondaryStatus.count = robot.lack_of_data;
+          }
+          a.secondaryStatus.date = robot.new_deadline;
+        }
+      }
       return a;
     });
 

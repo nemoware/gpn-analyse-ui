@@ -17,6 +17,7 @@ export interface Audit {
   typeViewResult: number;
   bookValues: any[];
   selectedRows: ViolationModel[];
+  secondaryStatus: Object;
 }
 
 export interface DataSourceAudit {
