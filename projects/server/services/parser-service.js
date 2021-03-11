@@ -1,6 +1,7 @@
 const fs = require('fs-promise');
 const request = require('request');
 const url = require('../config').parser.url;
+const roboServiceUrl = require('../config').parser.roboServiceUrl;
 const template = require('../config').conclusion.template;
 const { Document } = require('../models');
 const path = require('path');
@@ -31,18 +32,34 @@ function info(version) {
   console.log();
 }
 
-function getOptions(filename, content) {
-  let base64data = Buffer.from(content, 'binary').toString('base64');
-  let extension = path
-    .extname(filename)
-    .substring(1)
-    .toUpperCase();
+// function getOptions(filename, content) {
+//   let base64data = Buffer.from(content, 'binary').toString('base64');
+//   let extension = path
+//     .extname(filename)
+//     .substring(1)
+//     .toUpperCase();
+//   let body = {
+//     base64Content: base64data,
+//     documentFileType: extension
+//   };
+//   return {
+//     url: `${url}/document-parser`,
+//     headers: { 'content-type': 'application/json' },
+//     body: JSON.stringify(body)
+//   };
+// }
+
+function getOptions(id, path) {
   let body = {
-    base64Content: base64data,
-    documentFileType: extension
+    id: id,
+    all_data_recognized: true,
+    lack_of_data: 0,
+    new_deadline: new Date(),
+    audit_start: true,
+    directory_path: path
   };
   return {
-    url: `${url}/document-parser`,
+    url: `${roboServiceUrl}/robot/recognition`,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body)
   };
@@ -167,13 +184,22 @@ async function postDocument(data, audit, filename, responseCode, version, doc) {
 }
 
 exports.parseAudit = async audit => {
-  audit.status = 'Loading';
-  await audit.save();
-
-  if (!global.robot) await parseDirectory(audit);
-
-  await this.setResult(audit);
+  try {
+    const options = getOptions(audit.id, audit.ftpUrl);
+    const response = await post(options);
+  } catch (err) {
+    logger.log(err);
+  }
 };
+
+// exports.parseAudit = async audit => {
+//   audit.status = 'Loading';
+//   await audit.save();
+//
+//   if (!global.robot) await parseDirectory(audit);
+//
+//   await this.setResult(audit);
+// };
 
 exports.setResult = async audit => {
   let count = await Document.countDocuments({

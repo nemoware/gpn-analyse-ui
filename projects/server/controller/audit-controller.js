@@ -196,7 +196,7 @@ exports.fetchAudits = async (req, res) => {
     audits = audits.map(a => {
       a.subsidiaryName = a.subsidiary.name;
       a.secondaryStatus = {};
-      if (a.robot) {
+      if (a.robot && a.robot.length !== 0) {
         const robot = a.robot[a.robot.length - 1];
         a.secondaryStatus.name = robot.request_path.split('/')[2];
 

@@ -21,7 +21,8 @@ exports.ad = {
 
 exports.parser = {
   pathFolder: process.env.GPN_DOC_DIRECTORY,
-  url: process.env.GPN_PARSER_URL
+  url: process.env.GPN_PARSER_URL,
+  roboServiceUrl: process.env.GPN_ROBO_SERVICE_URL
 };
 
 exports.jwt = {
