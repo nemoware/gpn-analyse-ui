@@ -1,6 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@root/node_modules/@angular/forms';
-import { EventEmitter, Input, Output } from '@root/node_modules/@angular/core';
+import {
+  EventEmitter,
+  HostListener,
+  Input,
+  Output
+} from '@root/node_modules/@angular/core';
 import { DateAdapter } from '@root/node_modules/@angular/material';
 
 @Component({
@@ -16,6 +21,14 @@ export class AuditFilterComponent implements OnInit {
   @Output() ApplyFilter = new EventEmitter<
     Array<{ name: string; value: any }>
   >();
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.applyFilter();
+    }
+  }
+
   selectedStatuses = '';
   _dateFrom: Date = null;
   _dateTo: Date = null;
