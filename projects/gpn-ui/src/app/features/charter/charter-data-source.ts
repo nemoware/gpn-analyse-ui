@@ -45,7 +45,7 @@ export class CharterDataSource implements DataSource<any> {
         // @ts-ignore
         this.totalCount = data.count;
         // @ts-ignore
-        this.chartersSubject.next(data.audits);
+        this.chartersSubject.next(data.charters);
       });
   }
 

@@ -748,116 +748,6 @@ exports.deleteStar = async (req, res) => {
   }
 };
 
-exports.getChartersForTable = async (req, res) => {
-  const allSubsidiariesRegexp = /.*все до$/i;
-  const name = req.query.name;
-
-  // Все ДО, если совпадает с регэкспом или не пришел параметр name
-  const allSubsidiaries = allSubsidiariesRegexp.test(name) || !name;
-  const mongoRegexp = {
-    $regex: `.*${allSubsidiaries ? '' : name}.*`,
-    $options: 'i'
-  };
-
-  const where = {
-    'parse.documentType': 'CHARTER',
-    parserResponseCode: 200,
-    $or: [
-      // если существует user
-      {
-        // фильтр по наименованию ДО
-        'user.attributes.org-1-name.value': mongoRegexp
-      },
-      // если существует только analysis
-      {
-        user: null,
-        // фильтр по наименованию ДО
-        'analysis.attributes.org-1-name.value': mongoRegexp
-      },
-      {
-        // Те уставы, в которых нет этих полей
-        'analysis.attributes.org-1-name.value': undefined,
-        'user.attributes.org-1-name.value': undefined
-      }
-    ]
-  };
-  try {
-    const docs = await Document.find(
-      where,
-      `
-    createDate
-    state
-    user.author.name
-    analysis.analyze_timestamp
-    isActive
-    subsidiary.name
-    analysis.attributes.date.value
-    user.attributes.date.value
-    analysis.attributes.org-1-name
-    user.attributes.org-1-name`
-    );
-    const result = docs.map(c => {
-      return {
-        _id: c._id,
-        fromDate: c.getAttributeValue('date') || null,
-        subsidiary:
-          c.getAttributeValue('org-1-name') ||
-          (!c.analysis.attributes && c.subsidiary.name) ||
-          null,
-        analyze_timestamp: c.analysis.analyze_timestamp || c.createDate,
-        user: c.user.author && c.user.author.name,
-        isActive: c.isActive !== false,
-        toDate: null,
-        state: c.state || null
-      };
-    });
-
-    //Уставы с валидными полями
-    const charters = result.filter(
-      result => result.fromDate && result.subsidiary
-    );
-
-    //Уставы с невалидными полями
-    const badCharters = result.filter(
-      result => !(result.fromDate && result.subsidiary)
-    );
-
-    const subsidiaries = Object.keys(
-      result.reduce((previous, current) => {
-        previous[current.subsidiary] = true;
-        return previous;
-      }, {})
-    );
-
-    for (const subsidiary of subsidiaries) {
-      setToDate(charters.filter(c => c.subsidiary === subsidiary));
-    }
-
-    if (allSubsidiaries) {
-      for (let i = 0; i < badCharters.length; i++) {
-        charters.push(badCharters[i]);
-      }
-    } else {
-      const regExp = new RegExp(name);
-      for (let i = 0; i < badCharters.length; i++) {
-        if (regExp.test(badCharters[i].subsidiary))
-          charters.push(badCharters[i]);
-      }
-    }
-    res.send(
-      charters.sort((a, b) => {
-        // сортировка по наименованию ДО
-        if (a.subsidiary > b.subsidiary) return 1;
-        if (a.subsidiary < b.subsidiary) return -1;
-        // сортировка по дате
-        return a.fromDate - b.fromDate;
-      })
-    );
-  } catch (err) {
-    logger.logError(req, res, err, 500);
-  }
-};
-
 exports.charterActivation = async (req, res) => {
   const id = req.body.id;
   const action = req.body.action;
@@ -927,10 +817,9 @@ exports.fetchCharters = async (req, res) => {
   const name = req.query.subsidiaryName;
   const showInactive = req.query.showInactive === 'true';
   const charterStatuses = req.query.charterStatuses;
-  console.log(req.query.dateTo);
+  let dateFrom = req.query.dateFrom;
   let dateTo = req.query.dateTo;
-  const dateFrom = req.query.dateFrom;
-  const createDate = req.query.createDate;
+
   // Все ДО, если совпадает с регэкспом или не пришел параметр name
   const allSubsidiaries = allSubsidiariesRegexp.test(name) || !name;
   const mongoRegexp = {
@@ -992,7 +881,7 @@ exports.fetchCharters = async (req, res) => {
     });
 
     //Уставы с валидными полями
-    const charters = result.filter(
+    let charters = result.filter(
       result => result.fromDate && result.subsidiary
     );
 
@@ -1023,17 +912,34 @@ exports.fetchCharters = async (req, res) => {
           charters.push(badCharters[i]);
       }
     }
-    let skip = req.query.skip;
-    let take;
-    if (skip) {
-      take = +skip + +req.query.take;
-    } else take = req.query.take;
-    let audits = charters;
+    let start = req.query.skip;
+    let end;
+    if (start) {
+      end = +start + +req.query.take;
+    } else end = req.query.take;
+
     if (!showInactive) {
-      audits = charters.filter(x => x.isActive === true);
+      charters = charters.filter(x => x.isActive === true);
     }
-    let count = audits.length;
-    audits = audits
+
+    if (charterStatuses) {
+      charters = charters.filter(x =>
+        charterStatuses.split(',').includes(x.state.toString())
+      );
+    }
+
+    if (dateTo) {
+      dateTo = toDate(dateTo);
+      charters = charters.filter(x => x.toDate <= dateTo);
+    }
+
+    if (dateFrom) {
+      dateFrom = toDate(dateFrom);
+      charters = charters.filter(x => x.fromDate >= dateFrom);
+    }
+
+    let count = charters.length;
+    charters = charters
       .sort((a, b) => {
         // сортировка по наименованию ДО
         if (a.subsidiary > b.subsidiary) return 1;
@@ -1041,106 +947,10 @@ exports.fetchCharters = async (req, res) => {
         // сортировка по дате
         return a.fromDate - b.fromDate;
       })
-      .slice(skip, take);
+      .slice(start, end);
 
-    if (dateTo) {
-      dateTo = toDate(dateTo);
-      dateTo.setDate(dateTo.getDate() + 1);
-      console.log(dateTo);
-      audits = audits.filter(x => x.toDate <= dateTo);
-    }
-
-    // if (dateFrom) {
-    //   where.push({ auditStart: { $gte: toDate(dateFrom) } });
-    // }
-
-    res.send({ count, audits });
+    res.send({ count, charters });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
-
-  // console.log('1111111')
-  // try {
-  //   let sort;
-  //   if (req.query.column) {
-  //     sort = {
-  //       [req.query.column === 'subsidiaryName'
-  //         ? 'subsidiary.name'
-  //         : req.query.column]: req.query.sort === 'asc' ? 1 : -1
-  //     };
-  //   }
-  //   const where = [];
-  //   const subsidiaryName = req.query.subsidiaryName;
-  //   const auditStatuses = req.query.auditStatuses;
-  //   let dateTo = req.query.dateTo;
-  //   const dateFrom = req.query.dateFrom;
-  //   const createDate = req.query.createDate;
-  //
-  //   if (auditStatuses) {
-  //     where.push({ status: { $in: auditStatuses.split(',') } });
-  //   }
-  //
-  //   if (dateTo) {
-  //     dateTo = toDate(dateTo);
-  //     dateTo.setDate(dateTo.getDate() + 1);
-  //     where.push({ auditEnd: { $lt: dateTo } });
-  //   }
-  //
-  //   if (dateFrom) {
-  //     where.push({ auditStart: { $gte: toDate(dateFrom) } });
-  //   }
-  //
-  //   if (createDate) {
-  //     const dateTo = toDate(createDate);
-  //     dateTo.setDate(dateTo.getDate() + 1);
-  //     where.push({
-  //       $and: [
-  //         { createDate: { $lt: dateTo } },
-  //         { createDate: { $gte: toDate(createDate) } }
-  //       ]
-  //     });
-  //   }
-  //
-  //   if (subsidiaryName) {
-  //     where.push({
-  //       'subsidiary.name': {
-  //         $regex: `.*${subsidiaryName}.*`,
-  //         $options: 'i'
-  //       }
-  //     });
-  //   }
-  //
-  //   let count;
-  //   let audits;
-  //
-  //   if (where.length) {
-  //     count = await Document.countDocuments({ $and: where });
-  //     audits = await Document.find({ $and: where })
-  //       .lean()
-  //       .setOptions({
-  //         skip: +req.query.skip,
-  //         limit: +req.query.take,
-  //         sort
-  //       });
-  //   } else {
-  //     count = await Document.countDocuments();
-  //     audits = await Document.find()
-  //       .lean()
-  //       .setOptions({
-  //         skip: +req.query.skip,
-  //         limit: +req.query.take,
-  //         sort
-  //       });
-  //   }
-  //   console.log('---------');
-  //   console.log('audits');
-  //   audits = audits.map(a => {
-  //     a.subsidiaryName = a.subsidiary.name;
-  //     return a;
-  //   });
-  //
-  //   res.send({ count, audits });
-  // } catch (err) {
-  //   logger.logError(req, res, err, 500);
-  // }
 };

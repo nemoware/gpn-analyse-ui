@@ -228,7 +228,6 @@ export class AuditService {
     column: string,
     sort: string
   ): Observable<DataSourceAudit> {
-    console.log('FETCHING');
     let httpParams = new HttpParams();
     if (filterValue) {
       for (const filter of filterValue) {

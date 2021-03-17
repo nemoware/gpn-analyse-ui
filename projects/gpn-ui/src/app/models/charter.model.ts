@@ -29,3 +29,8 @@ export interface Charter {
   parseError: string;
   state: number;
 }
+
+export interface DataSourceCharter {
+  count: number;
+  items: Charter[];
+}

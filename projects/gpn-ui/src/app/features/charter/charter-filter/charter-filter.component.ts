@@ -1,7 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@root/node_modules/@angular/forms';
-import { EventEmitter, Input, Output } from '@root/node_modules/@angular/core';
+import {
+  EventEmitter,
+  HostListener,
+  Input,
+  Output
+} from '@root/node_modules/@angular/core';
 import { DateAdapter } from '@root/node_modules/@angular/material';
+import { CharterStates } from '@app/features/charter/list-charter/list.charter.component';
 
 @Component({
   selector: 'gpn-charter-filter',
@@ -12,11 +18,19 @@ import { DateAdapter } from '@root/node_modules/@angular/material';
 export class CharterFilterComponent implements OnInit {
   filter = new FormControl();
 
-  @Input() charterStates: string[];
+  @Input() charterStates: CharterStates[];
   @Output() ApplyFilter = new EventEmitter<
     Array<{ name: string; value: any }>
   >();
-  selectedStatuses = '';
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.applyFilter();
+    }
+  }
+
+  selectedStatuses: CharterStates[];
   _dateFrom: Date = null;
   _dateTo: Date = null;
   _createDate: Date = null;
@@ -33,7 +47,7 @@ export class CharterFilterComponent implements OnInit {
     this._dateFrom = null;
     this._dateTo = null;
     this._createDate = null;
-    this.selectedStatuses = '';
+    this.selectedStatuses = [];
     this.subsidiaryName = '';
   }
 
@@ -57,11 +71,6 @@ export class CharterFilterComponent implements OnInit {
       filterValue.push({
         name: 'dateTo',
         value: this._dateTo.toLocaleDateString()
-      });
-    if (this._createDate)
-      filterValue.push({
-        name: 'createDate',
-        value: this._createDate.toLocaleDateString()
       });
     if (this.subsidiaryName.length > 0)
       filterValue.push({

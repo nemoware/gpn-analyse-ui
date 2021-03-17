@@ -5,8 +5,7 @@ import {
   HttpClient,
   HttpParams
 } from '@root/node_modules/@angular/common/http';
-import { Charter } from '@app/models/charter.model';
-import { DataSourceAudit } from '@app/models/audit.model';
+import { Charter, DataSourceCharter } from '@app/models/charter.model';
 
 const api = '/api';
 
@@ -41,8 +40,7 @@ export class CharterService {
     column: string,
     sort: string,
     showInactive: boolean
-  ): Observable<DataSourceAudit> {
-    console.log('FETCHING');
+  ): Observable<DataSourceCharter> {
     let httpParams = new HttpParams();
     if (filterValue) {
       for (const filter of filterValue) {
@@ -59,7 +57,7 @@ export class CharterService {
       (showInactive && true).toString()
     );
 
-    return this.http.get<DataSourceAudit>(`${api}/document/fetchCharters`, {
+    return this.http.get<DataSourceCharter>(`${api}/document/fetchCharters`, {
       params: httpParams
     });
   }

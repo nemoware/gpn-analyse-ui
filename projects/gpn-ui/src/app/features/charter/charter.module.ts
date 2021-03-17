@@ -13,7 +13,6 @@ import { LOCALE_ID } from '@root/node_modules/@angular/core';
 import { CreateCharterComponent } from './create-charter/create-charter.component';
 import { NgxMatSelectSearchModule } from '@root/node_modules/ngx-mat-select-search';
 import { AuditModule } from '@app/features/audit/audit.module';
-import { TestComponent } from './test/test.component';
 import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
 import { CharterFilterComponent } from './charter-filter/charter-filter.component';
 
@@ -21,7 +20,6 @@ import { CharterFilterComponent } from './charter-filter/charter-filter.componen
   declarations: [
     ListCharterComponent,
     CreateCharterComponent,
-    TestComponent,
     CharterFilterComponent
   ],
   imports: [
