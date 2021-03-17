@@ -32,23 +32,6 @@ function info(version) {
   console.log();
 }
 
-// function getOptions(filename, content) {
-//   let base64data = Buffer.from(content, 'binary').toString('base64');
-//   let extension = path
-//     .extname(filename)
-//     .substring(1)
-//     .toUpperCase();
-//   let body = {
-//     base64Content: base64data,
-//     documentFileType: extension
-//   };
-//   return {
-//     url: `${url}/document-parser`,
-//     headers: { 'content-type': 'application/json' },
-//     body: JSON.stringify(body)
-//   };
-// }
-
 function getOptions(id, path) {
   let body = {
     id: id,
@@ -186,20 +169,11 @@ async function postDocument(data, audit, filename, responseCode, version, doc) {
 exports.parseAudit = async audit => {
   try {
     const options = getOptions(audit.id, audit.ftpUrl);
-    const response = await post(options);
+    await post(options);
   } catch (err) {
     logger.log(err);
   }
 };
-
-// exports.parseAudit = async audit => {
-//   audit.status = 'Loading';
-//   await audit.save();
-//
-//   if (!global.robot) await parseDirectory(audit);
-//
-//   await this.setResult(audit);
-// };
 
 exports.setResult = async audit => {
   let count = await Document.countDocuments({
@@ -221,16 +195,6 @@ exports.setResult = async audit => {
   }
   await audit.save();
 };
-
-async function parseDirectory(audit) {
-  const directory = audit.ftpUrl;
-  let filePaths = await getPaths(directory);
-  let promises = [];
-  for (let filePath of filePaths) {
-    promises.push(parse(directory, filePath, audit));
-  }
-  await Promise.all(promises);
-}
 
 async function parseFile(charter) {
   const url = charter.ftpUrl;
