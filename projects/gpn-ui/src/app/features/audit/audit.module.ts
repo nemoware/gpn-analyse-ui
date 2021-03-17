@@ -109,7 +109,12 @@ import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-det
     SearchDocumentComponent,
     SubsidiaryDetailComponent
   ],
-  exports: [ViewDocumentComponent, DocStateComponent, MaskDateDirective],
+  exports: [
+    ViewDocumentComponent,
+    DocStateComponent,
+    MaskDateDirective,
+    AuditFilterComponent
+  ],
   providers: [
     {
       provide: DateAdapter,

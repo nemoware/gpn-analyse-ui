@@ -5,7 +5,7 @@ import {
   HttpClient,
   HttpParams
 } from '@root/node_modules/@angular/common/http';
-import { Charter } from '@app/models/charter.model';
+import { Charter, DataSourceCharter } from '@app/models/charter.model';
 
 const api = '/api';
 
@@ -31,5 +31,34 @@ export class CharterService {
 
   public postCharter(charter): Observable<any> {
     return this.http.post<Document>(`${api}/document/charters`, charter);
+  }
+
+  fetch(
+    filterValue: Array<{ name: string; value: any }>,
+    take: number,
+    pageIndex: number,
+    column: string,
+    sort: string,
+    showInactive: boolean
+  ): Observable<DataSourceCharter> {
+    let httpParams = new HttpParams();
+    if (filterValue) {
+      for (const filter of filterValue) {
+        httpParams = httpParams.append(filter.name, filter.value);
+      }
+    }
+    if (take) httpParams = httpParams.append('take', take.toString());
+    if (pageIndex)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+    if (column) httpParams = httpParams.append('column', column.toString());
+    if (sort) httpParams = httpParams.append('sort', sort.toString());
+    httpParams = httpParams.append(
+      'showInactive',
+      (showInactive && true).toString()
+    );
+
+    return this.http.get<DataSourceCharter>(`${api}/document/fetchCharters`, {
+      params: httpParams
+    });
   }
 }

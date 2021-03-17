@@ -7,8 +7,8 @@ router
   .route('/charters')
   .get(controller.getCharters)
   .post(controller.postCharter);
+router.get('/fetchCharters', controller.fetchCharters);
 router.put('/activate-charter', controller.charterActivation);
-router.get('/charter-table', controller.getChartersForTable);
 router
   .route('')
   .get(controller.getDocument)

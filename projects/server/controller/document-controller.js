@@ -748,9 +748,77 @@ exports.deleteStar = async (req, res) => {
   }
 };
 
-exports.getChartersForTable = async (req, res) => {
+exports.charterActivation = async (req, res) => {
+  const id = req.body.id;
+  const action = req.body.action;
+  if (!id) return res.status(400).send(`Required parameter 'id' is not passed`);
+  try {
+    await Document.findOneAndUpdate({ _id: id }, { isActive: action });
+    res.end();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.postCharter = async (req, res) => {
+  let charter = new Document(req.body);
+  try {
+    await fs.access(charter.ftpUrl);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      logger.logError(req, res, `No such file: ${charter.ftpUrl}`, 400);
+    } else {
+      logger.logError(req, res, err, 500);
+    }
+    return;
+  }
+
+  const stat = await fs.stat(charter.ftpUrl);
+  if (stat.isDirectory()) {
+    logger.logError(req, res, `${charter.ftpUrl} is not a file`, 400);
+    return;
+  }
+
+  try {
+    await parser.parseFile(charter);
+    if (
+      charter.parserResponseCode === 200 &&
+      charter.parse.documentType === 'CHARTER'
+    ) {
+      await charter.save();
+      await logger.log(
+        req,
+        res,
+        'Загрузка устава',
+        `Имя файла: '${charter.filename}'
+      `
+      );
+      res.status(201).json(charter);
+    } else if (
+      charter.parserResponseCode === 504 ||
+      charter.parserResponseCode === 0
+    )
+      logger.logError(req, res, charter.parse.message, 400);
+    else {
+      logger.logError(req, res, 'Not a charter', 400);
+    }
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+function toDate(s) {
+  const parts = s.split('.');
+  return new Date(parts[2], parts[1] - 1, parts[0], 3);
+}
+
+exports.fetchCharters = async (req, res) => {
   const allSubsidiariesRegexp = /.*все до$/i;
-  const name = req.query.name;
+  const name = req.query.subsidiaryName;
+  const showInactive = req.query.showInactive === 'true';
+  const charterStatuses = req.query.charterStatuses;
+  let dateFrom = req.query.dateFrom;
+  let dateTo = req.query.dateTo;
 
   // Все ДО, если совпадает с регэкспом или не пришел параметр name
   const allSubsidiaries = allSubsidiariesRegexp.test(name) || !name;
@@ -813,7 +881,7 @@ exports.getChartersForTable = async (req, res) => {
     });
 
     //Уставы с валидными полями
-    const charters = result.filter(
+    let charters = result.filter(
       result => result.fromDate && result.subsidiary
     );
 
@@ -844,74 +912,44 @@ exports.getChartersForTable = async (req, res) => {
           charters.push(badCharters[i]);
       }
     }
-    res.send(
-      charters.sort((a, b) => {
+    let start = req.query.skip;
+    let end;
+    if (start) {
+      end = +start + +req.query.take;
+    } else end = req.query.take;
+
+    if (!showInactive) {
+      charters = charters.filter(x => x.isActive === true);
+    }
+
+    if (charterStatuses) {
+      charters = charters.filter(x =>
+        charterStatuses.split(',').includes(x.state.toString())
+      );
+    }
+
+    if (dateTo) {
+      dateTo = toDate(dateTo);
+      charters = charters.filter(x => x.toDate <= dateTo);
+    }
+
+    if (dateFrom) {
+      dateFrom = toDate(dateFrom);
+      charters = charters.filter(x => x.fromDate >= dateFrom);
+    }
+
+    let count = charters.length;
+    charters = charters
+      .sort((a, b) => {
         // сортировка по наименованию ДО
         if (a.subsidiary > b.subsidiary) return 1;
         if (a.subsidiary < b.subsidiary) return -1;
         // сортировка по дате
         return a.fromDate - b.fromDate;
       })
-    );
-  } catch (err) {
-    logger.logError(req, res, err, 500);
-  }
-};
+      .slice(start, end);
 
-exports.charterActivation = async (req, res) => {
-  const id = req.body.id;
-  const action = req.body.action;
-  if (!id) return res.status(400).send(`Required parameter 'id' is not passed`);
-  try {
-    await Document.findOneAndUpdate({ _id: id }, { isActive: action });
-    res.end();
-  } catch (err) {
-    logger.logError(req, res, err, 500);
-  }
-};
-
-exports.postCharter = async (req, res) => {
-  let charter = new Document(req.body);
-  try {
-    await fs.access(charter.ftpUrl);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      logger.logError(req, res, `No such file: ${charter.ftpUrl}`, 400);
-    } else {
-      logger.logError(req, res, err, 500);
-    }
-    return;
-  }
-
-  const stat = await fs.stat(charter.ftpUrl);
-  if (stat.isDirectory()) {
-    logger.logError(req, res, `${charter.ftpUrl} is not a file`, 400);
-    return;
-  }
-
-  try {
-    await parser.parseFile(charter);
-    if (
-      charter.parserResponseCode === 200 &&
-      charter.parse.documentType === 'CHARTER'
-    ) {
-      await charter.save();
-      await logger.log(
-        req,
-        res,
-        'Загрузка устава',
-        `Имя файла: '${charter.filename}'
-      `
-      );
-      res.status(201).json(charter);
-    } else if (
-      charter.parserResponseCode === 504 ||
-      charter.parserResponseCode === 0
-    )
-      logger.logError(req, res, charter.parse.message, 400);
-    else {
-      logger.logError(req, res, 'Not a charter', 400);
-    }
+    res.send({ count, charters });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

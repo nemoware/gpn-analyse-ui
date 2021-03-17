@@ -185,7 +185,6 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
       bookValue[this.years[i]] = this.bookValues.value[i];
       values.push(bookValue);
     }
-
     const newAudit: Audit = {
       subsidiaryName: this.subsidiaryCtrl.value.name,
       subsidiary: this.subsidiaryCtrl.value,

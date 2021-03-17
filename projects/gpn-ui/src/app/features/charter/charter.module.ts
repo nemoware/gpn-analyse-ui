@@ -13,15 +13,22 @@ import { LOCALE_ID } from '@root/node_modules/@angular/core';
 import { CreateCharterComponent } from './create-charter/create-charter.component';
 import { NgxMatSelectSearchModule } from '@root/node_modules/ngx-mat-select-search';
 import { AuditModule } from '@app/features/audit/audit.module';
+import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
+import { CharterFilterComponent } from './charter-filter/charter-filter.component';
 
 @NgModule({
-  declarations: [ListCharterComponent, CreateCharterComponent],
+  declarations: [
+    ListCharterComponent,
+    CreateCharterComponent,
+    CharterFilterComponent
+  ],
   imports: [
     CommonModule,
     ListCharterRoutingModule,
     SharedModule,
     NgxMatSelectSearchModule,
-    AuditModule
+    AuditModule,
+    NgxSpinnerModule
   ],
   entryComponents: [CreateCharterComponent],
   providers: [

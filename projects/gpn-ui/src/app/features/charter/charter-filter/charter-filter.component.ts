@@ -7,17 +7,18 @@ import {
   Output
 } from '@root/node_modules/@angular/core';
 import { DateAdapter } from '@root/node_modules/@angular/material';
+import { CharterStates } from '@app/features/charter/list-charter/list.charter.component';
 
 @Component({
-  selector: 'gpn-audit-filter',
-  templateUrl: './audit-filter.component.html',
-  styleUrls: ['./audit-filter.component.scss'],
+  selector: 'gpn-charter-filter',
+  templateUrl: './charter-filter.component.html',
+  styleUrls: ['./charter-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuditFilterComponent implements OnInit {
+export class CharterFilterComponent implements OnInit {
   filter = new FormControl();
 
-  @Input() auditStatuses: string[];
+  @Input() charterStates: CharterStates[];
   @Output() ApplyFilter = new EventEmitter<
     Array<{ name: string; value: any }>
   >();
@@ -29,7 +30,7 @@ export class AuditFilterComponent implements OnInit {
     }
   }
 
-  selectedStatuses = '';
+  selectedStatuses: CharterStates[];
   _dateFrom: Date = null;
   _dateTo: Date = null;
   _createDate: Date = null;
@@ -46,7 +47,7 @@ export class AuditFilterComponent implements OnInit {
     this._dateFrom = null;
     this._dateTo = null;
     this._createDate = null;
-    this.selectedStatuses = '';
+    this.selectedStatuses = [];
     this.subsidiaryName = '';
   }
 
@@ -56,7 +57,10 @@ export class AuditFilterComponent implements OnInit {
       value: string;
     }>();
     if (this.selectedStatuses) {
-      filterValue.push({ name: 'auditStatuses', value: this.selectedStatuses });
+      filterValue.push({
+        name: 'charterStatuses',
+        value: this.selectedStatuses
+      });
     }
     if (this._dateFrom)
       filterValue.push({
@@ -67,11 +71,6 @@ export class AuditFilterComponent implements OnInit {
       filterValue.push({
         name: 'dateTo',
         value: this._dateTo.toLocaleDateString()
-      });
-    if (this._createDate)
-      filterValue.push({
-        name: 'createDate',
-        value: this._createDate.toLocaleDateString()
       });
     if (this.subsidiaryName.length > 0)
       filterValue.push({
