@@ -11,6 +11,15 @@ const routes: Routes = [
     data: { appPage: 'audit' }
   },
   {
+    path: 'pre-audit',
+    loadChildren: () =>
+      import('./features/pre-audit/pre-audit.module').then(
+        m => m.PreAuditModule
+      ),
+    canActivate: [AppPageGuard],
+    data: { appPage: 'pre-audit' }
+  },
+  {
     path: 'dash',
     loadChildren: () =>
       import('./features/dash/dash.module').then(m => m.FeatureListModule)

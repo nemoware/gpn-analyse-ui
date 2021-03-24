@@ -5,6 +5,8 @@ const logger = require('../core/logger');
 const { Audit, Document, Subsidiary, Risk } = require('../models');
 const parser = require('../services/parser-service');
 const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
+const roboServiceUrl = require('../config').parser.roboServiceUrl;
+const roboService = require('../services/robo-service');
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
@@ -194,7 +196,7 @@ exports.fetchAudits = async (req, res) => {
         });
     }
     audits = audits.map(a => {
-      a.subsidiaryName = a.subsidiary.name;
+      a.subsidiaryName = a.subsidiary && a.subsidiary.name;
       a.secondaryStatus = {};
       if (a.robot && a.robot.length !== 0) {
         const robot = a.robot[a.robot.length - 1];
@@ -775,6 +777,16 @@ exports.postSelectedViolations = async (req, res) => {
     // console.log(audit.selectedRows);
     await audit.save();
     res.status(200);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.uploadFiles = async (req, res) => {
+  try {
+    const author = res.locals.user;
+    await roboService.postFiles(req.body, author);
+    res.send({ ok: 'ok' });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

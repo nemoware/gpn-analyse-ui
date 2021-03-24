@@ -32,8 +32,8 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(compression());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: false }));
 app.use(cookieParser());
 
 app.use(jwt.authenticate);
