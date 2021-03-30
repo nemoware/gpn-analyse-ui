@@ -19,7 +19,11 @@ export class AuthorizationData {
     if (
       this.userInfo &&
       this.userInfo.roles.find(role => {
-        return role.appPage === authPage;
+        return (
+          role.appPage === authPage ||
+          (role.appPage === 'audit' &&
+            (authPage === 'charter' || authPage === 'handbook'))
+        );
       })
     ) {
       return true;
