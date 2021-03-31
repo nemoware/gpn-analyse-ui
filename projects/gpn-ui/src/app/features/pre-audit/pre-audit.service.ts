@@ -15,7 +15,7 @@ export class PreAuditService {
 
   public postPreAudit(documents: Object[]): Observable<any> {
     return this.http.post<Observable<any>>(
-      `${api}/audit/uploadFiles`,
+      `${api}/preAudit/uploadFiles`,
       documents
     );
   }
@@ -39,7 +39,7 @@ export class PreAuditService {
     if (column) httpParams = httpParams.append('column', column.toString());
     if (sort) httpParams = httpParams.append('sort', sort.toString());
 
-    return this.http.get<PreAuditService>(`${api}/audit/fetchPreAudits`, {
+    return this.http.get<PreAuditService>(`${api}/preAudit/fetchPreAudits`, {
       params: httpParams
     });
   }

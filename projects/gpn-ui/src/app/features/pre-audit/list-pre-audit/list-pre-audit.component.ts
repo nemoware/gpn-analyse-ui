@@ -145,5 +145,6 @@ export class ListPreAuditComponent implements OnInit {
       name: 'checkType',
       value: this.checked
     });
+    this.loadAuditsPage();
   }
 }

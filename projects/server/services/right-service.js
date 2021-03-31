@@ -37,6 +37,9 @@ module.exports = async (req, res, next) => {
     case 'event':
       check = !!roles.find(r => r.appPage === 'events');
       break;
+    case 'preAudit':
+      check = !!roles.find(r => r.appPage === 'pre-audit');
+      break;
   }
 
   if (!check) return res.sendStatus(403);
