@@ -1,28 +1,124 @@
-.mat-form-field {
-  margin: 40px 0;
-  width: 500px !important;
+@import '../../../../styles-variables';
+@import '../../../../themes/default-theme';
+
+.table-container {
+  padding-top: 5px;
+  position: relative;
+  max-height: 75vh;
+  overflow: auto;
 }
 
-.mat-toolbar-single-row {
-  height: auto !important;
-  background: transparent;
-}
-
-.mat-toolbar-single-row button {
-  width: 200px;
-}
-
-.mat-form-field {
+table {
   width: 100%;
 }
 
-#uploadFile {
-  top: 0px;
-  left: 0px;
+.mat-column-subsidiaryName {
+  width: 45% !important;
+}
+
+.mat-column-auditStart {
+  width: 10% !important;
+}
+
+.mat-column-auditEnd {
+  width: 10% !important;
+}
+
+.mat-column-checkedDocumentCount {
+  width: 5% !important;
+}
+
+.mat-column-createDate {
+  width: 10% !important;
+}
+
+.left_group {
+  margin-left: 10px;
+  height: 80vh;
+  width: 20%;
+  float: left;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.right_group {
+  margin-right: 10px;
+  height: 80vh;
+  width: 78%;
+  float: right;
+}
+
+.search-container > * {
+  width: 50%;
+}
+
+.md-button.md-cornered {
+  border-radius: 0;
+}
+
+.mat-table {
   width: 100%;
-  z-index: 9;
-  opacity: 0;
-  height: 100%;
+}
+
+.link_tag {
   cursor: pointer;
-  position: absolute;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  background-color: aliceblue;
+}
+
+div.btn-group {
+  display: none;
+}
+.mat-row:hover .btn-group {
+  display: inline-block;
+}
+
+.small {
+  font-size: 85%;
+  color: $gpn-labels;
+
+  mat-icon {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    height: auto;
+    width: 16px;
+  }
+}
+
+.search-container > * {
+  width: 50%;
+}
+
+.md-button.md-cornered {
+  border-radius: 0;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.link_tag {
+  cursor: pointer;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  background-color: aliceblue;
+}
+
+div.btn-group {
+  display: none;
+}
+.mat-row:hover .btn-group {
+  display: inline-block;
+}
+
+.inactive-color {
+  background-color: lightgrey;
 }

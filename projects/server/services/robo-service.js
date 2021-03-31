@@ -8,8 +8,7 @@ exports.postFiles = async (documents, author) => {
     const fs = require('fs');
     let data = JSON.stringify(options.body, null, 2);
     fs.writeFileSync('test.json', data);
-    const response = await post(options);
-    console.log(response);
+    await post(options);
   } catch (err) {
     logger.log(err);
   }

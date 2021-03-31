@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@root/node_modules/@angular/common/http';
+import {
+  HttpClient,
+  HttpParams
+} from '@root/node_modules/@angular/common/http';
 import { Observable } from '@root/node_modules/rxjs';
 
 const api = '/api';
@@ -15,5 +18,29 @@ export class PreAuditService {
       `${api}/audit/uploadFiles`,
       documents
     );
+  }
+
+  fetch(
+    filterValue: Array<{ name: string; value: any }>,
+    take: number,
+    pageIndex: number,
+    column: string,
+    sort: string
+  ): Observable<PreAuditService> {
+    let httpParams = new HttpParams();
+    if (filterValue) {
+      for (const filter of filterValue) {
+        httpParams = httpParams.append(filter.name, filter.value);
+      }
+    }
+    if (take) httpParams = httpParams.append('take', take.toString());
+    if (pageIndex)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+    if (column) httpParams = httpParams.append('column', column.toString());
+    if (sort) httpParams = httpParams.append('sort', sort.toString());
+
+    return this.http.get<PreAuditService>(`${api}/audit/fetchPreAudits`, {
+      params: httpParams
+    });
   }
 }

@@ -177,5 +177,9 @@
   "all_data_recognized": "Все документы распознаны",
   "not_all_data_recognized": "Некоторые документы не распознаны",
   "recognition_started": "распознавание запущено",
-  "recognition_not_started": "распознавание не запущено"
+  "recognition_not_started": "распознавание не запущено",
+
+  "InsiderControl": "Проверка наличия инсайдерской информации",
+  "InterestControl": "Проверка наличия заинтересованности",
+  "ProjectControl": "Проведение проверки проектов ДД"
 }

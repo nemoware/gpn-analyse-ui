@@ -5,7 +5,6 @@ const logger = require('../core/logger');
 const { Audit, Document, Subsidiary, Risk } = require('../models');
 const parser = require('../services/parser-service');
 const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
-const roboServiceUrl = require('../config').parser.roboServiceUrl;
 const roboService = require('../services/robo-service');
 
 exports.postAudit = async (req, res) => {
@@ -139,6 +138,8 @@ exports.fetchAudits = async (req, res) => {
     const dateFrom = req.query.dateFrom;
     const createDate = req.query.createDate;
 
+    where.push({ 'pre-check': { $exists: false } });
+
     if (auditStatuses) {
       where.push({ status: { $in: auditStatuses.split(',') } });
     }
@@ -175,26 +176,15 @@ exports.fetchAudits = async (req, res) => {
 
     let count;
     let audits;
+    count = await Audit.countDocuments({ $and: where });
+    audits = await Audit.find({ $and: where })
+      .lean()
+      .setOptions({
+        skip: +req.query.skip,
+        limit: +req.query.take,
+        sort
+      });
 
-    if (where.length) {
-      count = await Audit.countDocuments({ $and: where });
-      audits = await Audit.find({ $and: where })
-        .lean()
-        .setOptions({
-          skip: +req.query.skip,
-          limit: +req.query.take,
-          sort
-        });
-    } else {
-      count = await Audit.countDocuments();
-      audits = await Audit.find()
-        .lean()
-        .setOptions({
-          skip: +req.query.skip,
-          limit: +req.query.take,
-          sort
-        });
-    }
     audits = audits.map(a => {
       a.subsidiaryName = a.subsidiary && a.subsidiary.name;
       a.secondaryStatus = {};
@@ -258,6 +248,59 @@ exports.fetchAudits = async (req, res) => {
           a.secondaryStatus.date = robot.new_deadline;
         }
       }
+      return a;
+    });
+
+    res.send({ count, audits });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.fetchPreAudits = async (req, res) => {
+  try {
+    let sort;
+    if (req.query.column) {
+      sort = {
+        [req.query.column]: req.query.sort === 'asc' ? 1 : -1
+      };
+    }
+    const where = [];
+
+    const checkType = req.query.checkType;
+
+    where.push({ 'pre-check': { $exists: true } });
+
+    let count;
+    let audits;
+    count = await Audit.countDocuments({ $and: where });
+    audits = await Audit.find({ $and: where })
+      .lean()
+      .setOptions({
+        skip: +req.query.skip,
+        limit: +req.query.take,
+        sort
+      });
+
+    audits = audits.map(a => {
+      a.authorName = a.author && a.author.name;
+      const roles = a.author && a.author.roles;
+      const role = roles.forEach(
+        role => role._id === 4 || role._id === 5 || role._id === 6
+      );
+      a.checkType = [];
+      switch (role._id) {
+        case 4:
+          a.checkType.push('InsiderControl');
+          break;
+        case 5:
+          a.checkType.push('InterestControl');
+          break;
+        case 6:
+          a.checkType.push('ProjectControl');
+          break;
+      }
+      a.files = 'Файлики';
       return a;
     });
 
@@ -786,7 +829,7 @@ exports.uploadFiles = async (req, res) => {
   try {
     const author = res.locals.user;
     await roboService.postFiles(req.body, author);
-    res.send({ ok: 'ok' });
+    res.status(201).json();
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

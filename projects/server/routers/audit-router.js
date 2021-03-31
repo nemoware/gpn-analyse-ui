@@ -16,6 +16,7 @@ router.post('/exportConclusion', controller.exportConclusion);
 router.get('/conclusion', controller.getConclusion);
 router.put('/conclusion', controller.postConclusion);
 router.get('/fetch', controller.fetchAudits);
+router.get('/fetchPreAudits', controller.fetchPreAudits);
 router.put('/selectedViolations', controller.postSelectedViolations);
 router.get('/robot', controller.getRobotState);
 router.post('/uploadFiles', controller.uploadFiles);
