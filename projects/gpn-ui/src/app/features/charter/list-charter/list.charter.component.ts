@@ -119,7 +119,13 @@ export class ListCharterComponent implements OnInit {
     this.destroyStream.next();
   }
 
-  openDocument(row: any) {}
+  openDocument(doc) {
+    if (!(doc.state === 0 || doc.state === 5 || doc.state === null))
+      window.open(
+        window.location.origin + '/#/audit/edit/' + doc._id,
+        '_blank'
+      );
+  }
 
   uploadCharter() {
     const dialogRef = this.dialog.open(CreateCharterComponent, {
