@@ -12,7 +12,6 @@ import { merge, Subject } from '@root/node_modules/rxjs';
 import { takeUntil, tap } from '@root/node_modules/rxjs/operators';
 import { CharterDataSource } from '@app/features/charter/charter-data-source';
 import { CharterService } from '@app/features/charter/charter.service';
-import { CreateCharterComponent } from '@app/features/charter/create-charter/create-charter.component';
 
 export interface CharterStates {
   id: number;
@@ -48,6 +47,7 @@ export class ListCharterComponent implements OnInit {
     'lastEditUser',
     'analyze_state'
   ];
+  documents: Object[];
 
   charterStates: CharterStates[] = [
     { id: 5, name: 'Загружен, ожидает анализа' },
@@ -61,13 +61,14 @@ export class ListCharterComponent implements OnInit {
   mouseOverIndex = -1;
   private destroyStream = new Subject<void>();
   showInactive: any;
+  filesString: string;
 
   ngOnInit() {
     this.dataSource = new CharterDataSource(this.charterService);
     this.dataSource.loadCharters(
       [],
       'subsidiaryName',
-      'desc',
+      'asc',
       0,
       this.defPageSize,
       false
@@ -89,11 +90,11 @@ export class ListCharterComponent implements OnInit {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(this.sort.sortChange, this.paginator.page)
-      .pipe(tap(() => this.loadAuditsPage()))
+      .pipe(tap(() => this.loadChartersPage()))
       .subscribe();
   }
 
-  loadAuditsPage() {
+  loadChartersPage() {
     this.dataSource.loadCharters(
       this._filterValue,
       this.sort.active,
@@ -108,7 +109,7 @@ export class ListCharterComponent implements OnInit {
     this._filterValue = filterValue;
     // console.log(this._filterValue);
     this.paginator.pageIndex = 0;
-    this.loadAuditsPage();
+    this.loadChartersPage();
   }
 
   onMouseOver(index) {
@@ -127,18 +128,42 @@ export class ListCharterComponent implements OnInit {
       );
   }
 
-  uploadCharter() {
-    const dialogRef = this.dialog.open(CreateCharterComponent, {
-      width: '500px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-      }
+  showCharters() {
+    this.showInactive = !this.showInactive;
+    this.loadChartersPage();
+  }
+
+  uploadFiles(event) {
+    this.documents = [];
+    const files = event.target.files;
+    Array.from(files).forEach((file: File) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      const that = this;
+      reader.onload = () => {
+        that.documents.push({
+          base64Content: reader.result
+            .toString()
+            .replace('data:', '')
+            .replace(/^.+,/, ''),
+          fileName: file.name,
+          documentType: 'CHARTER'
+        });
+      };
+      reader.onerror = function() {
+        console.log(reader.error);
+      };
     });
   }
 
-  showCharters() {
-    this.showInactive = !this.showInactive;
-    this.loadAuditsPage();
+  submitFiles() {
+    if (this.documents.length !== 0) {
+      this.charterService.postCharter(this.documents).subscribe(() => {
+        this.filesString = '';
+        this.loadChartersPage();
+      });
+    } else {
+      window.alert('Вы не выбрали файл!');
+    }
   }
 }

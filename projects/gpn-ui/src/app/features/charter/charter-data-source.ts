@@ -28,7 +28,7 @@ export class CharterDataSource implements DataSource<any> {
   loadCharters(
     filter = [],
     column = 'subsidiaryName',
-    sort = 'desc',
+    sort = 'asc',
     pageIndex = 0,
     pageSize = 15,
     showInactive = false

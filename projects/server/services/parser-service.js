@@ -1,7 +1,6 @@
 const fs = require('fs-promise');
 const request = require('request');
 const url = require('../config').parser.url;
-const roboServiceUrl = require('../config').parser.roboServiceUrl;
 const template = require('../config').conclusion.template;
 const { Document } = require('../models');
 const path = require('path');
@@ -32,17 +31,18 @@ function info(version) {
   console.log();
 }
 
-function getOptions(id, path) {
+function getOptions(filename, content) {
+  let base64data = Buffer.from(content, 'binary').toString('base64');
+  let extension = path
+    .extname(filename)
+    .substring(1)
+    .toUpperCase();
   let body = {
-    id: id,
-    all_data_recognized: true,
-    lack_of_data: 0,
-    new_deadline: new Date(),
-    audit_start: true,
-    directory_path: path
+    base64Content: base64data,
+    documentFileType: extension
   };
   return {
-    url: `${roboServiceUrl}/robot/recognition`,
+    url: `${url}/document-parser`,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body)
   };

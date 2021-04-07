@@ -813,6 +813,13 @@ function toDate(s) {
 }
 
 exports.fetchCharters = async (req, res) => {
+  let sortColumn;
+  let sortDirection;
+  if (req.query.column) {
+    sortColumn = req.query.column;
+    sortDirection = req.query.sort === 'asc';
+  }
+
   const allSubsidiariesRegexp = /.*все до$/i;
   const name = req.query.subsidiaryName;
   const showInactive = req.query.showInactive === 'true';
@@ -941,11 +948,24 @@ exports.fetchCharters = async (req, res) => {
     let count = charters.length;
     charters = charters
       .sort((a, b) => {
-        // сортировка по наименованию ДО
-        if (a.subsidiary > b.subsidiary) return 1;
-        if (a.subsidiary < b.subsidiary) return -1;
-        // сортировка по дате
-        return a.fromDate - b.fromDate;
+        switch (sortColumn) {
+          case 'subsidiaryName':
+            return a.subsidiary > b.subsidiary === sortDirection ? 1 : -1;
+          case 'charterStart':
+            return a.fromDate > b.fromDate === sortDirection ? 1 : -1;
+          case 'charterEnd':
+            if (a.toDate && b.toDate)
+              return a.toDate > b.toDate === sortDirection ? 1 : -1;
+            else if (a.toDate) {
+              return sortDirection ? 1 : -1;
+            } else if (b.toDate) {
+              return !sortDirection ? 1 : -1;
+            } else return 0;
+          case 'lastEditDate':
+            return a.analyze_timestamp > b.analyze_timestamp === sortDirection
+              ? 1
+              : -1;
+        }
       })
       .slice(start, end);
 

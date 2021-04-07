@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ErrorHandler,
   OnDestroy,
   OnInit
 } from '@angular/core';
@@ -41,10 +40,7 @@ import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field'
 import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { ViolationModel } from '@app/models/violation-model';
 import { Subject } from '@root/node_modules/rxjs';
-import { CreateCharterComponent } from '@app/features/charter/create-charter/create-charter.component';
-import { CreateAuditComponent } from '@app/features/audit/create-audit/create-audit.component';
 import { SubsidiaryDetailComponent } from '@app/features/audit/audit-analyse-result/subsidiary-detail/subsidiary-detail.component';
-import { SearchDocumentComponent } from '@app/features/audit/audit-editor/search-document/search-document.component';
 
 interface Node {
   _id?: string;

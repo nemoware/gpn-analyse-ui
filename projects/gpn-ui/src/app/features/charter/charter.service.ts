@@ -15,24 +15,6 @@ const api = '/api';
 export class CharterService {
   constructor(private http: HttpClient) {}
 
-  public getCharters(
-    filterValue: Array<{ name: string; value: any }> = null
-  ): Observable<Charter[]> {
-    let httpParams = new HttpParams();
-    if (filterValue) {
-      for (const filter of filterValue) {
-        httpParams = httpParams.append(filter.name, filter.value);
-      }
-    }
-    return this.http.get<Array<Charter>>(`${api}/document/charter-table`, {
-      params: httpParams
-    });
-  }
-
-  public postCharter(charter): Observable<any> {
-    return this.http.post<Document>(`${api}/document/charters`, charter);
-  }
-
   fetch(
     filterValue: Array<{ name: string; value: any }>,
     take: number,
@@ -60,5 +42,12 @@ export class CharterService {
     return this.http.get<DataSourceCharter>(`${api}/document/fetchCharters`, {
       params: httpParams
     });
+  }
+
+  public postCharter(documents: Object[]): Observable<any> {
+    return this.http.post<Observable<any>>(
+      `${api}/preAudit/uploadFiles`,
+      documents
+    );
   }
 }

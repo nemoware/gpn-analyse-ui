@@ -10,18 +10,13 @@ import {
 } from '@root/node_modules/@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
 import { LOCALE_ID } from '@root/node_modules/@angular/core';
-import { CreateCharterComponent } from './create-charter/create-charter.component';
 import { NgxMatSelectSearchModule } from '@root/node_modules/ngx-mat-select-search';
 import { AuditModule } from '@app/features/audit/audit.module';
 import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
 import { CharterFilterComponent } from './charter-filter/charter-filter.component';
 
 @NgModule({
-  declarations: [
-    ListCharterComponent,
-    CreateCharterComponent,
-    CharterFilterComponent
-  ],
+  declarations: [ListCharterComponent, CharterFilterComponent],
   imports: [
     CommonModule,
     ListCharterRoutingModule,
@@ -30,7 +25,6 @@ import { CharterFilterComponent } from './charter-filter/charter-filter.componen
     AuditModule,
     NgxSpinnerModule
   ],
-  entryComponents: [CreateCharterComponent],
   providers: [
     {
       provide: DateAdapter,

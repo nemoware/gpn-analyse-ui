@@ -2,8 +2,9 @@
   <gpn-charter-filter [charterStates]="charterStates" (ApplyFilter)="onApplyFilter($event)"></gpn-charter-filter>
 </div>
 <div class="col">
-  <button mat-raised-button color="accent" style="float: right; margin-right: 20px; margin-top: 15px; margin-bottom: 15px" (click)="uploadCharter()"> Добавить </button>
-  <button mat-raised-button color="accent" style="float: right; margin-right: 20px; margin-bottom: 15px; margin-top: 15px" (click)="showCharters()"> {{showInactive ? 'Показать только активные уставы':'Показать все уставы'}} </button>
+  <button class = "buttons-group" mat-raised-button color="accent"  (click)="showCharters()"> {{showInactive ? 'Показать только активные уставы':'Показать все уставы'}} </button>
+  <button class = "buttons-group" mat-raised-button color="accent"  (click)="submitFiles()">Загрузить файлы</button>
+  <input class = "buttons-group" [(ngModel)]="filesString" type="file" (change)="uploadFiles($event)" >
 </div>
 <div class="right_group">
   <ngx-spinner
@@ -47,14 +48,14 @@
       </ng-container>
 
       <ng-container matColumnDef="lastEditUser">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Пользователь, внесший последние изменения </th>
+        <th mat-header-cell *matHeaderCellDef > Пользователь, внесший последние изменения </th>
         <td mat-cell *matCellDef="let element">
           {{element.user?(element.user):'Анализатор'}}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="analyze_state">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Статус устава </th>
+        <th mat-header-cell *matHeaderCellDef > Статус устава </th>
         <td mat-cell *matCellDef="let element">
           <gpn-doc-state [document]='element'></gpn-doc-state>
         </td>
