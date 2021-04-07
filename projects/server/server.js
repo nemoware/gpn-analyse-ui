@@ -6,6 +6,7 @@ const path = require('path');
 const https = require('https');
 const fs = require('fs');
 const parser = require('./services/parser-service');
+const robo = require('./services/robo-service');
 const rightService = require('./services/right-service');
 
 const argv = require('yargs').argv;
@@ -58,7 +59,7 @@ const listen = async err => {
   console.log(`App is listening on port ${port}`);
   console.log();
 
-  await Promise.all([parser.test(), ad.test(), kerberos.test()]);
+  await Promise.all([parser.test(), ad.test(), kerberos.test(), robo.test()]);
 };
 
 if (ssl) {
