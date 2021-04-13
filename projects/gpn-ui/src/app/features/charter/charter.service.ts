@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from '@root/node_modules/rxjs';
-import { Document } from '@app/models/document.model';
 import {
   HttpClient,
   HttpParams
 } from '@root/node_modules/@angular/common/http';
-import { Charter, DataSourceCharter } from '@app/models/charter.model';
+import { DataSourceCharter } from '@app/models/charter.model';
 
 const api = '/api';
 
@@ -46,7 +45,7 @@ export class CharterService {
 
   public postCharter(documents: Object[]): Observable<any> {
     return this.http.post<Observable<any>>(
-      `${api}/preAudit/uploadFiles`,
+      `${api}/document/uploadFiles`,
       documents
     );
   }

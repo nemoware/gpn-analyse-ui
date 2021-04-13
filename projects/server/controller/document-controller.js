@@ -5,6 +5,7 @@ const attribute = require('../core/attribute');
 const types = require('../json/document-type');
 const fs = require('fs-promise');
 const parser = require('../services/parser-service');
+const roboService = require('../services/robo-service');
 
 const documentFields = `filename
 parse.documentType
@@ -970,6 +971,16 @@ exports.fetchCharters = async (req, res) => {
       .slice(start, end);
 
     res.send({ count, charters });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.uploadFiles = async (req, res) => {
+  try {
+    const author = res.locals.user;
+    await roboService.postFiles(req.body, author);
+    res.status(201).json();
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

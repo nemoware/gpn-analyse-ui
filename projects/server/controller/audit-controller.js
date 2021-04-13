@@ -5,6 +5,7 @@ const logger = require('../core/logger');
 const { Audit, Document, Subsidiary, Risk } = require('../models');
 const parser = require('../services/parser-service');
 const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
+const roboService = require('../services/robo-service');
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
@@ -39,7 +40,7 @@ exports.postAudit = async (req, res) => {
     );
     res.status(201).json(audit);
 
-    parser.parseAudit(audit);
+    await roboService.postAudit(audit);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

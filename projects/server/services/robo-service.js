@@ -50,6 +50,22 @@ function getOptions(documents, author) {
   };
 }
 
+function getAuditOptions(id, path) {
+  let body = {
+    id: id,
+    all_data_recognized: true,
+    lack_of_data: 0,
+    new_deadline: new Date(),
+    audit_start: true,
+    directory_path: path
+  };
+  return {
+    url: `${roboServiceUrl}/robot/recognition`,
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body)
+  };
+}
+
 function post(options) {
   return new Promise((resolve, reject) => {
     request.post(options, (err, response, body) => {
@@ -79,3 +95,12 @@ function get(options) {
     });
   });
 }
+
+exports.postAudit = async audit => {
+  try {
+    const options = getAuditOptions(audit.id, audit.ftpUrl);
+    await post(options);
+  } catch (err) {
+    logger.log(err);
+  }
+};

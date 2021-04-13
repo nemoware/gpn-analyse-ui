@@ -23,5 +23,6 @@ router
   .route('/star')
   .post(controller.addStar)
   .delete(controller.deleteStar);
+router.post('/uploadFiles', controller.uploadFiles);
 
 module.exports = router;
