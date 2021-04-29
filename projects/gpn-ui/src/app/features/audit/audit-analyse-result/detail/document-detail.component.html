@@ -71,7 +71,8 @@
   <ng-container matColumnDef="contract_subject">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>предмет договора</th>
     <td mat-cell *matCellDef="let row">
-      {{ getAttrValue('subject', row) | translate}}
+      {{ getAttrValue('subject', row) | translate}}<br>
+      <div class="small"> {{row.primary_subject | translate}}</div>
     </td>
   </ng-container>
 
