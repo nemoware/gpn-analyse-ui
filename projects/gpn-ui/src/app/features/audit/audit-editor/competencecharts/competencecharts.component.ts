@@ -82,7 +82,6 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
 
       for (const x of xx) {
         const pth = keyToPieces(x.key);
-
         const org_level = pth[0];
         if (org_level.toLowerCase().includes('constraint')) break;
 
@@ -97,9 +96,19 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
         }
         const competence = competences[competence_name];
         competence['span'] = x.span;
-        if ((pth.length = 4)) {
-          const margin_ = pth[2];
-          if ('value' === x.kind) {
+        if (pth.length === 4) {
+          let margin_;
+          const sign = this.attributes.find(
+            atr => atr.key === x.parent + '/sign'
+          );
+          if (sign) {
+            if (sign.value === -1) {
+              margin_ = 'constraint-max';
+            } else if (sign.value === 1) {
+              margin_ = 'constraint-min';
+            }
+          }
+          if ('amount' === x.kind) {
             const margin_value = Number(x.value);
             competence[margin_] = margin_value;
             constraint_values.push(margin_value);
@@ -113,7 +122,7 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
 
     const isConstraint = x => {
       const p = x.kind;
-      return p === 'constraint-min' || p === 'constraint-max';
+      return p === 'constraint';
     };
 
     const collectChildrenOf = parent => {
@@ -130,17 +139,16 @@ export class CompetencechartsComponent implements OnInit, AfterViewInit {
 
     //TODO: get rid of this list, this is very temporal solution
     const deal_kinds = [
-      /*'Deal',
+      'Deal',
       'BigDeal',
       'Charity',
       'Lawsuit',
       'RealEstate',
-      'LoansLoans',
+      'Loans',
       'Insurance',
       'Consulting',
-      'RentingOutRentingOut',
-      'Renting'*/
-      // temporal labels
+      'RentingOut',
+      'Renting',
       'AgencyContract',
       'Renting',
       'BankGuarantees',

@@ -53,7 +53,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // console.log(this.attributes);
     this.refreshView();
     document
       .getElementById('view_doc')
@@ -363,8 +362,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           );
           if (a && a.once) onceAttribute.push(a.kind);
         });
-
-      return atr.children.filter(x => !onceAttribute.includes(x.kind));
+      //Если сумма уже есть вне предмета договора
+      if (
+        this.attributes.find(a => a.key === 'price') &&
+        atrParent.kind === 'subject'
+      ) {
+        return [];
+      } else return atr.children.filter(x => !onceAttribute.includes(x.kind));
     }
   }
 
@@ -403,6 +407,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
         if (result.delete) {
           this.removeAttribute(atr);
         } else {
+          //По схеме в полях amount и sign должно быть число
+          if (result.kind === 'amount' || result.kind === 'sign') {
+            result.value = Number(result.value);
+          }
           newAtr.kind = result.kind;
           newAtr.value = result.value;
           newAtr.changed = true;
@@ -425,7 +433,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
             newAtr.key,
             true
           );
-          // console.log(this.attributes);
         }
         this.changeAttribute.emit(this.attributes);
       }
@@ -451,47 +458,26 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
       item =>
         (atr[item.key] = {
           confidence: 1,
-          kind: item.key,
+          kind: item.kind,
+          key: item.key,
           span: item.span,
           span_map: item.span_map,
-          value: item.value,
+          value: item.value || null, //value is required
           changed: item.changed,
           parent: item.parent
         })
     );
 
-    let wrongMarking = false;
-    const signValueCurrency = this.attributes.filter(
-      a =>
-        a.kind === 'sign_value_currency' ||
-        a.kind === 'constraint-min' ||
-        a.kind === 'constraint-max'
-    );
-    signValueCurrency.forEach(attribute => {
-      const value = this.attributes.filter(
-        a =>
-          a.key === `${attribute.key}/value` ||
-          a.key === `${attribute.key}/value-2`
-      );
-      const currency = this.attributes.filter(
-        a =>
-          a.key === `${attribute.key}/currency` ||
-          a.key === `${attribute.key}/currency-2`
-      );
-      if (!(value.length && currency.length)) {
-        wrongMarking = true;
-      }
-    });
-    if (!wrongMarking) {
-      this.auditservice
-        .updateDocument(this.document._id, atr, documentType)
-        .subscribe(() => {
+    this.auditservice
+      .updateDocument(this.document._id, atr, documentType)
+      .subscribe(
+        () => {
           this.changed = false;
           this.refresh.emit();
-        });
-    } else {
-      window.alert('Вы не указали значение суммы или единицу измерения!');
-    }
+        },
+        //Вывод ошибки о несоответствии схеме
+        error => console.log(error)
+      );
   }
 
   ngOnDestroy(): void {

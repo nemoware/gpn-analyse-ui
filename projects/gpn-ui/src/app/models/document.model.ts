@@ -1,4 +1,5 @@
 import { HeaderModel } from '@app/models/header-model';
+import { AttributeModel } from '@app/models/attribute-model';
 
 export interface Document {
   _id: string;
@@ -20,12 +21,12 @@ export interface Document {
       words: [[number, number]];
     };
     checksum: number;
-    attributes: Object;
+    attributes: [AttributeModel];
     headers: [HeaderModel];
     warnings: any[];
   };
   user: {
-    attributes: Object;
+    attributes: [AttributeModel];
     author: { _id: string; login: String };
     updateDate: Date;
   };

@@ -28,7 +28,7 @@
         "once": true
       },
       {
-        "kind": "org-1-alt-name",
+        "kind": "org-1-alt_name",
         "once": true
       },
       {
@@ -37,7 +37,7 @@
         "hide": true
       },
       {
-        "kind": "org-2-alt-name",
+        "kind": "org-2-alt_name",
         "once": true
       },
       {
@@ -57,13 +57,13 @@
       {
         "parents": [
           {
-            "kind": "sign_value_currency",
+            "kind": "price",
             "once": true
           }
         ],
         "children": [
           {
-            "kind": "value",
+            "kind": "amount",
             "type": "number",
             "once": true
           },
@@ -92,10 +92,15 @@
         ],
         "children": [
           {
-            "parents": ["sign_value_currency"],
+            "parents": [
+              {
+                "kind": "price",
+                "once": true
+              }
+            ],
             "children": [
               {
-                "kind": "value",
+                "kind": "amount",
                 "type": "number",
                 "once": true
               },
@@ -130,19 +135,7 @@
         "once": true
       },
       {
-        "kind": "org-2-type",
-        "once": true
-      },
-      {
-        "kind": "org-2-name",
-        "once": true
-      },
-      {
         "kind": "org-1-alias",
-        "once": true
-      },
-      {
-        "kind": "org-2-alias",
         "once": true
       },
       {
@@ -170,10 +163,10 @@
           "contract_agent_org-2-alias",
 
           {
-            "parents": ["sign_value_currency"],
+            "parents": ["price"],
             "children": [
               {
-                "kind": "value",
+                "kind": "amount",
                 "type": "number",
                 "once": true
               },
@@ -214,11 +207,15 @@
       },
       {
         "parents": [
-          { "kind": "ShareholdersGeneralMeeting", "hideValue": true },
-          { "kind": "BoardOfDirectors", "hideValue": true },
-          { "kind": "CEO", "hideValue": true },
-          { "kind": "AllMembers", "hideValue": true },
-          { "kind": "BoardOfCompany", "hideValue": true }
+          {
+            "kind": "ShareholdersGeneralMeeting",
+            "hideValue": true,
+            "once": true
+          },
+          { "kind": "BoardOfDirectors", "hideValue": true, "once": true },
+          { "kind": "CEO", "hideValue": true, "once": true },
+          { "kind": "AllMembers", "hideValue": true, "once": true },
+          { "kind": "BoardOfCompany", "hideValue": true, "once": true }
         ],
         "children": [
           {
@@ -260,10 +257,10 @@
             ],
             "children": [
               {
-                "parents": ["constraint-min", "constraint-max", "constraint"],
+                "parents": ["constraint"],
                 "children": [
                   {
-                    "kind": "value",
+                    "kind": "amount",
                     "type": "number",
                     "once": true
                   },
@@ -316,7 +313,7 @@
         "once": true
       },
       {
-        "kind": "org-1-alt-name",
+        "kind": "org-1-alt_name",
         "once": true
       },
       {
@@ -325,7 +322,7 @@
         "hide": true
       },
       {
-        "kind": "org-2-alt-name",
+        "kind": "org-2-alt_name",
         "once": true
       },
       {
@@ -345,13 +342,13 @@
       {
         "parents": [
           {
-            "kind": "sign_value_currency",
+            "kind": "price",
             "once": true
           }
         ],
         "children": [
           {
-            "kind": "value",
+            "kind": "amount",
             "type": "number",
             "once": true
           },
@@ -380,10 +377,10 @@
         ],
         "children": [
           {
-            "parents": ["sign_value_currency"],
+            "parents": ["price"],
             "children": [
               {
-                "kind": "value",
+                "kind": "amount",
                 "type": "number",
                 "once": true
               },
@@ -434,7 +431,7 @@
         "once": true
       },
       {
-        "kind": "org-1-alt-name",
+        "kind": "org-1-alt_name",
         "once": true
       },
       {
@@ -443,7 +440,7 @@
         "hide": true
       },
       {
-        "kind": "org-2-alt-name",
+        "kind": "org-2-alt_name",
         "once": true
       },
       {
@@ -463,13 +460,13 @@
       {
         "parents": [
           {
-            "kind": "sign_value_currency",
+            "kind": "price",
             "once": true
           }
         ],
         "children": [
           {
-            "kind": "value",
+            "kind": "amount",
             "type": "number",
             "once": true
           },
@@ -498,10 +495,10 @@
         ],
         "children": [
           {
-            "parents": ["sign_value_currency"],
+            "parents": ["price"],
             "children": [
               {
-                "kind": "value",
+                "kind": "amount",
                 "type": "number",
                 "once": true
               },

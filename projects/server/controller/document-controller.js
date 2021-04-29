@@ -6,6 +6,10 @@ const types = require('../json/document-type');
 const fs = require('fs-promise');
 const parser = require('../services/parser-service');
 const roboService = require('../services/robo-service');
+const schema = require('../json/schema.json');
+const Ajv = require('ajv');
+const addFormats = require('ajv-formats').default;
+const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
 
 const documentFields = `filename
 parse.documentType
@@ -124,6 +128,7 @@ exports.getDocument = async (req, res) => {
         document.documentType = document.parse.documentType;
         document.isActive = document.isActive !== false;
         delete document.parse;
+        setKeys(document);
         res.status(200).json(document);
       } else {
         let audit = await Audit.findOne(
@@ -182,7 +187,7 @@ exports.getDocument = async (req, res) => {
           if (document.user) {
             delete document.analysis.attributes;
           }
-
+          setKeys(document);
           res.status(200).json(document);
         } else {
           let err = `Can not find audit with id ${document.auditId}`;
@@ -199,82 +204,130 @@ exports.getDocument = async (req, res) => {
 };
 
 exports.updateDocument = async (req, res) => {
-  let document = await Document.findOne(
-    { _id: req.query._id },
-    'user parse auditId analysis.warnings'
-  );
-  if (!document) {
-    return logger.logError(req, res, 'Document not found', 404);
-  }
-
-  // if (req.body.documentType && document.parse.documentType!==req.body.documentType){
-  //   document.parse.documentType = req.body.documentType;
-  // }
-
-  if (req.body.user) {
-    const user = req.body.user;
-    document.user.attributes = {};
-    const attributes = attribute.getAttributeList(document.parse.documentType);
-    for (let i = 0; i < document.analysis.warnings.length; i++) {
-      const warning = document.analysis.warnings[i];
-      if (
-        (warning.code === 'date_not_found' && user.date) ||
-        (warning.code === 'number_not_found' && user.number) ||
-        (warning.code === 'contract_value_not_found' &&
-          user['sign_value_currency/value']) ||
-        (warning.code === 'contract_value_not_found' &&
-          user['subject/sign_value_currency/currency']) ||
-        (warning.code === 'protocol_agenda_not_found' && user['agenda_item']) ||
-        (warning.code === 'org_name_not_found' &&
-          (user['org-1-name'] || user['org-2-name'])) ||
-        (warning.code === 'org_type_not_found' &&
-          (user['org-1-type'] || user['org-2-type'])) ||
-        (warning.code === 'org_struct_level_not_found' &&
-          user['org_structural_level']) ||
-        (warning.code === 'value_section_not_found' &&
-          user['sign_value_currency']) ||
-        ((warning.code === 'subject_section_not_found' ||
-          warning.code === 'contract_subject_not_found' ||
-          warning.code === 'contract_subject_section_not_found') &&
-          user.subject)
-      ) {
-        if (!document.analysis.resolvedWarnings)
-          document.analysis.resolvedWarnings = [];
-        document.analysis.resolvedWarnings.push(warning);
-        document.analysis.warnings.splice(i);
-      }
-    }
-    for (let key in user) {
-      const parts = key.split('/');
-      const kind = parts[parts.length - 1];
-      const attribute = attributes.find(a => a.kind === kind);
-      if (attribute) {
-        switch (attribute.type) {
-          case 'date':
-            user[key].value = new Date(user[key].value);
-            break;
-          case 'number':
-            user[key].value = +user[key].value;
-            break;
-        }
-        if (attribute.kind === 'sign') {
-          user[key].value = +user[key].value;
-        }
-      }
-
-      document.user.attributes[key] = user[key];
-    }
-  }
-
-  document.user.author = res.locals.user;
-  document.user.updateDate = new Date();
-  document.user.analyze_timestamp = document.analysis.analyze_timestamp;
-  document.state = 5;
-
   try {
-    if (document.user.attributes) {
-      document.markModified('user.attributes');
+    let document = await Document.findOne(
+      { _id: req.query._id },
+      'user parse auditId analysis.warnings'
+    );
+    if (!document) {
+      return logger.logError(req, res, 'Document not found', 404);
     }
+
+    // if (req.body.documentType && document.parse.documentType!==req.body.documentType){
+    //   document.parse.documentType = req.body.documentType;
+    // }
+
+    if (req.body.user) {
+      const user = req.body.user;
+      document.user.attributes = {};
+      document.user.attributes_tree = {};
+      let attributesUI = user;
+      let attributeTree = {};
+      const documentType = document.parse.documentType;
+      if (documentType === 'PROTOCOL') {
+        attributeTree.agenda_items = [];
+      }
+      let error = { message: '' };
+      if (documentType === 'CHARTER') {
+        document.user.attributes_tree[
+          documentType.toLowerCase()
+        ] = setCharterTree(attributesUI, error);
+        if (error.message) {
+          res
+            .status(400)
+            .json({ msg: 'error', details: error.message.toString() });
+          return;
+        }
+      } else if (
+        documentType === 'CONTRACT' ||
+        documentType === 'ANNEX' ||
+        documentType === 'SUPPLEMENTARY_AGREEMENT'
+      ) {
+        document.user.attributes_tree[
+          documentType.toLowerCase()
+        ] = setContractTree(attributesUI, error);
+        if (error.message) {
+          res
+            .status(400)
+            .json({ msg: 'error', details: error.message.toString() });
+          return;
+        }
+      } else if (documentType === 'PROTOCOL') {
+        document.user.attributes_tree[
+          documentType.toLowerCase()
+        ] = setProtocolTree(attributesUI, error);
+        if (error.message) {
+          res
+            .status(400)
+            .json({ msg: 'error', details: error.message.toString() });
+          return;
+        }
+      }
+
+      const attributes = attribute.getAttributeList(
+        document.parse.documentType
+      );
+      for (let i = 0; i < document.analysis.warnings.length; i++) {
+        const warning = document.analysis.warnings[i];
+        if (
+          (warning.code === 'date_not_found' && user.date) ||
+          (warning.code === 'number_not_found' && user.number) ||
+          (warning.code === 'contract_value_not_found' &&
+            user['sign_value_currency/value']) ||
+          (warning.code === 'contract_value_not_found' &&
+            user['subject/sign_value_currency/currency']) ||
+          (warning.code === 'protocol_agenda_not_found' &&
+            user['agenda_item']) ||
+          (warning.code === 'org_name_not_found' &&
+            (user['org-1-name'] || user['org-2-name'])) ||
+          (warning.code === 'org_type_not_found' &&
+            (user['org-1-type'] || user['org-2-type'])) ||
+          (warning.code === 'org_struct_level_not_found' &&
+            user['org_structural_level']) ||
+          (warning.code === 'value_section_not_found' &&
+            user['sign_value_currency']) ||
+          ((warning.code === 'subject_section_not_found' ||
+            warning.code === 'contract_subject_not_found' ||
+            warning.code === 'contract_subject_section_not_found') &&
+            user.subject)
+        ) {
+          if (!document.analysis.resolvedWarnings)
+            document.analysis.resolvedWarnings = [];
+          document.analysis.resolvedWarnings.push(warning);
+          document.analysis.warnings.splice(i);
+        }
+      }
+      for (let key in user) {
+        const parts = key.split('/');
+        const kind = parts[parts.length - 1];
+        const attribute = attributes.find(a => a.kind === kind);
+        if (attribute) {
+          switch (attribute.type) {
+            case 'date':
+              user[key].value = new Date(user[key].value);
+              break;
+            case 'number':
+              user[key].value = +user[key].value;
+              break;
+          }
+          if (attribute.kind === 'sign') {
+            user[key].value = +user[key].value;
+          }
+        }
+
+        document.user.attributes[key] = user[key];
+      }
+    }
+
+    document.user.author = res.locals.user;
+    document.user.updateDate = new Date();
+    document.user.analyze_timestamp = document.analysis.analyze_timestamp;
+    document.state = 5;
+
+    if (document.user.attributes_tree) {
+      document.markModified('user.attributes_tree');
+    }
+
     await document.save();
 
     if (document.parse.documentType === 'CHARTER') {
@@ -984,4 +1037,413 @@ exports.uploadFiles = async (req, res) => {
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
+};
+
+setKeys = document => {
+  const orgAttributes = ['name', 'type', 'alt_name', 'alias'];
+  let attributes_tree = {};
+  if (document.user && document.user.attributes_tree) {
+    attributes_tree = document.user.attributes_tree;
+  } else if (document.analysis.attributes_tree) {
+    attributes_tree = document.analysis.attributes_tree;
+  }
+
+  let attributes = [];
+  if (attributes_tree) {
+    const doc_type = Object.keys(attributes_tree)[0];
+    //Договоры
+    let contract = {};
+    if (doc_type === 'contract') {
+      contract = attributes_tree.contract;
+    } else if (doc_type === 'annex') {
+      contract = attributes_tree.annex;
+    } else if (doc_type === 'supplementary_agreement') {
+      contract = attributes_tree.supplementary_agreement;
+    }
+    if (contract) {
+      if (contract.date) {
+        contract.date.kind = 'date';
+        contract.date.key = 'date';
+        attributes.push(contract.date);
+      }
+      if (contract.number) {
+        contract.number.kind = 'number';
+        contract.number.key = 'number';
+        attributes.push(contract.number);
+      }
+      if (contract.orgs) {
+        for (let i = 0; i < contract.orgs.length; i++) {
+          Object.keys(contract.orgs[i]).forEach(x => {
+            contract.orgs[i][x].kind = 'org' + '-' + (i + 1) + '-' + x;
+            contract.orgs[i][x].key = contract.orgs[i][x].kind;
+            attributes.push(contract.orgs[i][x]);
+          });
+        }
+      }
+      if (contract.price) {
+        contract.price.kind = 'price';
+        contract.price.key = 'price';
+        const price = contract.price;
+        attributes.push(contract.price);
+        Object.keys(price).forEach(x => {
+          if (
+            x === 'amount' ||
+            x === 'currency' ||
+            (x === 'sign' && price[x].span[0] !== price[x].span[1])
+          ) {
+            price[x].kind = x;
+            price[x].key = price.key + '/' + price[x].kind;
+            price[x].parent = price.key;
+            attributes.push(price[x]);
+          }
+        });
+      }
+      if (contract.subject) {
+        contract.subject.kind = 'subject';
+        contract.subject.key = 'subject';
+        attributes.push(contract.subject);
+        const price = contract.subject.price;
+        if (price) {
+          price.kind = 'price';
+          price.key = contract.subject.key + '/' + 'price';
+          attributes.push(price);
+          Object.keys(price).forEach(x => {
+            if (x === 'amount' || x === 'currency' || x === 'sign') {
+              price[x].kind = x;
+              price[x].key = price.key + '/' + price[x].kind;
+              price[x].parent = price.key;
+              attributes.push(price[x]);
+            }
+          });
+        }
+      }
+      // attributes_tree.contract = contract;
+    }
+
+    //Уставы
+    const charter = attributes_tree.charter;
+    if (charter) {
+      if (charter.date) {
+        charter.date.kind = 'date';
+        charter.date.key = 'date';
+        attributes.push(charter.date);
+      }
+      if (charter.org) {
+        Object.keys(charter.org).forEach(x => {
+          if (orgAttributes.includes(x)) {
+            charter.org[x].kind = 'org-1-' + x;
+            charter.org[x].key = charter.org[x].kind;
+            attributes.push(charter.org[x]);
+          }
+        });
+      }
+      if (charter.structural_levels) {
+        for (let i = 0; i < charter.structural_levels.length; i++) {
+          const structuralLevel = charter.structural_levels[i];
+          if (structuralLevel.value) {
+            structuralLevel.kind = structuralLevel.value;
+            structuralLevel.key = structuralLevel.kind;
+            attributes.push(structuralLevel);
+            const competences = structuralLevel.competences;
+            if (competences) {
+              for (let j = 0; j < competences.length; j++) {
+                const competence = competences[j];
+                if (competence.value) {
+                  competence.kind = competence.value;
+                  const num = attributes.filter(
+                    c =>
+                      c.parent === structuralLevel.kind &&
+                      c.kind === competence.kind
+                  ).length;
+                  competence.key =
+                    structuralLevel.key + '/' + competence.kind + '-' + num;
+                  competence.parent = structuralLevel.key;
+                  attributes.push(competence);
+                  const constraints = competence.constraints;
+                  if (constraints) {
+                    for (let k = 0; k < constraints.length; k++) {
+                      const constraint = constraints[k];
+                      constraint.kind = 'constraint';
+                      constraint.key =
+                        competence.key + '/' + constraint.kind + '-' + k;
+                      constraint.parent = competence.key;
+                      attributes.push(constraint);
+                      Object.keys(constraint).forEach(x => {
+                        if (
+                          x === 'amount' ||
+                          x === 'currency' ||
+                          x === 'sign'
+                        ) {
+                          constraint[x].kind = x;
+                          constraint[x].key =
+                            constraint.key + '/' + constraint[x].kind;
+                          constraint[x].parent = constraint.key;
+                          attributes.push(constraint[x]);
+                        }
+                      });
+                    }
+                  }
+                }
+              }
+              charter.structural_levels[i].competences = competences;
+            }
+          }
+        }
+      }
+    }
+
+    const protocol = attributes_tree.protocol;
+    if (protocol) {
+      if (protocol.date) {
+        protocol.date.kind = 'date';
+        protocol.date.key = 'date';
+        attributes.push(protocol.date);
+      }
+
+      if (protocol.org) {
+        Object.keys(protocol.org).forEach(x => {
+          if (orgAttributes.includes(x)) {
+            protocol.org[x].kind = 'org-1-' + x;
+            protocol.org[x].key = protocol.org[x].kind;
+            attributes.push(protocol.org[x]);
+          }
+        });
+      }
+
+      if (protocol.structural_level) {
+        protocol.structural_level.kind = 'structural_level';
+        protocol.structural_level.key = 'structural_level';
+        attributes.push(protocol.structural_level);
+      }
+
+      const agenda_items = protocol.agenda_items;
+      if (agenda_items) {
+        for (let i = 0; i < protocol.agenda_items.length; i++) {
+          const agenda_item = protocol.agenda_items[i];
+          agenda_item.kind = 'agenda_item';
+          agenda_item.key = agenda_item.kind + '-' + i;
+          attributes.push(agenda_item);
+          if (agenda_item.contract && agenda_item.contract.orgs) {
+            for (let j = 0; j < agenda_item.contract.orgs.length; j++) {
+              const org = agenda_item.contract.orgs[j];
+              if (org) {
+                Object.keys(org).forEach(x => {
+                  if (j === 0) {
+                    org[x].kind = 'org-1-' + x;
+                    org[x].key = agenda_item.key + '/' + org[x].kind;
+                    org[x].parent = agenda_item.key;
+                  } else {
+                    org[x].kind = 'org-2-' + x;
+                    org[x].key = agenda_item.key + '/' + org[x].kind + '-' + j;
+                    org[x].parent = agenda_item.key;
+                  }
+                  attributes.push(org[x]);
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+    if (document.user) {
+      document.user.attributes = attributes;
+    } else {
+      document.analysis.attributes = attributes;
+    }
+  }
+};
+
+setCharterTree = (userAttributes, error) => {
+  let attributeTree = {};
+  const structuralLevelsList = [
+    'CEO',
+    'ShareholdersGeneralMeeting',
+    'BoardOfDirectors',
+    'BoardOfCompany',
+    'AllMembers'
+  ];
+  let structuralLevels = [];
+  attributeTree.org = {};
+  // console.log(userAttributes);
+  Object.keys(userAttributes).forEach(name => {
+    const y = userAttributes[name];
+    const key = y.key;
+    let atr = key.split('/');
+    if (atr.length === 1) {
+      let arr = key.split('-');
+      if (key === 'org-1-name' || key === 'org-1-type') {
+        attributeTree.org[arr[2]] = y;
+      } else if (structuralLevelsList.includes(arr[0])) {
+        y.value = y.kind;
+        delete y.competences;
+        structuralLevels.push(y);
+      } else {
+        attributeTree[arr[0]] = y;
+      }
+    } else if (atr.length === 2) {
+      const lvl = y.parent.split('-')[0];
+      delete y.parent;
+      if (structuralLevelsList.includes(lvl)) {
+        let structuralLevel = structuralLevels.find(l => l.key === lvl);
+        const index = structuralLevels.findIndex(l => l.key === lvl);
+        structuralLevels.splice(index, 1);
+        if (structuralLevel) {
+          if (!structuralLevel.competences) {
+            structuralLevel.competences = [];
+          }
+          y.value = y.kind;
+          delete y.constraints;
+          structuralLevel.competences.push(y);
+          structuralLevels.push(structuralLevel);
+        }
+      }
+    } else if (atr.length === 3) {
+      if (atr[2].startsWith('constraint')) {
+        const level = structuralLevels.find(l => {
+          return l.key === atr[0];
+        });
+        const competence = level.competences.find(c => {
+          return c.key === atr[0] + '/' + atr[1];
+        });
+        if (!competence.constraints) {
+          competence.constraints = [];
+        }
+        competence.constraints.push(y);
+      }
+    } else if (atr.length === 4) {
+      const level = structuralLevels.find(l => {
+        return l.key === atr[0];
+      });
+      const competence = level.competences.find(c => {
+        return c.key === atr[0] + '/' + atr[1];
+      });
+      const constraint_atr = atr[3].split('-');
+      for (const c of competence.constraints) {
+        if (c.key === atr[0] + '/' + atr[1] + '/' + atr[2]) {
+          if (y.kind === 'amount') {
+            y.value = Number.parseInt(y.value);
+          }
+          c[constraint_atr[0]] = y;
+        }
+      }
+    }
+  });
+  attributeTree.structural_levels = structuralLevels;
+
+  const data = { charter: attributeTree };
+
+  validateSchema(data, schema, error);
+
+  return attributeTree;
+};
+
+setContractTree = (userAttributes, error) => {
+  let attributeTree = {};
+  let org1 = {};
+  let org2 = {};
+  Object.keys(userAttributes).forEach(name => {
+    const y = userAttributes[name];
+    const key = y.key;
+    let atr = key.split('/');
+    if (atr.length === 1) {
+      let arr = key.split('-');
+      //org-1-name,
+      if (arr[0] === 'org') {
+        if (arr[1] === '1') {
+          org1[arr[2]] = y;
+        } else {
+          org2[arr[2]] = y;
+        }
+      } else {
+        attributeTree[arr[0]] = y;
+      }
+    } else if (atr.length === 2) {
+      //subject
+      if (atr[0] === 'subject') {
+        attributeTree[atr[0]][atr[1]] = y;
+      } else if (atr[0] === 'price') {
+        if (y.kind === 'sign') {
+          //Баг анализатора, sign value может быть 0
+          if (y.value === null) {
+            y.value = 0;
+          }
+        }
+        attributeTree[atr[0]][atr[1]] = y;
+      }
+    } else if (atr.length === 3) {
+      if (atr[0] === 'subject') {
+        attributeTree[atr[0]][atr[1]][atr[2]] = y;
+      }
+    }
+  });
+  if (org1 || org2) {
+    attributeTree.orgs = [org1, org2];
+  }
+
+  const data = { contract: attributeTree };
+
+  validateSchema(data, schema, error);
+
+  return attributeTree;
+};
+
+//TODO: доделать протоколы
+setProtocolTree = (userAttributes, error) => {
+  let attributeTree = {};
+  attributeTree.org = {};
+  attributeTree.agenda_items = [];
+  Object.keys(userAttributes).forEach(name => {
+    const y = userAttributes[name];
+    const key = y.key;
+    let atr = key.split('/');
+    if (atr.length === 1) {
+      // console.log(atr);
+      let arr = key.split('-');
+      if (
+        key === 'org-1-name' ||
+        key === 'org-1-type' ||
+        key === 'org-1-alt_name' ||
+        key === 'org-1-alias'
+      ) {
+        attributeTree.org[arr[2]] = y;
+      } else if (key === 'org_structural_level') {
+        attributeTree.structural_level = y;
+      } else if (arr[0] === 'agenda_item') {
+        y.orgs = [];
+        attributeTree.agenda_items.push(y);
+      }
+    } else if (atr.length === 2) {
+    }
+  });
+
+  const data = { charter: attributeTree };
+
+  validateSchema(data, schema, error);
+
+  return attributeTree;
+};
+
+validateSchema = (data, schema, error) => {
+  const ajv = new Ajv({ strictTypes: false, allErrors: true });
+  require('ajv-errors')(ajv /*, {singleError: true} */);
+
+  addFormats(ajv);
+  const validate = ajv.compile(schema);
+  const valid = validate(data);
+  if (!valid) {
+    validate.errors.forEach(m => {
+      const pathArray = m.instancePath.split('/');
+      let path;
+      if (isNaN(Number(pathArray[pathArray.length - 1]))) {
+        path = translate(pathArray[pathArray.length - 1]);
+      } else {
+        path = translate(pathArray[pathArray.length - 2]);
+      }
+      error.message += path + ': ' + m.message + '\n';
+    });
+  }
+};
+
+translate = message => {
+  return translations[message];
 };

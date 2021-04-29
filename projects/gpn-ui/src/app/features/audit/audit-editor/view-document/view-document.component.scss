@@ -62,48 +62,36 @@ $org_1_base_alt: $mat-blue;
 $org_2_base: $mat-red;
 $org_2_base_alt: $mat-pink;
 
-.contract_agent_org-1-name,
 .org-1-name {
-  background: mat-color($org_1_base_alt, 200);
-}
-
-.contract_agent_org-1-alt_name {
-  background: mat-color($org_1_base_alt, 100);
-}
-
-.contract_agent_org-1-type,
-.org-1-type {
   background: mat-color($org_1_base, 200);
 }
 
-.org-1-type-ext {
+.org-1-alt_name {
+  background: mat-color($org_1_base_alt, 100);
+}
+
+.org-1-type {
   background: mat-color($org_1_base, 100);
 }
 
-.contract_agent_org-1-alias {
+.org-1-alias {
   background: mat-color($org_1_base_alt, 200);
 }
 // -----
 
-.contract_agent_org-2-name,
 .org-2-name {
-  background: mat-color($org_2_base, 300);
-}
-
-.contract_agent_org-2-alt_name {
   background: mat-color($org_2_base, 200);
 }
 
-.contract_agent_org-2-type,
-.org-2-type {
-  background: mat-color($org_2_base_alt, 200);
-}
-
-.org-2-type-ext {
+.org-2-alt_name {
   background: mat-color($org_2_base_alt, 100);
 }
 
-.contract_agent_org-2-alias {
+.org-2-type {
+  background: mat-color($org_2_base, 100);
+}
+
+.org-2-alias {
   background: mat-color($org_2_base_alt, 200);
 }
 
@@ -115,7 +103,7 @@ $org_2_base_alt: $mat-pink;
 .subject {
   background: mat-color($mat-amber, 300);
 }
-.sign_value_currency {
+.price {
   background: mat-color($mat-blue-gray, 200);
 }
 .value {
@@ -128,25 +116,17 @@ $org_2_base_alt: $mat-pink;
   background: mat-color($mat-teal, 100);
 }
 
-.constraint-min {
-  background: mat-color($mat-teal, 100);
+.constraint {
+  background: mat-color($mat-blue-gray, 200);
 
   .value {
     background: mat-color($mat-teal, 300);
   }
-}
-
-.constraint-max {
-  background: mat-color($mat-pink, 100);
-
-  .value {
-    background: mat-color($mat-pink, 300) !important;
+  .currency {
+    background: mat-color($mat-teal, 200);
   }
   .sign {
-    background: mat-color($mat-pink, 100) !important;
-  }
-  .currency {
-    background: mat-color($mat-pink, 200);
+    background: mat-color($mat-teal, 100);
   }
 }
 // ------------

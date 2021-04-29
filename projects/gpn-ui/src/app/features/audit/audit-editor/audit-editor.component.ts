@@ -91,11 +91,9 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(data => {
         this.document = data;
         if (this.document.user) {
-          this.attributes = Helper.json2array(this.document.user.attributes);
+          this.attributes = this.document.user.attributes;
         } else if (this.document.analysis.attributes) {
-          this.attributes = Helper.json2array(
-            this.document.analysis.attributes
-          );
+          this.attributes = this.document.analysis.attributes;
         } else this.attributes = [];
         if (needRefresh) this.view_doc.refreshView(this.attributes);
         this.selectedType = this.document.documentType;

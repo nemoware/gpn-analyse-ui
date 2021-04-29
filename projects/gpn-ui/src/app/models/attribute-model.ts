@@ -1,7 +1,7 @@
 export interface AttributeModel {
   confidence: number;
   kind: string;
-  value: string;
+  value: any;
   span: number[];
   span_map: string;
   parent: string;

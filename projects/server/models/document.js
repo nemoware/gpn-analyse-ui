@@ -22,6 +22,7 @@ module.exports = (mongoose, Schema) => {
       },
       checksum: Number,
       attributes: Object,
+      attributes_tree: Object,
       headers: [
         {
           value: String,
@@ -38,7 +39,8 @@ module.exports = (mongoose, Schema) => {
     user: {
       attributes: Object,
       author: Object,
-      updateDate: Date
+      updateDate: Date,
+      attributes_tree: Object
     }
   });
 
