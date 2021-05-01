@@ -362,13 +362,21 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           );
           if (a && a.once) onceAttribute.push(a.kind);
         });
-      //Если сумма уже есть вне предмета договора
-      if (
-        this.attributes.find(a => a.key === 'price') &&
-        atrParent.kind === 'subject'
-      ) {
-        return [];
-      } else return atr.children.filter(x => !onceAttribute.includes(x.kind));
+      return atr.children.filter(
+        x =>
+          !onceAttribute.includes(x.kind) &&
+          //Если сумма и инсайдерская информация уже есть вне предмета договора
+          !(
+            atrParent.kind === 'subject' &&
+            this.attributes.find(a => a.key === 'price') &&
+            x.kind === 'price'
+          ) &&
+          !(
+            atrParent.kind === 'subject' &&
+            this.attributes.find(a => a.key === 'insideInformation') &&
+            x.kind === 'insideInformation'
+          )
+      );
     }
   }
 

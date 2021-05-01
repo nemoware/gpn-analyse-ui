@@ -1098,6 +1098,11 @@ setKeys = document => {
           }
         });
       }
+      if (contract.insideInformation) {
+        contract.insideInformation.kind = 'insideInformation';
+        contract.insideInformation.key = contract.insideInformation.kind;
+        attributes.push(contract.insideInformation);
+      }
       if (contract.subject) {
         contract.subject.kind = 'subject';
         contract.subject.key = 'subject';
@@ -1105,7 +1110,7 @@ setKeys = document => {
         const price = contract.subject.price;
         if (price) {
           price.kind = 'price';
-          price.key = contract.subject.key + '/' + 'price';
+          price.key = contract.subject.key + '/' + price.kind;
           attributes.push(price);
           Object.keys(price).forEach(x => {
             if (x === 'amount' || x === 'currency' || x === 'sign') {
@@ -1116,8 +1121,14 @@ setKeys = document => {
             }
           });
         }
+        const insideInformation = contract.subject.insideInformation;
+        if (insideInformation) {
+          insideInformation.kind = 'insideInformation';
+          insideInformation.key =
+            contract.subject.key + '/' + insideInformation.kind;
+          attributes.push(insideInformation);
+        }
       }
-      // attributes_tree.contract = contract;
     }
 
     //Уставы

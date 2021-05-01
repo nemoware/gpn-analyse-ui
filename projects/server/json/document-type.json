@@ -55,6 +55,12 @@
         "once": true
       },
       {
+        "kind": "insideInformation",
+        "type": "dictionary",
+        "dictionaryName": "InsideInformation",
+        "once": true
+      },
+      {
         "parents": [
           {
             "kind": "price",
@@ -117,6 +123,12 @@
                 "once": true
               }
             ]
+          },
+          {
+            "kind": "insideInformation",
+            "type": "dictionary",
+            "dictionaryName": "InsideInformation",
+            "once": true
           }
         ]
       }

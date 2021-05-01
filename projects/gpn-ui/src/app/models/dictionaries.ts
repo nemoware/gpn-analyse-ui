@@ -66,6 +66,23 @@ export class Dictionaries {
         { id: 'ShareholdersGeneralMeeting' },
         { id: 'AllMembers' }
       ]
+    },
+    {
+      id: 'InsideInformation',
+      values: [
+        { id: 'Bankruptcy' },
+        { id: 'SharesOfParticipation' },
+        { id: 'SEB' },
+        { id: 'Changes' },
+        { id: 'Licenses' },
+        { id: 'OSA' },
+        { id: 'Accounting' },
+        { id: 'Plans' },
+        { id: 'SD' },
+        { id: 'Deals' },
+        { id: 'Courts' },
+        { id: 'IssuedSecurities' }
+      ]
     }
   ];
 

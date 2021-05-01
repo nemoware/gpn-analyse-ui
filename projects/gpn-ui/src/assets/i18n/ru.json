@@ -93,6 +93,7 @@
   "RegisteredCapital": "Уставной капитал",
   "AssetTransactions": "Сделки с активами",
   "RealEstateTransactions": "Сделки с недвижимым имуществом",
+  "insideInformation": "Инсайдерская информация",
 
   "Consulting": "Консалтинг",
   "Other": "Прочее",
@@ -182,5 +183,18 @@
 
   "InsiderControl": "Проверка наличия инсайдерской информации",
   "InterestControl": "Проверка наличия заинтересованности",
-  "ProjectControl": "Проведение проверки проектов ДД"
+  "ProjectControl": "Проведение проверки проектов ДД",
+
+  "Bankruptcy": "Банкротство",
+  "SharesOfParticipation": "Доли Участия",
+  "SEB": "ЕИО",
+  "Changes": "Изменения",
+  "Licenses": "Лицензии",
+  "OSA": "ОСА",
+  "Accounting": "Отчетность",
+  "Plans": "Планы",
+  "SD": "СД",
+  "Deals": "Сделки",
+  "Courts": "Суды",
+  "IssuedSecurities": "ЭЦБ"
 }

@@ -66,6 +66,33 @@
         }
       ]
     },
+    "insideInformation": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/tag"
+        },
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "Bankruptcy",
+                "SharesOfParticipation",
+                "SEB",
+                "Changes",
+                "Licenses",
+                "OSA",
+                "Accounting",
+                "Plans",
+                "SD",
+                "Deals",
+                "Courts",
+                "IssuedSecurities"
+              ]
+            }
+          }
+        }
+      ]
+    },
     "date_tag": {
       "allOf": [
         {
@@ -235,6 +262,9 @@
             },
             "price": {
               "$ref": "#/definitions/currency_value"
+            },
+            "insideInformation": {
+              "$ref": "#/definitions/insideInformation"
             }
           }
         }
@@ -383,6 +413,9 @@
         },
         "price": {
           "$ref": "#/definitions/currency_value"
+        },
+        "insideInformation": {
+          "$ref": "#/definitions/insideInformation"
         },
         "orgs": {
           "type": "array",

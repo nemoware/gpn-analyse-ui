@@ -103,23 +103,11 @@ $org_2_base_alt: $mat-pink;
 .subject {
   background: mat-color($mat-amber, 300);
 }
-.price {
-  background: mat-color($mat-blue-gray, 200);
-}
-.value {
-  background: mat-color($mat-teal, 300);
-}
-.currency {
-  background: mat-color($mat-teal, 200);
-}
-.sign {
-  background: mat-color($mat-teal, 100);
-}
 
 .constraint {
   background: mat-color($mat-blue-gray, 200);
 
-  .value {
+  .amount {
     background: mat-color($mat-teal, 300);
   }
   .currency {
@@ -130,6 +118,24 @@ $org_2_base_alt: $mat-pink;
   }
 }
 // ------------
+
+.price {
+  background: mat-color($mat-blue-gray, 200);
+
+  .amount {
+    background: mat-color($mat-teal, 300);
+  }
+  .currency {
+    background: mat-color($mat-teal, 200);
+  }
+  .sign {
+    background: mat-color($mat-teal, 100);
+  }
+}
+
+.insideInformation {
+  background: mat-color($mat-red, 300);
+}
 
 .date {
   background: mat-color($mat-deep-orange, 100);
