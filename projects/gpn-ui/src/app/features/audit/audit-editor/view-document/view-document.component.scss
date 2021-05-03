@@ -134,7 +134,18 @@ $org_2_base_alt: $mat-pink;
 }
 
 .insideInformation {
-  background: mat-color($mat-red, 300);
+  background: mat-color($mat-cyan, 300);
+}
+
+.person {
+  background: mat-color($mat-brown, 100);
+
+  .firstName {
+    background: mat-color($mat-light-green, 200);
+  }
+  .lastName {
+    background: mat-color($mat-light-green, 400);
+  }
 }
 
 .date {

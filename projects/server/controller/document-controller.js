@@ -1039,6 +1039,7 @@ exports.uploadFiles = async (req, res) => {
   }
 };
 
+//Перевод атрибутов из дерева в плоский формат для отображения на UI
 setKeys = document => {
   const orgAttributes = ['name', 'type', 'alt_name', 'alias'];
   let attributes_tree = {};
@@ -1102,6 +1103,23 @@ setKeys = document => {
         contract.insideInformation.kind = 'insideInformation';
         contract.insideInformation.key = contract.insideInformation.kind;
         attributes.push(contract.insideInformation);
+      }
+      const people = contract.people;
+      if (people) {
+        for (let i = 0; i < people.length; i++) {
+          const person = people[i];
+          person.kind = 'person';
+          person.key = person.kind + '-' + i;
+          attributes.push(person);
+          Object.keys(person).forEach(x => {
+            if (x === 'firstName' || x === 'lastName') {
+              person[x].kind = x;
+              person[x].key = person.key + '/' + person[x].kind;
+              person[x].parent = person.key;
+              attributes.push(person[x]);
+            }
+          });
+        }
       }
       if (contract.subject) {
         contract.subject.kind = 'subject';
@@ -1352,6 +1370,7 @@ setContractTree = (userAttributes, error) => {
   let attributeTree = {};
   let org1 = {};
   let org2 = {};
+  // console.log(userAttributes);
   Object.keys(userAttributes).forEach(name => {
     const y = userAttributes[name];
     const key = y.key;
@@ -1365,6 +1384,11 @@ setContractTree = (userAttributes, error) => {
         } else {
           org2[arr[2]] = y;
         }
+      } else if (arr[0] === 'person') {
+        if (!attributeTree.people) {
+          attributeTree.people = [];
+        }
+        attributeTree.people.push(y);
       } else {
         attributeTree[arr[0]] = y;
       }
@@ -1380,6 +1404,12 @@ setContractTree = (userAttributes, error) => {
           }
         }
         attributeTree[atr[0]][atr[1]] = y;
+      } else if (atr[0].startsWith('person')) {
+        for (const person of attributeTree.people) {
+          if (person.key === y.parent) {
+            person[atr[1]] = y;
+          }
+        }
       }
     } else if (atr.length === 3) {
       if (atr[0] === 'subject') {

@@ -189,6 +189,29 @@
         }
       ]
     },
+    "person": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/tag"
+        },
+        {
+          "properties": {
+            "firstName": {
+              "$ref": "#/definitions/string_tag"
+            },
+            "lastName": {
+              "$ref": "#/definitions/string_tag"
+            }
+          },
+          "required": ["lastName"],
+          "errorMessage": {
+            "required": {
+              "lastName": "Не размечена фамилия!"
+            }
+          }
+        }
+      ]
+    },
     "currency_value": {
       "allOf": [
         {
@@ -416,6 +439,12 @@
         },
         "insideInformation": {
           "$ref": "#/definitions/insideInformation"
+        },
+        "people": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/person"
+          }
         },
         "orgs": {
           "type": "array",

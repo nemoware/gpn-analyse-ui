@@ -196,5 +196,10 @@
   "SD": "СД",
   "Deals": "Сделки",
   "Courts": "Суды",
-  "IssuedSecurities": "ЭЦБ"
+  "IssuedSecurities": "ЭЦБ",
+
+  "person": "Должностное лицо",
+  "people": "Должностное лицо",
+  "firstName": "Инициалы",
+  "lastName": "Фамилия"
 }

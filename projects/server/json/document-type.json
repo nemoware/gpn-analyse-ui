@@ -63,6 +63,23 @@
       {
         "parents": [
           {
+            "kind": "person"
+          }
+        ],
+        "children": [
+          {
+            "kind": "firstName",
+            "once": true
+          },
+          {
+            "kind": "lastName",
+            "once": true
+          }
+        ]
+      },
+      {
+        "parents": [
+          {
             "kind": "price",
             "once": true
           }
@@ -352,6 +369,29 @@
         "once": true
       },
       {
+        "kind": "insideInformation",
+        "type": "dictionary",
+        "dictionaryName": "InsideInformation",
+        "once": true
+      },
+      {
+        "parents": [
+          {
+            "kind": "person"
+          }
+        ],
+        "children": [
+          {
+            "kind": "firstName",
+            "once": true
+          },
+          {
+            "kind": "lastName",
+            "once": true
+          }
+        ]
+      },
+      {
         "parents": [
           {
             "kind": "price",
@@ -389,7 +429,12 @@
         ],
         "children": [
           {
-            "parents": ["price"],
+            "parents": [
+              {
+                "kind": "price",
+                "once": true
+              }
+            ],
             "children": [
               {
                 "kind": "amount",
@@ -409,6 +454,12 @@
                 "once": true
               }
             ]
+          },
+          {
+            "kind": "insideInformation",
+            "type": "dictionary",
+            "dictionaryName": "InsideInformation",
+            "once": true
           }
         ]
       }
@@ -416,7 +467,7 @@
   },
   {
     "_id": "SUPPLEMENTARY_AGREEMENT",
-    "name": "Договор",
+    "name": "Дополнительное соглашение",
     "attributes": [
       {
         "kind": "org-1-type",
@@ -470,6 +521,29 @@
         "once": true
       },
       {
+        "kind": "insideInformation",
+        "type": "dictionary",
+        "dictionaryName": "InsideInformation",
+        "once": true
+      },
+      {
+        "parents": [
+          {
+            "kind": "person"
+          }
+        ],
+        "children": [
+          {
+            "kind": "firstName",
+            "once": true
+          },
+          {
+            "kind": "lastName",
+            "once": true
+          }
+        ]
+      },
+      {
         "parents": [
           {
             "kind": "price",
@@ -507,7 +581,12 @@
         ],
         "children": [
           {
-            "parents": ["price"],
+            "parents": [
+              {
+                "kind": "price",
+                "once": true
+              }
+            ],
             "children": [
               {
                 "kind": "amount",
@@ -527,6 +606,12 @@
                 "once": true
               }
             ]
+          },
+          {
+            "kind": "insideInformation",
+            "type": "dictionary",
+            "dictionaryName": "InsideInformation",
+            "once": true
           }
         ]
       }
