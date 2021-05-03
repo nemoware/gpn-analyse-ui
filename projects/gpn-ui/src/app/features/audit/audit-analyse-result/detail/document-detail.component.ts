@@ -71,7 +71,7 @@ const column_to_sorting_mapping = {
   date: 'date',
   contract_subject: 'subject',
   number: 'number',
-  value: 'sign_value_currency/value',
+  value: 'contract_price_amount',
   org1: 'org-1-name',
   org2: 'org-2-name',
   org: 'org-1-name',
@@ -208,8 +208,20 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   getAttrValue(attrName: string, doc, default_value = null) {
     if (doc && doc.attributes) {
-      const atr = doc.attributes.find(x => x.key === attrName);
-      if (atr) return atr.value;
+      if (attrName === 'contract_price_amount') {
+        const atr = doc.attributes.find(
+          x => x.key === 'subject/price/amount' || x.key === 'price/amount'
+        );
+        if (atr) return atr.value;
+      } else if (attrName === 'contract_price_currency') {
+        const atr = doc.attributes.find(
+          x => x.key === 'subject/price/currency' || x.key === 'price/currency'
+        );
+        if (atr) return atr.value;
+      } else {
+        const atr = doc.attributes.find(x => x.key === attrName);
+        if (atr) return atr.value;
+      }
     }
     return default_value;
   }

@@ -38,7 +38,7 @@
   <ng-container matColumnDef="value">
     <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header disableClear>сумма договора без ндс</th>
     <td mat-cell *matCellDef="let row">
-      {{ getAttrValue('sign_value_currency/value', row) | currency:getAttrValue('sign_value_currency/currency', row)}}
+      {{ getAttrValue('contract_price_amount', row) | currency:getAttrValue('contract_price_currency', row)}}
     </td>
   </ng-container>
 
