@@ -90,10 +90,10 @@
           <div class="col-4">
             <label>Стоимость договора</label>
             <h3>
-              <ng-container *ngIf="!getAttrValue('sign_value_currency/value')">
+              <ng-container *ngIf="!getAttrValue('contract_price_amount')">
                 Не обнаружена
               </ng-container>
-              <div>{{ getAttrValue('sign_value_currency/value') | currency:getAttrValue('sign_value_currency/currency')}}</div>
+              <div>{{ getAttrValue('contract_price_amount') | currency:getAttrValue('contract_price_currency')}}</div>
             </h3>
           </div>
         </ng-container>

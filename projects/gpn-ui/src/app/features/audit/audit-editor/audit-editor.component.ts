@@ -97,13 +97,13 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         } else this.attributes = [];
         if (needRefresh) this.view_doc.refreshView(this.attributes);
         this.selectedType = this.document.documentType;
+        this.subjects = [];
         if (this.document.primary_subject) {
           this.subjects.push(this.document.primary_subject);
         }
         if (this.getAttrValue('subject')) {
           this.subjects.push(this.getAttrValue('subject'));
         }
-        console.log(this.subjects.length === 0);
         this.changeDetectorRefs.detectChanges();
       });
   }
@@ -146,8 +146,20 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getAttrValue(attrName: string, default_value = null) {
     if (this.attributes) {
-      const atr = this.attributes.find(x => x.key === attrName);
-      if (atr) return atr.value;
+      if (attrName === 'contract_price_amount') {
+        const atr = this.attributes.find(
+          x => x.key === 'subject/price/amount' || x.key === 'price/amount'
+        );
+        if (atr) return atr.value;
+      } else if (attrName === 'contract_price_currency') {
+        const atr = this.attributes.find(
+          x => x.key === 'subject/price/currency' || x.key === 'price/currency'
+        );
+        if (atr) return atr.value;
+      } else {
+        const atr = this.attributes.find(x => x.key === attrName);
+        if (atr) return atr.value;
+      }
     }
     return default_value;
   }
