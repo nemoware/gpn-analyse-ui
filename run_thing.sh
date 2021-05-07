@@ -13,6 +13,6 @@ export GPN_EVENT_GROUP=CN=Group2,OU=Company,DC=company,DC=loc
 export GPN_JWT_SECRET='gpn-dev'
 
 
-#node ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc --robot false
-nodemon ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc --robot false
+node ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc --robot false
+#nodemon ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc --robot false
 #node --inspect ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc

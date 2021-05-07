@@ -1,0 +1,25 @@
+<div class="container position-relative">
+  <h4>Новое задание на предпроверку</h4>
+  <br>
+  <mat-form-field style="width: 100%" color="accent">
+    <mat-label>Вид проверки</mat-label>
+    <mat-select [formControl]="typeControl" multiple>
+      <mat-option *ngFor="let type of checkTypes" [value]="type">{{type | translate}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-error *ngIf="typeControl.value.length === 0">
+    Вы не выбрали тип проверки!
+  </mat-error>
+  <div style="width: 100%" color="accent">
+    <input [(ngModel)]="filesString"  type="file" multiple (change)="uploadFiles($event)">
+  </div>
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+    </div>
+    <div class="col">
+      <button mat-raised-button color="accent" (click)="submitFiles()" [disabled]="!valid()">Новое задание
+      </button>
+    </div>
+  </div>
+</div>

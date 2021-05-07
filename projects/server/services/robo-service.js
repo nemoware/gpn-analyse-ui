@@ -26,9 +26,9 @@ function info(version) {
   console.log();
 }
 
-exports.postFiles = async (documents, author) => {
+exports.postFiles = async (checkTypes, documents, author) => {
   try {
-    const options = getOptions(documents, author);
+    const options = getOptions(checkTypes, documents, author);
     const fs = require('fs');
     let data = JSON.stringify(options.body, null, 2);
     fs.writeFileSync('test.json', data);
@@ -38,8 +38,9 @@ exports.postFiles = async (documents, author) => {
   }
 };
 
-function getOptions(documents, author) {
+function getOptions(checkTypes, documents, author) {
   let body = {
+    checkTypes: checkTypes,
     documents: documents,
     author: author
   };

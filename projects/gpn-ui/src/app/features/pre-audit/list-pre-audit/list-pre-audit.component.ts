@@ -15,6 +15,7 @@ import { Router } from '@root/node_modules/@angular/router';
 import { merge, Subject } from '@root/node_modules/rxjs';
 import { takeUntil, tap } from '@root/node_modules/rxjs/operators';
 import { PreAuditDataSource } from '@app/features/pre-audit/pre-audit-data-source';
+import { CreatePreAuditComponent } from '@app/features/pre-audit/create-pre-audit/create-pre-audit.component';
 
 @Component({
   selector: 'gpn-list-pre-audit',
@@ -26,48 +27,12 @@ export class ListPreAuditComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  checked = false;
-  documents: Object[] = [];
-
   constructor(
     private preAuditService: PreAuditService,
     private spinner: NgxSpinnerService,
     public dialog: MatDialog,
     private router: Router
   ) {}
-
-  uploadFiles(event) {
-    this.documents = [];
-    const files = event.target.files;
-    Array.from(files).forEach((file: File) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      const that = this;
-      reader.onload = () => {
-        that.documents.push({
-          base64Content: reader.result
-            .toString()
-            .replace('data:', '')
-            .replace(/^.+,/, ''),
-          fileName: file.name
-        });
-      };
-      reader.onerror = function() {
-        console.log(reader.error);
-      };
-    });
-  }
-
-  submitFiles() {
-    if (this.documents.length !== 0) {
-      this.preAuditService.postPreAudit(this.documents).subscribe(() => {
-        this.filesString = '';
-        this.loadAuditsPage();
-      });
-    } else {
-      window.alert('Вы не выбрали файлы!');
-    }
-  }
 
   defPageSize = 15;
   dataSource: PreAuditDataSource;
@@ -83,7 +48,6 @@ export class ListPreAuditComponent implements OnInit {
   _filterValue: Object[] = [];
   mouseOverIndex = -1;
   private destroyStream = new Subject<void>();
-  filesString: string;
 
   ngOnInit() {
     this.dataSource = new PreAuditDataSource(this.preAuditService);
@@ -139,12 +103,13 @@ export class ListPreAuditComponent implements OnInit {
     this.destroyStream.next();
   }
 
-  onClick() {
-    this.checked = !this.checked;
-    this._filterValue.push({
-      name: 'checkType',
-      value: this.checked
+  createAudit() {
+    const dialogRef = this.dialog.open(CreatePreAuditComponent, {
+      width: '40%',
+      data: {}
     });
-    this.loadAuditsPage();
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadAuditsPage();
+    });
   }
 }

@@ -13,11 +13,11 @@ const api = '/api';
 export class PreAuditService {
   constructor(private http: HttpClient) {}
 
-  public postPreAudit(documents: Object[]): Observable<any> {
-    return this.http.post<Observable<any>>(
-      `${api}/preAudit/uploadFiles`,
-      documents
-    );
+  public postPreAudit(documents: Object[], checkTypes): Observable<any> {
+    return this.http.post<Observable<any>>(`${api}/preAudit/uploadFiles`, {
+      documents,
+      checkTypes
+    });
   }
 
   fetch(

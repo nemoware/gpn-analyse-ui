@@ -1,8 +1,12 @@
-<div style="text-align: right; margin-top: 15px; margin-bottom: 15px; margin-right: 15px">
-  <div style="float: left; margin-left: 15px"> <mat-checkbox [checked]="checked" (change)="onClick()">Все виды проверок</mat-checkbox> </div>
-  <input [(ngModel)]="filesString"  type="file" multiple (change)="uploadFiles($event)">
-<button mat-raised-button color="accent" (click)="submitFiles()">Загрузить файлы</button>
+<div class="left_group">
+  <gpn-pre-audit-filter [auditStatuses]="auditStatuses" (ApplyFilter)="onApplyFilter($event)"></gpn-pre-audit-filter>
 </div>
+<div style="text-align: right; margin-top: 15px; margin-bottom: 15px; margin-right: 20px">
+  <div class="col">
+    <button mat-raised-button color="accent" style="float: right; margin-bottom: 15px" (click)="createAudit()"> Добавить </button>
+  </div>
+</div>
+<div class="right_group">
   <ngx-spinner
     bdColor="rgba(250,250,250,0.2)"
     size="large"
@@ -29,7 +33,7 @@
 
       <ng-container matColumnDef="files">
         <th mat-header-cell *matHeaderCellDef> Файлы </th>
-        <td mat-cell *matCellDef="let audit"> {{audit.files}} </td>
+        <td mat-cell *matCellDef="let audit"> {{audit.fileNames}}  </td>
       </ng-container>
 
       <ng-container matColumnDef="createDate">
@@ -52,3 +56,4 @@
 
   <mat-paginator [length]="dataSource.totalCount" [pageSize]="defPageSize"
                  [pageSizeOptions]="[15, 20, 25]"></mat-paginator>
+</div>
