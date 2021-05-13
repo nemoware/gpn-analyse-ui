@@ -9,6 +9,7 @@ router
   .post(controller.postCharter);
 router.get('/fetchCharters', controller.fetchCharters);
 router.put('/activate-charter', controller.charterActivation);
+router.put('/setInside', controller.setInside);
 router
   .route('')
   .get(controller.getDocument)

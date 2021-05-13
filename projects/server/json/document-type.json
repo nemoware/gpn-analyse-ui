@@ -68,10 +68,6 @@
         ],
         "children": [
           {
-            "kind": "firstName",
-            "once": true
-          },
-          {
             "kind": "lastName",
             "once": true
           }
@@ -382,10 +378,6 @@
         ],
         "children": [
           {
-            "kind": "firstName",
-            "once": true
-          },
-          {
             "kind": "lastName",
             "once": true
           }
@@ -533,10 +525,6 @@
           }
         ],
         "children": [
-          {
-            "kind": "firstName",
-            "once": true
-          },
           {
             "kind": "lastName",
             "once": true

@@ -3,7 +3,7 @@
   <span>
   <h2>
       <span class="headline-date">{{audit.auditStart | date :'dd LLL yyyy'}} - {{audit.auditEnd | date : 'dd LLL yyyy'}}</span><br>
-    <button mat-button (click)="openDialog()">{{audit.subsidiary.name }}</button>
+    <button mat-button (click)="openDialog()">{{audit.subsidiary && audit.subsidiary.name }}</button>
   </h2>
 
   </span>

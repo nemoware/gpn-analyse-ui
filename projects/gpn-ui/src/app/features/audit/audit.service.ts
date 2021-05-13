@@ -182,6 +182,14 @@ export class AuditService {
     );
   }
 
+  public setInside(id: string, action: boolean) {
+    return this.http.put(
+      `${api}/document/setInside`,
+      { id: id, action: action },
+      { responseType: 'text' as 'json' }
+    );
+  }
+
   public exportConclusion(
     id: string,
     selectedRows

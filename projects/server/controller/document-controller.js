@@ -19,6 +19,7 @@ analysis.analyze_timestamp
 analysis.version
 analysis.warnings
 isActive
+hasInside
 `;
 
 function getAttributeValue(document, attribute) {
@@ -182,6 +183,7 @@ exports.getDocument = async (req, res) => {
           document.documentType = document.parse.documentType;
           document.documentNumber = document.parse.documentNumber;
           document.audit = audit;
+          document.hasInside = document.hasInside !== false;
           delete document.parse;
 
           if (document.user) {
@@ -814,6 +816,18 @@ exports.charterActivation = async (req, res) => {
   }
 };
 
+exports.setInside = async (req, res) => {
+  const id = req.body.id;
+  const action = req.body.action;
+  if (!id) return res.status(400).send(`Required parameter 'id' is not passed`);
+  try {
+    await Document.findOneAndUpdate({ _id: id }, { hasInside: action });
+    res.end();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
 exports.postCharter = async (req, res) => {
   let charter = new Document(req.body);
   try {
@@ -1112,7 +1126,7 @@ setKeys = document => {
           person.key = person.kind + '-' + i;
           attributes.push(person);
           Object.keys(person).forEach(x => {
-            if (x === 'firstName' || x === 'lastName') {
+            if (x === 'lastName') {
               person[x].kind = x;
               person[x].key = person.key + '/' + person[x].kind;
               person[x].parent = person.key;

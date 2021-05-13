@@ -11,6 +11,7 @@ export interface Document {
   documentNumber: string; //TODO: deprecated, moved to attributes
   parentId: string;
   isActive: boolean;
+  hasInside: boolean;
   paragraphs: [{ paragraphHeader: Object; paragraphBody: Object }];
   analysis: {
     original_text: string;

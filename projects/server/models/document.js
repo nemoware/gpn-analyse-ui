@@ -12,6 +12,7 @@ module.exports = (mongoose, Schema) => {
     parserResponseCode: Number,
     state: Number,
     isActive: Boolean,
+    hasInside: Boolean,
     analysis: {
       version: String,
       original_text: String,

@@ -40,6 +40,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(CompetencechartsComponent, { static: false })
   competencecharts: CompetencechartsComponent;
   documentType: string[];
+  checkboxDisabled = false;
   changed = false;
   selectedAttribute: string;
   selectedType: string;
@@ -52,6 +53,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     'ANNEX'
   ];
   subjects = [];
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -115,6 +117,16 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   changeAttribute(attributes: AttributeModel[]) {
     this.changed = true;
     this.tree.updateAttributes(attributes);
+    if (
+      attributes.find(a => {
+        return a.kind === 'insideInformation';
+      })
+    ) {
+      this.document.hasInside = true;
+      this.checkboxDisabled = true;
+    } else {
+      this.checkboxDisabled = false;
+    }
   }
 
   refresh() {
@@ -169,12 +181,15 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.auditservice
       .deactivateCharter(this.document._id, this.document.isActive)
       .pipe(takeUntil(this.destroyStream))
-      .subscribe(
-        () => {},
-        error => {
-          alert(error.message());
-        }
-      );
+      .subscribe(() => {});
+  }
+
+  onClickInside() {
+    this.document.hasInside = !this.document.hasInside;
+    this.auditservice
+      .setInside(this.document._id, this.document.hasInside)
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(() => {});
   }
 
   selectionChanged() {
@@ -183,5 +198,9 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroyStream.next();
+  }
+
+  isDisabled() {
+    return this.checkboxDisabled;
   }
 }

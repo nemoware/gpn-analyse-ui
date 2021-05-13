@@ -196,9 +196,6 @@
         },
         {
           "properties": {
-            "firstName": {
-              "$ref": "#/definitions/string_tag"
-            },
             "lastName": {
               "$ref": "#/definitions/string_tag"
             }

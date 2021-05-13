@@ -198,8 +198,7 @@
   "Courts": "Суды",
   "IssuedSecurities": "ЭЦБ",
 
-  "person": "Должностное лицо",
-  "people": "Должностное лицо",
-  "firstName": "Инициалы",
+  "person": "Подписант",
+  "people": "Подписант",
   "lastName": "Фамилия"
 }
