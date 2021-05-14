@@ -49,7 +49,6 @@ exports.fetchPreAudits = async (req, res) => {
     audits = await Promise.all(
       audits.map(async a => {
         a.authorName = a.author && a.author.name;
-        a.checkType = ['В базе пока что этого нет'];
         a.fileNames = await getFiles(a);
         return a;
       })
