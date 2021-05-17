@@ -4,7 +4,7 @@
   "description": "Legal document attributes. Schema draft 4 is used for compatibility with Mongo DB",
   "definitions": {
     "tag": {
-      "description": "a piece of text, denoting attributes",
+      "description": "a piece of text, denoting an attribute",
       "type": "object",
       "properties": {
         "span": {
@@ -17,9 +17,6 @@
         },
         "span_map": {
           "type": "string"
-        },
-        "changed": {
-          "type": "boolean"
         }
       },
       "required": ["span"]
@@ -34,7 +31,8 @@
             "value": {
               "type": "string"
             }
-          }
+          },
+          "required": ["span", "value"]
         }
       ]
     },
@@ -48,11 +46,12 @@
             "value": {
               "type": "boolean"
             }
-          }
+          },
+          "required": ["span", "value"]
         }
       ]
     },
-    "number_tag": {
+    "numeric_tag": {
       "allOf": [
         {
           "$ref": "#/definitions/tag"
@@ -62,11 +61,13 @@
             "value": {
               "type": "number"
             }
-          }
+          },
+          "required": ["span", "value"]
         }
       ]
     },
     "insideInformation": {
+      "description": "Инсайдерская информация",
       "allOf": [
         {
           "$ref": "#/definitions/tag"
@@ -104,12 +105,13 @@
               "type": "string",
               "format": "date-time"
             }
-          }
+          },
+          "required": ["span", "value"]
         }
       ]
     },
     "agenda_contract": {
-      "description": "\u0410\u0442\u0440\u0438\u0431\u0443\u0442\u044b \u043a\u043e\u043d\u0442\u0440\u0430\u043a\u0442\u0430, \u043e \u043a\u043e\u0442\u043e\u0440\u043e\u043c \u0438\u0434\u0435\u0442 \u0440\u0435\u0447\u044c \u0432 \u043f\u043e\u0432\u0435\u0441\u0442\u043a\u0435",
+      "description": "Атрибуты контракта, о котором идет речь в повестке",
       "properties": {
         "number": {
           "$ref": "#/definitions/string_tag"
@@ -117,17 +119,13 @@
         "date": {
           "$ref": "#/definitions/date_tag"
         },
-        "solution": {
-          "description": "\u0420\u0435\u0448\u0435\u043d\u0438\u0435, \u043f\u0440\u0438\u043d\u044f\u0442\u043e\u0435 \u043e\u0442\u043d\u043e\u0441\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0432\u043e\u043f\u0440\u043e\u0441\u0430 \u043f\u043e\u0432\u0435\u0441\u0442\u043a\u0438 \u0434\u043d\u044f",
-          "$ref": "#/definitions/boolean_tag"
-        },
         "orgs": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/contract_agent"
           }
         },
-        "value": {
+        "price": {
           "$ref": "#/definitions/currency_value"
         }
       },
@@ -140,8 +138,15 @@
         },
         {
           "properties": {
-            "contract": {
-              "$ref": "#/definitions/agenda_contract"
+            "contracts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/agenda_contract"
+              }
+            },
+            "solution": {
+              "description": "Решение, принятое относительно вопроса повестки дня",
+              "$ref": "#/definitions/boolean_tag"
             }
           },
           "required": ["span"]
@@ -166,8 +171,7 @@
                 "RSD",
                 "KGS",
                 "UAH",
-                "Percent",
-                "%"
+                "Percent"
               ]
             }
           }
@@ -203,13 +207,14 @@
           "required": ["lastName"],
           "errorMessage": {
             "required": {
-              "lastName": "Не размечена фамилия!"
+              "lastName": "Не размечена фамилия"
             }
           }
         }
       ]
     },
     "currency_value": {
+      "description": "see ContractPrice class",
       "allOf": [
         {
           "$ref": "#/definitions/tag"
@@ -217,22 +222,32 @@
         {
           "properties": {
             "amount": {
-              "$ref": "#/definitions/number_tag"
+              "$ref": "#/definitions/numeric_tag"
             },
             "currency": {
               "$ref": "#/definitions/currency"
             },
             "sign": {
               "$ref": "#/definitions/sign"
+            },
+            "vat": {
+              "description": "НДС",
+              "$ref": "#/definitions/numeric_tag"
+            },
+            "vat_unit": {
+              "description": "числовое значение или процент",
+              "$ref": "#/definitions/currency"
+            },
+            "amount_brutto": {
+              "description": "= amount_netto + VAT",
+              "$ref": "#/definitions/numeric_tag"
+            },
+            "amount_netto": {
+              "description": "amount_brutto minus VAT",
+              "$ref": "#/definitions/numeric_tag"
             }
           },
-          "required": ["amount", "currency"],
-          "errorMessage": {
-            "required": {
-              "amount": "Не размечена сумма!",
-              "currency": "Не размечена единица измерения!"
-            }
-          }
+          "required": ["amount", "currency"]
         }
       ]
     },
@@ -279,9 +294,6 @@
                 "ParticipationInOtherOrganizations",
                 "DecisionsForSubsidiary"
               ]
-            },
-            "price": {
-              "$ref": "#/definitions/currency_value"
             },
             "insideInformation": {
               "$ref": "#/definitions/insideInformation"
@@ -378,12 +390,6 @@
         },
         "type": {
           "$ref": "#/definitions/string_tag"
-        },
-        "alias": {
-          "$ref": "#/definitions/string_tag"
-        },
-        "alt_name": {
-          "$ref": "#/definitions/string_tag"
         }
       }
     },
@@ -408,8 +414,13 @@
         "date": {
           "$ref": "#/definitions/date_tag"
         },
-        "org": {
-          "$ref": "#/definitions/org"
+        "orgs": {
+          "type": "array",
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/org"
+          }
         },
         "structural_levels": {
           "type": "array",
@@ -459,7 +470,7 @@
           "$ref": "#/definitions/date_tag"
         },
         "number": {
-          "$ref": "#/definitions/number_tag"
+          "$ref": "#/definitions/string_tag"
         },
         "structural_level": {
           "$ref": "#/definitions/structural_level"
@@ -477,7 +488,8 @@
             "$ref": "#/definitions/agenda"
           }
         }
-      }
+      },
+      "additionalProperties": false
     }
   }
 }
