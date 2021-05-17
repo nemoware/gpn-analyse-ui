@@ -31,6 +31,7 @@ const cols_by_type = {
     'star',
     'date',
     'number',
+    'amount_with_vat',
     'value',
     'org1',
     'org2',
