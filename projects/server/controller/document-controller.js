@@ -46,7 +46,9 @@ exports.getDocuments = async (req, res) => {
   try {
     let include;
     if (req.query.full === 'false') {
-      include = documentFields + `analysis.attributes primary_subject`;
+      include =
+        documentFields +
+        `analysis.attributes analysis.attributes_tree   primary_subject`;
     }
 
     const audit = await Audit.findById(auditId, `charters`, { lean: true });
@@ -94,7 +96,9 @@ exports.getDocuments = async (req, res) => {
         document.starred = true;
       }
     }
-
+    for (const document of documents) {
+      setKeys(document);
+    }
     res.send(documents);
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -1056,13 +1060,12 @@ exports.uploadFiles = async (req, res) => {
 //Перевод атрибутов из дерева в плоский формат для отображения на UI
 setKeys = document => {
   const orgAttributes = ['name', 'type', 'alt_name', 'alias'];
-  let attributes_tree = {};
+  let attributes_tree;
   if (document.user && document.user.attributes_tree) {
     attributes_tree = document.user.attributes_tree;
-  } else if (document.analysis.attributes_tree) {
+  } else if (document.analysis && document.analysis.attributes_tree) {
     attributes_tree = document.analysis.attributes_tree;
   }
-
   let attributes = [];
   if (attributes_tree) {
     const doc_type = Object.keys(attributes_tree)[0];

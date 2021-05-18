@@ -86,9 +86,6 @@ export class AuditAnalyseResultComponent
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   faEye = faEye;
-  faClock = faClock;
-  faExclamationTriangle = faExclamationTriangle;
-  faFlagCheckered = faFlagCheckered;
   faFolder = faFolder;
   faFolderOpen = faFolderOpen;
   faFile = faFile;
@@ -257,9 +254,9 @@ export class AuditAnalyseResultComponent
               if (this.selectedPage === 2) {
                 nodeChild.attributes =
                   d.user != null
-                    ? Helper.json2array(d.user.attributes)
+                    ? d.user.attributes
                     : d.analysis && d.analysis.attributes
-                    ? Helper.json2array(d.analysis.attributes)
+                    ? d.analysis.attributes
                     : [];
                 docs.docs.push(nodeChild);
               } else node.children.push(nodeChild);
