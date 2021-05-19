@@ -127,7 +127,7 @@
             "orgs": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/contract_agent"
+                "$ref": "#/definitions/org"
               }
             },
             "price": {
@@ -395,6 +395,9 @@
           "$ref": "#/definitions/string_tag"
         },
         "type": {
+          "$ref": "#/definitions/string_tag"
+        },
+        "alt_name": {
           "$ref": "#/definitions/string_tag"
         }
       }
