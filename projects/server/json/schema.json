@@ -111,25 +111,31 @@
       ]
     },
     "agenda_contract": {
-      "description": "Атрибуты контракта, о котором идет речь в повестке",
-      "properties": {
-        "number": {
-          "$ref": "#/definitions/string_tag"
+      "allOf": [
+        {
+          "$ref": "#/definitions/tag"
         },
-        "date": {
-          "$ref": "#/definitions/date_tag"
-        },
-        "orgs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/contract_agent"
+        {
+          "description": "Атрибуты контракта, о котором идет речь в повестке",
+          "properties": {
+            "number": {
+              "$ref": "#/definitions/string_tag"
+            },
+            "date": {
+              "$ref": "#/definitions/date_tag"
+            },
+            "orgs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/contract_agent"
+              }
+            },
+            "price": {
+              "$ref": "#/definitions/currency_value"
+            }
           }
-        },
-        "price": {
-          "$ref": "#/definitions/currency_value"
         }
-      },
-      "additionalProperties": false
+      ]
     },
     "agenda": {
       "allOf": [

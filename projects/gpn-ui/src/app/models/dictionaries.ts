@@ -83,6 +83,10 @@ export class Dictionaries {
         { id: 'Courts' },
         { id: 'IssuedSecurities' }
       ]
+    },
+    {
+      id: 'Yes_No',
+      values: [{ id: 'Yes' }, { id: 'No' }]
     }
   ];
 

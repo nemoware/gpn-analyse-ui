@@ -100,6 +100,10 @@ $org_2_base_alt: $mat-pink;
   background: mat-color($mat-orange, 200);
 }
 
+.structural_level {
+  background: mat-color($mat-orange, 200);
+}
+
 .subject {
   background: mat-color($mat-amber, 300);
 }
@@ -157,6 +161,14 @@ $org_2_base_alt: $mat-pink;
 
 .agenda_item {
   background: mat-color($mat-lime, 100);
+}
+
+.contract {
+  background: mat-color($mat-light-blue, 100);
+}
+
+.solution {
+  background: mat-color($mat-light-green, 500);
 }
 
 // --------------

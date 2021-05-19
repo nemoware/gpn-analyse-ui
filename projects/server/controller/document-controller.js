@@ -1060,6 +1060,7 @@ exports.uploadFiles = async (req, res) => {
 //Перевод атрибутов из дерева в плоский формат для отображения на UI
 setKeys = document => {
   const orgAttributes = ['name', 'type', 'alt_name', 'alias'];
+  const priceAttributes = ['amount', 'sign', 'currency'];
   let attributes_tree;
   if (document.user && document.user.attributes_tree) {
     attributes_tree = document.user.attributes_tree;
@@ -1246,12 +1247,18 @@ setKeys = document => {
         attributes.push(protocol.date);
       }
 
-      if (protocol.org) {
-        Object.keys(protocol.org).forEach(x => {
+      if (protocol.number) {
+        protocol.number.kind = 'number';
+        protocol.number.key = 'number';
+        attributes.push(protocol.number);
+      }
+      const org = protocol.orgs[0];
+      if (protocol.orgs && org) {
+        Object.keys(org).forEach(x => {
           if (orgAttributes.includes(x)) {
-            protocol.org[x].kind = 'org-1-' + x;
-            protocol.org[x].key = protocol.org[x].kind;
-            attributes.push(protocol.org[x]);
+            org[x].kind = 'org-1-' + x;
+            org[x].key = org[x].kind;
+            attributes.push(org[x]);
           }
         });
       }
@@ -1269,24 +1276,68 @@ setKeys = document => {
           agenda_item.kind = 'agenda_item';
           agenda_item.key = agenda_item.kind + '-' + i;
           attributes.push(agenda_item);
-          if (agenda_item.contract && agenda_item.contract.orgs) {
-            for (let j = 0; j < agenda_item.contract.orgs.length; j++) {
-              const org = agenda_item.contract.orgs[j];
-              if (org) {
-                Object.keys(org).forEach(x => {
-                  if (j === 0) {
-                    org[x].kind = 'org-1-' + x;
-                    org[x].key = agenda_item.key + '/' + org[x].kind;
-                    org[x].parent = agenda_item.key;
-                  } else {
-                    org[x].kind = 'org-2-' + x;
-                    org[x].key = agenda_item.key + '/' + org[x].kind + '-' + j;
-                    org[x].parent = agenda_item.key;
+          if (agenda_item.contracts) {
+            for (let j = 0; j < agenda_item.contracts.length; j++) {
+              const contract = agenda_item.contracts[j];
+              contract.kind = 'contract';
+              contract.key = agenda_item.key + '/' + contract.kind + '-' + j;
+              attributes.push(contract);
+              Object.keys(contract).forEach(key => {
+                if (key === 'number') {
+                  const number = contract.number;
+                  number.kind = 'number';
+                  number.key = contract.key + '/' + number.kind;
+                  attributes.push(number);
+                }
+                if (key === 'date') {
+                  const date = contract.date;
+                  date.kind = 'date';
+                  date.key = contract.key + '/' + date.kind;
+                  attributes.push(date);
+                }
+                if (key === 'price') {
+                  const price = contract.price;
+                  price.kind = 'price';
+                  price.key = contract.key + '/' + price.kind;
+                  attributes.push(price);
+                  //Атрибуты суммы
+                  Object.keys(price).forEach(key => {
+                    if (priceAttributes.includes(key)) {
+                      price[key].kind = key;
+                      price[key].key = price.key + '/' + price[key].kind;
+                      attributes.push(price[key]);
+                    }
+                  });
+                }
+                if (key === 'orgs') {
+                  for (let i = 0; i < contract.orgs.length; i++) {
+                    const name = contract.orgs[i].name;
+                    if (name) {
+                      name.kind = 'org-2-name';
+                      name.key = contract.key + '/' + name.kind + '-' + i;
+                      attributes.push(name);
+                    }
+                    const type = contract.orgs[i].type;
+                    if (type) {
+                      type.kind = 'org-2-type';
+                      type.key = contract.key + '/' + type.kind + '-' + i;
+                      attributes.push(type);
+                    }
                   }
-                  attributes.push(org[x]);
-                });
-              }
+                }
+              });
             }
+          }
+          const solution = agenda_item.solution;
+          if (solution) {
+            solution.kind = 'solution';
+            solution.key = agenda_item.key + '/' + solution.kind;
+            if (solution.value === true) {
+              solution.value = 'Yes';
+            } else {
+              solution.value = 'No';
+            }
+            attributes.push(solution);
           }
         }
       }
@@ -1445,37 +1496,143 @@ setContractTree = (userAttributes, error) => {
   return attributeTree;
 };
 
-//TODO: доделать протоколы
+//Перевод атрибутов протокола из плоской структруры в дерево
 setProtocolTree = (userAttributes, error) => {
+  const org1Keys = ['org-1-name', 'org-1-type'];
   let attributeTree = {};
-  attributeTree.org = {};
+  attributeTree.orgs = [];
   attributeTree.agenda_items = [];
+  console.log(userAttributes);
   Object.keys(userAttributes).forEach(name => {
+    //Атрибут
     const y = userAttributes[name];
+    //Уникальный ключ атрибута
     const key = y.key;
     let atr = key.split('/');
+    console.log(atr);
+
     if (atr.length === 1) {
-      // console.log(atr);
-      let arr = key.split('-');
-      if (
-        key === 'org-1-name' ||
-        key === 'org-1-type' ||
-        key === 'org-1-alt_name' ||
-        key === 'org-1-alias'
-      ) {
-        attributeTree.org[arr[2]] = y;
-      } else if (key === 'org_structural_level') {
+      const arr = key.split('-');
+      //Наименование ДО, Краткое наименование ДО, Псевдоним ДО, Форма собственности ДО
+      if (org1Keys.includes(key)) {
+        if (!attributeTree.orgs[0]) {
+          attributeTree.orgs[0] = {};
+        }
+        attributeTree.orgs[0][arr[2]] = y;
+      }
+      //Структурный уровень
+      if (key === 'structural_level') {
         attributeTree.structural_level = y;
-      } else if (arr[0] === 'agenda_item') {
-        y.orgs = [];
+      }
+      //Номер
+      if (key === 'number') {
+        attributeTree.number = y;
+      }
+      //Дата
+      if (key === 'date') {
+        attributeTree.date = y;
+      }
+      //Пункт повестки дня
+      if (arr[0] === 'agenda_item') {
         attributeTree.agenda_items.push(y);
       }
-    } else if (atr.length === 2) {
+    }
+
+    if (atr.length === 2) {
+      const arr = atr[0].split('-');
+      //agenda_item/contract - cделка
+      if (arr[0] === 'agenda_item') {
+        attributeTree.agenda_items.find(agenda_item => {
+          if (agenda_item.key === y.parent) {
+            if (atr[1].startsWith('contract')) {
+              if (!agenda_item.contracts) {
+                agenda_item.contracts = [];
+              }
+              agenda_item.contracts.push(y);
+            }
+            if (atr[1].startsWith('solution')) {
+              y.value === 'Yes' ? (y.value = true) : (y.value = false);
+              agenda_item.solution = y;
+            }
+          }
+        });
+      }
+    }
+
+    if (atr.length === 3) {
+      //agenda_item/contract/...
+      if (atr[1].startsWith('contract')) {
+        const parent = y.parent.split('/')[0];
+        attributeTree.agenda_items.find(agenda_item => {
+          //Ищем соответствующий agenda_item
+          if (agenda_item.key === parent) {
+            //Ищем соответствующий contract
+            agenda_item.contracts.find(contract => {
+              if (contract.key === y.parent) {
+                //Тип атрибута
+                const orgAtr = atr[2];
+                if (orgAtr.startsWith('org')) {
+                  if (!contract.orgs) {
+                    contract.orgs = [];
+                  }
+                  //Наименование контрагента, Форма собственности контрагента
+                  const atrName = orgAtr.split('-')[2];
+                  if (contract.orgs.length !== 0) {
+                    for (let i = 0; i <= contract.orgs.length; i++) {
+                      const org = contract.orgs[i];
+                      if (org) {
+                        if (org && !org[atrName]) {
+                          contract.orgs[i][atrName] = y;
+                          break;
+                        }
+                      } else {
+                        contract.orgs[i] = {};
+                        contract.orgs[i][atrName] = y;
+                        break;
+                      }
+                    }
+                  } else {
+                    contract.orgs[0] = {};
+                    contract.orgs[0][atrName] = y;
+                  }
+                } else {
+                  contract[atr[2]] = y;
+                }
+              }
+            });
+          }
+        });
+      }
+    }
+
+    if (atr.length === 4) {
+      //agenda_item/contract/price/...
+      if (atr[2].startsWith('price')) {
+        const contractParent = y.parent.split('/')[0];
+        //Ищем соответствующий agenda_item
+        attributeTree.agenda_items.find(agenda_item => {
+          if (agenda_item.key === contractParent) {
+            const priceParent =
+              y.parent.split('/')[0] + '/' + y.parent.split('/')[1];
+            //Ищем соответствующий contract
+            agenda_item.contracts.find(contract => {
+              if (contract.key === priceParent) {
+                if (!contract.price) {
+                  contract.price = {};
+                }
+                // amount, sign, currency
+                contract.price[atr[3].split('-')[0]] = y;
+              }
+            });
+          }
+        });
+      }
     }
   });
 
-  const data = { charter: attributeTree };
+  const data = { protocol: attributeTree };
 
+  console.log(attributeTree);
   validateSchema(data, schema, error);
 
   return attributeTree;
@@ -1498,6 +1655,7 @@ validateSchema = (data, schema, error) => {
         path = translate(pathArray[pathArray.length - 2]);
       }
       error.message += path + ': ' + m.message + '\n';
+      console.log(pathArray + ': ' + m.message + '\n');
     });
   }
 };

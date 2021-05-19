@@ -160,11 +160,7 @@
         "once": true
       },
       {
-        "kind": "org-1-alias",
-        "once": true
-      },
-      {
-        "kind": "org_structural_level",
+        "kind": "structural_level",
         "type": "dictionary",
         "dictionaryName": "StructuralLevel",
         "once": true
@@ -175,37 +171,46 @@
         "once": true
       },
       {
+        "kind": "number",
+        "once": true
+      },
+      {
         "parents": ["agenda_item"],
         "children": [
-          "contract_agent_org-1-name",
-          "contract_agent_org-1-type",
-          "contract_agent_org-1-alt_name",
-          "contract_agent_org-1-alias",
-
-          "contract_agent_org-2-name",
-          "contract_agent_org-2-type",
-          "contract_agent_org-2-alt_name",
-          "contract_agent_org-2-alias",
-
           {
-            "parents": ["price"],
+            "kind": "solution",
+            "type": "dictionary",
+            "dictionaryName": "Yes_No",
+            "once": true
+          },
+          {
+            "parents": ["contract"],
             "children": [
+              "org-2-name",
+              "org-2-type",
+              "number",
+              "date",
               {
-                "kind": "amount",
-                "type": "number",
-                "once": true
-              },
-              {
-                "kind": "sign",
-                "type": "dictionary",
-                "dictionaryName": "Sign",
-                "once": true
-              },
-              {
-                "kind": "currency",
-                "type": "dictionary",
-                "dictionaryName": "Currency",
-                "once": true
+                "parents": ["price"],
+                "children": [
+                  {
+                    "kind": "amount",
+                    "type": "number",
+                    "once": true
+                  },
+                  {
+                    "kind": "sign",
+                    "type": "dictionary",
+                    "dictionaryName": "Sign",
+                    "once": true
+                  },
+                  {
+                    "kind": "currency",
+                    "type": "dictionary",
+                    "dictionaryName": "Currency",
+                    "once": true
+                  }
+                ]
               }
             ]
           }
