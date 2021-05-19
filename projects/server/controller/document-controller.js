@@ -1252,8 +1252,8 @@ setKeys = document => {
         protocol.number.key = 'number';
         attributes.push(protocol.number);
       }
-      const org = protocol.orgs[0];
-      if (protocol.orgs && org) {
+      if (protocol.orgs && protocol.orgs[0]) {
+        const org = protocol.orgs[0];
         Object.keys(org).forEach(x => {
           if (orgAttributes.includes(x)) {
             org[x].kind = 'org-1-' + x;
