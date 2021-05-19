@@ -1323,6 +1323,13 @@ setKeys = document => {
                       type.key = contract.key + '/' + type.kind + '-' + i;
                       attributes.push(type);
                     }
+                    const alt_name = contract.orgs[i].alt_name;
+                    if (alt_name) {
+                      alt_name.kind = 'org-2-alt_name';
+                      alt_name.key =
+                        contract.key + '/' + alt_name.kind + '-' + i;
+                      attributes.push(alt_name);
+                    }
                   }
                 }
               });
@@ -1351,6 +1358,7 @@ setKeys = document => {
 };
 
 setCharterTree = (userAttributes, error) => {
+  const orgKeys = ['org-1-name', 'org-1-type', 'org-1-alt_name'];
   let attributeTree = {};
   const structuralLevelsList = [
     'CEO',
@@ -1368,7 +1376,7 @@ setCharterTree = (userAttributes, error) => {
     let atr = key.split('/');
     if (atr.length === 1) {
       let arr = key.split('-');
-      if (key === 'org-1-name' || key === 'org-1-type') {
+      if (orgKeys.includes(key)) {
         attributeTree.org[arr[2]] = y;
       } else if (structuralLevelsList.includes(arr[0])) {
         y.value = y.kind;
@@ -1498,7 +1506,7 @@ setContractTree = (userAttributes, error) => {
 
 //Перевод атрибутов протокола из плоской структруры в дерево
 setProtocolTree = (userAttributes, error) => {
-  const org1Keys = ['org-1-name', 'org-1-type'];
+  const org1Keys = ['org-1-name', 'org-1-type', 'org-1-alt_name'];
   let attributeTree = {};
   attributeTree.orgs = [];
   attributeTree.agenda_items = [];
@@ -1513,7 +1521,7 @@ setProtocolTree = (userAttributes, error) => {
 
     if (atr.length === 1) {
       const arr = key.split('-');
-      //Наименование ДО, Краткое наименование ДО, Псевдоним ДО, Форма собственности ДО
+      //Наименование ДО, Краткое наименование ДО, Форма собственности ДО
       if (org1Keys.includes(key)) {
         if (!attributeTree.orgs[0]) {
           attributeTree.orgs[0] = {};

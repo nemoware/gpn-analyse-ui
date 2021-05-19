@@ -160,6 +160,10 @@
         "once": true
       },
       {
+        "kind": "org-1-alt_name",
+        "once": true
+      },
+      {
         "kind": "structural_level",
         "type": "dictionary",
         "dictionaryName": "StructuralLevel",
@@ -188,8 +192,16 @@
             "children": [
               "org-2-name",
               "org-2-type",
-              "number",
-              "date",
+              "org-2-alt_name",
+              {
+                "kind": "number",
+                "once": true
+              },
+              {
+                "kind": "date",
+                "type": "date",
+                "once": true
+              },
               {
                 "parents": ["price"],
                 "children": [
@@ -228,6 +240,10 @@
       },
       {
         "kind": "org-1-type",
+        "once": true
+      },
+      {
+        "kind": "org-1-alt_name",
         "once": true
       },
       {
