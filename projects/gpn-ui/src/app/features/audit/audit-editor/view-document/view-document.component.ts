@@ -381,6 +381,13 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showAttributeInfo(atr: AttributeModel, atrParent: AttributeModel) {
+    const numberAttributes = [
+      'amount',
+      'sign',
+      'vat',
+      'amount_brutto',
+      'amount_netto'
+    ];
     const newAtr: AttributeModel = {
       confidence: atr.confidence,
       key: atr.key,
@@ -416,9 +423,10 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           this.removeAttribute(atr);
         } else {
           //По схеме в полях amount и sign должно быть число
-          if (result.kind === 'amount' || result.kind === 'sign') {
+          if (numberAttributes.includes(result.kind)) {
             result.value = Number(result.value);
           }
+
           newAtr.kind = result.kind;
           newAtr.value = result.value;
           newAtr.changed = true;

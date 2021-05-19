@@ -1060,7 +1060,15 @@ exports.uploadFiles = async (req, res) => {
 //Перевод атрибутов из дерева в плоский формат для отображения на UI
 setKeys = document => {
   const orgAttributes = ['name', 'type', 'alt_name', 'alias'];
-  const priceAttributes = ['amount', 'sign', 'currency'];
+  const priceAttributes = [
+    'amount',
+    'sign',
+    'currency',
+    'vat',
+    'vat_unit',
+    'amount_brutto',
+    'amount_netto'
+  ];
   let attributes_tree;
   if (document.user && document.user.attributes_tree) {
     attributes_tree = document.user.attributes_tree;
@@ -1106,10 +1114,10 @@ setKeys = document => {
         attributes.push(contract.price);
         Object.keys(price).forEach(x => {
           if (
-            x === 'amount' ||
-            x === 'currency' ||
-            (x === 'sign' && price[x].span[0] !== price[x].span[1])
+            priceAttributes.includes(x) &&
+            price[x].span[0] !== price[x].span[1]
           ) {
+            //Баг анализатора, после фикса удалить
             price[x].kind = x;
             price[x].key = price.key + '/' + price[x].kind;
             price[x].parent = price.key;

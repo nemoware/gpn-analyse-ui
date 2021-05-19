@@ -97,6 +97,27 @@
             "type": "dictionary",
             "dictionaryName": "Currency",
             "once": true
+          },
+          {
+            "kind": "vat",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "vat_unit",
+            "type": "dictionary",
+            "dictionaryName": "Currency",
+            "once": true
+          },
+          {
+            "kind": "amount_brutto",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "amount_netto",
+            "type": "number",
+            "once": true
           }
         ]
       },
@@ -332,7 +353,7 @@
   },
   {
     "_id": "ANNEX",
-    "name": "Договор",
+    "name": "Приложение",
     "attributes": [
       {
         "kind": "org-1-type",
@@ -427,6 +448,27 @@
             "kind": "currency",
             "type": "dictionary",
             "dictionaryName": "Currency",
+            "once": true
+          },
+          {
+            "kind": "vat",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "vat_unit",
+            "type": "dictionary",
+            "dictionaryName": "Currency",
+            "once": true
+          },
+          {
+            "kind": "amount_brutto",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "amount_netto",
+            "type": "number",
             "once": true
           }
         ]
@@ -575,6 +617,27 @@
             "kind": "currency",
             "type": "dictionary",
             "dictionaryName": "Currency",
+            "once": true
+          },
+          {
+            "kind": "vat",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "vat_unit",
+            "type": "dictionary",
+            "dictionaryName": "Currency",
+            "once": true
+          },
+          {
+            "kind": "amount_brutto",
+            "type": "number",
+            "once": true
+          },
+          {
+            "kind": "amount_netto",
+            "type": "number",
             "once": true
           }
         ]

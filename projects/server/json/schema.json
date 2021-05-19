@@ -253,7 +253,7 @@
               "$ref": "#/definitions/numeric_tag"
             }
           },
-          "required": ["amount", "currency"]
+          "required": []
         }
       ]
     },

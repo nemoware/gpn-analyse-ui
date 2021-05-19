@@ -127,13 +127,31 @@ $org_2_base_alt: $mat-pink;
   background: mat-color($mat-blue-gray, 200);
 
   .amount {
-    background: mat-color($mat-teal, 300);
+    background: mat-color($mat-brown, 100);
   }
+
   .currency {
-    background: mat-color($mat-teal, 200);
+    background: mat-color($mat-amber, 300);
   }
+
   .sign {
     background: mat-color($mat-teal, 100);
+  }
+
+  .vat {
+    background: mat-color($mat-indigo, 100);
+  }
+
+  .vat_unit {
+    background: mat-color($mat-amber, 400);
+  }
+
+  .amount_brutto {
+    background: mat-color($mat-teal, 100);
+  }
+
+  .amount_netto {
+    background: mat-color($mat-teal, 500);
   }
 }
 
