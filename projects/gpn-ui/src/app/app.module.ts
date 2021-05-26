@@ -6,8 +6,7 @@ import { CoreModule } from './core/core.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app/app.component';
-import {
-  BrowserAnimationsModule,
+import {  
   NoopAnimationsModule
 } from '@angular/platform-browser/animations';
 import { HideDirective } from '@core/authorization/hide.directive';
@@ -36,7 +35,6 @@ registerLocaleData(localeRu, 'ru');
   imports: [
     // angular
     NoopAnimationsModule,
-    BrowserAnimationsModule,
     BrowserModule,
     NgxSpinnerModule,
 
