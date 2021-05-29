@@ -10,7 +10,11 @@
 - GPN_DB_PORT // port
 - GPN_DB_NAME // database
 
-3\. Install dependencies:
+3\. Instll node.js v10
+
+https://nodejs.org/dist/latest-v10.x/
+
+3.1\. Install dependencies:
 
 ```bash
 $ npm install
