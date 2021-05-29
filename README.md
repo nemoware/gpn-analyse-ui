@@ -2,31 +2,36 @@
 
 ## Quick start
 
-1\. Install MongoDB
+### 1\. Install MongoDB
 
-2\. Setup environment variables
+### 2\. Setup environment variables
 
 - GPN_DB_HOST // host
 - GPN_DB_PORT // port
 - GPN_DB_NAME // database
 
-3\. Instll node.js v10
+### 3\. Instll node.js v10
 
 https://nodejs.org/dist/latest-v10.x/
 
-3.1\. Install dependencies:
+#### 3.1\. Install dependencies:
 
 ```bash
 $ npm install
 ```
 
-4\. Build project:
+### 4\. Build project:
 
 ```bash
 $ ng b
 ```
 
-5\. Run the server:
+to make it work, you probaly need to instal Angluar CLI globally (-g)
+```
+sudo npm install @angular/cli@8.0.6 -g
+```
+
+### 5\. Run the server:
 
 ```
 node ./projects/server/server.js
