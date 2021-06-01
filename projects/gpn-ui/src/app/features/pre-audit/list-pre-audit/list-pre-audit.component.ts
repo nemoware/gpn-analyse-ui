@@ -91,7 +91,7 @@ export class ListPreAuditComponent implements OnInit {
 
   openAuditResult(element) {
     if (element.status !== 'New') {
-      this.router.navigate(['audit/result/', element._id]);
+      this.router.navigate(['pre-audit/result/', element._id]);
     }
   }
 

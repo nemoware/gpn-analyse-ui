@@ -1,9 +1,4 @@
-import {
-  TRANSLATIONS,
-  TRANSLATIONS_FORMAT,
-  LOCALE_ID,
-  NgModule
-} from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListAuditComponent } from '@app/features/audit/list.audit/list.audit.component';
 import { SharedModule } from '@shared/shared.module';
@@ -113,7 +108,10 @@ import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-det
     ViewDocumentComponent,
     DocStateComponent,
     MaskDateDirective,
-    AuditFilterComponent
+    AuditFilterComponent,
+    DocumentDetailComponent,
+    ViolationsAuditComponent,
+    ChildDetailComponent
   ],
   providers: [
     {

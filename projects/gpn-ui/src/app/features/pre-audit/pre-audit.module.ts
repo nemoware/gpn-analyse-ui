@@ -8,12 +8,20 @@ import { NgxSpinnerModule } from '@root/node_modules/ngx-spinner';
 import { TranslateModule } from '@root/node_modules/@ngx-translate/core';
 import { PreAuditFilterComponent } from './pre-audit-filter/pre-audit-filter.component';
 import { CreatePreAuditComponent } from './create-pre-audit/create-pre-audit.component';
+import { PreAuditAnalyseResultComponent } from './pre-audit-analyse-result/pre-audit-analyse-result.component';
+import { MatTreeModule } from '@root/node_modules/@angular/material';
+import { AuditModule } from '@app/features/audit/audit.module';
+import { ViolationsPreAuditComponent } from './pre-audit-analyse-result/violations-pre-audit/violations-pre-audit.component';
+import { PreAuditDetailComponent } from './pre-audit-analyse-result/pre-audit-detail/pre-audit-detail.component';
 
 @NgModule({
   declarations: [
     ListPreAuditComponent,
     PreAuditFilterComponent,
-    CreatePreAuditComponent
+    CreatePreAuditComponent,
+    PreAuditAnalyseResultComponent,
+    ViolationsPreAuditComponent,
+    PreAuditDetailComponent
   ],
   entryComponents: [CreatePreAuditComponent],
   imports: [
@@ -21,7 +29,9 @@ import { CreatePreAuditComponent } from './create-pre-audit/create-pre-audit.com
     PreAuditRoutingModule,
     SharedModule,
     NgxSpinnerModule,
-    TranslateModule
+    TranslateModule,
+    MatTreeModule,
+    AuditModule
   ]
 })
 export class PreAuditModule {}

@@ -138,11 +138,26 @@ exports.getDocument = async (req, res) => {
       } else {
         let audit = await Audit.findOne(
           { _id: document.auditId },
-          `subsidiary.name auditStart auditEnd status -_id`
+          `subsidiary.name auditStart auditEnd status -_id pre-check`
         ).lean();
 
         const type = types.find(t => t._id === document.parse.documentType);
-        if (document.parse.documentType === 'PROTOCOL')
+        if (audit['pre-check']) {
+          await logger.log(
+            req,
+            res,
+            'Просмотр документа',
+            `${type && type.name} № ${getAttributeValue(document, 'number') ||
+              'н/д'} от ${
+              getAttributeValue(document, 'date')
+                ? moment(getAttributeValue(document, 'date')).format(
+                    'DD.MM.YYYY'
+                  )
+                : 'н/д'
+            }. Предпроверка от ${moment(audit.createDate).format('DD.MM.YYYY')}
+            )}`
+          );
+        } else if (document.parse.documentType === 'PROTOCOL')
           await logger.log(
             req,
             res,
@@ -180,7 +195,7 @@ exports.getDocument = async (req, res) => {
           );
 
         if (audit) {
-          audit.subsidiaryName = audit.subsidiary.name;
+          audit.subsidiaryName = audit.subsidiary && audit.subsidiary.name;
           delete audit.subsidiary;
           document.statusAudit = audit.status;
           document.documentDate = document.parse.documentDate;

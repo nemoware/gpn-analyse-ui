@@ -4,6 +4,7 @@ import {
   HttpParams
 } from '@root/node_modules/@angular/common/http';
 import { Observable } from '@root/node_modules/rxjs';
+import { Audit } from '@app/models/audit.model';
 
 const api = '/api';
 
@@ -40,6 +41,20 @@ export class PreAuditService {
     if (sort) httpParams = httpParams.append('sort', sort.toString());
 
     return this.http.get<PreAuditService>(`${api}/preAudit/fetchPreAudits`, {
+      params: httpParams
+    });
+  }
+
+  public getAudits(
+    filterVlaue: Array<{ name: string; value: any }> = null
+  ): Observable<Audit[]> {
+    let httpParams = new HttpParams();
+    if (filterVlaue) {
+      for (const filter of filterVlaue) {
+        httpParams = httpParams.append(filter.name, filter.value);
+      }
+    }
+    return this.http.get<Array<Audit>>(`${api}/preAudit/list`, {
       params: httpParams
     });
   }

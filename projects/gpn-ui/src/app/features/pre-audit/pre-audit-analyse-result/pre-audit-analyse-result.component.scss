@@ -1,0 +1,50 @@
+@import '../../../../styles-variables.scss';
+
+.errorFile {
+  color: $gpn-error;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.mat-toolbar {
+  padding: $gpn-padding;
+
+  h2 {
+    color: mat-color($mat-blue, 700);
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 1.2em;
+    font-family: 'din';
+    .headline-date {
+      font-size: 14px;
+      color: $gpn-labels-darker;
+    }
+  }
+
+  .headline-status {
+    font-size: 14px;
+  }
+
+  .approve {
+    margin-left: 10px;
+  }
+}
+
+mat-tab-group {
+  background-color: white;
+}
+
+.mat-form-field {
+  width: 90%;
+  align-content: center;
+}
+
+.left_group {
+  max-width: 350px;
+  .container {
+    padding: $gpn-padding;
+  }
+  position: fixed;
+}

@@ -84,3 +84,52 @@ getFiles = async audit => {
     $or: [{ auditId }, { _id: { $in: audit.charters } }]
   }).distinct('filename');
 };
+
+exports.getPreAudits = async (req, res) => {
+  let where = {};
+
+  if (req.query.name) {
+    where['subsidiary.name'] = {
+      $regex: `.*${req.query.name}.*`,
+      $options: 'i'
+    };
+  }
+
+  if (req.query.id) {
+    where['_id'] = req.query.id;
+  }
+
+  try {
+    let audits = await Audit.find(where, null, { lean: true });
+
+    const checks = [
+      { 'analysis.attributes': { $exists: true } },
+      { parserResponseCode: 200 }
+    ];
+
+    if (
+      req.query.id &&
+      audits[0] &&
+      ['Finalizing', 'Done', 'Approved'].includes(audits[0].status)
+    ) {
+      audits[0].typeViewResult = 4;
+    } else {
+      for (let audit of audits) {
+        audit.typeViewResult = checks.length;
+        for (let check of checks) {
+          check.auditId = audit._id;
+          if (await Document.findOne(check)) {
+            break;
+          }
+          audit.typeViewResult--;
+        }
+      }
+    }
+
+    audits.sort((a, b) => b.sortDate - a.sortDate);
+
+    res.send(audits);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
