@@ -7,23 +7,29 @@
       <mat-option *ngFor="let user of users" [value]="user">{{user}}</mat-option>
     </mat-select>
   </mat-form-field>
+
   <mat-form-field style="width: 100%">
     <input matInput [matDatepicker]="createDate" placeholder="Дата создания" readonly [(ngModel)]="_createDate">
-    <mat-datepicker-toggle matSuffix [for]="createDate"></mat-datepicker-toggle >
+    <mat-datepicker-toggle matSuffix [for]="createDate"></mat-datepicker-toggle>
     <mat-datepicker #createDate></mat-datepicker>
   </mat-form-field>
+
   <mat-form-field style="width: 100%" color="accent">
     <mat-label>Вид проверки</mat-label>
     <mat-select [(ngModel)]="selectedTypes" [formControl]="filter" multiple>
       <mat-option *ngFor="let type of checkTypes" [value]="type">{{type | translate}}</mat-option>
     </mat-select>
   </mat-form-field>
+
   <mat-form-field style="width: 100%" color="accent">
     <mat-label>Статус проверки</mat-label>
     <mat-select [(ngModel)]="selectedStatuses" [formControl]="filter" multiple>
       <mat-option *ngFor="let status of auditStatuses" [value]="status">{{status | translate}}</mat-option>
     </mat-select>
   </mat-form-field>
-  <button mat-raised-button (click)="applyFilter()" style="margin-right: 5px; width: 48%; float: left;">Применить</button>
-  <button mat-raised-button (click)="clearFilter()" style="margin-left: 5px; width: 48%; float: right;">Очистить</button>
+  
+  <div class="btnContainer">
+    <button mat-raised-button (click)="applyFilter()" class="btn">Применить</button>
+    <button mat-raised-button (click)="clearFilter()" class="btn">Очистить</button>
+  </div>
 </div>

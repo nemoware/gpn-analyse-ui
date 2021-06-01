@@ -12,11 +12,12 @@ import {
 
 import { EventViewerComponent } from '@app/features/events/events/event.viewer.component';
 import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
+import { FilterModule } from '../filter/filter.module';
 
 @NgModule({
   declarations: [EventViewerComponent, EventFilterComponent],
   entryComponents: [],
-  imports: [CommonModule, SharedModule, EventViewerRoutingModule],
+  imports: [CommonModule, SharedModule, EventViewerRoutingModule, FilterModule],
   providers: [
     {
       provide: DateAdapter,

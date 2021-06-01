@@ -1,15 +1,18 @@
 <div class="mat-elevation-z10 container">
   <label style="margin-top: 5px; font-size:16px; font-weight: bold;">Панель фильтров</label>
   <hr>
+  
   <mat-form-field appearance="legacy" style="width: 100%">
     <input matInput placeholder="Наименование ДО" [(ngModel)]="subsidiaryName">
   </mat-form-field>
+  
   <mat-form-field style="width: 100%" color="accent">
     <mat-label>Статус устава</mat-label>
     <mat-select [(ngModel)]="selectedStatuses" [formControl]="filter" multiple>
       <mat-option *ngFor="let status of charterStates" [value]="status.id">{{status.name}}</mat-option>
     </mat-select>
   </mat-form-field>
+
   <span>Период действия устава</span>
   <br>
   <mat-form-field style="width: 50%">

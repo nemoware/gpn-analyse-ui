@@ -4,23 +4,25 @@
   <mat-form-field appearance="legacy" style="width: 100%">
     <input matInput placeholder="Наименование ДО" [(ngModel)]="subsidiaryName">
   </mat-form-field>
+
   <mat-form-field style="width: 100%">
     <input matInput [matDatepicker]="createDate" placeholder="Дата создания" readonly [(ngModel)]="_createDate">
-    <mat-datepicker-toggle matSuffix [for]="createDate"></mat-datepicker-toggle >
+    <mat-datepicker-toggle matSuffix [for]="createDate"></mat-datepicker-toggle>
     <mat-datepicker #createDate></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field style="width: 100%" color="accent">
     <mat-label>Статус проверки</mat-label>
     <mat-select [(ngModel)]="selectedStatuses" [formControl]="filter" multiple>
-      <mat-option *ngFor="let status of auditStatuses" [value]="status">{{status | translate}}</mat-option>
+      <mat-option *ngFor="let status of auditStatuses" [value]="status">{{status}}</mat-option>
     </mat-select>
   </mat-form-field>
+  
   <span>Период проверки</span>
   <br>
   <mat-form-field style="width: 50%">
     <input matInput [matDatepicker]="dateFrom" placeholder="Начало" readonly [(ngModel)]="_dateFrom">
-    <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle >
+    <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
     <mat-datepicker #dateFrom></mat-datepicker>
   </mat-form-field>
 

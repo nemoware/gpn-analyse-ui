@@ -1,3 +1,4 @@
+import { FilterModule } from './../filter/filter.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListCharterComponent } from './list-charter/list.charter.component';
@@ -23,7 +24,8 @@ import { CharterFilterComponent } from './charter-filter/charter-filter.componen
     SharedModule,
     NgxMatSelectSearchModule,
     AuditModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    FilterModule
   ],
   providers: [
     {

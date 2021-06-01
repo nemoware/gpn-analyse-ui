@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { DateAdapter } from '@root/node_modules/@angular/material';
 import { FormControl } from '@root/node_modules/@angular/forms';
+import { CharterStates } from '@app/features/charter/list-charter/list.charter.component';
 
 @Component({
   selector: 'gpn-event-filter',
@@ -34,6 +35,7 @@ export class EventFilterComponent implements OnInit {
   strLogin = '';
   _dateFrom: Date = null;
   _dateTo: Date = null;
+
   constructor(private dateAdapter: DateAdapter<Date>) {}
 
   ngOnInit() {
@@ -51,7 +53,6 @@ export class EventFilterComponent implements OnInit {
   }
 
   applyFilter() {
-    const docum_type: string[] = [];
     const filterVlaue: Array<{ name: string; value: any }> = new Array<{
       name: string;
       value: string;
