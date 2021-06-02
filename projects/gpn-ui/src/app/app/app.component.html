@@ -37,8 +37,7 @@
                       gpnHide [appPage] = "item.link" [matMenuTriggerFor]="menu">
                 {{ item.label }}
                 <mat-menu #menu="matMenu">
-                  <button mat-menu-item *ngFor="let item of handbookMenu" class="nav-button" [routerLink]="[item.link]"
-                          routerLinkActive="mat-accent">{{ item.label }}
+                  <button mat-menu-item *ngFor="let item of handbookMenu" class="nav-button" (click)="openWindow(item)">{{ item.label }}
                   </button>
                 </mat-menu>
               </button>
@@ -59,12 +58,6 @@
               <li *ngFor="let role of getRolesUser()"> {{ role.description }} &nbsp;</li>
             </ol>
           </mat-menu>
-
-          <!--
-          <button mat-icon-button routerLink="settings" class="d-none d-sm-inline">
-            <fa-icon icon="cog"></fa-icon>
-          </button> -->
-
         </mat-toolbar>
       </div>
 
