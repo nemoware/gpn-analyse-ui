@@ -40,10 +40,12 @@ exports.postFiles = async (checkTypes, documents, author) => {
 
 function getOptions(checkTypes, documents, author) {
   let body = {
-    checkTypes: checkTypes,
     documents: documents,
     author: author
   };
+  if (checkTypes.length !== 0) {
+    body.checkTypes = checkTypes;
+  }
   return {
     url: `${roboServiceUrl}/upload_docs`,
     headers: { 'content-type': 'application/json' },

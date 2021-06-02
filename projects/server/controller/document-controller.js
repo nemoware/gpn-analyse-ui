@@ -1065,7 +1065,7 @@ exports.fetchCharters = async (req, res) => {
 exports.uploadFiles = async (req, res) => {
   try {
     const author = res.locals.user;
-    await roboService.postFiles(req.body, author);
+    await roboService.postFiles([], req.body, author);
     res.status(201).json();
   } catch (err) {
     logger.logError(req, res, err, 500);
