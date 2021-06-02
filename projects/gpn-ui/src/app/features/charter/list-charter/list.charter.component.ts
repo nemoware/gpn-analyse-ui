@@ -12,6 +12,7 @@ import { merge, Subject } from '@root/node_modules/rxjs';
 import { takeUntil, tap } from '@root/node_modules/rxjs/operators';
 import { CharterDataSource } from '@app/features/charter/charter-data-source';
 import { CharterService } from '@app/features/charter/charter.service';
+import { AppPages } from '@app/models/app.pages';
 
 export interface CharterStates {
   id: number;
@@ -62,6 +63,7 @@ export class ListCharterComponent implements OnInit {
   private destroyStream = new Subject<void>();
   showInactive: any;
   filesString: string;
+  eAppPage = AppPages;
 
   ngOnInit() {
     this.dataSource = new CharterDataSource(this.charterService);

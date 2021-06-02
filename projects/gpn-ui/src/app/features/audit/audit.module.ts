@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ListAuditComponent } from '@app/features/audit/list.audit/list.audit.component';
 import { SharedModule } from '@shared/shared.module';
 import { ListAuditRoutingModule } from '@app/features/audit/audit-routing.module';
-import { AuditFilterComponent } from './audit-filter/audit-filter.component';
 import { CreateAuditComponent } from './create-audit/create-audit.component';
 import { NgxMatSelectSearchModule } from '@root/node_modules/ngx-mat-select-search';
 import { ReactiveFormsModule } from '@root/node_modules/@angular/forms';
@@ -50,6 +49,7 @@ import { MaskDateDirective } from './create-audit/mask-date.directive';
 import { SortValuePipe } from './audit-editor/competencecharts/sort-value.pipe';
 import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
 import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-detail/subsidiary-detail.component';
+import { FilterModule } from './../filter/filter.module';
 
 @NgModule({
   declarations: [
@@ -74,7 +74,6 @@ import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-det
     ViolationsAuditComponent,
     MaskDateDirective,
     SortValuePipe,
-    AuditFilterComponent,
     SubsidiaryDetailComponent
   ],
   imports: [
@@ -95,7 +94,8 @@ import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-det
     MatExpansionModule,
     AngularResizedEventModule,
     MatRippleModule,
-    TextMaskModule
+    TextMaskModule,
+    FilterModule
   ],
   entryComponents: [
     CreateAuditComponent,
@@ -108,7 +108,6 @@ import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-det
     ViewDocumentComponent,
     DocStateComponent,
     MaskDateDirective,
-    AuditFilterComponent,
     DocumentDetailComponent,
     ViolationsAuditComponent,
     ChildDetailComponent

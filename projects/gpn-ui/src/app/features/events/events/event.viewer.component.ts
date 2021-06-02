@@ -14,7 +14,7 @@ import { EventDataSource } from '@app/features/events/event-data-source';
 import { tap } from 'rxjs/operators';
 import { merge, Subject } from '@root/node_modules/rxjs';
 import { takeUntil } from 'rxjs/operators';
-
+import { AppPages } from '@app/models/app.pages';
 @Component({
   selector: 'gpn-event.viewer',
   templateUrl: './event.viewer.component.html',
@@ -35,6 +35,7 @@ export class EventViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   eventsType = [];
   _filterValue: [];
   private destroyStream = new Subject<void>();
+  eAppPage = AppPages;
 
   ngOnInit() {
     this.dataSource = new EventDataSource(this.eventviewerservice);

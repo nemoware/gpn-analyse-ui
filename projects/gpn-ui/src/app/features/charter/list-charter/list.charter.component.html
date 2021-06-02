@@ -1,5 +1,5 @@
 <div class="left_group">
-  <gpn-charter-filter [charterStates]="charterStates" (ApplyFilter)="onApplyFilter($event)"></gpn-charter-filter>
+  <gpn-filter [states]="charterStates" [appPage]="eAppPage.charter" (ApplyFilter)="onApplyFilter($event)"></gpn-filter>
 </div>
 <div class="col">
   <button class = "buttons-group" mat-raised-button color="accent"  (click)="showCharters()"> {{showInactive ? 'Показать только активные уставы':'Показать все уставы'}} </button>

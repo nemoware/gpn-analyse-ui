@@ -123,6 +123,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.spinner.hide();
 
+        console.log(this.selectedAttribute);
+
         if (this.selectedAttribute) {
           this.goToAttribute(this.selectedAttribute);
         }
@@ -259,6 +261,8 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public goToAttribute(id) {
     const element = document.getElementById(id);
+    console.log(element);
+
     if (element != null)
       element.scrollIntoView({
         block: 'center',
