@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { ListAuditComponent } from '@app/features/audit/list.audit/list.audit.component';
 import { SharedModule } from '@shared/shared.module';
 import { ListAuditRoutingModule } from '@app/features/audit/audit-routing.module';
-import { AuditFilterComponent } from './audit-filter/audit-filter.component';
 import { CreateAuditComponent } from './create-audit/create-audit.component';
 import { NgxMatSelectSearchModule } from '@root/node_modules/ngx-mat-select-search';
 import { ReactiveFormsModule } from '@root/node_modules/@angular/forms';
@@ -80,7 +79,6 @@ import { FilterModule } from './../filter/filter.module';
     ViolationsAuditComponent,
     MaskDateDirective,
     SortValuePipe,
-    AuditFilterComponent,
     SubsidiaryDetailComponent
   ],
   imports: [
@@ -111,12 +109,7 @@ import { FilterModule } from './../filter/filter.module';
     SearchDocumentComponent,
     SubsidiaryDetailComponent
   ],
-  exports: [
-    ViewDocumentComponent,
-    DocStateComponent,
-    MaskDateDirective,
-    AuditFilterComponent
-  ],
+  exports: [ViewDocumentComponent, DocStateComponent, MaskDateDirective],
   providers: [
     {
       provide: DateAdapter,

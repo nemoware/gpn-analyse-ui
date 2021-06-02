@@ -1,9 +1,16 @@
 <div class="mat-elevation-z10 container">
   <label style="margin-top: 5px; font-size:16px; font-weight: bold;">Панель фильтров</label>
   <hr>
-  <mat-form-field appearance="legacy" style="width: 100%">
+  <mat-form-field appearance="legacy" style="width: 100%"  *ngIf="appPage != pagesFromModel['pre-audit']; else Block">
     <input matInput placeholder={{placeHolderForHtml[0]}} [(ngModel)]="subsidiaryName">
   </mat-form-field>
+
+  <ng-template #Block><mat-form-field style="width: 100%" color="accent">
+    <mat-label>Пользователь</mat-label>
+    <mat-select [(ngModel)]="subsidiaryName" [formControl]="filter" multiple>
+      <mat-option *ngFor="let user of users" [value]="user">{{user}}</mat-option>
+    </mat-select>
+  </mat-form-field></ng-template>
 
   <mat-form-field style="width: 100%" *ngIf="appPage==pagesFromModel.audit || appPage==pagesFromModel['pre-audit']">
     <input matInput [matDatepicker]="createDate" placeholder="Дата создания" readonly [(ngModel)]="_createDate">

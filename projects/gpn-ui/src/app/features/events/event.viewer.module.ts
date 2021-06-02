@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '@shared/shared.module';
 
 import { EventViewerRoutingModule } from '@app/features/events/event.viewer.routing.module';
-import { EventFilterComponent } from '@app/features/events/events.filter/events.filter.component';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -15,7 +14,7 @@ import { APP_DATE_FORMATS, AppDateAdapter } from '@app/format/app-date-adapter';
 import { FilterModule } from '../filter/filter.module';
 
 @NgModule({
-  declarations: [EventViewerComponent, EventFilterComponent],
+  declarations: [EventViewerComponent],
   entryComponents: [],
   imports: [CommonModule, SharedModule, EventViewerRoutingModule, FilterModule],
   providers: [

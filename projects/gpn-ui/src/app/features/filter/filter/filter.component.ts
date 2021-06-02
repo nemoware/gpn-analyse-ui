@@ -45,6 +45,7 @@ export class FilterComponent implements OnInit {
   selectedTypes = '';
   checkTypes = ['InsiderControl', 'InterestControl'];
   selectedUsers = '';
+  users = [];
 
   placeholder: Placeholder = {
     preAudit: ['Пользователь', 'Вид проверки', 'Статус проверки'],

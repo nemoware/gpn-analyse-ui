@@ -57,7 +57,6 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
     document
       .getElementById('view_doc')
       .addEventListener('click', this.getInfoAttribute.bind(this));
-    console.log(this.attributes);
   }
 
   ngAfterViewInit(): void {
