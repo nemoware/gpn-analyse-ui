@@ -1377,6 +1377,8 @@ setKeys = document => {
     } else {
       document.analysis.attributes = attributes;
     }
+  } else if (document.analysis) {
+    document.analysis.attributes = [];
   }
 };
 
