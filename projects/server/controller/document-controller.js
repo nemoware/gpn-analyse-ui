@@ -1469,7 +1469,6 @@ setContractTree = (userAttributes, error) => {
   let attributeTree = {};
   let org1 = {};
   let org2 = {};
-  // console.log(userAttributes);
   Object.keys(userAttributes).forEach(name => {
     const y = userAttributes[name];
     const key = y.key;
@@ -1506,7 +1505,7 @@ setContractTree = (userAttributes, error) => {
       } else if (atr[0].startsWith('person')) {
         for (const person of attributeTree.people) {
           if (person.key === y.parent) {
-            person[atr[1]] = y;
+            person[atr[1].split('-')[0]] = y;
           }
         }
       }
@@ -1521,7 +1520,6 @@ setContractTree = (userAttributes, error) => {
   }
 
   const data = { contract: attributeTree };
-
   validateSchema(data, schema, error);
 
   return attributeTree;
@@ -1533,7 +1531,6 @@ setProtocolTree = (userAttributes, error) => {
   let attributeTree = {};
   attributeTree.orgs = [];
   attributeTree.agenda_items = [];
-  console.log(userAttributes);
   Object.keys(userAttributes).forEach(name => {
     //Атрибут
     const y = userAttributes[name];
