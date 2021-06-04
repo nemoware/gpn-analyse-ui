@@ -28,6 +28,7 @@ import { takeUntil } from 'rxjs/operators';
 
 const cols_by_type = {
   CONTRACT: [
+    'shevron',
     'star',
     'date',
     'number',
@@ -169,6 +170,9 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const docs = this.documents.docs; // shortcut
+    console.log('this.documents.docs');
+    console.log(this.documents.docs);
+
     this.documentTypeName = null;
     if (docs && docs.length > 0) {
       this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
@@ -178,6 +182,11 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
       this.col = cols_by_type[this.documentTypeName].map(x => x);
       this.documentType = ViewDetailDoc.getTypeDoc(docs[0].documentType);
+
+      console.log('docs[0].documentType');
+      console.log(docs[0].documentType);
+      console.log('this.documentType');
+      console.log(this.documentType);
 
       if (this._isAllOrgsSame(docs, 'org-1-name')) {
         let index = this.col.indexOf('org1', 0);
@@ -237,6 +246,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   selectedRow(value, event) {
     this.expandedElementId =
       value._id !== this.expandedElementId ? value._id : '-1';
+    console.log(this.expandedElementId);
+
     event.stopPropagation();
   }
 

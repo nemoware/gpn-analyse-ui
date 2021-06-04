@@ -159,6 +159,9 @@ export class AuditAnalyseResultComponent
       .getAudits([{ name: 'id', value: this.IdAudit }])
       .pipe(takeUntil(this.destroyStream))
       .subscribe(data => {
+        console.log('data');
+        console.log(data);
+
         this.audit = data[0];
         this.maxPageIndex = this.audit.typeViewResult;
         if (this.maxPageIndex === 4) {
@@ -215,6 +218,8 @@ export class AuditAnalyseResultComponent
         .pipe(takeUntil(this.destroyStream))
         .subscribe(data => {
           this.docs = data;
+          console.log('this.docs');
+          console.log(this.docs);
 
           if (this.audit.typeViewResult === 2) {
             this.docs = this.docs.filter(

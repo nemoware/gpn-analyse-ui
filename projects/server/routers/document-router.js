@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const controller = require('../controller/document-controller');
 
+router.get('/TreeList', controller.getTreeFromDocuments);
 router.get('/list', controller.getDocuments);
 router.get('/list-by-type', controller.getDocumentsByType);
 router

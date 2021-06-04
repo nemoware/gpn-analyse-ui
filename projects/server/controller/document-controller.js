@@ -52,7 +52,7 @@ exports.getDocuments = async (req, res) => {
     }
 
     const audit = await Audit.findById(auditId, `charters`, { lean: true });
-
+    console.log(audit);
     let documents = await Document.find(
       {
         $or: [{ auditId }, { _id: { $in: audit.charters } }],
@@ -100,6 +100,33 @@ exports.getDocuments = async (req, res) => {
       setKeys(document);
     }
     res.send(documents);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getTreeFromDocuments = async (req, res) => {
+  const auditId = req.query.auditId;
+  if (!auditId) {
+    let err = 'Can not find documents: auditId is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+  // let include = ``;
+
+  try {
+    const audit = await Audit.findById(auditId, 'links', { lean: true });
+    console.log(audit);
+    const mapLinksFromAudit = new Map(audit.links.map(i => [i.fromId, i.toId]));
+    console.log(mapLinksFromAudit);
+    let arr = [];
+    mapLinksFromAudit.forEach((value, key) => {
+      arr.push(
+        Document.findById(key, 'user.attributes_tree.contract', { lean: true })
+      );
+    });
+    console.log(arr);
+    res.send(arr);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
