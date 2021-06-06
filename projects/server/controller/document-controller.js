@@ -1397,6 +1397,7 @@ setCharterTree = (userAttributes, error) => {
   // console.log(userAttributes);
   Object.keys(userAttributes).forEach(name => {
     const y = userAttributes[name];
+    setValue(y);
     const key = y.key;
     let atr = key.split('/');
     if (atr.length === 1) {
@@ -1473,6 +1474,7 @@ setContractTree = (userAttributes, error) => {
   let org2 = {};
   Object.keys(userAttributes).forEach(name => {
     const y = userAttributes[name];
+    setValue(y);
     const key = y.key;
     let atr = key.split('/');
     if (atr.length === 1) {
@@ -1536,11 +1538,10 @@ setProtocolTree = (userAttributes, error) => {
   Object.keys(userAttributes).forEach(name => {
     //Атрибут
     const y = userAttributes[name];
+    setValue(y);
     //Уникальный ключ атрибута
     const key = y.key;
     let atr = key.split('/');
-    console.log(atr);
-
     if (atr.length === 1) {
       const arr = key.split('-');
       //Наименование ДО, Краткое наименование ДО, Форма собственности ДО
@@ -1692,4 +1693,11 @@ validateSchema = (data, schema, error) => {
 
 translate = message => {
   return translations[message];
+};
+
+//Если у атрибута нет значения, то записываем туда пустую строку для валидации по схеме
+setValue = attribute => {
+  if (!attribute.value) {
+    attribute.value = '';
+  }
 };
