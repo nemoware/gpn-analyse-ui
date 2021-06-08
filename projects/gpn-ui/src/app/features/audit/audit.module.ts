@@ -50,6 +50,9 @@ import { MaskDateDirective } from './create-audit/mask-date.directive';
 import { SortValuePipe } from './audit-editor/competencecharts/sort-value.pipe';
 import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
 import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-detail/subsidiary-detail.component';
+import { NotUsedDocumentsComponent } from './audit-analyse-result/not-used-documents/not-used-documents.component';
+import { LinksDocumentComponent } from './audit-analyse-result/links-document/links-document.component';
+import { DocumentTableDetailComponent } from './audit-analyse-result/document-table-detail/document-table-detail.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +78,10 @@ import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-det
     MaskDateDirective,
     SortValuePipe,
     AuditFilterComponent,
-    SubsidiaryDetailComponent
+    SubsidiaryDetailComponent,
+    NotUsedDocumentsComponent,
+    LinksDocumentComponent,
+    DocumentTableDetailComponent
   ],
   imports: [
     CommonModule,

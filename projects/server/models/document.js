@@ -1,49 +1,52 @@
 module.exports = (mongoose, Schema) => {
   const ObjectId = Schema.Types.ObjectId;
-  let documentSchema = new Schema({
-    auditId: ObjectId,
-    subsidiary: {
-      name: String
-    },
-    ftpUrl: String,
-    createDate: Date,
-    filename: String,
-    parse: Object,
-    parserResponseCode: Number,
-    state: Number,
-    isActive: Boolean,
-    hasInside: Boolean,
-    analysis: {
-      version: String,
-      original_text: String,
-      normal_text: String,
-      analyze_timestamp: Date,
-      tokenization_maps: {
-        words: [[Number, Number]]
+  let documentSchema = new Schema(
+    {
+      auditId: ObjectId,
+      subsidiary: {
+        name: String
       },
-      checksum: Number,
-      attributes: Object,
-      attributes_tree: Object,
-      headers: [
-        {
-          value: String,
-          parent: Object,
-          span: [Number, Number],
-          span_map: String,
-          confidence: Number,
-          display_value: String
-        }
-      ],
-      warnings: [{ code: String }],
-      resolvedWarnings: [{ code: String }]
+      ftpUrl: String,
+      createDate: Date,
+      filename: String,
+      parse: Object,
+      parserResponseCode: Number,
+      state: Number,
+      isActive: Boolean,
+      hasInside: Boolean,
+      analysis: {
+        version: String,
+        original_text: String,
+        normal_text: String,
+        analyze_timestamp: Date,
+        tokenization_maps: {
+          words: [[Number, Number]]
+        },
+        checksum: Number,
+        attributes: Object,
+        attributes_tree: Object,
+        headers: [
+          {
+            value: String,
+            parent: Object,
+            span: [Number, Number],
+            span_map: String,
+            confidence: Number,
+            display_value: String
+          }
+        ],
+        warnings: [{ code: String }],
+        resolvedWarnings: [{ code: String }]
+      },
+      user: {
+        attributes: Object,
+        author: Object,
+        updateDate: Date,
+        attributes_tree: Object
+      }
     },
-    user: {
-      attributes: Object,
-      author: Object,
-      updateDate: Date,
-      attributes_tree: Object
-    }
-  });
+    { toJSON: { virtuals: true }, typeKey: '$type' }
+  );
 
   documentSchema.methods.getAttributeValue = function getAttributeValue(
     attribute

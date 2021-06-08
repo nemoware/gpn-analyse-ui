@@ -25,6 +25,7 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { AuditService } from '@app/features/audit/audit.service';
 import { Subject } from '@root/node_modules/rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Document } from '@app/models/document.model';
 
 const cols_by_type = {
   CONTRACT: [
@@ -81,9 +82,9 @@ const column_to_sorting_mapping = {
 };
 
 @Component({
-  selector: 'gpn-document-detail',
-  templateUrl: './document-detail.component.html',
-  styleUrls: ['./document-detail.component.scss'],
+  selector: 'gpn-document-table-detail',
+  templateUrl: './document-table-detail.component.html',
+  styleUrls: ['./document-table-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe],
   animations: [
@@ -97,8 +98,8 @@ const column_to_sorting_mapping = {
     ])
   ]
 })
-export class DocumentDetailComponent implements OnInit, OnDestroy {
-  @Input() documents: any;
+export class DocumentTableDetailComponent implements OnInit {
+  @Input() documents: Document[];
   @Input() subsidiaryName: string;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   header: string;
@@ -121,45 +122,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   isExpansionDetailRow = () => true;
 
-  _sortingDataAccessor: (data, sortHeaderId: string) => string | number = (
-    data,
-    sortHeaderId: string
-  ): string | number => {
-    if (sortHeaderId === 'analyze_state') {
-      if (
-        data.state === 0 ||
-        data.state === 1 ||
-        data.state === 5 ||
-        data.state === null
-      )
-        return 'Загружен, ожидает анализа' + data.analysis.analyze_timestamp;
-      if (data.state === 10)
-        return 'Анализируется' + data.analysis.analyze_timestamp;
-      if (data.state === 11)
-        return 'Ошибка при анализе' + data.analysis.analyze_timestamp;
-      if (data.state === 12)
-        return (
-          'Документ не попадает под параметры Проверки' +
-          data.analysis.analyze_timestamp
-        );
-      if (data.state === 15)
-        return 'Анализ завершен' + data.analysis.analyze_timestamp;
-      return ' ';
-    }
-    if (sortHeaderId in column_to_sorting_mapping) {
-      const attr = column_to_sorting_mapping[sortHeaderId];
-      if (sortHeaderId === 'contract_subject' || sortHeaderId === 'org_level')
-        return this.translate.instant(this.getAttrValue(attr, data) || ' ');
-      return this.getAttrValue(attr, data);
-    }
-    if ('warnings' === sortHeaderId) {
-      if (data.analysis && data.analysis.warnings)
-        return data.analysis.warnings.length;
-      else return 0;
-    }
-    return -1;
-  };
-
   hasWarnings(document): boolean {
     return (
       document.analysis &&
@@ -169,33 +131,18 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('this.documents');
+    const docs: Document[] = this.documents;
+    // docs.map(i => {
+    //   i.analysis.attributes_tree.contract.date.
+
+    // });
     console.log(this.documents);
-    console.log('this.documents.docs');
-    console.log(this.documents.docs);
-    const docs = this.documents.docs;
 
     this.documentTypeName = null;
     if (docs && docs.length > 0) {
-      this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
       this.dataSource.sort = this.sort;
       this.dataSource.data = docs;
-      this.documentTypeName = docs[0].documentType;
-
-      this.col = cols_by_type[this.documentTypeName].map(x => x);
-      this.documentType = ViewDetailDoc.getTypeDoc(docs[0].documentType);
-
-      if (this._isAllOrgsSame(docs, 'org-1-name')) {
-        let index = this.col.indexOf('org1', 0);
-        if (index > -1) {
-          this.col.splice(index, 1);
-        }
-
-        index = this.col.indexOf('org', 0);
-        if (index > -1) {
-          this.col.splice(index, 1);
-        }
-      }
+      this.col = cols_by_type[docs[0].parse.documentType].map(x => x);
     } else {
       this.dataSource.data = [];
     }

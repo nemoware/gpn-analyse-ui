@@ -93,8 +93,7 @@ export class AuditAnalyseResultComponent
   docs: Document[];
   TREE_DATA: Node[] = [];
   audit: Audit;
-  treeControl;
-  treeFlattener;
+  tableSource;
   dataSource;
   selectedPage = -1;
   maxPageIndex = -1;
@@ -115,19 +114,23 @@ export class AuditAnalyseResultComponent
     return {
       expandable: !!node.children && node.children.length > 0,
       name: node.name,
-      kind: node.kind,
-      childCount: node.childCount,
       level: level,
-      index: node.index,
-      documentDate: this.getAttrValue('date', node),
-      documentNumber: this.getAttrValue('number', node),
-      documentType: node.documentType,
-      _id: node._id,
-      error: node.error,
-      attributes: node.attributes,
+      childCount: node.childCount,
       docs: node.docs
     };
   };
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer,
+    node => node.level,
+    node => node.expandable,
+    node => node.children
+  );
+
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+    node => node.level,
+    node => node.expandable
+  );
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -141,27 +144,13 @@ export class AuditAnalyseResultComponent
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
-  ngOnInit() {
-    this.treeFlattener = new MatTreeFlattener(
-      this._transformer,
-      node => node.level,
-      node => node.expandable,
-      node => node.children
-    );
-    this.treeControl = new FlatTreeControl<ExampleFlatNode>(
-      node => node.level,
-      node => node.expandable
-    );
-  }
+  ngOnInit() {}
 
   ngAfterViewInit(): void {
     this.auditservice
       .getAudits([{ name: 'id', value: this.IdAudit }])
       .pipe(takeUntil(this.destroyStream))
       .subscribe(data => {
-        console.log('data');
-        console.log(data);
-
         this.audit = data[0];
         this.maxPageIndex = this.audit.typeViewResult;
         if (this.maxPageIndex === 4) {
@@ -170,6 +159,12 @@ export class AuditAnalyseResultComponent
         } else {
           this.selectedPage = this.audit.typeViewResult;
         }
+      });
+    this.auditservice
+      .getTreeDocument(this.IdAudit)
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(data => {
+        this.tableSource = data.arrOfAllContract;
       });
   }
 
@@ -218,9 +213,6 @@ export class AuditAnalyseResultComponent
         .pipe(takeUntil(this.destroyStream))
         .subscribe(data => {
           this.docs = data;
-          console.log('this.docs');
-          console.log(this.docs);
-
           if (this.audit.typeViewResult === 2) {
             this.docs = this.docs.filter(
               x => x.analysis != null || x.user != null

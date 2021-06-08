@@ -112,21 +112,122 @@ exports.getTreeFromDocuments = async (req, res) => {
     logger.logError(req, res, err, 400);
     return;
   }
-  // let include = ``;
 
   try {
     const audit = await Audit.findById(auditId, 'links', { lean: true });
-    console.log(audit);
-    const mapLinksFromAudit = new Map(audit.links.map(i => [i.fromId, i.toId]));
-    console.log(mapLinksFromAudit);
-    let arr = [];
-    mapLinksFromAudit.forEach((value, key) => {
-      arr.push(
-        Document.findById(key, 'user.attributes_tree.contract', { lean: true })
-      );
+
+    const arrLinksFromId = audit.links.map(i => i.fromId.toString());
+    const arrLinksToId = audit.links.map(i => i.toId.toString());
+
+    const arrayOfAllDocument = await Document.find()
+      .where('auditId')
+      .in(auditId)
+      .select({
+        'analysis.attributes_tree.contract': 1,
+        'parse.documentType': 1
+      })
+      .lean();
+
+    const arrOfAllContract = arrayOfAllDocument.filter(
+      i => i.parse.documentType === 'CONTRACT'
+    );
+
+    const arrOfBadSupplementaryAgreement = arrayOfAllDocument.filter(
+      i =>
+        i.parse.documentType === 'SUPPLEMENTARY_AGREEMENT' &&
+        !arrLinksToId.includes(i._id.toString()) &&
+          !arrLinksFromId.includes(i._id.toString())
+    );
+    const arrOfBadPROTOCOL = arrayOfAllDocument.filter(
+      i =>
+        i.parse.documentType === 'PROTOCOL' &&
+        !arrLinksToId.includes(i._id.toString()) &&
+          !arrLinksFromId.includes(i._id.toString())
+    );
+    const arrOfBadANNEX = arrayOfAllDocument.filter(
+      i =>
+        i.parse.documentType === 'ANNEX' &&
+        !arrLinksToId.includes(i._id.toString()) &&
+          !arrLinksFromId.includes(i._id.toString())
+    );
+    const arrOfBadCHARTER = arrayOfAllDocument.filter(
+      i =>
+        i.parse.documentType === 'CHARTER' &&
+        !arrLinksToId.includes(i._id.toString()) &&
+          !arrLinksFromId.includes(i._id.toString())
+    );
+
+    res.send({
+      arrOfAllContract,
+      NotUsed: {
+        arrOfBadSupplementaryAgreement,
+        arrOfBadPROTOCOL,
+        arrOfBadANNEX,
+        arrOfBadCHARTER
+      }
     });
-    console.log(arr);
-    res.send(arr);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getTreeLinks = async (req, res) => {
+  const documentId = req.query.documentId;
+  if (!documentId) {
+    let err = `Can not get links for document because documentId is null`;
+    logger.logError(req, res, err, 400);
+    return;
+  }
+  const document = await Document.findById(documentId).lean();
+  if (!document)
+    return res.status(404).send(`Document with id = '${documentId}' not found`);
+  const audit = await Audit.findById(document.auditId).lean();
+
+  // console.log(audit);
+  if (!audit)
+    return res
+      .status(500)
+      .send(`Audit with id = '${document.auditId}' not found`);
+
+  try {
+    if (!audit.links) {
+      return res.send([]);
+    }
+
+    let ids = audit.links
+      .filter(l => l.fromId.toString() === documentId)
+      .map(l => l.toId)
+      .concat(
+        audit.links
+          .filter(l => l.toId.toString() === documentId)
+          .map(l => l.fromId)
+      );
+
+    const arrayOfAllDocument = await Document.find()
+      .where('_id')
+      .in(ids)
+      .select({ 'analysis.attributes_tree': 1, 'parse.documentType': 1 })
+      .lean();
+
+    console.log(arrayOfAllDocument);
+
+    res.send({
+      Charter: arrayOfAllDocument.filter(
+        i => i.parse.documentType.toString() === 'CHARTER'
+      ),
+      Contract: arrayOfAllDocument.filter(
+        i => i.parse.documentType.toString() === 'CONTRACT'
+      ),
+      Protocol: arrayOfAllDocument.filter(
+        i => i.parse.documentType.toString() === 'PROTOCOL'
+      ),
+      SupplementaryAgreement: arrayOfAllDocument.filter(
+        i => i.parse.documentType.toString() === 'SUPPLEMENTARY_AGREEMENT'
+      ),
+      Annex: arrayOfAllDocument.filter(
+        i => i.parse.documentType.toString() === 'ANNEX'
+      )
+    });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

@@ -1,3 +1,4 @@
+import { AttributeTreeModel } from './attribute-tree-model';
 import { HeaderModel } from '@app/models/header-model';
 import { AttributeModel } from '@app/models/attribute-model';
 
@@ -23,8 +24,12 @@ export interface Document {
     };
     checksum: number;
     attributes: [AttributeModel];
+    attributes_tree: AttributeTreeModel;
     headers: [HeaderModel];
     warnings: any[];
+  };
+  parse: {
+    documentType: string;
   };
   user: {
     attributes: [AttributeModel];

@@ -61,6 +61,59 @@ export class AuditService {
     });
   }
 
+  public getTreeDocument(
+    auditId: string
+  ): Observable<{
+    arrOfAllContract: Document[];
+    NotUsed: {
+      arrOfBadSupplementaryAgreement: Document[];
+      arrOfBadPROTOCOL: Document[];
+      arrOfBadANNEX: Document[];
+      arrOfBadCHARTER: Document[];
+    };
+  }> {
+    let httpParams = new HttpParams();
+
+    if (auditId) {
+      httpParams = httpParams.append('auditId', auditId);
+    }
+    return this.http.get<{
+      arrOfAllContract: Document[];
+      NotUsed: {
+        arrOfBadSupplementaryAgreement: Document[];
+        arrOfBadPROTOCOL: Document[];
+        arrOfBadANNEX: Document[];
+        arrOfBadCHARTER: Document[];
+      };
+    }>(`${api}/document/treelist`, {
+      params: httpParams
+    });
+  }
+
+  public getTreeLinks(
+    documentId: string
+  ): Observable<{
+    Charter: Document[];
+    Contract: Document[];
+    CharProtocolter: Document[];
+    SupplementaryAgreement: Document[];
+    Annex: Document[];
+  }> {
+    let httpParams = new HttpParams();
+    if (documentId) {
+      httpParams = httpParams.append('documentId', documentId);
+    }
+    return this.http.get<{
+      Charter: Document[];
+      Contract: Document[];
+      CharProtocolter: Document[];
+      SupplementaryAgreement: Document[];
+      Annex: Document[];
+    }>(`${api}/document/treelinks`, {
+      params: httpParams
+    });
+  }
+
   public getFiles(auditId: string = null): Observable<FileModel[]> {
     let httpParams = new HttpParams();
     if (auditId) {
