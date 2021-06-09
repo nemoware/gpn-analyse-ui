@@ -1,8 +1,12 @@
 const ldap = require('ldapjs');
 const options = require('../config').ad.options;
+const fs = require('fs');
+const argv = require('yargs').argv;
+const ssl = argv.ssl !== 'false';
 const clientOptions = {
   url: options.url,
-  reconnect: true
+  reconnect: true,
+  tlsOptions: ssl ? { ca: fs.readFileSync('./ssl/server.crt') } : {}
 };
 
 function bind(client) {
