@@ -33,8 +33,8 @@ export class AppComponent implements OnInit, OnDestroy {
   currentRoute;
   logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
-    { link: 'pre-audit', label: 'Предпроверка' },
-    { link: 'audit', label: 'Проверка' },
+    { link: 'pre-audit', label: 'Предпроверка ДД' },
+    { link: 'audit', label: 'Проверка ДО' },
     { link: 'charter', label: 'Уставы' },
     { link: 'handbook', label: 'Справочники' },
     // { link: 'dash', label: 'Дэшборд' },

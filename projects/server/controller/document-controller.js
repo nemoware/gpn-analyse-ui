@@ -154,7 +154,9 @@ exports.getDocument = async (req, res) => {
                     'DD.MM.YYYY'
                   )
                 : 'н/д'
-            }. Предпроверка от ${moment(audit.createDate).format('DD.MM.YYYY')}
+            }. Предпроверка ДД от ${moment(audit.createDate).format(
+              'DD.MM.YYYY'
+            )}
             )}`
           );
         } else if (document.parse.documentType === 'PROTOCOL')
