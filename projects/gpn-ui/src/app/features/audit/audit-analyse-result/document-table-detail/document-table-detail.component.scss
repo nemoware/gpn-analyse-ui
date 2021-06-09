@@ -12,7 +12,12 @@ $icon-column-width: 48px;
 }
 
 tr.detail-row {
+  overflow: hidden;
   height: 0;
+}
+
+.fixed-width td {
+  width: 20% !important;
 }
 
 .element-row td {
@@ -20,7 +25,7 @@ tr.detail-row {
 }
 
 .element-detail {
-  margin-left: 20px;
+  // margin-left: 20px;
   overflow: hidden;
   cursor: default;
 }
@@ -40,7 +45,8 @@ tr.detail-row {
 }
 
 .org-name {
-  display: block;
+  display: flex;
+  flex-direction: row;
 }
 
 .mat-column-shevron {

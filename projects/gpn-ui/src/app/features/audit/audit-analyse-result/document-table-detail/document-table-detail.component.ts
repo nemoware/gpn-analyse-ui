@@ -13,6 +13,7 @@ import { DatePipe } from '@root/node_modules/@angular/common';
 import { Router } from '@root/node_modules/@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 
 import {
   animate,
@@ -38,13 +39,22 @@ const cols_by_type = {
     'org1',
     'org2',
     'contract_subject',
-    'spacer',
+    // 'spacer',
     'warnings',
     'analyze_state'
   ],
-  CHARTER: ['star', 'date', 'shevron', 'org', 'warnings', 'analyze_state'],
-  PROTOCOL: ['star', 'date', 'org', 'org_level', 'warnings', 'analyze_state'],
+  CHARTER: ['shevron', 'star', 'date', 'org', 'warnings', 'analyze_state'],
+  PROTOCOL: [
+    'shevron',
+    'star',
+    'date',
+    'org',
+    'org_level',
+    'warnings',
+    'analyze_state'
+  ],
   ANNEX: [
+    'shevron',
     'star',
     'date',
     'number',
@@ -52,11 +62,12 @@ const cols_by_type = {
     'org1',
     'org2',
     'contract_subject',
-    'spacer',
+    // 'spacer',
     'warnings',
     'analyze_state'
   ],
   SUPPLEMENTARY_AGREEMENT: [
+    'shevron',
     'star',
     'date',
     'number',
@@ -64,7 +75,7 @@ const cols_by_type = {
     'org1',
     'org2',
     'contract_subject',
-    'spacer',
+    // 'spacer',
     'warnings',
     'analyze_state'
   ]
@@ -102,11 +113,14 @@ export class DocumentTableDetailComponent implements OnInit {
   @Input() documents: Document[];
   @Input() subsidiaryName: string;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  defPageSize = 10;
   header: string;
   col: string[] = [];
   dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
   documentType: any;
   expandedElementId = '';
+  arrOfexpandedElementId = [];
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   documentTypeName = null;
@@ -132,15 +146,23 @@ export class DocumentTableDetailComponent implements OnInit {
 
   ngOnInit() {
     const docs: Document[] = this.documents;
-    // docs.map(i => {
-    //   i.analysis.attributes_tree.contract.date.
 
-    // });
+    console.log('this.documents');
     console.log(this.documents);
 
     this.documentTypeName = null;
+    this.dataSource.paginator = this.paginator;
     if (docs && docs.length > 0) {
       this.dataSource.sort = this.sort;
+      this.documents.map(i => {
+        if (
+          i.parse.documentType !== 'ANNEX' &&
+          i.parse.documentType !== 'SUPPLEMENTARY_AGREEMENT'
+        ) {
+          i.analysis.attributes_tree.contract =
+            i.analysis.attributes_tree[i.parse.documentType.toLowerCase()];
+        }
+      });
       this.dataSource.data = docs;
       this.col = cols_by_type[docs[0].parse.documentType].map(x => x);
     } else {
@@ -187,11 +209,20 @@ export class DocumentTableDetailComponent implements OnInit {
   }
 
   selectedRow(value, event) {
-    this.expandedElementId =
-      value._id !== this.expandedElementId ? value._id : '-1';
-    console.log('this.expandedElementId');
-    console.log(this.expandedElementId);
+    if (value._id !== this.expandedElementId) {
+      this.expandedElementId = value._id;
+    } else {
+      this.expandedElementId = '-1';
+    }
 
+    if (!this.arrOfexpandedElementId.includes(value._id)) {
+      this.arrOfexpandedElementId.push(value._id);
+    } else {
+      this.arrOfexpandedElementId.splice(
+        this.arrOfexpandedElementId.indexOf(value._id),
+        1
+      );
+    }
     event.stopPropagation();
   }
 

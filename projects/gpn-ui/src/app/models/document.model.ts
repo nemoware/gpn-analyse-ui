@@ -33,7 +33,7 @@ export interface Document {
   };
   user: {
     attributes: [AttributeModel];
-    author: { _id: string; login: String };
+    author: { _id: string; login: String; name: string };
     updateDate: Date;
   };
   parseError: string;
@@ -48,4 +48,5 @@ export interface Document {
   starred: boolean;
   state?: number;
   primary_subject?: string;
+  links?: boolean;
 }

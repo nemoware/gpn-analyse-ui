@@ -114,7 +114,7 @@ exports.getTreeFromDocuments = async (req, res) => {
   }
 
   try {
-    const audit = await Audit.findById(auditId, 'links', { lean: true });
+    const audit = await Audit.findById(auditId, 'links ', { lean: true });
 
     const arrLinksFromId = audit.links.map(i => i.fromId.toString());
     const arrLinksToId = audit.links.map(i => i.toId.toString());
@@ -124,9 +124,43 @@ exports.getTreeFromDocuments = async (req, res) => {
       .in(auditId)
       .select({
         'analysis.attributes_tree.contract': 1,
-        'parse.documentType': 1
+        'analysis.analyze_timestamp': 1,
+        'parse.documentType': 1,
+        state: 1,
+        'user.author.name': 1
       })
       .lean();
+
+    const user = await User.findOne(
+      {
+        login: res.locals.user.sAMAccountName
+      },
+      'stars'
+    ).lean();
+
+    if (user) {
+      let arrStars = user.stars.map(i => i.documentId.toString());
+      arrayOfAllDocument.map(i => {
+        if (arrStars.includes(i._id.toString())) i.starred = true;
+        else i.starred = false;
+        return i;
+      });
+    }
+    arrayOfAllDocument.map(i => {
+      let ids = audit.links
+        .filter(l => l.fromId.toString() === i._id.toString())
+        .map(l => l.toId)
+        .concat(
+          audit.links
+            .filter(l => l.toId.toString() === i._id.toString())
+            .map(l => l.fromId)
+        );
+      console.log(i._id);
+      console.log(ids);
+      if (ids && ids.length > 0) i.links = true;
+      else i.links = false;
+      return i;
+    });
 
     const arrOfAllContract = arrayOfAllDocument.filter(
       i => i.parse.documentType === 'CONTRACT'
@@ -136,25 +170,25 @@ exports.getTreeFromDocuments = async (req, res) => {
       i =>
         i.parse.documentType === 'SUPPLEMENTARY_AGREEMENT' &&
         !arrLinksToId.includes(i._id.toString()) &&
-          !arrLinksFromId.includes(i._id.toString())
+        !arrLinksFromId.includes(i._id.toString())
     );
     const arrOfBadPROTOCOL = arrayOfAllDocument.filter(
       i =>
         i.parse.documentType === 'PROTOCOL' &&
         !arrLinksToId.includes(i._id.toString()) &&
-          !arrLinksFromId.includes(i._id.toString())
+        !arrLinksFromId.includes(i._id.toString())
     );
     const arrOfBadANNEX = arrayOfAllDocument.filter(
       i =>
         i.parse.documentType === 'ANNEX' &&
         !arrLinksToId.includes(i._id.toString()) &&
-          !arrLinksFromId.includes(i._id.toString())
+        !arrLinksFromId.includes(i._id.toString())
     );
     const arrOfBadCHARTER = arrayOfAllDocument.filter(
       i =>
         i.parse.documentType === 'CHARTER' &&
         !arrLinksToId.includes(i._id.toString()) &&
-          !arrLinksFromId.includes(i._id.toString())
+        !arrLinksFromId.includes(i._id.toString())
     );
 
     res.send({
@@ -178,12 +212,19 @@ exports.getTreeLinks = async (req, res) => {
     logger.logError(req, res, err, 400);
     return;
   }
-  const document = await Document.findById(documentId).lean();
+  const document = await Document.findById(documentId, 'auditId').lean();
   if (!document)
     return res.status(404).send(`Document with id = '${documentId}' not found`);
-  const audit = await Audit.findById(document.auditId).lean();
+  let audit = await Audit.findById(document.auditId, 'links').lean();
 
-  // console.log(audit);
+  if (!audit)
+    audit = await Audit.find({
+      $or: [
+        { 'links.toId': document.auditId },
+        { 'links.fromId': document.auditId }
+      ]
+    }).lean();
+
   if (!audit)
     return res
       .status(500)
@@ -191,7 +232,7 @@ exports.getTreeLinks = async (req, res) => {
 
   try {
     if (!audit.links) {
-      return res.send([]);
+      return res.send({});
     }
 
     let ids = audit.links
@@ -208,8 +249,6 @@ exports.getTreeLinks = async (req, res) => {
       .in(ids)
       .select({ 'analysis.attributes_tree': 1, 'parse.documentType': 1 })
       .lean();
-
-    console.log(arrayOfAllDocument);
 
     res.send({
       Charter: arrayOfAllDocument.filter(

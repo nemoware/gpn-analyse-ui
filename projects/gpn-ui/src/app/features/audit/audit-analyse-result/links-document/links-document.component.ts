@@ -111,17 +111,27 @@ export class LinksDocumentComponent implements OnInit, AfterViewInit {
           {
             name: 'Протокол',
             docType: 'Protocol'
-          },
-          {
-            name: 'Договор',
-            docType: 'Contract'
           }
+          //Если любишь циклы
+          // {
+          //   name: 'Договор',
+          //   docType: 'Contract'
+          // }
         );
 
-        this.Data_node = this.Data_node.filter(i => data[i.docType] != '');
-
-        console.log(this.Data_node);
-
+        this.Data_node = this.Data_node.filter(
+          i => data[i.docType] != '' && data[i.docType]
+        ).map(i => {
+          i.children = [
+            {
+              name: 'qwe',
+              docType: undefined,
+              document: data[i.docType]
+            }
+          ];
+          i.count = data[i.docType].length;
+          return i;
+        });
         this.refreshData();
       });
   }
