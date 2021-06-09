@@ -27,6 +27,18 @@ mongoose
     const count = await db.Group.countDocuments();
     if (!count) {
       for (let key in groups) {
+        let role = [];
+        switch (key) {
+          case 'admin':
+            role = [roles.find(r => r._id === '3')];
+            break;
+          case 'audit':
+            role = [roles.find(r => r._id === '1')];
+            break;
+          case 'event':
+            role = [roles.find(r => r._id === '2')];
+            break;
+        }
         const group = new db.Group({
           cn: groups[key]
             .split(',')
@@ -34,7 +46,7 @@ mongoose
             .split('=')[1],
           distinguishedName: groups[key],
           target: key,
-          roles: key === 'admin' ? [roles.find(r => r._id === '3')] : []
+          roles: role
         });
         await group.save();
       }
