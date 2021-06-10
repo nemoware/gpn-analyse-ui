@@ -49,4 +49,6 @@ export interface Document {
   state?: number;
   primary_subject?: string;
   links?: boolean;
+  protocolDate?: [Date];
+  charterDate?: [Date];
 }

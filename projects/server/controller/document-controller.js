@@ -10,6 +10,7 @@ const schema = require('../json/schema.json');
 const Ajv = require('ajv');
 const addFormats = require('ajv-formats').default;
 const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
+const { ArrayDataSource } = require('@angular/cdk/collections');
 
 const documentFields = `filename
 parse.documentType
@@ -52,7 +53,7 @@ exports.getDocuments = async (req, res) => {
     }
 
     const audit = await Audit.findById(auditId, `charters`, { lean: true });
-    console.log(audit);
+    // console.log(audit);
     let documents = await Document.find(
       {
         $or: [{ auditId }, { _id: { $in: audit.charters } }],
@@ -124,6 +125,8 @@ exports.getTreeFromDocuments = async (req, res) => {
       .in(auditId)
       .select({
         'analysis.attributes_tree.contract': 1,
+        'analysis.attributes_tree.charter.date.value ': 1,
+        'analysis.attributes_tree.protocol.date.value': 1,
         'analysis.analyze_timestamp': 1,
         'parse.documentType': 1,
         state: 1,
@@ -146,17 +149,40 @@ exports.getTreeFromDocuments = async (req, res) => {
         return i;
       });
     }
+
+    const arrPROTOCOL = arrayOfAllDocument.filter(
+      i => i.parse.documentType === 'PROTOCOL'
+    );
+    console.log(arrPROTOCOL);
+    const arrCHARTER = arrayOfAllDocument.filter(
+      i => i.parse.documentType === 'CHARTER'
+    );
+    console.log(arrCHARTER);
+
     arrayOfAllDocument.map(i => {
       let ids = audit.links
         .filter(l => l.fromId.toString() === i._id.toString())
-        .map(l => l.toId)
+        .map(l => l.toId.toString())
         .concat(
           audit.links
             .filter(l => l.toId.toString() === i._id.toString())
-            .map(l => l.fromId)
+            .map(l => l.fromId.toString())
         );
-      console.log(i._id);
-      console.log(ids);
+
+      i.protocolDate = arrPROTOCOL
+        .filter(i => ids.includes(i._id.toString()))
+        .map(i => i.analysis.attributes_tree.protocol.date.value);
+      i.charterDate = arrCHARTER
+        .filter(i => ids.includes(i._id.toString()))
+        .map(i => i.analysis.attributes_tree.charter.date.value);
+
+      ids = ids.filter(i => {
+        for (let simpleDoc of arrPROTOCOL.concat(arrCHARTER)) {
+          if (simpleDoc._id.toString() === i.toString()) return false;
+        }
+        return true;
+      });
+
       if (ids && ids.length > 0) i.links = true;
       else i.links = false;
       return i;

@@ -147,9 +147,6 @@ export class DocumentTableDetailComponent implements OnInit {
   ngOnInit() {
     const docs: Document[] = this.documents;
 
-    console.log('this.documents');
-    console.log(this.documents);
-
     this.documentTypeName = null;
     this.dataSource.paginator = this.paginator;
     if (docs && docs.length > 0) {

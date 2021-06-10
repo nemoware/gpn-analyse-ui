@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Document } from '@app/models/document.model';
 
 @Component({
@@ -6,11 +6,7 @@ import { Document } from '@app/models/document.model';
   templateUrl: './doc-state.component.html',
   styleUrls: ['./doc-state.component.scss']
 })
-export class DocStateComponent implements OnInit {
-  ngOnInit(): void {
-    console.log('Статус');
-    console.log(this.document);
-  }
+export class DocStateComponent {
   @Input() document: Document;
 
   getDocStateClass(doc) {

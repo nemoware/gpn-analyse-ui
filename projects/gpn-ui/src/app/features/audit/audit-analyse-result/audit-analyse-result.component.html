@@ -101,7 +101,15 @@
   </div>
   
   <div *ngIf="selectedPage === 2">
-    <div *ngIf="tableSource != ''">
+    <ngx-spinner
+    bdColor="rgba(250,250,250,0.2)"
+    size="large"
+    color="#0074D9"
+    type="timer"
+  >
+    <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
+  </ngx-spinner>
+    <div *ngIf="tableSource">
       <gpn-document-table-detail [documents]="tableSource" style="width: 100%">
       </gpn-document-table-detail>
     </div>

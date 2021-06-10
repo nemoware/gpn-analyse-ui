@@ -160,12 +160,6 @@ export class AuditAnalyseResultComponent
           this.selectedPage = this.audit.typeViewResult;
         }
       });
-    this.auditservice
-      .getTreeDocument(this.IdAudit)
-      .pipe(takeUntil(this.destroyStream))
-      .subscribe(data => {
-        this.tableSource = data.arrOfAllContract;
-      });
   }
 
   fillNodes(files: FileModel, parentNode: Node = null) {
@@ -207,7 +201,7 @@ export class AuditAnalyseResultComponent
           for (const n of this.files) this.fillNodes(n);
           this.refreshTree();
         });
-    } else if (this.selectedPage <= 2) {
+    } else if (this.selectedPage <= 1) {
       this.auditservice
         .getDouments(this.IdAudit, false)
         .pipe(takeUntil(this.destroyStream))
@@ -268,6 +262,16 @@ export class AuditAnalyseResultComponent
               this.TREE_DATA.push(node);
           }
           this.refreshTree();
+        });
+    } else if (this.selectedPage === 2) {
+      this.spinner.show();
+      this.auditservice
+        .getTreeDocument(this.IdAudit)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe(data => {
+          this.tableSource = data.arrOfAllContract;
+          this.changeDetectorRefs.detectChanges();
+          this.spinner.hide();
         });
     } else if (this.selectedPage === 4) {
       this.spinner.show();
