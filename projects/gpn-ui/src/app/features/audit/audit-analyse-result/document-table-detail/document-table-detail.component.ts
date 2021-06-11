@@ -1,3 +1,4 @@
+import { AuditDataSource } from '@app/features/audit/audit-data-source';
 import {
   Component,
   ViewChild,
@@ -7,14 +8,10 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
-import { ViewDetailDoc } from '@app/models/view.detail.doc';
-import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { DatePipe } from '@root/node_modules/@angular/common';
-import { Router } from '@root/node_modules/@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-
 import {
   animate,
   state,
@@ -24,9 +21,10 @@ import {
 } from '@root/node_modules/@angular/animations';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { AuditService } from '@app/features/audit/audit.service';
-import { Subject } from '@root/node_modules/rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, merge } from '@root/node_modules/rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 import { Document } from '@app/models/document.model';
+import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 
 const cols_by_type = {
   CONTRACT: [
@@ -41,7 +39,8 @@ const cols_by_type = {
     'contract_subject',
     // 'spacer',
     'warnings',
-    'analyze_state'
+    'analyze_state',
+    'charterAndProtocol'
   ],
   CHARTER: ['shevron', 'star', 'date', 'org', 'warnings', 'analyze_state'],
   PROTOCOL: [
@@ -64,7 +63,8 @@ const cols_by_type = {
     'contract_subject',
     // 'spacer',
     'warnings',
-    'analyze_state'
+    'analyze_state',
+    'charterAndProtocol'
   ],
   SUPPLEMENTARY_AGREEMENT: [
     'shevron',
@@ -77,7 +77,8 @@ const cols_by_type = {
     'contract_subject',
     // 'spacer',
     'warnings',
-    'analyze_state'
+    'analyze_state',
+    'charterAndProtocol'
   ]
 };
 
@@ -112,12 +113,14 @@ const column_to_sorting_mapping = {
 export class DocumentTableDetailComponent implements OnInit {
   @Input() documents: Document[];
   @Input() subsidiaryName: string;
+  @Input() auditId: string;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  defPageSize = 10;
+  defPageSize = 15;
   header: string;
   col: string[] = [];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
+  dataSource2: MatTableDataSource<any> = new MatTableDataSource([]);
+  dataSource: AuditDataSource;
   documentType: any;
   expandedElementId = '';
   arrOfexpandedElementId = [];
@@ -125,13 +128,14 @@ export class DocumentTableDetailComponent implements OnInit {
   faChevronUp = faChevronUp;
   documentTypeName = null;
   focusedId: string;
+  _filterValue: [];
+  totalCount: number;
   private destroyStream = new Subject<void>();
 
   constructor(
-    private translate: TranslateService,
-    private router: Router,
     private auditService: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef
+    private changeDetectorRefs: ChangeDetectorRef,
+    private spinner: NgxSpinnerService
   ) {}
 
   isExpansionDetailRow = () => true;
@@ -145,28 +149,69 @@ export class DocumentTableDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    const docs: Document[] = this.documents;
+    // const docs: Document[] = this.documents;
+    // console.log(docs);
+    this.dataSource = new AuditDataSource(this.auditService);
 
-    this.documentTypeName = null;
-    this.dataSource.paginator = this.paginator;
-    if (docs && docs.length > 0) {
-      this.dataSource.sort = this.sort;
-      this.documents.map(i => {
-        if (
-          i.parse.documentType !== 'ANNEX' &&
-          i.parse.documentType !== 'SUPPLEMENTARY_AGREEMENT'
-        ) {
-          i.analysis.attributes_tree.contract =
-            i.analysis.attributes_tree[i.parse.documentType.toLowerCase()];
+    this.dataSource.loadContract(
+      this.auditId,
+      15,
+      0,
+      'charterAndProtocol',
+      'asc'
+    );
+
+    this.dataSource
+      .getLoadingState()
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(data => {
+        if (data) {
+          this.spinner.show();
+        } else {
+          this.spinner.hide();
+          this.totalCount = this.dataSource.totalCount;
         }
       });
-      this.dataSource.data = docs;
-      this.col = cols_by_type[docs[0].parse.documentType].map(x => x);
-    } else {
-      this.dataSource.data = [];
-    }
+
+    this.col = cols_by_type['CONTRACT'].map(x => x);
+    // this.documentTypeName = null;
+
+    // this.dataSource2.paginator = this.paginator;
+    // if (docs && docs.length > 0) {
+    //   this.dataSource2.sort = this.sort;
+    //   this.documents.map(i => {
+    //     if (
+    //       i.parse.documentType !== 'ANNEX' &&
+    //       i.parse.documentType !== 'SUPPLEMENTARY_AGREEMENT'
+    //     ) {
+    //       i.analysis.attributes_tree.contract =
+    //         i.analysis.attributes_tree[i.parse.documentType.toLowerCase()];
+    //     }
+    //   });
+    //   this.dataSource2.data = docs;
+    //   this.col = cols_by_type[docs[0].parse.documentType].map(x => x);
+    // } else {
+    //   this.dataSource2.data = [];
+    // }
   }
 
+  ngAfterViewInit() {
+    this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(tap(() => this.loadChartersPage()))
+      .subscribe();
+  }
+
+  loadChartersPage() {
+    this.dataSource.loadContract(
+      this.auditId,
+      this.paginator.pageSize,
+      this.paginator.pageIndex,
+      this.sort.active,
+      this.sort.direction
+    );
+  }
   _isAllOrgsSame(docs, keyname: string): boolean {
     let res = true;
     docs.forEach(doc => {

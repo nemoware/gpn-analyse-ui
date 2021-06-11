@@ -90,6 +90,38 @@ export class AuditService {
     });
   }
 
+  public getTreeDocument2(
+    auditId: string,
+    // filterValue: Array<{ name: string; value: any }>,
+    take: number,
+    pageIndex: number,
+    column: string,
+    sort: string
+  ): Observable<{ arrOfAllContract: Document[]; count: number }> {
+    let httpParams = new HttpParams();
+
+    if (auditId) httpParams = httpParams.append('auditId', auditId);
+
+    if (take) httpParams = httpParams.append('take', take.toString());
+
+    if (take)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+
+    if (pageIndex)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+
+    if (column) httpParams = httpParams.append('column', column.toString());
+
+    if (sort) httpParams = httpParams.append('sort', sort.toString());
+
+    return this.http.get<{ arrOfAllContract: Document[]; count: number }>(
+      `${api}/document/treelist`,
+      {
+        params: httpParams
+      }
+    );
+  }
+
   public getTreeLinks(
     documentId: string
   ): Observable<{

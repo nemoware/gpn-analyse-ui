@@ -264,15 +264,15 @@ export class AuditAnalyseResultComponent
           this.refreshTree();
         });
     } else if (this.selectedPage === 2) {
-      this.spinner.show();
-      this.auditservice
-        .getTreeDocument(this.IdAudit)
-        .pipe(takeUntil(this.destroyStream))
-        .subscribe(data => {
-          this.tableSource = data.arrOfAllContract;
-          this.changeDetectorRefs.detectChanges();
-          this.spinner.hide();
-        });
+      // this.spinner.show();
+      // this.auditservice
+      //   .getTreeDocument(this.IdAudit)
+      //   .pipe(takeUntil(this.destroyStream))
+      //   .subscribe(data => {
+      //     this.tableSource = data.arrOfAllContract;
+      //     this.changeDetectorRefs.detectChanges();
+      //     this.spinner.hide();
+      //   });
     } else if (this.selectedPage === 4) {
       this.spinner.show();
       this.auditservice
@@ -299,11 +299,6 @@ export class AuditAnalyseResultComponent
       this.treeFlattener
     );
     this.dataSource.data = this.TREE_DATA;
-    /*if (this.selectedPage === 0) this.treeControl.expandAll();
-    else
-      for (const n of this.treeControl.dataNodes) {
-        if (n.level === 0) this.treeControl.expand(n);
-      }*/
     this.checkCount = this.documentCount - this.errorCount;
     this.changeDetectorRefs.detectChanges();
   }

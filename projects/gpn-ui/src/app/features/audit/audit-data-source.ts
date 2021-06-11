@@ -47,6 +47,40 @@ export class AuditDataSource implements DataSource<any> {
       });
   }
 
+  loadContract(
+    auditId,
+    pageSize = 15,
+    pageIndex = 0,
+    column = 'subsidiaryName',
+    sort = 'asc'
+  ) {
+    this.loadingSubject.next(true);
+    this.service
+      .getTreeDocument2(auditId, pageSize, pageIndex, column, sort)
+      .pipe(
+        catchError(() => of([])),
+        finalize(() => this.loadingSubject.next(false))
+      )
+      .subscribe(data => {
+        console.log('data');
+        console.log(data);
+        // @ts-ignore
+        this.totalCount = data.count;
+        // @ts-ignore
+        data.arrOfAllContract.map(i => {
+          if (
+            i.parse.documentType !== 'ANNEX' &&
+            i.parse.documentType !== 'SUPPLEMENTARY_AGREEMENT'
+          ) {
+            i.analysis.attributes_tree.contract =
+              i.analysis.attributes_tree[i.parse.documentType.toLowerCase()];
+          }
+        });
+        // @ts-ignore
+        this.auditsSubject.next(data.arrOfAllContract);
+      });
+  }
+
   getLoadingState() {
     return this.loading$;
   }

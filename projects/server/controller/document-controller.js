@@ -108,6 +108,11 @@ exports.getDocuments = async (req, res) => {
 
 exports.getTreeFromDocuments = async (req, res) => {
   const auditId = req.query.auditId;
+  const take = parseInt(req.query.take);
+  const column = req.query.column;
+  const sort = req.query.sort;
+  const skip = parseInt(req.query.skip);
+
   if (!auditId) {
     let err = 'Can not find documents: auditId is null';
     logger.logError(req, res, err, 400);
@@ -120,13 +125,15 @@ exports.getTreeFromDocuments = async (req, res) => {
     const arrLinksFromId = audit.links.map(i => i.fromId.toString());
     const arrLinksToId = audit.links.map(i => i.toId.toString());
 
-    const arrayOfAllDocument = await Document.find()
-      .where('auditId')
-      .in(auditId)
+    const arrLinks = [...new Set([...arrLinksFromId, ...arrLinksToId])];
+    const arrayOfAllDocument = await Document.find({
+      $or: [{ _id: { $in: arrLinks } }, { auditId: auditId }]
+    })
       .select({
         'analysis.attributes_tree.contract': 1,
-        'analysis.attributes_tree.charter.date.value ': 1,
+        'analysis.attributes_tree.charter.date.value': 1,
         'analysis.attributes_tree.protocol.date.value': 1,
+        'user.attributes_tree': 1,
         'analysis.analyze_timestamp': 1,
         'parse.documentType': 1,
         state: 1,
@@ -150,6 +157,16 @@ exports.getTreeFromDocuments = async (req, res) => {
       });
     }
 
+    arrayOfAllDocument.map(i => {
+      if (i.user) {
+        i.analysis.attributes_tree = i.user.attributes_tree;
+        delete i.user;
+      }
+      delete i.analysis?.attributes_tree?.creation_date;
+      delete i.analysis?.attributes_tree?.version;
+      return i;
+    });
+
     const arrPROTOCOL = arrayOfAllDocument.filter(
       i => i.parse.documentType === 'PROTOCOL'
     );
@@ -157,7 +174,6 @@ exports.getTreeFromDocuments = async (req, res) => {
     const arrCHARTER = arrayOfAllDocument.filter(
       i => i.parse.documentType === 'CHARTER'
     );
-    console.log(arrCHARTER);
 
     arrayOfAllDocument.map(i => {
       let ids = audit.links
@@ -171,10 +187,11 @@ exports.getTreeFromDocuments = async (req, res) => {
 
       i.protocolDate = arrPROTOCOL
         .filter(i => ids.includes(i._id.toString()))
-        .map(i => i.analysis.attributes_tree.protocol.date.value);
+        .map(i => i.analysis.attributes_tree.protocol?.date?.value)[0];
+
       i.charterDate = arrCHARTER
         .filter(i => ids.includes(i._id.toString()))
-        .map(i => i.analysis.attributes_tree.charter.date.value);
+        .map(i => i.analysis.attributes_tree.charter?.date?.value)[0];
 
       ids = ids.filter(i => {
         for (let simpleDoc of arrPROTOCOL.concat(arrCHARTER)) {
@@ -192,39 +209,54 @@ exports.getTreeFromDocuments = async (req, res) => {
       i => i.parse.documentType === 'CONTRACT'
     );
 
-    const arrOfBadSupplementaryAgreement = arrayOfAllDocument.filter(
-      i =>
-        i.parse.documentType === 'SUPPLEMENTARY_AGREEMENT' &&
-        !arrLinksToId.includes(i._id.toString()) &&
-        !arrLinksFromId.includes(i._id.toString())
-    );
-    const arrOfBadPROTOCOL = arrayOfAllDocument.filter(
-      i =>
-        i.parse.documentType === 'PROTOCOL' &&
-        !arrLinksToId.includes(i._id.toString()) &&
-        !arrLinksFromId.includes(i._id.toString())
-    );
-    const arrOfBadANNEX = arrayOfAllDocument.filter(
-      i =>
-        i.parse.documentType === 'ANNEX' &&
-        !arrLinksToId.includes(i._id.toString()) &&
-        !arrLinksFromId.includes(i._id.toString())
-    );
-    const arrOfBadCHARTER = arrayOfAllDocument.filter(
-      i =>
-        i.parse.documentType === 'CHARTER' &&
-        !arrLinksToId.includes(i._id.toString()) &&
-        !arrLinksFromId.includes(i._id.toString())
-    );
+    const count = arrOfAllContract.length;
+
+    function compare(a, b) {
+      if (a.last_nom < b.last_nom) {
+        return -1;
+      }
+      if (a.last_nom > b.last_nom) {
+        return 1;
+      }
+      return 0;
+    }
+
+    arrOfAllContract.sort(compare);
+
+    // const arrOfBadSupplementaryAgreement = arrayOfAllDocument.filter(
+    //   i =>
+    //     i.parse.documentType === 'SUPPLEMENTARY_AGREEMENT' &&
+    //     !arrLinksToId.includes(i._id.toString()) &&
+    //     !arrLinksFromId.includes(i._id.toString())
+    // );
+    // const arrOfBadPROTOCOL = arrayOfAllDocument.filter(
+    //   i =>
+    //     i.parse.documentType === 'PROTOCOL' &&
+    //     !arrLinksToId.includes(i._id.toString()) &&
+    //     !arrLinksFromId.includes(i._id.toString())
+    // );
+    // const arrOfBadANNEX = arrayOfAllDocument.filter(
+    //   i =>
+    //     i.parse.documentType === 'ANNEX' &&
+    //     !arrLinksToId.includes(i._id.toString()) &&
+    //     !arrLinksFromId.includes(i._id.toString())
+    // );
+    // const arrOfBadCHARTER = arrayOfAllDocument.filter(
+    //   i =>
+    //     i.parse.documentType === 'CHARTER' &&
+    //     !arrLinksToId.includes(i._id.toString()) &&
+    //     !arrLinksFromId.includes(i._id.toString())
+    // );
 
     res.send({
-      arrOfAllContract,
-      NotUsed: {
-        arrOfBadSupplementaryAgreement,
-        arrOfBadPROTOCOL,
-        arrOfBadANNEX,
-        arrOfBadCHARTER
-      }
+      arrOfAllContract: arrOfAllContract.slice(skip, take + skip),
+      count: count
+      // NotUsed: {
+      //   arrOfBadSupplementaryAgreement,
+      //   arrOfBadPROTOCOL,
+      //   arrOfBadANNEX,
+      //   arrOfBadCHARTER
+      // }
     });
   } catch (err) {
     logger.logError(req, res, err, 500);

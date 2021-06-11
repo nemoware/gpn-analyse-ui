@@ -1,8 +1,18 @@
-<div><table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows matSortActive="date" matSortDirection="desc">
+<div>
+  <ngx-spinner
+    bdColor="rgba(250,250,250,0.2)"
+    size="large"
+    color="#0074D9"
+    type="timer"
+  >
+    <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
+  </ngx-spinner>
+  <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows 
+  matSortActive="date" matSortDirection="desc" matSortDisableClear>
 
   <!-- star -->
   <ng-container matColumnDef="star">
-    <th mat-header-cell *matHeaderCellDef disableClear></th>
+    <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let row">
       <button mat-icon-button (click)="starDoc(row, $event)" class="star" 
         [ngStyle]="{'display': focusedId === row._id || row.starred ? 'inline-block' : 'none'}">
@@ -14,7 +24,7 @@
 
   <!-- шэврон -->
   <ng-container matColumnDef="shevron">
-    <th mat-header-cell *matHeaderCellDef disableClear></th>
+    <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let row" >
       <button mat-icon-button (click)="selectedRow(row, $event)" *ngIf="row.links">
         <fa-icon [icon]="faChevronDown" *ngIf="!arrOfexpandedElementId.includes(row._id)"></fa-icon>
@@ -25,7 +35,7 @@
 
   <!-- value -->
   <ng-container matColumnDef="value">
-    <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header disableClear>сумма договора без ндс</th>
+    <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора без ндс</th>
     <td mat-cell *matCellDef="let row">
       {{(row.analysis.attributes_tree.contract?.price?.amount?.value |
       currency:row.analysis.attributes_tree.contract?.price?.currency?.value)||
@@ -35,12 +45,14 @@
 
   <!-- value -->
   <ng-container matColumnDef="amount_with_vat">
-    <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header disableClear>сумма договора c ндс</th>
+    <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора c ндс</th>
     <td mat-cell *matCellDef="let row">
       {{
-      (row.analysis.attributes_tree.contract?.price?.amount.value |
+      (row.analysis.attributes_tree.contract?.price?.amount?.value |
+      currency:row.analysis.attributes_tree.contract?.price?.currency?.value) ||
+      (row.analysis.attributes_tree.contract?.subject?.price?.amount?.value |
       currency:row.analysis.attributes_tree.contract?.price?.currency?.value)||
-      (row.analysis.attributes_tree.contract?.subject?.price?.amount.value |
+      (row.analysis.attributes_tree.contract?.subject?.price?.amount_brutto?.value |
       currency:row.analysis.attributes_tree.contract?.price?.currency?.value)
       }}
     </td>
@@ -48,7 +60,7 @@
 
   <!-- НОМЕР -->
   <ng-container matColumnDef="number">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>номер</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>номер</th>
     <td mat-cell *matCellDef="let row"> 
       {{row.analysis.attributes_tree.contract?.number?.value || '⚠️ не обнаружен'}}
     </td>
@@ -56,7 +68,7 @@
 
   <!-- ДАТА -->
   <ng-container matColumnDef="date">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>дата</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>дата</th>
     <td mat-cell *matCellDef="let row"> 
       {{(row.analysis.attributes_tree.contract?.date?.value | date) || '⚠️ не обнаружен' }}
     </td>
@@ -64,7 +76,7 @@
 
   <!-- ОРГ -->
   <ng-container matColumnDef="org">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>наименование</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>наименование</th>
     <td mat-cell *matCellDef="let row" >
       <span class="org-type">{{ row.analysis.attributes_tree.charter?.org?.type?.value ||  '⚠️ не обнаружен'}}</span>
       <span class="org-name">{{ row.analysis.attributes_tree.charter?.org?.name?.value ||  '⚠️ не обнаружен'}}</span>
@@ -73,7 +85,7 @@
 
   <!-- ПРЕДМЕТ -->
   <ng-container matColumnDef="contract_subject">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>предмет договора</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>предмет договора</th>
     <td mat-cell *matCellDef="let row" >
       {{ row.analysis.attributes_tree.contract?.subject?.value | translate}}<br>
       <!-- <div class="small"> {{row.primary_subject | translate}}</div> -->
@@ -82,7 +94,7 @@
 
   <!-- org_structural_level -->
   <ng-container matColumnDef="org_level">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>орган управления</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>орган управления</th>
     <td mat-cell *matCellDef="let row" >
       {{ getAttrValue('org_structural_level', row, '⚠️ не обнаружен') | translate}}
     </td>
@@ -90,7 +102,7 @@
 
   <!-- контрагент 1 -->
   <ng-container matColumnDef="org1">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>сторона 1</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 1</th>
     <td mat-cell *matCellDef="let row" >
       <span class="org-type">{{ row.analysis.attributes_tree.contract?.orgs[0]?.type?.value}}</span>
       <span class="org-name">{{
@@ -103,7 +115,7 @@
 
   <!-- контрагент 2 -->
   <ng-container matColumnDef="org2">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>сторона 2</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 2</th>
     <td mat-cell *matCellDef="let row" >
       <span class="org-type">{{ row.analysis.attributes_tree.contract?.orgs[1]?.type?.value}}</span>
       <span class="org-name">{{
@@ -114,8 +126,18 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="charterAndProtocol">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>cвязи</th>
+    <td mat-cell *matCellDef="let row" >
+      <span class="org-alias">Устав от</span>
+      <span class="org-name" >{{(row.charterDate | date:'dd MMM yyyy') || '⚠️ не обнаружен'}}</span>
+      <span class="org-alias">Протокол от</span>
+      <span class="org-name">{{(row.protocolDate | date:'dd MMM yyyy') || '⚠️ не обнаружен'}}</span>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="analyze_state">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>статус</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>статус</th>
     <td mat-cell *matCellDef="let doc">
       <gpn-doc-state [document]='doc' ></gpn-doc-state>
     </td>
@@ -128,7 +150,7 @@
   </ng-container> -->
 
   <ng-container matColumnDef="warnings">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>!</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>!</th>
     <td mat-cell *matCellDef="let doc" >
       <span *ngIf="documentTypeName!== 'ANNEX' && hasWarnings(doc)">⚠️</span>
     </td>
@@ -155,5 +177,5 @@
   <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" class="detail-row"></tr>
 
 </table>
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]= "defPageSize" showFirstLastButtons></mat-paginator>
+<mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" [pageSize]= "defPageSize" [length]="totalCount" showFirstLastButtons></mat-paginator>
 </div>
