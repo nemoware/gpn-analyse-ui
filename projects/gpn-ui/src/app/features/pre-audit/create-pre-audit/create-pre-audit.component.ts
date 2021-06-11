@@ -1,15 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import {
-  AfterViewInit,
-  Inject,
-  OnDestroy
-} from '@root/node_modules/@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Inject, OnDestroy } from '@root/node_modules/@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup
 } from '@root/node_modules/@angular/forms';
-import { Subject, SubscriptionLike } from '@root/node_modules/rxjs';
+import { Subject } from '@root/node_modules/rxjs';
 import {
   DateAdapter,
   MAT_DIALOG_DATA,
@@ -17,6 +13,7 @@ import {
 } from '@root/node_modules/@angular/material';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { PreAuditService } from '@app/features/pre-audit/pre-audit.service';
+import { takeUntil } from '@root/node_modules/rxjs/operators';
 
 @Component({
   selector: 'gpn-create-pre-audit',
@@ -25,15 +22,19 @@ import { PreAuditService } from '@app/features/pre-audit/pre-audit.service';
   providers: [PreAuditService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreatePreAuditComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+export class CreatePreAuditComponent implements OnDestroy {
   faTimes = faTimes;
-  subscriptions: SubscriptionLike[] = [];
   auditForm: FormGroup;
-  private _onDestroy = new Subject<void>();
+  private destroyStream = new Subject<void>();
   checkTypes = ['InsiderControl', 'InterestControl'];
+  //Все документы
   documents: Object[] = [];
+  //Цепочка бенефециаров
+  chain: Object[] = [];
+  //Файлы документов
   filesString = '';
+  //Файл цепочки бенефециаров
+  chainString = '';
 
   public typeControl: FormControl = new FormControl(this.checkTypes);
 
@@ -51,15 +52,8 @@ export class CreatePreAuditComponent
     this.auditForm = this.fb.group({});
   }
 
-  ngOnInit() {}
-
-  ngAfterViewInit(): void {}
-
   ngOnDestroy() {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.subscriptions = [];
-    this._onDestroy.next();
-    this._onDestroy.complete();
+    this.destroyStream.next();
   }
 
   CloseForm() {
@@ -67,11 +61,19 @@ export class CreatePreAuditComponent
   }
 
   valid(): boolean {
-    return (
-      !(this.filesString.length === 0) && this.typeControl.value.length > 0
-    );
+    if (this.typeControl.value.includes('InterestControl'))
+      return (
+        !(this.chainString.length === 0 || this.filesString.length === 0) &&
+        this.typeControl.value.length > 0
+      );
+    else {
+      return (
+        !(this.filesString.length === 0) && this.typeControl.value.length > 0
+      );
+    }
   }
 
+  //Загрузка договоров и приложений
   uploadFiles(event) {
     this.documents = [];
     const files = event.target.files;
@@ -94,11 +96,36 @@ export class CreatePreAuditComponent
     });
   }
 
+  //Загрузка цепочки бенефециаров
+  uploadChain(event) {
+    this.chain = [];
+    const files = event.target.files;
+    Array.from(files).forEach((file: File) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      const that = this;
+      reader.onload = () => {
+        that.chain.push({
+          base64Content: reader.result
+            .toString()
+            .replace('data:', '')
+            .replace(/^.+,/, ''),
+          fileName: file.name,
+          documentType: 'BENEFICIARY_CHAIN'
+        });
+      };
+      reader.onerror = function() {
+        console.log(reader.error);
+      };
+    });
+  }
+
   submitFiles() {
+    this.documents.push(this.chain[0]);
     this.preAuditService
       .postPreAudit(this.documents, this.typeControl.value)
+      .pipe(takeUntil(this.destroyStream))
       .subscribe(() => {
-        this.filesString = '';
         this.CloseForm();
       });
   }

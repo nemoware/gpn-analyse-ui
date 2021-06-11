@@ -29,9 +29,6 @@ function info(version) {
 exports.postFiles = async (checkTypes, documents, author) => {
   try {
     const options = getOptions(checkTypes, documents, author);
-    const fs = require('fs');
-    let data = JSON.stringify(options.body, null, 2);
-    fs.writeFileSync('test.json', data);
     await post(options);
   } catch (err) {
     logger.log(err);
