@@ -1,181 +1,174 @@
 <div>
-  <ngx-spinner
-    bdColor="rgba(250,250,250,0.2)"
-    size="large"
-    color="#0074D9"
-    type="timer"
-  >
-    <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
-  </ngx-spinner>
-  <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows 
-  matSortActive="date" matSortDirection="desc" matSortDisableClear>
+  <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows matSortActive="date" matSortDirection="desc"
+    matSortDisableClear>
 
-  <!-- star -->
-  <ng-container matColumnDef="star">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let row">
-      <button mat-icon-button (click)="starDoc(row, $event)" class="star" 
-        [ngStyle]="{'display': focusedId === row._id || row.starred ? 'inline-block' : 'none'}">
-        <mat-icon *ngIf="row.starred">star</mat-icon>
-        <mat-icon *ngIf="!row.starred">star_border</mat-icon>
-      </button>
-    </td>
-  </ng-container>
+    <!-- star -->
+    <ng-container matColumnDef="starred">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Избр.</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button (click)="starDoc(row, $event)" class="star"
+          [ngStyle]="{'display': focusedId === row._id || row.starred ? 'inline-block' : 'none'}">
+          <mat-icon *ngIf="row.starred">star</mat-icon>
+          <mat-icon *ngIf="!row.starred">star_border</mat-icon>
+        </button>
+      </td>
+    </ng-container>
 
-  <!-- шэврон -->
-  <ng-container matColumnDef="shevron">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let row" >
-      <button mat-icon-button (click)="selectedRow(row, $event)" *ngIf="row.links">
-        <fa-icon [icon]="faChevronDown" *ngIf="!arrOfexpandedElementId.includes(row._id)"></fa-icon>
-        <fa-icon [icon]="faChevronUp" *ngIf="arrOfexpandedElementId.includes(row._id)"></fa-icon>
-      </button>
-    </td>
-  </ng-container>
+    <!-- шэврон -->
+    <ng-container matColumnDef="shevron">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button (click)="selectedRow(row, $event)" *ngIf="row.links">
+          <fa-icon [icon]="faChevronDown" *ngIf="!arrOfexpandedElementId.includes(row._id)"></fa-icon>
+          <fa-icon [icon]="faChevronUp" *ngIf="arrOfexpandedElementId.includes(row._id)"></fa-icon>
+        </button>
+      </td>
+    </ng-container>
 
-  <!-- value -->
-  <ng-container matColumnDef="value">
-    <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора без ндс</th>
-    <td mat-cell *matCellDef="let row">
-      {{(row.analysis.attributes_tree.contract?.price?.amount?.value |
-      currency:row.analysis.attributes_tree.contract?.price?.currency?.value)||
-      row.analysis.attributes_tree.contract?.subject?.price?.amount.value}}
-    </td>
-  </ng-container>
+    <!-- value -->
+    <ng-container matColumnDef="value">
+      <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора без ндс</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        {{(row.analysis.attributes_tree.contract?.price?.amount?.value |
+        currency:row.analysis.attributes_tree.contract?.price?.currency?.value)||
+        row.analysis.attributes_tree.contract?.subject?.price?.amount.value}}
+      </td>
+    </ng-container>
 
-  <!-- value -->
-  <ng-container matColumnDef="amount_with_vat">
-    <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора c ндс</th>
-    <td mat-cell *matCellDef="let row">
-      {{
-      (row.analysis.attributes_tree.contract?.price?.amount?.value |
-      currency:row.analysis.attributes_tree.contract?.price?.currency?.value) ||
-      (row.analysis.attributes_tree.contract?.subject?.price?.amount?.value |
-      currency:row.analysis.attributes_tree.contract?.price?.currency?.value)||
-      (row.analysis.attributes_tree.contract?.subject?.price?.amount_brutto?.value |
-      currency:row.analysis.attributes_tree.contract?.price?.currency?.value)
-      }}
-    </td>
-  </ng-container>
-
-  <!-- НОМЕР -->
-  <ng-container matColumnDef="number">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>номер</th>
-    <td mat-cell *matCellDef="let row"> 
-      {{row.analysis.attributes_tree.contract?.number?.value || '⚠️ не обнаружен'}}
-    </td>
-  </ng-container>
-
-  <!-- ДАТА -->
-  <ng-container matColumnDef="date">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>дата</th>
-    <td mat-cell *matCellDef="let row"> 
-      {{(row.analysis.attributes_tree.contract?.date?.value | date) || '⚠️ не обнаружен' }}
-    </td>
-  </ng-container>
-
-  <!-- ОРГ -->
-  <ng-container matColumnDef="org">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>наименование</th>
-    <td mat-cell *matCellDef="let row" >
-      <span class="org-type">{{ row.analysis.attributes_tree.charter?.org?.type?.value ||  '⚠️ не обнаружен'}}</span>
-      <span class="org-name">{{ row.analysis.attributes_tree.charter?.org?.name?.value ||  '⚠️ не обнаружен'}}</span>
-    </td>
-  </ng-container>
-
-  <!-- ПРЕДМЕТ -->
-  <ng-container matColumnDef="contract_subject">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>предмет договора</th>
-    <td mat-cell *matCellDef="let row" >
-      {{ row.analysis.attributes_tree.contract?.subject?.value | translate}}<br>
-      <!-- <div class="small"> {{row.primary_subject | translate}}</div> -->
-    </td>
-  </ng-container>
-
-  <!-- org_structural_level -->
-  <ng-container matColumnDef="org_level">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>орган управления</th>
-    <td mat-cell *matCellDef="let row" >
-      {{ getAttrValue('org_structural_level', row, '⚠️ не обнаружен') | translate}}
-    </td>
-  </ng-container>
-
-  <!-- контрагент 1 -->
-  <ng-container matColumnDef="org1">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 1</th>
-    <td mat-cell *matCellDef="let row" >
-      <span class="org-type">{{ row.analysis.attributes_tree.contract?.orgs[0]?.type?.value}}</span>
-      <span class="org-name">{{
-        row.analysis.attributes_tree.contract?.orgs[0]?.name?.value || '⚠️ не обнаружен'
+    <!-- value -->
+    <ng-container matColumnDef="amount_with_vat">
+      <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора c ндс</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        {{
+        (row.analysis.attributes_tree.contract?.price?.amount?.value |
+        currency:row.analysis.attributes_tree.contract?.price?.currency?.value) ||
+        (row.analysis.attributes_tree.contract?.subject?.price?.amount?.value |
+        currency:row.analysis.attributes_tree.contract?.price?.currency?.value)||
+        (row.analysis.attributes_tree.contract?.subject?.price?.amount_brutto?.value |
+        currency:row.analysis.attributes_tree.contract?.price?.currency?.value)
         }}
-      </span>
-      <span class="org-alias">{{row.analysis.attributes_tree.contract?.orgs[0]?.alias?.value }}</span>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
-  <!-- контрагент 2 -->
-  <ng-container matColumnDef="org2">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 2</th>
-    <td mat-cell *matCellDef="let row" >
-      <span class="org-type">{{ row.analysis.attributes_tree.contract?.orgs[1]?.type?.value}}</span>
-      <span class="org-name">{{
-        row.analysis.attributes_tree.contract?.orgs[1]?.name?.value || '⚠️ не обнаружен'
-        }}
-      </span>
-      <span class="org-alias">{{row.analysis.attributes_tree.contract?.orgs[1]?.alias?.value }}</span>
-    </td>
-  </ng-container>
+    <!-- НОМЕР -->
+    <ng-container matColumnDef="number">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>номер</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        {{row.analysis.attributes_tree.contract?.number?.value || '⚠️ не обнаружен'}}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="charterAndProtocol">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>cвязи</th>
-    <td mat-cell *matCellDef="let row" >
-      <span class="org-alias">Устав от</span>
-      <span class="org-name" >{{(row.charterDate | date:'dd MMM yyyy') || '⚠️ не обнаружен'}}</span>
-      <span class="org-alias">Протокол от</span>
-      <span class="org-name">{{(row.protocolDate | date:'dd MMM yyyy') || '⚠️ не обнаружен'}}</span>
-    </td>
-  </ng-container>
+    <!-- ДАТА -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>дата</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        {{(row.analysis.attributes_tree.contract?.date?.value | date) || '⚠️ не обнаружен' }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="analyze_state">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>статус</th>
-    <td mat-cell *matCellDef="let doc">
-      <gpn-doc-state [document]='doc' ></gpn-doc-state>
-    </td>
-  </ng-container>
+    <!-- ОРГ -->
+    <ng-container matColumnDef="org">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>наименование</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        <span class="org-type">{{ row.analysis.attributes_tree.contract?.org?.type?.value || '⚠️ не обнаружен'}}</span>
+        <span class="org-name">{{ row.analysis.attributes_tree.contract?.org?.name?.value || '⚠️ не обнаружен'}}</span>
+      </td>
+    </ng-container>
+    <!-- structural_level -->
+    <!-- ПРЕДМЕТ -->
+    <ng-container matColumnDef="contract_subject">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>предмет договора</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        {{ row.analysis.attributes_tree.contract?.subject?.value | translate}}<br>
+        <!-- <div class="small"> {{row.primary_subject | translate}}</div> -->
+      </td>
+    </ng-container>
 
-  <!-- <ng-container matColumnDef="spacer">
+    <!-- org_structural_level -->
+    <ng-container matColumnDef="org_level">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>орган управления</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        {{ (row.analysis.attributes_tree.contract?.structural_level?.value | translate)|| '⚠️ не обнаружен' }}
+      </td>
+    </ng-container>
+
+    <!-- контрагент 1 -->
+    <ng-container matColumnDef="org1">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 1</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        <span class="org-type">{{ row.analysis.attributes_tree.contract?.orgs[0]?.type?.value}}</span>
+        <span class="org-name">{{
+          row.analysis.attributes_tree.contract?.orgs[0]?.name?.value || '⚠️ не обнаружен'
+          }}
+        </span>
+        <span class="org-alias">{{row.analysis.attributes_tree.contract?.orgs[0]?.alias?.value }}</span>
+      </td>
+    </ng-container>
+
+    <!-- контрагент 2 -->
+    <ng-container matColumnDef="org2">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 2</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        <span class="org-type">{{ row.analysis.attributes_tree.contract?.orgs[1]?.type?.value}}</span>
+        <span class="org-name">{{
+          row.analysis.attributes_tree.contract?.orgs[1]?.name?.value || '⚠️ не обнаружен'
+          }}
+        </span>
+        <span class="org-alias">{{row.analysis.attributes_tree.contract?.orgs[1]?.alias?.value }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="charterAndProtocol">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>cвязи</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="org-alias">Устав от</span>
+        <a class="org-name" (click)="openCharterOrProtocol(row.charterDate)">{{(row.charterDate.value | date:'dd MMM yyyy') ||
+          '⚠️ не обнаружен'}}</a>
+        <span class="org-alias">Протокол от</span>
+        <a class="org-name" (click)="openCharterOrProtocol(row.protocolDate)">{{(row.protocolDate.value | date:'dd MMM yyyy')
+          || '⚠️ не обнаружен'}}</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>статус</th>
+      <td mat-cell *matCellDef="let doc" (click)="openDocument(doc)">
+        <gpn-doc-state [document]='doc'></gpn-doc-state>
+      </td>
+    </ng-container>
+
+    <!-- <ng-container matColumnDef="spacer">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear></th>
     <td mat-cell *matCellDef="let doc" >
     </td>
   </ng-container> -->
 
-  <ng-container matColumnDef="warnings">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>!</th>
-    <td mat-cell *matCellDef="let doc" >
-      <span *ngIf="documentTypeName!== 'ANNEX' && hasWarnings(doc)">⚠️</span>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="warnings">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>!</th>
+      <td mat-cell *matCellDef="let doc" (click)="openDocument(doc)">
+        <span *ngIf="doc.parse.documentType!== 'ANNEX' && hasWarnings(doc)">⚠️</span>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="expandedDetail">
-    <td mat-cell *matCellDef="let row" [attr.colspan]="col.length" style="padding-left: 0px;padding-right: 0px; ">
-      <div *ngIf="arrOfexpandedElementId.includes(row._id)" class="element-detail"
-        [@detailExpand]="arrOfexpandedElementId.includes(row._id) ? 'expanded' : 'collapsed'">
-        <gpn-links-document [document]=row></gpn-links-document>
-      </div>
-    </td>
-  </ng-container>
-  
-  <tr mat-header-row *matHeaderRowDef="col"></tr>
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="col.length" style="padding-left: 0px;padding-right: 0px; "
+        (click)="openDocument(row)">
+        <div *ngIf="arrOfexpandedElementId.includes(row._id)" class="element-detail"
+          [@detailExpand]="arrOfexpandedElementId.includes(row._id) ? 'expanded' : 'collapsed'">
+          <gpn-links-document [auditId]=auditId [documentId]=row._id></gpn-links-document>
+        </div>
+      </td>
+    </ng-container>
 
-  <tr mat-row *matRowDef="let row; columns: col;" 
-    class="element-row" 
-    (click)="openDocument(row)"
-    (mouseenter)="focusedDoc(row._id)" 
-    (mouseleave)="focusedDoc(null)">
-  </tr>
+    <tr mat-header-row *matHeaderRowDef="col"></tr>
 
-  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" class="detail-row"></tr>
+    <tr mat-row *matRowDef="let row; columns: col;" class="element-row" (mouseenter)="focusedDoc(row._id)"
+      (mouseleave)="focusedDoc(null)">
+    </tr>
 
-</table>
-<mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" [pageSize]= "defPageSize" [length]="totalCount" showFirstLastButtons></mat-paginator>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" class="detail-row"></tr>
+
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" [pageSize]="defPageSize" [length]="totalCount"
+    showFirstLastButtons></mat-paginator>
 </div>

@@ -61,16 +61,14 @@ export class AuditService {
     });
   }
 
-  public getTreeDocument(
+  public getListNotUsedDocuments(
     auditId: string
   ): Observable<{
-    arrOfAllContract: Document[];
-    NotUsed: {
-      arrOfBadSupplementaryAgreement: Document[];
-      arrOfBadPROTOCOL: Document[];
-      arrOfBadANNEX: Document[];
-      arrOfBadCHARTER: Document[];
-    };
+    charter: { count: number; type: string };
+    protocol: { count: number; type: string };
+    annex: { count: number; type: string };
+    supplementary_agreement: { count: number; type: string };
+    contract: { count: number; type: string };
   }> {
     let httpParams = new HttpParams();
 
@@ -78,26 +76,24 @@ export class AuditService {
       httpParams = httpParams.append('auditId', auditId);
     }
     return this.http.get<{
-      arrOfAllContract: Document[];
-      NotUsed: {
-        arrOfBadSupplementaryAgreement: Document[];
-        arrOfBadPROTOCOL: Document[];
-        arrOfBadANNEX: Document[];
-        arrOfBadCHARTER: Document[];
-      };
-    }>(`${api}/document/treelist`, {
+      charter: { count: number; type: string };
+      protocol: { count: number; type: string };
+      annex: { count: number; type: string };
+      supplementary_agreement: { count: number; type: string };
+      contract: { count: number; type: string };
+    }>(`${api}/document/notusedlinks`, {
       params: httpParams
     });
   }
 
-  public getTreeDocument2(
+  public getNotUsedDocuments(
     auditId: string,
-    // filterValue: Array<{ name: string; value: any }>,
+    documentType: string,
     take: number,
     pageIndex: number,
     column: string,
     sort: string
-  ): Observable<{ arrOfAllContract: Document[]; count: number }> {
+  ): Observable<{ arrOfRequiredContract: Document[]; count: number }> {
     let httpParams = new HttpParams();
 
     if (auditId) httpParams = httpParams.append('auditId', auditId);
@@ -114,7 +110,48 @@ export class AuditService {
 
     if (sort) httpParams = httpParams.append('sort', sort.toString());
 
-    return this.http.get<{ arrOfAllContract: Document[]; count: number }>(
+    if (documentType)
+      httpParams = httpParams.append('documentType', documentType.toString());
+
+    return this.http.get<{ arrOfRequiredContract: Document[]; count: number }>(
+      `${api}/document/notused`,
+      {
+        params: httpParams
+      }
+    );
+  }
+
+  public getTreeDocument(
+    auditId: string,
+    documentId: string,
+    documentType: string,
+    take: number,
+    pageIndex: number,
+    column: string,
+    sort: string
+  ): Observable<{ arrOfRequiredContract: Document[]; count: number }> {
+    let httpParams = new HttpParams();
+
+    if (auditId) httpParams = httpParams.append('auditId', auditId);
+
+    if (take) httpParams = httpParams.append('take', take.toString());
+
+    if (take)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+
+    if (pageIndex)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+
+    if (column) httpParams = httpParams.append('column', column.toString());
+
+    if (sort) httpParams = httpParams.append('sort', sort.toString());
+
+    if (documentId && documentType) {
+      httpParams = httpParams.append('documentId', documentId.toString());
+      httpParams = httpParams.append('documentType', documentType.toString());
+    }
+
+    return this.http.get<{ arrOfRequiredContract: Document[]; count: number }>(
       `${api}/document/treelist`,
       {
         params: httpParams
@@ -125,9 +162,7 @@ export class AuditService {
   public getTreeLinks(
     documentId: string
   ): Observable<{
-    Charter: Document[];
     Contract: Document[];
-    CharProtocolter: Document[];
     SupplementaryAgreement: Document[];
     Annex: Document[];
   }> {
@@ -136,9 +171,7 @@ export class AuditService {
       httpParams = httpParams.append('documentId', documentId);
     }
     return this.http.get<{
-      Charter: Document[];
       Contract: Document[];
-      CharProtocolter: Document[];
       SupplementaryAgreement: Document[];
       Annex: Document[];
     }>(`${api}/document/treelinks`, {

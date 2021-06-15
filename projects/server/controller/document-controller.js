@@ -10,7 +10,6 @@ const schema = require('../json/schema.json');
 const Ajv = require('ajv');
 const addFormats = require('ajv-formats').default;
 const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
-const { ArrayDataSource } = require('@angular/cdk/collections');
 
 const documentFields = `filename
 parse.documentType
@@ -22,6 +21,19 @@ analysis.warnings
 isActive
 hasInside
 `;
+
+const AllColumn = {
+  starred: 'starred',
+  date: 'analysis.attributes_tree.contract.date.value',
+  number: 'analysis.attributes_tree.contract.number.value',
+  org1: 'analysis.attributes_tree.contract.orgs.0.name.value',
+  org2: 'analysis.attributes_tree.contract.orgs.1.name.value',
+  contract_subject: 'analysis.attributes_tree.contract.subject.value',
+  warnings: 'analysis.warnings',
+  state: 'state',
+  charterDate: 'charterDate',
+  protocolDate: 'protocolDate'
+};
 
 function getAttributeValue(document, attribute) {
   if (document.user && document.user.attributes) {
@@ -108,9 +120,11 @@ exports.getDocuments = async (req, res) => {
 
 exports.getTreeFromDocuments = async (req, res) => {
   const auditId = req.query.auditId;
+  const documentId = req.query.documentId; //Если есть, то отправит связанные с ним доки, конкретного типа(См.ниже).
+  const documentType = req.query.documentType; //Какой тип документов будет отправлять.
   const take = parseInt(req.query.take);
   const column = req.query.column;
-  const sort = req.query.sort;
+  const sort = req.query.sort === 'asc' ? 1 : -1;
   const skip = parseInt(req.query.skip);
 
   if (!auditId) {
@@ -120,14 +134,11 @@ exports.getTreeFromDocuments = async (req, res) => {
   }
 
   try {
-    const audit = await Audit.findById(auditId, 'links ', { lean: true });
-
-    const arrLinksFromId = audit.links.map(i => i.fromId.toString());
-    const arrLinksToId = audit.links.map(i => i.toId.toString());
-
-    const arrLinks = [...new Set([...arrLinksFromId, ...arrLinksToId])];
+    const audit = await Audit.findById(auditId, 'links charters', {
+      lean: true
+    });
     const arrayOfAllDocument = await Document.find({
-      $or: [{ _id: { $in: arrLinks } }, { auditId: auditId }]
+      $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }]
     })
       .select({
         'analysis.attributes_tree.contract': 1,
@@ -170,10 +181,14 @@ exports.getTreeFromDocuments = async (req, res) => {
     const arrPROTOCOL = arrayOfAllDocument.filter(
       i => i.parse.documentType === 'PROTOCOL'
     );
-    console.log(arrPROTOCOL);
+
     const arrCHARTER = arrayOfAllDocument.filter(
       i => i.parse.documentType === 'CHARTER'
     );
+
+    const bufferContract = arrayOfAllDocument
+      .filter(i => i.parse.documentType === 'CONTRACT')
+      .map(i => i._id.toString());
 
     arrayOfAllDocument.map(i => {
       let ids = audit.links
@@ -187,16 +202,31 @@ exports.getTreeFromDocuments = async (req, res) => {
 
       i.protocolDate = arrPROTOCOL
         .filter(i => ids.includes(i._id.toString()))
-        .map(i => i.analysis.attributes_tree.protocol?.date?.value)[0];
+        .map(i => {
+          return {
+            value: i.analysis.attributes_tree.protocol?.date?.value,
+            id: i._id
+          };
+        })[0];
+
+      if (i.protocolDate == undefined) i.protocolDate = '';
 
       i.charterDate = arrCHARTER
         .filter(i => ids.includes(i._id.toString()))
-        .map(i => i.analysis.attributes_tree.charter?.date?.value)[0];
+        .map(i => {
+          return {
+            value: i.analysis.attributes_tree.charter?.date?.value,
+            id: i._id
+          };
+        })[0];
+
+      if (i.charterDate == undefined) i.charterDate = '';
 
       ids = ids.filter(i => {
         for (let simpleDoc of arrPROTOCOL.concat(arrCHARTER)) {
           if (simpleDoc._id.toString() === i.toString()) return false;
         }
+        if (bufferContract.includes(i.toString())) return false;
         return true;
       });
 
@@ -205,58 +235,237 @@ exports.getTreeFromDocuments = async (req, res) => {
       return i;
     });
 
-    const arrOfAllContract = arrayOfAllDocument.filter(
-      i => i.parse.documentType === 'CONTRACT'
-    );
+    let arrOfRequiredContract;
 
-    const count = arrOfAllContract.length;
+    if (documentId) {
+      let ids = audit.links
+        .filter(l => l.fromId.toString() === documentId)
+        .map(l => l.toId.toString())
+        .concat(
+          audit.links
+            .filter(l => l.toId.toString() === documentId)
+            .map(l => l.fromId.toString())
+        );
+      arrOfRequiredContract = arrayOfAllDocument.filter(
+        i =>
+          i.parse.documentType === documentType &&
+          ids.includes(i._id.toString())
+      );
+    } else {
+      arrOfRequiredContract = arrayOfAllDocument.filter(
+        i => i.parse.documentType === 'CONTRACT'
+      );
+    }
+
+    const count = arrOfRequiredContract.length;
 
     function compare(a, b) {
-      if (a.last_nom < b.last_nom) {
-        return -1;
-      }
-      if (a.last_nom > b.last_nom) {
-        return 1;
-      }
+      if (deepFind(a, column) < deepFind(b, column)) return sort * -1;
+      if (deepFind(a, column) > deepFind(b, column)) return sort;
       return 0;
     }
 
-    arrOfAllContract.sort(compare);
+    function compareForCharterAndProtocol(a, b) {
+      let props = ['charterDate', 'protocolDate'];
+      let result = 0,
+        i = 0;
+      while (result === 0 && i < props.length) {
+        result = 0;
+        if (a[props[i]] < b[props[i]]) result = sort * -1;
+        if (a[props[i]] > b[props[i]]) result = sort;
+        i++;
+      }
+      return result;
+    }
 
-    // const arrOfBadSupplementaryAgreement = arrayOfAllDocument.filter(
-    //   i =>
-    //     i.parse.documentType === 'SUPPLEMENTARY_AGREEMENT' &&
-    //     !arrLinksToId.includes(i._id.toString()) &&
-    //     !arrLinksFromId.includes(i._id.toString())
-    // );
-    // const arrOfBadPROTOCOL = arrayOfAllDocument.filter(
-    //   i =>
-    //     i.parse.documentType === 'PROTOCOL' &&
-    //     !arrLinksToId.includes(i._id.toString()) &&
-    //     !arrLinksFromId.includes(i._id.toString())
-    // );
-    // const arrOfBadANNEX = arrayOfAllDocument.filter(
-    //   i =>
-    //     i.parse.documentType === 'ANNEX' &&
-    //     !arrLinksToId.includes(i._id.toString()) &&
-    //     !arrLinksFromId.includes(i._id.toString())
-    // );
-    // const arrOfBadCHARTER = arrayOfAllDocument.filter(
-    //   i =>
-    //     i.parse.documentType === 'CHARTER' &&
-    //     !arrLinksToId.includes(i._id.toString()) &&
-    //     !arrLinksFromId.includes(i._id.toString())
-    // );
+    function deepFind(obj, column) {
+      let paths = AllColumn[column].split('.');
+      let current = obj;
+
+      for (let i = 0; i < paths.length; ++i) {
+        if (current[paths[i]] == undefined) return '';
+        else current = current[paths[i]];
+      }
+      return typeof current === 'string' ? current.toLowerCase() : current;
+    }
+
+    if (column == 'charterAndProtocol')
+      arrOfRequiredContract.sort(compareForCharterAndProtocol);
+    else arrOfRequiredContract.sort(compare);
 
     res.send({
-      arrOfAllContract: arrOfAllContract.slice(skip, take + skip),
+      arrOfRequiredContract: arrOfRequiredContract.slice(skip, take + skip),
       count: count
-      // NotUsed: {
-      //   arrOfBadSupplementaryAgreement,
-      //   arrOfBadPROTOCOL,
-      //   arrOfBadANNEX,
-      //   arrOfBadCHARTER
-      // }
+    });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getNotUsedDocument = async (req, res) => {
+  const auditId = req.query.auditId;
+  const documentType = req.query.documentType;
+  const take = parseInt(req.query.take);
+  const column = req.query.column;
+  const sort = req.query.sort === 'asc' ? 1 : -1;
+  const skip = parseInt(req.query.skip);
+
+  if (!auditId) {
+    let err = 'Can not find documents: auditId is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+  if (!documentType) {
+    let err = 'Can not find documents: documentType is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+
+  try {
+    const audit = await Audit.findById(auditId, 'links charters', {
+      lean: true
+    });
+
+    const arrLinksFromId = audit.links.map(i => i.fromId.toString());
+    const arrLinksToId = audit.links.map(i => i.toId.toString());
+
+    const arrLinks = [...new Set([...arrLinksFromId, ...arrLinksToId])];
+
+    const arrayOfAllDocument = await Document.find(
+      {
+        $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+        _id: { $nin: arrLinks },
+        'parse.documentType': documentType
+      },
+      {
+        'analysis.attributes_tree.contract': 1,
+        'analysis.attributes_tree.charter': 1,
+        'analysis.attributes_tree.protocol': 1,
+        'user.attributes_tree.contract': 1,
+        'user.attributes_tree.charter': 1,
+        'user.attributes_tree.protocol': 1,
+        'analysis.analyze_timestamp': 1,
+        'parse.documentType': 1,
+        state: 1,
+        'user.author.name': 1
+      },
+      { lean: true }
+    );
+
+    const user = await User.findOne(
+      {
+        login: res.locals.user.sAMAccountName
+      },
+      'stars'
+    ).lean();
+
+    if (user) {
+      let arrStars = user.stars.map(i => i.documentId.toString());
+      arrayOfAllDocument.map(i => {
+        if (arrStars.includes(i._id.toString())) i.starred = true;
+        else i.starred = false;
+        return i;
+      });
+    }
+
+    arrayOfAllDocument.map(i => {
+      if (i.user) {
+        i.analysis.attributes_tree = i.user.attributes_tree;
+        delete i.user;
+      }
+      delete i.analysis?.attributes_tree?.creation_date;
+      delete i.analysis?.attributes_tree?.version;
+      return i;
+    });
+
+    function compare(a, b) {
+      if (deepFind(a, column) < deepFind(b, column)) return sort * -1;
+      if (deepFind(a, column) > deepFind(b, column)) return sort;
+      return 0;
+    }
+
+    function deepFind(obj, column) {
+      let paths = AllColumn[column].split('.');
+      let current = obj;
+
+      for (let i = 0; i < paths.length; ++i) {
+        if (current[paths[i]] == undefined) return '';
+        else current = current[paths[i]];
+      }
+      return typeof current === 'string' ? current.toLowerCase() : current;
+    }
+
+    if (column != 'charterAndProtocol') arrayOfAllDocument.sort(compare);
+
+    res.send({
+      arrOfRequiredContract: arrayOfAllDocument.slice(skip, take + skip)
+    });
+  } catch (err) {}
+};
+exports.getLinksNotUsedDocument = async (req, res) => {
+  const auditId = req.query.auditId;
+
+  if (!auditId) {
+    let err = 'Can not find documents: auditId is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+  try {
+    const audit = await Audit.findById(auditId, 'links charters', {
+      lean: true
+    });
+
+    const arrLinksFromId = audit.links.map(i => i.fromId.toString());
+    const arrLinksToId = audit.links.map(i => i.toId.toString());
+
+    const arrLinks = [...new Set([...arrLinksFromId, ...arrLinksToId])];
+
+    const arrayOfAllDocument = await Document.find(
+      {
+        $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+        _id: { $nin: arrLinks }
+      },
+      'parse.documentType',
+      { lean: true }
+    );
+
+    const arrOfSupplementaryAgreement = arrayOfAllDocument.filter(
+      i => i.parse.documentType === 'SUPPLEMENTARY_AGREEMENT'
+    );
+    const arrOfAnnex = arrayOfAllDocument.filter(
+      i => i.parse.documentType === 'ANNEX'
+    );
+    const arrOfCharter = arrayOfAllDocument.filter(
+      i => i.parse.documentType === 'CHARTER'
+    );
+    const arrOfProtocol = arrayOfAllDocument.filter(
+      i => i.parse.documentType === 'PROTOCOL'
+    );
+    const arrOfContract = arrayOfAllDocument.filter(
+      i => i.parse.documentType === 'CONTRACT'
+    );
+
+    res.send({
+      charter: {
+        count: arrOfCharter.length,
+        type: 'CHARTER'
+      },
+      protocol: {
+        count: arrOfProtocol.length,
+        type: 'PROTOCOL'
+      },
+      annex: {
+        count: arrOfAnnex.length,
+        type: 'ANNEX'
+      },
+      supplementary_agreement: {
+        count: arrOfSupplementaryAgreement.length,
+        type: 'SUPPLEMENTARY_AGREEMENT'
+      },
+      contract: {
+        count: arrOfContract.length,
+        type: 'CONTRACT'
+      }
     });
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -273,15 +482,8 @@ exports.getTreeLinks = async (req, res) => {
   const document = await Document.findById(documentId, 'auditId').lean();
   if (!document)
     return res.status(404).send(`Document with id = '${documentId}' not found`);
-  let audit = await Audit.findById(document.auditId, 'links').lean();
 
-  if (!audit)
-    audit = await Audit.find({
-      $or: [
-        { 'links.toId': document.auditId },
-        { 'links.fromId': document.auditId }
-      ]
-    }).lean();
+  const audit = await Audit.findById(document.auditId, 'links').lean();
 
   if (!audit)
     return res
@@ -305,18 +507,12 @@ exports.getTreeLinks = async (req, res) => {
     const arrayOfAllDocument = await Document.find()
       .where('_id')
       .in(ids)
-      .select({ 'analysis.attributes_tree': 1, 'parse.documentType': 1 })
+      .select({ 'parse.documentType': 1 })
       .lean();
 
     res.send({
-      Charter: arrayOfAllDocument.filter(
-        i => i.parse.documentType.toString() === 'CHARTER'
-      ),
       Contract: arrayOfAllDocument.filter(
         i => i.parse.documentType.toString() === 'CONTRACT'
-      ),
-      Protocol: arrayOfAllDocument.filter(
-        i => i.parse.documentType.toString() === 'PROTOCOL'
       ),
       SupplementaryAgreement: arrayOfAllDocument.filter(
         i => i.parse.documentType.toString() === 'SUPPLEMENTARY_AGREEMENT'

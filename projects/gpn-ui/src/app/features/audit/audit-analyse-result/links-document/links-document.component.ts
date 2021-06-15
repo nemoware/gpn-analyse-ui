@@ -46,7 +46,8 @@ interface Node {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinksDocumentComponent implements OnInit, AfterViewInit {
-  @Input() document: Document;
+  @Input() documentId: string;
+  @Input() auditId: string;
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   faEye = faEye;
@@ -92,14 +93,10 @@ export class LinksDocumentComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.auditservice
-      .getTreeLinks(this.document._id)
+      .getTreeLinks(this.documentId)
       .pipe(takeUntil(this.destroyStream))
       .subscribe(data => {
         this.Data_node.push(
-          {
-            name: 'Устав',
-            docType: 'Charter'
-          },
           {
             name: 'Дополнительное соглашение',
             docType: 'SupplementaryAgreement'
@@ -107,10 +104,6 @@ export class LinksDocumentComponent implements OnInit, AfterViewInit {
           {
             name: 'Приложение',
             docType: 'Annex'
-          },
-          {
-            name: 'Протокол',
-            docType: 'Protocol'
           }
           //Если любишь циклы
           // {
@@ -132,6 +125,8 @@ export class LinksDocumentComponent implements OnInit, AfterViewInit {
           i.count = data[i.docType].length;
           return i;
         });
+        console.log(this.Data_node);
+
         this.refreshData();
       });
   }

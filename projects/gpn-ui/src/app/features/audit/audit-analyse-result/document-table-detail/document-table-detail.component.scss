@@ -89,3 +89,49 @@ tr.detail-row {
   font-size: 12pt;
   padding-right: $gpn-padding;
 }
+
+.mat-column {
+  // &-shevron {
+  //   width: 10% !important;
+  // }
+  &-starred {
+    width: 10% !important;
+    padding-left: 10px;
+  }
+  // &-value {
+  //   width: 10% !important;
+  // }
+  // &-amount_with_vat {
+  //   width: 10% !important;
+  // }
+  &-number {
+    width: 10% !important;
+  }
+  &-date {
+    width: 10% !important;
+  }
+  &-org {
+    width: 10% !important;
+  }
+  &-contract_subject {
+    width: 10% !important;
+  }
+  &-org_level {
+    width: 10% !important;
+  }
+  &-org1 {
+    width: 20% !important;
+  }
+  &-org2 {
+    width: 20% !important;
+  }
+  &-state {
+    width: 10% !important;
+  }
+  &-charterAndProtocol {
+    width: 8% !important;
+  }
+  // &-warnings {
+  //   width: 10% !important;
+  // }
+}

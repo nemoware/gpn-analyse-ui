@@ -17,11 +17,8 @@ import { Tag } from '@app/models/legal-document';
 import {
   faChevronDown,
   faChevronUp,
-  faClock,
-  faExclamationTriangle,
   faEye,
   faFile,
-  faFlagCheckered,
   faFolder,
   faFolderOpen
 } from '@fortawesome/free-solid-svg-icons';
@@ -46,7 +43,7 @@ interface Node {
   _id?: string;
   name: string;
   children?: any[];
-  docs?: [];
+  docs?: any[];
   details?: Tag;
   confidence?: number;
   kind?: string;
@@ -264,15 +261,40 @@ export class AuditAnalyseResultComponent
           this.refreshTree();
         });
     } else if (this.selectedPage === 2) {
-      // this.spinner.show();
-      // this.auditservice
-      //   .getTreeDocument(this.IdAudit)
-      //   .pipe(takeUntil(this.destroyStream))
-      //   .subscribe(data => {
-      //     this.tableSource = data.arrOfAllContract;
-      //     this.changeDetectorRefs.detectChanges();
-      //     this.spinner.hide();
-      //   });
+      this.spinner.show();
+      this.auditservice
+        .getListNotUsedDocuments(this.IdAudit)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe(data => {
+          for (let val in data) {
+            if (data[val].count === 0) continue;
+            this.TREE_DATA.push({
+              name: data[val].type,
+              childCount: data[val].count,
+              children: [
+                {
+                  documentType: data[val].type,
+                  docs: [
+                    {
+                      auditid: this.IdAudit,
+                      documentType: data[val].type
+                    }
+                  ]
+                }
+              ],
+              docs: [
+                {
+                  auditid: this.IdAudit,
+                  documentType: data[val].type
+                }
+              ]
+            });
+          }
+
+          this.changeDetectorRefs.detectChanges();
+          this.spinner.hide();
+          this.refreshTree();
+        });
     } else if (this.selectedPage === 4) {
       this.spinner.show();
       this.auditservice
