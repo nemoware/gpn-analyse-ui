@@ -66,22 +66,10 @@ export class ChildDetailComponent implements OnInit {
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   ngOnInit() {
-    console.log('this.document');
-    console.log(this.document);
-
-    console.log('this.documentType');
-    console.log(this.documentType);
-
-    console.log('document.attributes');
-    console.log(this.document.attributes);
-
     if (this.document) {
       this.TREE_DATA = this.documentType.children.getTreeAttributes(
         this.document.attributes
       );
-      console.log('this.TREE_DATA');
-      console.log(this.TREE_DATA);
-
       this.dataSource.data = this.TREE_DATA;
     }
   }

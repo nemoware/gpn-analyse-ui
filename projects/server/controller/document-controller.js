@@ -137,8 +137,16 @@ exports.getTreeFromDocuments = async (req, res) => {
     const audit = await Audit.findById(auditId, 'links charters', {
       lean: true
     });
+
+    arrOfFromId = audit.links.map(i => i.fromId.toString());
+    arrOfToId = audit.links.map(i => i.toId.toString());
     const arrayOfAllDocument = await Document.find({
-      $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }]
+      $or: [
+        { _id: { $in: audit.charters } },
+        { auditId: auditId },
+        { _id: { $in: arrOfFromId } },
+        { _id: { $in: arrOfToId } }
+      ]
     })
       .select({
         'analysis.attributes_tree.contract': 1,
@@ -224,9 +232,9 @@ exports.getTreeFromDocuments = async (req, res) => {
 
       ids = ids.filter(i => {
         for (let simpleDoc of arrPROTOCOL.concat(arrCHARTER)) {
-          if (simpleDoc._id.toString() === i.toString()) return false;
+          if (simpleDoc._id.toString() == i.toString()) return false;
         }
-        if (bufferContract.includes(i.toString())) return false;
+        if (bufferContract.includes(i)) return false;
         return true;
       });
 

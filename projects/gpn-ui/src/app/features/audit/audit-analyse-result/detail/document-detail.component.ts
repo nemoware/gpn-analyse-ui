@@ -169,10 +169,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('this.documents');
-    console.log(this.documents);
-    console.log('this.documents.docs');
-    console.log(this.documents.docs);
     const docs = this.documents.docs;
 
     this.documentTypeName = null;
@@ -242,9 +238,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   selectedRow(value, event) {
     this.expandedElementId =
       value._id !== this.expandedElementId ? value._id : '-1';
-    console.log('this.expandedElementId');
-    console.log(this.expandedElementId);
-
     event.stopPropagation();
   }
 

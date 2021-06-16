@@ -14,6 +14,13 @@ import { ConclusionModel } from '@app/models/conclusion-model';
 
 const api = '/api';
 
+interface NotUsedDocuments {
+  charter: { count: number; type: string };
+  protocol: { count: number; type: string };
+  annex: { count: number; type: string };
+  supplementary_agreement: { count: number; type: string };
+  contract: { count: number; type: string };
+}
 @Injectable()
 export class AuditService {
   constructor(private http: HttpClient) {}
@@ -63,25 +70,13 @@ export class AuditService {
 
   public getListNotUsedDocuments(
     auditId: string
-  ): Observable<{
-    charter: { count: number; type: string };
-    protocol: { count: number; type: string };
-    annex: { count: number; type: string };
-    supplementary_agreement: { count: number; type: string };
-    contract: { count: number; type: string };
-  }> {
+  ): Observable<NotUsedDocuments> {
     let httpParams = new HttpParams();
 
     if (auditId) {
       httpParams = httpParams.append('auditId', auditId);
     }
-    return this.http.get<{
-      charter: { count: number; type: string };
-      protocol: { count: number; type: string };
-      annex: { count: number; type: string };
-      supplementary_agreement: { count: number; type: string };
-      contract: { count: number; type: string };
-    }>(`${api}/document/notusedlinks`, {
+    return this.http.get<NotUsedDocuments>(`${api}/document/notusedlinks`, {
       params: httpParams
     });
   }

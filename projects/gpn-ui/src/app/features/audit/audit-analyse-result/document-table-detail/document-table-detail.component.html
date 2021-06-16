@@ -123,10 +123,10 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>cвязи</th>
       <td mat-cell *matCellDef="let row">
         <span class="org-alias">Устав от</span>
-        <a class="org-name" (click)="openCharterOrProtocol(row.charterDate)">{{(row.charterDate.value | date:'dd MMM yyyy') ||
+        <a class="org-name" (click)="openCharterOrProtocol(row.charterDate)">{{(row.charterDate?.value | date:'dd MMM yyyy') ||
           '⚠️ не обнаружен'}}</a>
         <span class="org-alias">Протокол от</span>
-        <a class="org-name" (click)="openCharterOrProtocol(row.protocolDate)">{{(row.protocolDate.value | date:'dd MMM yyyy')
+        <a class="org-name" (click)="openCharterOrProtocol(row.protocolDate)">{{(row.protocolDate?.value | date:'dd MMM yyyy')
           || '⚠️ не обнаружен'}}</a>
       </td>
     </ng-container>

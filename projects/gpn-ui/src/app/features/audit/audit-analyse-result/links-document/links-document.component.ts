@@ -105,11 +105,6 @@ export class LinksDocumentComponent implements OnInit, AfterViewInit {
             name: 'Приложение',
             docType: 'Annex'
           }
-          //Если любишь циклы
-          // {
-          //   name: 'Договор',
-          //   docType: 'Contract'
-          // }
         );
 
         this.Data_node = this.Data_node.filter(
