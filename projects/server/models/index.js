@@ -64,6 +64,9 @@ mongoose
       }
     });
 
+    db.Document.createIndex({
+      'analysis.attributes_tree.contract.date.value': 1
+    });
     info();
   })
   .catch(err => info(err));

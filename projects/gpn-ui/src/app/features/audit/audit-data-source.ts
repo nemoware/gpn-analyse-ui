@@ -75,6 +75,9 @@ export class AuditDataSource implements DataSource<any> {
       .subscribe(data => {
         // @ts-ignore
         this.totalCount = data.count;
+
+        console.log(data);
+
         // @ts-ignore
         data.arrOfRequiredContract.map(i => {
           if (

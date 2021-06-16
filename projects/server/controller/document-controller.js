@@ -34,6 +34,15 @@ const AllColumn = {
   charterDate: 'charterDate',
   protocolDate: 'protocolDate'
 };
+const AllColumn2 = {
+  date: 'analysis.attributes_tree.contract.date.value',
+  number: 'analysis.attributes_tree.contract.number.value',
+  org1: 'analysis.attributes_tree.contract.orgs.0.name.value',
+  org2: 'analysis.attributes_tree.contract.orgs.1.name.value',
+  contract_subject: 'analysis.attributes_tree.contract.subject.value',
+  warnings: 'analysis.warnings',
+  state: 'state'
+};
 
 function getAttributeValue(document, attribute) {
   if (document.user && document.user.attributes) {
@@ -138,27 +147,8 @@ exports.getTreeFromDocuments = async (req, res) => {
       lean: true
     });
 
-    arrOfFromId = audit.links.map(i => i.fromId.toString());
-    arrOfToId = audit.links.map(i => i.toId.toString());
-    const arrayOfAllDocument = await Document.find({
-      $or: [
-        { _id: { $in: audit.charters } },
-        { auditId: auditId },
-        { _id: { $in: arrOfFromId } },
-        { _id: { $in: arrOfToId } }
-      ]
-    })
-      .select({
-        'analysis.attributes_tree.contract': 1,
-        'analysis.attributes_tree.charter.date.value': 1,
-        'analysis.attributes_tree.protocol.date.value': 1,
-        'user.attributes_tree': 1,
-        'analysis.analyze_timestamp': 1,
-        'parse.documentType': 1,
-        state: 1,
-        'user.author.name': 1
-      })
-      .lean();
+    let arrOfFromId = audit.links.map(i => i.fromId.toString());
+    let arrOfToId = audit.links.map(i => i.toId.toString());
 
     const user = await User.findOne(
       {
@@ -166,6 +156,35 @@ exports.getTreeFromDocuments = async (req, res) => {
       },
       'stars'
     ).lean();
+
+    let arrayOfAllDocument;
+
+    if (AllColumn2[column] != undefined) {
+      arrayOfAllDocument = await Document.find({
+        auditId: auditId,
+        'parse.documentType': 'CONTRACT'
+      })
+        .select({
+          'analysis.attributes_tree.contract': 1,
+          'analysis.attributes_tree.charter.date.value': 1,
+          'analysis.attributes_tree.protocol.date.value': 1,
+          'user.attributes_tree': 1,
+          'analysis.analyze_timestamp': 1,
+          'parse.documentType': 1,
+          state: 1,
+          'user.author.name': 1
+        })
+        .sort({ [AllColumn2[column]]: sort })
+        .skip(skip)
+        .limit(take + skip)
+        .lean();
+    } else {
+    }
+
+    const count = await Document.find({
+      auditId: auditId,
+      'parse.documentType': 'CONTRACT'
+    }).count();
 
     if (user) {
       let arrStars = user.stars.map(i => i.documentId.toString());
@@ -264,8 +283,6 @@ exports.getTreeFromDocuments = async (req, res) => {
         i => i.parse.documentType === 'CONTRACT'
       );
     }
-
-    const count = arrOfRequiredContract.length;
 
     function compare(a, b) {
       if (deepFind(a, column) < deepFind(b, column)) return sort;
@@ -405,11 +422,14 @@ exports.getNotUsedDocument = async (req, res) => {
 
     if (column != 'charterAndProtocol') arrayOfAllDocument.sort(compare);
 
+    const count = arrayOfAllDocument.length;
     res.send({
-      arrOfRequiredContract: arrayOfAllDocument.slice(skip, take + skip)
+      arrOfRequiredContract: arrayOfAllDocument.slice(skip, take + skip),
+      count: count
     });
   } catch (err) {}
 };
+
 exports.getLinksNotUsedDocument = async (req, res) => {
   const auditId = req.query.auditId;
 

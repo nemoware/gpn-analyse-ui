@@ -153,7 +153,7 @@ export class DocumentTableDetailComponent implements OnInit {
         this.documentType,
         15,
         0,
-        'charterAndProtocol',
+        'date',
         'asc'
       );
     } else {
@@ -163,7 +163,7 @@ export class DocumentTableDetailComponent implements OnInit {
         this.documentType,
         15,
         0,
-        'charterAndProtocol',
+        'date',
         'asc'
       );
     }

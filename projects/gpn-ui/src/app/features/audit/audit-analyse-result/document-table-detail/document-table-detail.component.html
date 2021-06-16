@@ -30,10 +30,10 @@
       <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора без ндс</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{
-          (row.analysis.attributes_tree.contract?.price?.amount_netto?.value |
-        currency:row.analysis.attributes_tree.contract?.price?.currency?.value)||
-        (row.analysis.attributes_tree.contract?.subject?.price?.amount_netto.value | 
-        currency:row.analysis.attributes_tree.contract?.price?.currency?.value)
+          (row.analysis?.attributes_tree?.contract?.price?.amount_netto?.value |
+        currency:row.analysis?.attributes_tree?.contract?.price?.currency?.value)||
+        (row.analysis?.attributes_tree?.contract?.subject?.price?.amount_netto.value | 
+        currency:row.analysis?.attributes_tree?.contract?.price?.currency?.value)
       }}
       </td>
     </ng-container>
@@ -43,10 +43,10 @@
       <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора c ндс</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{
-        (row.analysis.attributes_tree.contract?.price?.amount_brutto?.value |
-        currency:row.analysis.attributes_tree.contract?.price?.currency?.value) ||
-        (row.analysis.attributes_tree.contract?.subject?.price?.amount_brutto?.value |
-        currency:row.analysis.attributes_tree.contract?.price?.currency?.value)
+        (row.analysis?.attributes_tree?.contract?.price?.amount_brutto?.value |
+        currency:row.analysis?.attributes_tree?.contract?.price?.currency?.value) ||
+        (row.analysis?.attributes_tree?.contract?.subject?.price?.amount_brutto?.value |
+        currency:row.analysis?.attributes_tree?.contract?.price?.currency?.value)
       }}
       </td>
     </ng-container>
@@ -55,7 +55,7 @@
     <ng-container matColumnDef="number">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>номер</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        {{row.analysis.attributes_tree.contract?.number?.value || '⚠️ не обнаружен'}}
+        {{row.analysis?.attributes_tree?.contract?.number?.value || '⚠️ не обнаружен'}}
       </td>
     </ng-container>
 
@@ -63,7 +63,7 @@
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>дата</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        {{(row.analysis.attributes_tree.contract?.date?.value | date) || '⚠️ не обнаружен' }}
+        {{(row.analysis?.attributes_tree?.contract?.date?.value | date) || '⚠️ не обнаружен' }}
       </td>
     </ng-container>
 
@@ -71,8 +71,8 @@
     <ng-container matColumnDef="org">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>наименование</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        <span class="org-type">{{ row.analysis.attributes_tree.contract?.org?.type?.value || '⚠️ не обнаружен'}}</span>
-        <span class="org-name">{{ row.analysis.attributes_tree.contract?.org?.name?.value || '⚠️ не обнаружен'}}</span>
+        <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.org?.type?.value || '⚠️ не обнаружен'}}</span>
+        <span class="org-name">{{ row.analysis?.attributes_tree?.contract?.org?.name?.value || '⚠️ не обнаружен'}}</span>
       </td>
     </ng-container>
     <!-- structural_level -->
@@ -80,7 +80,7 @@
     <ng-container matColumnDef="contract_subject">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>предмет договора</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        {{ row.analysis.attributes_tree.contract?.subject?.value | translate}}<br>
+        {{ row.analysis?.attributes_tree?.contract?.subject?.value | translate}}<br>
         <!-- <div class="small"> {{row.primary_subject | translate}}</div> -->
       </td>
     </ng-container>
@@ -89,7 +89,7 @@
     <ng-container matColumnDef="org_level">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>орган управления</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        {{ (row.analysis.attributes_tree.contract?.structural_level?.value | translate)|| '⚠️ не обнаружен' }}
+        {{ (row.analysis?.attributes_tree?.contract?.structural_level?.value | translate)|| '⚠️ не обнаружен' }}
       </td>
     </ng-container>
 
@@ -97,12 +97,12 @@
     <ng-container matColumnDef="org1">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 1</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        <span class="org-type">{{ row.analysis.attributes_tree.contract?.orgs[0]?.type?.value}}</span>
+        <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.orgs[0]?.type?.value}}</span>
         <span class="org-name">{{
-          row.analysis.attributes_tree.contract?.orgs[0]?.name?.value || '⚠️ не обнаружен'
+          row.analysis?.attributes_tree?.contract?.orgs[0]?.name?.value || '⚠️ не обнаружен'
           }}
         </span>
-        <span class="org-alias">{{row.analysis.attributes_tree.contract?.orgs[0]?.alias?.value }}</span>
+        <span class="org-alias">{{row.analysis?.attributes_tree?.contract?.orgs[0]?.alias?.value }}</span>
       </td>
     </ng-container>
 
@@ -110,17 +110,17 @@
     <ng-container matColumnDef="org2">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 2</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        <span class="org-type">{{ row.analysis.attributes_tree.contract?.orgs[1]?.type?.value}}</span>
+        <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.orgs[1]?.type?.value}}</span>
         <span class="org-name">{{
-          row.analysis.attributes_tree.contract?.orgs[1]?.name?.value || '⚠️ не обнаружен'
+          row.analysis?.attributes_tree?.contract?.orgs[1]?.name?.value || '⚠️ не обнаружен'
           }}
         </span>
-        <span class="org-alias">{{row.analysis.attributes_tree.contract?.orgs[1]?.alias?.value }}</span>
+        <span class="org-alias">{{row.analysis?.attributes_tree?.contract?.orgs[1]?.alias?.value }}</span>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="charterAndProtocol">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>cвязи</th>
+      <th mat-header-cell *matHeaderCellDef>cвязи</th>
       <td mat-cell *matCellDef="let row">
         <span class="org-alias">Устав от</span>
         <a class="org-name" (click)="openCharterOrProtocol(row.charterDate)">{{(row.charterDate?.value | date:'dd MMM yyyy') ||
