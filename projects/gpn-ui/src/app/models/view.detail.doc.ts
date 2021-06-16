@@ -25,9 +25,6 @@ export class ViewDetailDoc {
           const parentNode = attributes.filter(x =>
             this.rowHead.includes(x.kind)
           );
-          console.log('parentNode');
-          console.log(parentNode);
-
           for (const p of parentNode) {
             let parent = tree.find(x => name === p.kind);
             if (!parent) {

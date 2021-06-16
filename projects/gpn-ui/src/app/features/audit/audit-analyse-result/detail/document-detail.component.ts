@@ -169,8 +169,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const docs = this.documents.docs;
-
+    const docs = this.documents.docs; // shortcut
     this.documentTypeName = null;
     if (docs && docs.length > 0) {
       this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
@@ -193,6 +192,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
         }
       }
     } else {
+      // no docs
       this.dataSource.data = [];
     }
   }

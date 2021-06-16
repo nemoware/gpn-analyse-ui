@@ -120,7 +120,6 @@ export class LinksDocumentComponent implements OnInit, AfterViewInit {
           i.count = data[i.docType].length;
           return i;
         });
-        console.log(this.Data_node);
 
         this.refreshData();
       });

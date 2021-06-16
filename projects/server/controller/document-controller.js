@@ -65,7 +65,7 @@ exports.getDocuments = async (req, res) => {
     }
 
     const audit = await Audit.findById(auditId, `charters`, { lean: true });
-    // console.log(audit);
+
     let documents = await Document.find(
       {
         $or: [{ auditId }, { _id: { $in: audit.charters } }],

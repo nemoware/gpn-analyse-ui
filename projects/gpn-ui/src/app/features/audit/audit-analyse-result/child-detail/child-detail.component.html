@@ -4,7 +4,7 @@
     <!-- use a disabled button to provide padding for tree leaf -->
     <button mat-icon-button disabled></button>
       <div style="width: 100%">
-        <span>{{node.name | translate}}123</span>
+        <span>{{node.name | translate}}</span>
         <span class="value" *ngIf="node.min"> от {{node.min | currency: node.currency }} </span>
         <span class="value" *ngIf="node.max"> до {{node.max | currency: node.currency }} </span>
         <mat-divider></mat-divider>
