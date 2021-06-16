@@ -194,7 +194,8 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
   compareDocs(doc1: ViolationModel, doc2: ViolationModel) {
     return (
       doc1.document.id === doc2.document.id &&
-      doc1.founding_document.id === doc2.founding_document.id
+      (doc1.founding_document && doc1.founding_document.id) ===
+        (doc2.founding_document && doc2.founding_document.id)
     );
   }
 
