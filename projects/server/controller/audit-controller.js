@@ -593,20 +593,20 @@ async function generateConclusion(audit) {
     }
   }
 
-  const orgLevels = [
-    'AllMembers',
-    'ShareholdersGeneralMeeting',
-    'BoardOfDirectors',
-    'BoardOfCompany',
-    'CEO',
-    'competence_CEO'
-  ];
-  let charterOrgLevels = [];
-
-  for (const orgLevel of orgLevels) {
-    const level = desiredCharter.getAttributeValue(orgLevel);
-    if (level) charterOrgLevels.push(orgLevel);
-  }
+  // const orgLevels = [
+  //   'AllMembers',
+  //   'ShareholdersGeneralMeeting',
+  //   'BoardOfDirectors',
+  //   'BoardOfCompany',
+  //   'CEO',
+  //   'competence_CEO'
+  // ];
+  // let charterOrgLevels = [];
+  //
+  // for (const orgLevel of orgLevels) {
+  //   const level = desiredCharter.getAttributeValue(orgLevel);
+  //   if (level) charterOrgLevels.push(orgLevel);
+  // }
 
   let riskMatrix = await Risk.find(
     {},
