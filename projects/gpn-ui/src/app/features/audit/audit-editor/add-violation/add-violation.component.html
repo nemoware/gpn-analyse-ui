@@ -1,0 +1,60 @@
+<div class="container position-relative">
+
+  <h4>Новое нарушение</h4>
+  <form [formGroup]="controlForm">
+    <p>
+      <mat-form-field color="accent">
+        <mat-label>Нарушение</mat-label>
+        <mat-select formControlName="violationTypeControl">
+          <mat-option [matTooltip]="violation | translate" *ngFor="let violation of listOfViolations" [value]="violation">
+            {{violation | translate}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+    <p *ngIf="controlForm.controls.violationTypeControl.value!=='charter_not_found'">
+      <mat-form-field color="accent">
+        <mat-label>Подпункт, статья</mat-label>
+        <textarea matInput style="overflow: hidden"
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="referenceControl">
+        </textarea>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field color="accent">
+        <mat-label>Текст нарушения</mat-label>
+        <textarea matInput style="overflow: hidden"
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="violationTextControl">
+        </textarea>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field color="accent">
+        <mat-label>Основание нарушения</mat-label>
+        <textarea matInput style="overflow: hidden"
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  formControlName="violationReasonControl">
+        </textarea>
+
+      </mat-form-field>
+    </p>
+    <div class="row">
+      <div class="col">
+        <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+      </div>
+      <div class="col">
+        <button mat-raised-button color="accent" [disabled]="controlForm.invalid" (click)="addViolation()">{{data.new?'Добавить':'Сохранить'}}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+

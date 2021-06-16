@@ -252,4 +252,32 @@ export class AuditService {
       params: httpParams
     });
   }
+
+  public postViolation(
+    violation: Object,
+    auditId: string,
+    date: Date,
+    violation_reason_text: string
+  ): Observable<any> {
+    return this.http.post<Object>(
+      `${api}/audit/violation`,
+      { violation, auditId, date, violation_reason_text },
+      { responseType: 'text' as 'json' }
+    );
+  }
+
+  public updateViolation(violation: Object, auditId: string): Observable<any> {
+    return this.http.put<Object>(`${api}/audit/violation`, {
+      violation,
+      auditId
+    });
+  }
+
+  public deleteViolation(auditId: string, violationId: string) {
+    let urlParams = new HttpParams().set('auditId', auditId.toString());
+    urlParams = urlParams.append('violationId', violationId.toString());
+    return this.http.delete(`${api}/audit/violation`, {
+      params: urlParams
+    });
+  }
 }

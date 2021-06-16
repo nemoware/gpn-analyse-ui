@@ -50,6 +50,7 @@ import { SortValuePipe } from './audit-editor/competencecharts/sort-value.pipe';
 import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
 import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-detail/subsidiary-detail.component';
 import { FilterModule } from './../filter/filter.module';
+import { AddViolationComponent } from './audit-editor/add-violation/add-violation.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { FilterModule } from './../filter/filter.module';
     ViolationsAuditComponent,
     MaskDateDirective,
     SortValuePipe,
-    SubsidiaryDetailComponent
+    SubsidiaryDetailComponent,
+    AddViolationComponent
   ],
   imports: [
     CommonModule,
@@ -102,7 +104,8 @@ import { FilterModule } from './../filter/filter.module';
     AuditResultComponent,
     EditAttributeComponent,
     SearchDocumentComponent,
-    SubsidiaryDetailComponent
+    SubsidiaryDetailComponent,
+    AddViolationComponent
   ],
   exports: [
     ViewDocumentComponent,

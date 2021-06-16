@@ -34,3 +34,15 @@
   width: 30%;
   padding: 0 $gpn-padding-half;
 }
+
+div.btn-group {
+  display: none;
+}
+
+.mat-row:hover .btn-group {
+  display: inline-block;
+}
+
+.mat-column-events {
+  width: 5% !important;
+}

@@ -5,7 +5,6 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   ViewChild,
-  Input,
   OnDestroy
 } from '@angular/core';
 import { AuditService } from '@app/features/audit/audit.service';
@@ -14,12 +13,12 @@ import { Document } from '@app/models/document.model';
 import { ViewDocumentComponent } from '@app/features/audit/audit-editor/view-document/view-document.component';
 import { TreeAttributesComponent } from '@app/features/audit/audit-editor/tree-attributes/tree-attributes.component';
 import { AttributeModel } from '@app/models/attribute-model';
-import { Helper } from '@app/features/audit/helper';
-// import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 import { ResizedEvent } from 'angular-resize-event';
 import { CompetencechartsComponent } from '@app/features/audit/audit-editor/competencecharts/competencecharts.component';
 import { takeUntil } from '@root/node_modules/rxjs/operators';
 import { Subject } from '@root/node_modules/rxjs';
+import { MatDialog } from '@root/node_modules/@angular/material';
+import { AddViolationComponent } from '@app/features/audit/audit-editor/add-violation/add-violation.component';
 
 @Component({
   selector: 'gpn-audit-editor',
@@ -58,7 +57,8 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private auditservice: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef
+    private changeDetectorRefs: ChangeDetectorRef,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -202,5 +202,23 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isDisabled() {
     return this.checkboxDisabled;
+  }
+
+  addViolation() {
+    const dialogRef = this.dialog.open(AddViolationComponent, {
+      width: '1000px',
+      data: {
+        document: {
+          id: this.IdDocument,
+          number: this.getAttrValue('number'),
+          type: this.document.documentType,
+          auditId: this.document.auditId,
+          document_date: this.getAttrValue('date')
+        },
+        attributes: this.attributes,
+        new: true
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 }
