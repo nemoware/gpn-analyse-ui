@@ -1,0 +1,24 @@
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <gpn-document-table-detail [auditId] = auditId [documentId] = documentId [documentType] = node.document[0].parse.documentType style="width: 100%;margin-left: 30px;"
+        ></gpn-document-table-detail>
+    </mat-tree-node>
+
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <div style="width: 100%; margin-left: 30px;">
+            <mat-divider></mat-divider>
+            <div class="row">
+                <div class="col">
+                    <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                        <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
+                        <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
+                    </button>
+                    {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+        </div>
+    </mat-tree-node>
+
+</mat-tree>

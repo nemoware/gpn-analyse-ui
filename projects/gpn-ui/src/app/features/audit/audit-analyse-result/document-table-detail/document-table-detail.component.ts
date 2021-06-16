@@ -1,3 +1,4 @@
+import { AuditDataSource } from '@app/features/audit/audit-data-source';
 import {
   Component,
   ViewChild,
@@ -7,13 +8,10 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
-import { ViewDetailDoc } from '@app/models/view.detail.doc';
-import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { DatePipe } from '@root/node_modules/@angular/common';
-import { Router } from '@root/node_modules/@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-
+import { MatPaginator } from '@angular/material/paginator';
 import {
   animate,
   state,
@@ -23,13 +21,15 @@ import {
 } from '@root/node_modules/@angular/animations';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { AuditService } from '@app/features/audit/audit.service';
-import { Subject } from '@root/node_modules/rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, merge } from '@root/node_modules/rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
+import { Document } from '@app/models/document.model';
+import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 
 const cols_by_type = {
   CONTRACT: [
     'shevron',
-    'star',
+    'starred',
     'date',
     'number',
     'amount_with_vat',
@@ -37,35 +37,45 @@ const cols_by_type = {
     'org1',
     'org2',
     'contract_subject',
-    'spacer',
     'warnings',
-    'analyze_state'
+    'state',
+    'charterAndProtocol'
   ],
-  CHARTER: ['star', 'date', 'shevron', 'org', 'warnings', 'analyze_state'],
-  PROTOCOL: ['star', 'date', 'org', 'org_level', 'warnings', 'analyze_state'],
+  CHARTER: ['shevron', 'starred', 'date', 'org', 'warnings', 'state'],
+  PROTOCOL: [
+    'shevron',
+    'starred',
+    'date',
+    'org',
+    'org_level',
+    'warnings',
+    'state'
+  ],
   ANNEX: [
-    'star',
+    'shevron',
+    'starred',
     'date',
     'number',
     'value',
     'org1',
     'org2',
     'contract_subject',
-    'spacer',
     'warnings',
-    'analyze_state'
+    'state',
+    'charterAndProtocol'
   ],
   SUPPLEMENTARY_AGREEMENT: [
-    'star',
+    'shevron',
+    'starred',
     'date',
     'number',
     'value',
     'org1',
     'org2',
     'contract_subject',
-    'spacer',
     'warnings',
-    'analyze_state'
+    'state',
+    'charterAndProtocol'
   ]
 };
 
@@ -81,9 +91,9 @@ const column_to_sorting_mapping = {
 };
 
 @Component({
-  selector: 'gpn-document-detail',
-  templateUrl: './document-detail.component.html',
-  styleUrls: ['./document-detail.component.scss'],
+  selector: 'gpn-document-table-detail',
+  templateUrl: './document-table-detail.component.html',
+  styleUrls: ['./document-table-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe],
   animations: [
@@ -97,68 +107,35 @@ const column_to_sorting_mapping = {
     ])
   ]
 })
-export class DocumentDetailComponent implements OnInit, OnDestroy {
-  @Input() documents: any;
-  @Input() subsidiaryName: string;
+export class DocumentTableDetailComponent implements OnInit {
+  @Input() auditId: string;
+  @Input() documentId: string;
+  @Input() documentType: string;
+  @Input() isNotUsedDoc: boolean = false;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  defPageSize = 15;
   header: string;
   col: string[] = [];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
-  documentType: any;
+  dataSource2: MatTableDataSource<any> = new MatTableDataSource([]);
+  dataSource: AuditDataSource;
   expandedElementId = '';
+  arrOfexpandedElementId = [];
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   documentTypeName = null;
   focusedId: string;
+  _filterValue: [];
+  totalCount: number;
   private destroyStream = new Subject<void>();
 
   constructor(
-    private translate: TranslateService,
-    private router: Router,
     private auditService: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef
+    private changeDetectorRefs: ChangeDetectorRef,
+    private spinner: NgxSpinnerService
   ) {}
 
   isExpansionDetailRow = () => true;
-
-  _sortingDataAccessor: (data, sortHeaderId: string) => string | number = (
-    data,
-    sortHeaderId: string
-  ): string | number => {
-    if (sortHeaderId === 'analyze_state') {
-      if (
-        data.state === 0 ||
-        data.state === 1 ||
-        data.state === 5 ||
-        data.state === null
-      )
-        return 'Загружен, ожидает анализа' + data.analysis.analyze_timestamp;
-      if (data.state === 10)
-        return 'Анализируется' + data.analysis.analyze_timestamp;
-      if (data.state === 11)
-        return 'Ошибка при анализе' + data.analysis.analyze_timestamp;
-      if (data.state === 12)
-        return (
-          'Документ не попадает под параметры Проверки' +
-          data.analysis.analyze_timestamp
-        );
-      if (data.state === 15)
-        return 'Анализ завершен' + data.analysis.analyze_timestamp;
-      return ' ';
-    }
-    if (sortHeaderId in column_to_sorting_mapping) {
-      const attr = column_to_sorting_mapping[sortHeaderId];
-      if (sortHeaderId === 'contract_subject' || sortHeaderId === 'org_level')
-        return this.translate.instant(this.getAttrValue(attr, data) || ' ');
-      return this.getAttrValue(attr, data);
-    }
-    if ('warnings' === sortHeaderId) {
-      if (data.analysis && data.analysis.warnings)
-        return data.analysis.warnings.length;
-      else return 0;
-    }
-    return -1;
-  };
 
   hasWarnings(document): boolean {
     return (
@@ -169,43 +146,71 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const docs = this.documents.docs; // shortcut
-    this.documentTypeName = null;
-    if (docs && docs.length > 0) {
-      this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
-      this.dataSource.sort = this.sort;
-      this.dataSource.data = docs;
-      this.documentTypeName = docs[0].documentType;
-
-      this.col = cols_by_type[this.documentTypeName].map(x => x);
-      this.documentType = ViewDetailDoc.getTypeDoc(docs[0].documentType);
-
-      if (this._isAllOrgsSame(docs, 'org-1-name')) {
-        let index = this.col.indexOf('org1', 0);
-        if (index > -1) {
-          this.col.splice(index, 1);
-        }
-
-        index = this.col.indexOf('org', 0);
-        if (index > -1) {
-          this.col.splice(index, 1);
-        }
-      }
+    this.dataSource = new AuditDataSource(this.auditService);
+    if (this.isNotUsedDoc) {
+      this.dataSource.loadNotUsedDocuments(
+        this.auditId,
+        this.documentType,
+        15,
+        0,
+        'charterAndProtocol',
+        'asc'
+      );
     } else {
-      // no docs
-      this.dataSource.data = [];
+      this.dataSource.loadContract(
+        this.auditId,
+        this.documentId,
+        this.documentType,
+        15,
+        0,
+        'charterAndProtocol',
+        'asc'
+      );
     }
+
+    this.dataSource
+      .getLoadingState()
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(data => {
+        if (data) {
+          this.spinner.show();
+        } else {
+          this.spinner.hide();
+          this.totalCount = this.dataSource.totalCount;
+          this.col = cols_by_type[this.dataSource.documentType].map(x => x);
+        }
+      });
   }
 
-  _isAllOrgsSame(docs, keyname: string): boolean {
-    let res = true;
-    docs.forEach(doc => {
-      if (this.subsidiaryName !== this.getAttrValue(keyname, doc)) {
-        res = false;
-        return;
-      }
-    });
-    return res;
+  ngAfterViewInit() {
+    this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(tap(() => this.loadChartersPage()))
+      .subscribe();
+  }
+
+  loadChartersPage() {
+    if (this.isNotUsedDoc) {
+      this.dataSource.loadNotUsedDocuments(
+        this.auditId,
+        this.documentType,
+        this.paginator.pageSize,
+        this.paginator.pageIndex,
+        this.sort.active,
+        this.sort.direction
+      );
+    } else {
+      this.dataSource.loadContract(
+        this.auditId,
+        this.documentId,
+        this.documentType,
+        this.paginator.pageSize,
+        this.paginator.pageIndex,
+        this.sort.active,
+        this.sort.direction
+      );
+    }
   }
 
   getAttrValue(attrName: string, doc, default_value = null) {
@@ -235,9 +240,30 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     );
   }
 
+  openCharterOrProtocol(element) {
+    if (element) {
+      window.open(
+        window.location.origin + '/#/audit/edit/' + element.id,
+        '_blank'
+      );
+    }
+  }
+
   selectedRow(value, event) {
-    this.expandedElementId =
-      value._id !== this.expandedElementId ? value._id : '-1';
+    if (value._id !== this.expandedElementId) {
+      this.expandedElementId = value._id;
+    } else {
+      this.expandedElementId = '-1';
+    }
+
+    if (!this.arrOfexpandedElementId.includes(value._id)) {
+      this.arrOfexpandedElementId.push(value._id);
+    } else {
+      this.arrOfexpandedElementId.splice(
+        this.arrOfexpandedElementId.indexOf(value._id),
+        1
+      );
+    }
     event.stopPropagation();
   }
 

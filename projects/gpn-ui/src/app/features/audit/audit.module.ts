@@ -51,6 +51,8 @@ import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
 import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-detail/subsidiary-detail.component';
 import { FilterModule } from './../filter/filter.module';
 import { AddViolationComponent } from './audit-editor/add-violation/add-violation.component';
+import { LinksDocumentComponent } from './audit-analyse-result/links-document/links-document.component';
+import { DocumentTableDetailComponent } from './audit-analyse-result/document-table-detail/document-table-detail.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,10 @@ import { AddViolationComponent } from './audit-editor/add-violation/add-violatio
     MaskDateDirective,
     SortValuePipe,
     SubsidiaryDetailComponent,
-    AddViolationComponent
+    AddViolationComponent,
+    SubsidiaryDetailComponent,
+    LinksDocumentComponent,
+    DocumentTableDetailComponent
   ],
   imports: [
     CommonModule,

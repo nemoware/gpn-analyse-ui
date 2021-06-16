@@ -70,7 +70,6 @@ export class ChildDetailComponent implements OnInit {
       this.TREE_DATA = this.documentType.children.getTreeAttributes(
         this.document.attributes
       );
-
       this.dataSource.data = this.TREE_DATA;
     }
   }

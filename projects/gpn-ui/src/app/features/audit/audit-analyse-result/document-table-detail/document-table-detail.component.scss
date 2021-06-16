@@ -1,0 +1,137 @@
+@import '../../../../../styles-variables.scss';
+
+$icon-column-width: 48px;
+
+.mat-table {
+  width: 100%;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  background-color: aliceblue;
+}
+
+tr.detail-row {
+  overflow: hidden;
+  height: 0;
+}
+
+.fixed-width td {
+  width: 20% !important;
+}
+
+.element-row td {
+  border: none;
+}
+
+.element-detail {
+  // margin-left: 20px;
+  overflow: hidden;
+  cursor: default;
+}
+
+.mat-column-viewDetail {
+  max-width: 35px;
+}
+
+.org-type,
+.small {
+  font-size: 85%;
+  color: $gpn-labels;
+}
+
+.org-alias {
+  color: $gpn-labels;
+}
+
+.org-name {
+  display: flex;
+  flex-direction: row;
+}
+
+.mat-column-shevron {
+  width: $icon-column-width;
+  padding: 0 !important;
+}
+.mat-column-warnings {
+  width: $icon-column-width;
+  padding: 0 !important;
+  text-align: center;
+}
+
+.mat-column-star {
+  width: $icon-column-width;
+  padding-left: 0 !important;
+  padding-right: 0;
+}
+
+.mat-column-date {
+  width: 150px;
+}
+
+.mat-column-subject {
+  width: 180px;
+}
+
+.mat-column-analyze_state {
+  width: 200px;
+}
+
+.mat-column-value {
+  text-align: right;
+}
+
+.mat-cell.mat-column-value {
+  // width: 150px;
+
+  // font-family: 'din';
+  // font-weight: 400;
+  // font-size: 12pt;
+  padding-right: $gpn-padding;
+}
+
+.mat-column {
+  // &-shevron {
+  //   width: 10% !important;
+  // }
+  &-starred {
+    // width: 10% !important;
+    padding-left: 10px;
+  }
+  // &-value {
+  //   width: 10% !important;
+  // }
+  // &-amount_with_vat {
+  //   width: 10% !important;
+  // }
+  &-number {
+    width: 10% !important;
+  }
+  &-date {
+    width: 10% !important;
+  }
+  &-org {
+    width: 10% !important;
+  }
+  &-contract_subject {
+    width: 10% !important;
+  }
+  &-org_level {
+    width: 10% !important;
+  }
+  &-org1 {
+    width: 20% !important;
+  }
+  &-org2 {
+    width: 20% !important;
+  }
+  &-state {
+    width: 12% !important;
+  }
+  &-charterAndProtocol {
+    width: 10% !important;
+  }
+  // &-warnings {
+  //   width: 10% !important;
+  // }
+}

@@ -14,6 +14,13 @@ import { ConclusionModel } from '@app/models/conclusion-model';
 
 const api = '/api';
 
+interface NotUsedDocuments {
+  charter: { count: number; type: string };
+  protocol: { count: number; type: string };
+  annex: { count: number; type: string };
+  supplementary_agreement: { count: number; type: string };
+  contract: { count: number; type: string };
+}
 @Injectable()
 export class AuditService {
   constructor(private http: HttpClient) {}
@@ -57,6 +64,112 @@ export class AuditService {
       httpParams = httpParams.append('full', 'false');
     }
     return this.http.get<Array<Document>>(`${api}/document/list`, {
+      params: httpParams
+    });
+  }
+
+  public getListNotUsedDocuments(
+    auditId: string
+  ): Observable<NotUsedDocuments> {
+    let httpParams = new HttpParams();
+
+    if (auditId) {
+      httpParams = httpParams.append('auditId', auditId);
+    }
+    return this.http.get<NotUsedDocuments>(`${api}/document/notusedlinks`, {
+      params: httpParams
+    });
+  }
+
+  public getNotUsedDocuments(
+    auditId: string,
+    documentType: string,
+    take: number,
+    pageIndex: number,
+    column: string,
+    sort: string
+  ): Observable<{ arrOfRequiredContract: Document[]; count: number }> {
+    let httpParams = new HttpParams();
+
+    if (auditId) httpParams = httpParams.append('auditId', auditId);
+
+    if (take) httpParams = httpParams.append('take', take.toString());
+
+    if (take)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+
+    if (pageIndex)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+
+    if (column) httpParams = httpParams.append('column', column.toString());
+
+    if (sort) httpParams = httpParams.append('sort', sort.toString());
+
+    if (documentType)
+      httpParams = httpParams.append('documentType', documentType.toString());
+
+    return this.http.get<{ arrOfRequiredContract: Document[]; count: number }>(
+      `${api}/document/notused`,
+      {
+        params: httpParams
+      }
+    );
+  }
+
+  public getTreeDocument(
+    auditId: string,
+    documentId: string,
+    documentType: string,
+    take: number,
+    pageIndex: number,
+    column: string,
+    sort: string
+  ): Observable<{ arrOfRequiredContract: Document[]; count: number }> {
+    let httpParams = new HttpParams();
+
+    if (auditId) httpParams = httpParams.append('auditId', auditId);
+
+    if (take) httpParams = httpParams.append('take', take.toString());
+
+    if (take)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+
+    if (pageIndex)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+
+    if (column) httpParams = httpParams.append('column', column.toString());
+
+    if (sort) httpParams = httpParams.append('sort', sort.toString());
+
+    if (documentId && documentType) {
+      httpParams = httpParams.append('documentId', documentId.toString());
+      httpParams = httpParams.append('documentType', documentType.toString());
+    }
+
+    return this.http.get<{ arrOfRequiredContract: Document[]; count: number }>(
+      `${api}/document/treelist`,
+      {
+        params: httpParams
+      }
+    );
+  }
+
+  public getTreeLinks(
+    documentId: string
+  ): Observable<{
+    Contract: Document[];
+    SupplementaryAgreement: Document[];
+    Annex: Document[];
+  }> {
+    let httpParams = new HttpParams();
+    if (documentId) {
+      httpParams = httpParams.append('documentId', documentId);
+    }
+    return this.http.get<{
+      Contract: Document[];
+      SupplementaryAgreement: Document[];
+      Annex: Document[];
+    }>(`${api}/document/treelinks`, {
       params: httpParams
     });
   }

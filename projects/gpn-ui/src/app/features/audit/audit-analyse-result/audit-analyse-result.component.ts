@@ -17,11 +17,8 @@ import { Tag } from '@app/models/legal-document';
 import {
   faChevronDown,
   faChevronUp,
-  faClock,
-  faExclamationTriangle,
   faEye,
   faFile,
-  faFlagCheckered,
   faFolder,
   faFolderOpen
 } from '@fortawesome/free-solid-svg-icons';
@@ -46,7 +43,7 @@ interface Node {
   _id?: string;
   name: string;
   children?: any[];
-  docs?: [];
+  docs?: any[];
   details?: Tag;
   confidence?: number;
   kind?: string;
@@ -93,8 +90,7 @@ export class AuditAnalyseResultComponent
   docs: Document[];
   TREE_DATA: Node[] = [];
   audit: Audit;
-  treeControl;
-  treeFlattener;
+  tableSource;
   dataSource;
   selectedPage = -1;
   maxPageIndex = -1;
@@ -115,19 +111,23 @@ export class AuditAnalyseResultComponent
     return {
       expandable: !!node.children && node.children.length > 0,
       name: node.name,
-      kind: node.kind,
-      childCount: node.childCount,
       level: level,
-      index: node.index,
-      documentDate: this.getAttrValue('date', node),
-      documentNumber: this.getAttrValue('number', node),
-      documentType: node.documentType,
-      _id: node._id,
-      error: node.error,
-      attributes: node.attributes,
+      childCount: node.childCount,
       docs: node.docs
     };
   };
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer,
+    node => node.level,
+    node => node.expandable,
+    node => node.children
+  );
+
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+    node => node.level,
+    node => node.expandable
+  );
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -141,18 +141,7 @@ export class AuditAnalyseResultComponent
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
-  ngOnInit() {
-    this.treeFlattener = new MatTreeFlattener(
-      this._transformer,
-      node => node.level,
-      node => node.expandable,
-      node => node.children
-    );
-    this.treeControl = new FlatTreeControl<ExampleFlatNode>(
-      node => node.level,
-      node => node.expandable
-    );
-  }
+  ngOnInit() {}
 
   ngAfterViewInit(): void {
     this.auditservice
@@ -209,13 +198,12 @@ export class AuditAnalyseResultComponent
           for (const n of this.files) this.fillNodes(n);
           this.refreshTree();
         });
-    } else if (this.selectedPage <= 2) {
+    } else if (this.selectedPage <= 1) {
       this.auditservice
         .getDouments(this.IdAudit, false)
         .pipe(takeUntil(this.destroyStream))
         .subscribe(data => {
           this.docs = data;
-
           if (this.audit.typeViewResult === 2) {
             this.docs = this.docs.filter(
               x => x.analysis != null || x.user != null
@@ -272,6 +260,41 @@ export class AuditAnalyseResultComponent
           }
           this.refreshTree();
         });
+    } else if (this.selectedPage === 2) {
+      this.spinner.show();
+      this.auditservice
+        .getListNotUsedDocuments(this.IdAudit)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe(data => {
+          for (let val in data) {
+            if (data[val].count === 0) continue;
+            this.TREE_DATA.push({
+              name: data[val].type,
+              childCount: data[val].count,
+              children: [
+                {
+                  documentType: data[val].type,
+                  docs: [
+                    {
+                      auditid: this.IdAudit,
+                      documentType: data[val].type
+                    }
+                  ]
+                }
+              ],
+              docs: [
+                {
+                  auditid: this.IdAudit,
+                  documentType: data[val].type
+                }
+              ]
+            });
+          }
+
+          this.changeDetectorRefs.detectChanges();
+          this.spinner.hide();
+          this.refreshTree();
+        });
     } else if (this.selectedPage === 4) {
       this.spinner.show();
       this.auditservice
@@ -298,11 +321,6 @@ export class AuditAnalyseResultComponent
       this.treeFlattener
     );
     this.dataSource.data = this.TREE_DATA;
-    /*if (this.selectedPage === 0) this.treeControl.expandAll();
-    else
-      for (const n of this.treeControl.dataNodes) {
-        if (n.level === 0) this.treeControl.expand(n);
-      }*/
     this.checkCount = this.documentCount - this.errorCount;
     this.changeDetectorRefs.detectChanges();
   }
