@@ -482,7 +482,7 @@ export class ViewDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
           key: item.key,
           span: item.span,
           span_map: item.span_map,
-          value: item.value || null, //value is required
+          value: item.value,
           changed: item.changed,
           parent: item.parent
         })

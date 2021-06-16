@@ -1,7 +1,7 @@
 const { LimitValue } = require('../models');
 const { Risk } = require('../models');
 const logger = require('../core/logger');
-
+const catalog = require('../json/catalog.json');
 exports.getRisks = async (req, res) => {
   try {
     let riskMatrix = await Risk.find().lean();
@@ -111,6 +111,15 @@ exports.updateLimitValue = async (req, res) => {
     // await limitValue.save();
     await logger.log(req, res, 'Редактирование предельных значений');
     res.send(limitValue);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getViolationTypes = async (req, res) => {
+  try {
+    let violations = catalog.violationTypes;
+    res.send(violations);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

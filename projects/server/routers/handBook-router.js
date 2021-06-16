@@ -11,4 +11,6 @@ router.post('/limitValues', controller.postLimitValue);
 router.delete('/limitValues', controller.deleteLimitValue);
 router.put('/limitValues', controller.updateLimitValue);
 
+router.get('/violationTypes', controller.getViolationTypes);
+
 module.exports = router;

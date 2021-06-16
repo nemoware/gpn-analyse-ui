@@ -42,6 +42,11 @@
 
 
     <div class="actions-container">
+      <button (click)="addViolation()" color="primary" class='floating-button' mat-mini-fab
+              matTooltip="Добавить нарушение">
+        <mat-icon>error</mat-icon>
+      </button>
+
       <button (click)="goToAttribute('top')" color="primary" class='floating-button' mat-mini-fab
         matTooltip="В начало документа">
         <mat-icon>keyboard_arrow_up</mat-icon>
