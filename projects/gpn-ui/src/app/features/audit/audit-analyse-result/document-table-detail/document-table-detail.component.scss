@@ -82,11 +82,11 @@ tr.detail-row {
 }
 
 .mat-cell.mat-column-value {
-  width: 150px;
+  // width: 150px;
 
-  font-family: 'din';
-  font-weight: 400;
-  font-size: 12pt;
+  // font-family: 'din';
+  // font-weight: 400;
+  // font-size: 12pt;
   padding-right: $gpn-padding;
 }
 
@@ -95,7 +95,7 @@ tr.detail-row {
   //   width: 10% !important;
   // }
   &-starred {
-    width: 10% !important;
+    // width: 10% !important;
     padding-left: 10px;
   }
   // &-value {
@@ -126,10 +126,10 @@ tr.detail-row {
     width: 20% !important;
   }
   &-state {
-    width: 10% !important;
+    width: 12% !important;
   }
   &-charterAndProtocol {
-    width: 8% !important;
+    width: 10% !important;
   }
   // &-warnings {
   //   width: 10% !important;

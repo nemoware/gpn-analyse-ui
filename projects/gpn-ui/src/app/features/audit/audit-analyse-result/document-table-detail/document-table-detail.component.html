@@ -29,9 +29,12 @@
     <ng-container matColumnDef="value">
       <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора без ндс</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        {{(row.analysis.attributes_tree.contract?.price?.amount?.value |
+        {{
+          (row.analysis.attributes_tree.contract?.price?.amount_netto?.value |
         currency:row.analysis.attributes_tree.contract?.price?.currency?.value)||
-        row.analysis.attributes_tree.contract?.subject?.price?.amount.value}}
+        (row.analysis.attributes_tree.contract?.subject?.price?.amount_netto.value | 
+        currency:row.analysis.attributes_tree.contract?.price?.currency?.value)
+      }}
       </td>
     </ng-container>
 
@@ -40,13 +43,11 @@
       <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора c ндс</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{
-        (row.analysis.attributes_tree.contract?.price?.amount?.value |
+        (row.analysis.attributes_tree.contract?.price?.amount_brutto?.value |
         currency:row.analysis.attributes_tree.contract?.price?.currency?.value) ||
-        (row.analysis.attributes_tree.contract?.subject?.price?.amount?.value |
-        currency:row.analysis.attributes_tree.contract?.price?.currency?.value)||
         (row.analysis.attributes_tree.contract?.subject?.price?.amount_brutto?.value |
         currency:row.analysis.attributes_tree.contract?.price?.currency?.value)
-        }}
+      }}
       </td>
     </ng-container>
 

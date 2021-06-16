@@ -260,8 +260,8 @@ exports.getTreeFromDocuments = async (req, res) => {
     const count = arrOfRequiredContract.length;
 
     function compare(a, b) {
-      if (deepFind(a, column) < deepFind(b, column)) return sort * -1;
-      if (deepFind(a, column) > deepFind(b, column)) return sort;
+      if (deepFind(a, column) < deepFind(b, column)) return sort;
+      if (deepFind(a, column) > deepFind(b, column)) return sort * -1;
       return 0;
     }
 
@@ -271,8 +271,8 @@ exports.getTreeFromDocuments = async (req, res) => {
         i = 0;
       while (result === 0 && i < props.length) {
         result = 0;
-        if (a[props[i]] < b[props[i]]) result = sort * -1;
-        if (a[props[i]] > b[props[i]]) result = sort;
+        if (a[props[i]] < b[props[i]]) result = sort;
+        if (a[props[i]] > b[props[i]]) result = sort * -1;
         i++;
       }
       return result;
@@ -379,8 +379,8 @@ exports.getNotUsedDocument = async (req, res) => {
     });
 
     function compare(a, b) {
-      if (deepFind(a, column) < deepFind(b, column)) return sort * -1;
-      if (deepFind(a, column) > deepFind(b, column)) return sort;
+      if (deepFind(a, column) < deepFind(b, column)) return sort;
+      if (deepFind(a, column) > deepFind(b, column)) return sort * -1;
       return 0;
     }
 
