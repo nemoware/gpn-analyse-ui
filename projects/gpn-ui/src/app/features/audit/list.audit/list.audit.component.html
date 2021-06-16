@@ -1,5 +1,5 @@
 <div class="left_group">
-  <gpn-audit-filter [auditStatuses]="auditStatuses" (ApplyFilter)="onApplyFilter($event)"></gpn-audit-filter>
+  <gpn-filter [states]="auditStatuses" [appPage]="appPage.audit" (ApplyFilter)="onApplyFilter($event)"></gpn-filter>
 </div>
 
 <div class="col">

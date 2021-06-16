@@ -1,5 +1,5 @@
 <div class="left_group">
-  <gpn-event-filter [eventsType]="eventsType" (ApplyFilter)="onApplyFilter($event)"></gpn-event-filter>
+  <gpn-filter [states]="eventsType" [appPage] = "eAppPage.events" (ApplyFilter)="onApplyFilter($event)"></gpn-filter>
 </div>
 
 <div class="right_group">

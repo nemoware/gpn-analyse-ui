@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PreAuditFilterComponent } from './pre-audit-filter.component';
+import { AddViolationComponent } from './add-violation.component';
 
-describe('PreAuditFilterComponent', () => {
-  let component: PreAuditFilterComponent;
-  let fixture: ComponentFixture<PreAuditFilterComponent>;
+describe('AddViolationComponent', () => {
+  let component: AddViolationComponent;
+  let fixture: ComponentFixture<AddViolationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PreAuditFilterComponent]
+      declarations: [AddViolationComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PreAuditFilterComponent);
+    fixture = TestBed.createComponent(AddViolationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

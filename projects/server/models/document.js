@@ -58,5 +58,22 @@ module.exports = (mongoose, Schema) => {
     }
   };
 
+  documentSchema.methods.getDocumentDate = function(documentType) {
+    if (!this.analysis || !this.analysis.attributes_tree) return;
+
+    if (this.user && this.user.attributes_tree) {
+      return this.user.attributes_tree[documentType].date.value;
+    } else return this.user.attributes_tree[documentType].date.value;
+  };
+
+  documentSchema.methods.getAttributeTreeValue = function(attribute) {
+    const documentType = this.parse.documentType.toLowerCase();
+    if (!this.analysis || !this.analysis.attributes_tree) return;
+
+    if (this.user && this.user.attributes_tree) {
+      return this.user.attributes_tree[documentType][attribute].value;
+    } else return this.analysis.attributes_tree[documentType][attribute].value;
+  };
+
   return mongoose.model('Document', documentSchema);
 };

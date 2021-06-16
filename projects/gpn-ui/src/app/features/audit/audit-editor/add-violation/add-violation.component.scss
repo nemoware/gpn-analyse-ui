@@ -1,0 +1,26 @@
+.mat-form-field {
+  width: 100%;
+}
+
+#charter-message {
+  color: red;
+  position: absolute !important;
+  margin-top: -18px !important;
+  font-size: 13px;
+}
+
+.select-charter-item {
+  display: block;
+  font-size: 14px;
+  position: absolute;
+  top: 18px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}

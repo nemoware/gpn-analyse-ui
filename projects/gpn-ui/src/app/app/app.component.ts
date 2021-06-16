@@ -3,21 +3,21 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { environment as env } from '@environments/environment';
-import { HideDirective } from '../core/authorization/hide.directive';
 
 import {
-  authLogin,
-  authLogout,
   AppState,
   LocalStorageService,
   selectIsAuthenticated,
-  selectSettingsStickyHeader,
-  selectEffectiveTheme
+  selectSettingsStickyHeader
 } from '@core/core.module';
 import { AuthorizationData } from '@core/authorization/authorization.data';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
-import { Dictionaries } from '@app/models/dictionaries';
 import { takeUntil } from 'rxjs/operators';
+import {
+  Router,
+  NavigationStart,
+  Event as NavigationEvent
+} from '@root/node_modules/@angular/router';
 
 @Component({
   selector: 'gpn-root',
@@ -30,10 +30,11 @@ export class AppComponent implements OnInit, OnDestroy {
   version = env.versions.app;
   loadedUser = false;
   year = new Date().getFullYear();
+  currentRoute;
   logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
-    { link: 'pre-audit', label: 'Предпроверка' },
-    { link: 'audit', label: 'Проверка' },
+    { link: 'pre-audit', label: 'Предпроверка ДД' },
+    { link: 'audit', label: 'Проверка ДО' },
     { link: 'charter', label: 'Уставы' },
     { link: 'handbook', label: 'Справочники' },
     // { link: 'dash', label: 'Дэшборд' },
@@ -55,12 +56,12 @@ export class AppComponent implements OnInit, OnDestroy {
   isAuthenticated$: Observable<boolean>;
   stickyHeader$: Observable<boolean>;
   private destroyStream = new Subject<void>();
-
   constructor(
     private store: Store<AppState>,
     private storageService: LocalStorageService,
     private authorizationData: AuthorizationData,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private router: Router
   ) {
     translate.addLangs(['en', 'ru']);
     translate.setDefaultLang('ru');
@@ -74,6 +75,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    //TODO: Доделать подстветку активной вкладки для справочников
+    //Получаем текущую ссылку
+    this.router.events.subscribe((event: NavigationEvent) => {
+      if (event instanceof NavigationStart) {
+        this.currentRoute = event.url;
+      }
+    });
     this.storageService.testLocalStorage();
     this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));
@@ -108,5 +116,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroyStream.next();
+  }
+
+  openWindow(item) {
+    window.open(window.location.origin + '/#/' + item.link, '_blank');
   }
 }

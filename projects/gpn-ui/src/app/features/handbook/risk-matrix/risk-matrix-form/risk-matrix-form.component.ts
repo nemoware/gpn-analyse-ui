@@ -72,25 +72,7 @@ export class RiskMatrixFormComponent implements OnInit {
     'RealEstateTransactions',
     'RealEstate'
   ];
-  listOfViolations = [
-    'charter_not_found',
-    'protocol_not_found',
-    'contract_value_great_than_protocol_value',
-    'contract_value_not_equal_protocol_value',
-    'contract_value_less_than_protocol_value',
-    'contract_date_less_than_protocol_date',
-    'provision_date_less_than_protocol_date',
-    'hire_date_less_than_protocol_date',
-    'charity_policy_date_less_than_protocol_date',
-    'provision_not_found',
-    'person_list_not found',
-    'interested_party_transactions_found',
-    'attribute_not_found',
-    'sum_not_found',
-    'book_value_not_found',
-    'currency_data_not_found',
-    'agent_bounty_not_found'
-  ];
+  listOfViolations = [];
   //Форма контроля ввода
   controlForm: FormGroup;
   selectedType: string;
@@ -140,7 +122,12 @@ export class RiskMatrixFormComponent implements OnInit {
     this.controlForm.setValidators(this.uniqueValidator());
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    //Получаем список всевозможных нарушений
+    this.handBookService.getViolationTypes().subscribe(data => {
+      this.listOfViolations = data;
+    });
+  }
 
   triggerResize() {
     // Wait for changes to be applied, then trigger textarea resize.

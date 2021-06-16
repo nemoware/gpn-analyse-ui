@@ -6,6 +6,7 @@ const { Audit, Document, Subsidiary, Risk } = require('../models');
 const parser = require('../services/parser-service');
 const translations = require('../../gpn-ui/src/assets/i18n/ru.json');
 const roboService = require('../services/robo-service');
+const mongoose = require('mongoose');
 
 exports.postAudit = async (req, res) => {
   let audit = new Audit(req.body);
@@ -418,9 +419,9 @@ exports.getViolations = async (req, res) => {
         violations.push({
           document: {
             id: doc._id,
-            number: doc.analysis.attributes.number
-              ? doc.analysis.attributes.number.value
-              : '',
+            // number: doc.analysis.attributes.number
+            //   ? doc.analysis.attributes.number.value
+            //   : '',
             type: doc.parse.documentType,
             warnings: doc.analysis.warnings
           }
@@ -592,20 +593,20 @@ async function generateConclusion(audit) {
     }
   }
 
-  const orgLevels = [
-    'AllMembers',
-    'ShareholdersGeneralMeeting',
-    'BoardOfDirectors',
-    'BoardOfCompany',
-    'CEO',
-    'competence_CEO'
-  ];
-  let charterOrgLevels = [];
-
-  for (const orgLevel of orgLevels) {
-    const level = desiredCharter.getAttributeValue(orgLevel);
-    if (level) charterOrgLevels.push(orgLevel);
-  }
+  // const orgLevels = [
+  //   'AllMembers',
+  //   'ShareholdersGeneralMeeting',
+  //   'BoardOfDirectors',
+  //   'BoardOfCompany',
+  //   'CEO',
+  //   'competence_CEO'
+  // ];
+  // let charterOrgLevels = [];
+  //
+  // for (const orgLevel of orgLevels) {
+  //   const level = desiredCharter.getAttributeValue(orgLevel);
+  //   if (level) charterOrgLevels.push(orgLevel);
+  // }
 
   let riskMatrix = await Risk.find(
     {},
@@ -881,4 +882,146 @@ getViolations = selectedRows => {
     violationModel.push(violation);
   });
   return violationModel;
+};
+
+exports.postViolation = async (req, res) => {
+  const violation = req.body.violation;
+  const auditId = req.body.auditId;
+  const documentID = violation.document.id;
+  violation.violation_reason_text = req.body.violation_reason_text;
+  if (!auditId) {
+    let err = 'Can not post violation: auditId is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+
+  if (!documentID) {
+    let err = 'Can not post violation: documentID is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+
+  try {
+    const document = await Document.findById(documentID);
+    const org_type =
+      document.analysis?.attributes_tree?.contract?.orgs?.[1]?.type?.value ||
+      document.user?.attributes_tree?.contract?.orgs?.[1]?.type?.value;
+    const org_name =
+      document.analysis?.attributes_tree?.contract?.orgs?.[1]?.name?.value ||
+      document.user?.attributes_tree?.contract?.orgs?.[1]?.name?.value;
+    violation.violation_reason = {
+      contract: {
+        number: document.getAttributeTreeValue('number'),
+        date: document.getAttributeTreeValue('date'),
+        org_type,
+        org_name,
+        value: getContractPriceValue(document),
+        currency: getContractCurrencyValue(document)
+      }
+    };
+    const audit = await Audit.findById(auditId);
+    const links = audit.links.filter(
+      link => link.fromId.toString() === documentID
+    );
+    for (const link of links) {
+      const charter = await Document.findById(link.toId);
+      if (charter?.parse.documentType === 'CHARTER') {
+        violation.founding_document = {
+          id: charter._id,
+          date: charter.getAttributeTreeValue('date')
+        };
+      }
+    }
+    violation.userViolation = true;
+    violation.id = mongoose.Types.ObjectId();
+
+    audit.violations.push(violation);
+    audit.save();
+    res.status(200).json();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.updateViolation = async (req, res) => {
+  const id = req.body.auditId;
+  const violation = req.body.violation;
+  const violationId = violation.id;
+  try {
+    const audit = await Audit.findById(id);
+
+    if (!audit) {
+      let err = 'Can not update violation: auditId is null';
+      logger.logError(req, res, err, 400);
+      return;
+    }
+
+    if (!violationId) {
+      let err = 'Can not update violation: violationId is null';
+      logger.logError(req, res, err, 400);
+      return;
+    }
+
+    const index = audit.violations.findIndex(
+      violation => violation.id.toString() === violationId
+    );
+    audit.violations[index].violation_type = violation.violation_type;
+    audit.violations[index].violation_text = violation.violation_text;
+    audit.violations[index].violation_reason_text =
+      violation.violation_reason_text;
+    audit.violations[index].reference = violation.reference;
+    audit.markModified('violations');
+    await audit.save();
+    await logger.log(req, res, 'Редактирование нарушения');
+    res.status(200).json();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.deleteViolation = async (req, res) => {
+  const auditId = req.query.auditId;
+  if (!req.query.auditId) {
+    let err = 'Can not delete violation: auditId is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+  let violationId = req.query.violationId;
+  if (!violationId) {
+    let msg = 'Cannot delete violation: violationId is null';
+    logger.logError(req, res, msg, 400);
+    return;
+  }
+
+  try {
+    const audit = await Audit.findById(auditId);
+    audit.violations = audit.violations.filter(
+      violation => violation.id.toString() !== violationId
+    );
+    audit.markModified('violations');
+    await audit.save();
+    res.status(200).send();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+getContractPriceValue = document => {
+  return (
+    document.analysis?.attributes_tree?.contract?.price?.amount?.value ||
+    document.analysis?.attributes_tree?.contract?.subject?.price?.amount
+      ?.value ||
+    document.user?.attributes_tree?.contract?.price?.amount?.value ||
+    document.user?.attributes_tree?.contract?.subject?.price?.amount?.value
+  );
+};
+
+getContractCurrencyValue = document => {
+  return (
+    document.analysis?.attributes_tree?.contract?.price?.currency?.value ||
+    document.analysis?.attributes_tree?.contract?.subject?.price?.currency
+      ?.value ||
+    document.user?.attributes_tree?.contract?.price?.currency?.value ||
+    document.user?.attributes_tree?.contract?.subject?.price?.currency?.value
+  );
 };

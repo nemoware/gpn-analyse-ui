@@ -17,4 +17,7 @@ router.get('/conclusion', controller.getConclusion);
 router.put('/conclusion', controller.postConclusion);
 router.get('/fetch', controller.fetchAudits);
 router.put('/selectedViolations', controller.postSelectedViolations);
+router.post('/violation', controller.postViolation);
+router.put('/violation', controller.updateViolation);
+router.delete('/violation', controller.deleteViolation);
 module.exports = router;

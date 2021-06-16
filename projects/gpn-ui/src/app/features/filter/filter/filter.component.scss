@@ -4,6 +4,7 @@
   white-space: -moz-pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
+  padding-top: 15px;
 }
 
 .inputText {
@@ -23,9 +24,11 @@
 }
 
 .btn {
-  background-color: lightblue;
-  color: white;
-  border: none;
-  float: bottom;
-  width: 100%;
+  flex: auto;
+  margin: 5px;
+}
+
+.btnContainer {
+  display: flex;
+  flex-flow: wrap;
 }

@@ -583,7 +583,9 @@ exports.getDocument = async (req, res) => {
                     'DD.MM.YYYY'
                   )
                 : 'н/д'
-            }. Предпроверка от ${moment(audit.createDate).format('DD.MM.YYYY')}
+            }. Предпроверка ДД от ${moment(audit.createDate).format(
+              'DD.MM.YYYY'
+            )}
             )}`
           );
         } else if (document.parse.documentType === 'PROTOCOL')
@@ -1494,7 +1496,7 @@ exports.fetchCharters = async (req, res) => {
 exports.uploadFiles = async (req, res) => {
   try {
     const author = res.locals.user;
-    await roboService.postFiles(req.body, author);
+    await roboService.postFiles([], req.body, author);
     res.status(201).json();
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -1806,6 +1808,8 @@ setKeys = document => {
     } else {
       document.analysis.attributes = attributes;
     }
+  } else if (document.analysis) {
+    document.analysis.attributes = [];
   }
 };
 
@@ -1824,6 +1828,7 @@ setCharterTree = (userAttributes, error) => {
   // console.log(userAttributes);
   Object.keys(userAttributes).forEach(name => {
     const y = userAttributes[name];
+    setValue(y);
     const key = y.key;
     let atr = key.split('/');
     if (atr.length === 1) {
@@ -1898,9 +1903,9 @@ setContractTree = (userAttributes, error) => {
   let attributeTree = {};
   let org1 = {};
   let org2 = {};
-  // console.log(userAttributes);
   Object.keys(userAttributes).forEach(name => {
     const y = userAttributes[name];
+    setValue(y);
     const key = y.key;
     let atr = key.split('/');
     if (atr.length === 1) {
@@ -1935,7 +1940,7 @@ setContractTree = (userAttributes, error) => {
       } else if (atr[0].startsWith('person')) {
         for (const person of attributeTree.people) {
           if (person.key === y.parent) {
-            person[atr[1]] = y;
+            person[atr[1].split('-')[0]] = y;
           }
         }
       }
@@ -1950,7 +1955,6 @@ setContractTree = (userAttributes, error) => {
   }
 
   const data = { contract: attributeTree };
-
   validateSchema(data, schema, error);
 
   return attributeTree;
@@ -1962,15 +1966,13 @@ setProtocolTree = (userAttributes, error) => {
   let attributeTree = {};
   attributeTree.orgs = [];
   attributeTree.agenda_items = [];
-  console.log(userAttributes);
   Object.keys(userAttributes).forEach(name => {
     //Атрибут
     const y = userAttributes[name];
+    setValue(y);
     //Уникальный ключ атрибута
     const key = y.key;
     let atr = key.split('/');
-    console.log(atr);
-
     if (atr.length === 1) {
       const arr = key.split('-');
       //Наименование ДО, Краткое наименование ДО, Форма собственности ДО
@@ -2122,4 +2124,11 @@ validateSchema = (data, schema, error) => {
 
 translate = message => {
   return translations[message];
+};
+
+//Если у атрибута нет значения, то записываем туда пустую строку для валидации по схеме
+setValue = attribute => {
+  if (!attribute.value) {
+    attribute.value = '';
+  }
 };

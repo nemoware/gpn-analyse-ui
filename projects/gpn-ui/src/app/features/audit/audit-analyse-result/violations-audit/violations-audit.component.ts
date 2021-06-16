@@ -10,23 +10,20 @@ import {
   OnDestroy
 } from '@angular/core';
 import {
+  MatDialog,
   MatSort,
   MatTableDataSource
 } from '@root/node_modules/@angular/material';
 import { AuditService } from '@app/features/audit/audit.service';
 import { ViolationModel } from '@app/models/violation-model';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from '@root/node_modules/@angular/animations';
+import { state, style, trigger } from '@root/node_modules/@angular/animations';
 import { Helper } from '@app/features/audit/helper';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { SelectionModel } from '@root/node_modules/@angular/cdk/collections';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from '@root/node_modules/rxjs';
+import { AddViolationComponent } from '@app/features/audit/audit-editor/add-violation/add-violation.component';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'gpn-violations-audit',
@@ -40,12 +37,16 @@ import { Subject } from '@root/node_modules/rxjs';
 export class ViolationsAuditComponent implements OnInit, OnDestroy {
   col: string[] = [
     'document',
+    'creator',
     'founding_document',
     'reference',
     'violation_type',
     'violation_reason',
+    'events',
     'select'
   ];
+  faTrashAlt = faTrashAlt;
+  mouseOverIndex = -1;
   dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
   violations: ViolationModel[];
   selection = new SelectionModel<ViolationModel>(true, []);
@@ -59,7 +60,9 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
   constructor(
     private auditservice: AuditService,
     private changeDetectorRefs: ChangeDetectorRef,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public dialog: MatDialog,
+    private translateService: TranslateService
   ) {}
 
   emitSelected() {
@@ -111,6 +114,7 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    //Если заключение
     if (this.conclusion) {
       this.col.shift();
       this.col.pop();
@@ -121,31 +125,38 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
       this.dataSource.data = this.selectedRows.filter(x => {
         return x.violation_type;
       });
-    } else
-      this.auditservice
-        .getViolations(this.idAudit)
-        .pipe(takeUntil(this.destroyStream))
-        .subscribe(data => {
-          if (data) {
-            this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
-            this.dataSource.sort = this.sort;
-            this.dataSource.data = data.filter(x => {
-              return x.violation_type;
-            });
-            if (this.selectedRows) {
-              this.dataSource.data.forEach(row => {
+    } else {
+      this.getViolations();
+    }
+  }
+
+  getViolations() {
+    this.auditservice
+      .getViolations(this.idAudit)
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(data => {
+        if (data) {
+          this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
+          this.dataSource.sort = this.sort;
+          this.dataSource.data = data.filter(x => {
+            return x.violation_type;
+          });
+          if (this.selectedRows) {
+            this.dataSource.data.forEach(row => {
+              if (!row.userViolation) {
                 for (let i = 0; i < this.selectedRows.length; i++) {
                   if (this.compareDocs(row, this.selectedRows[i])) {
                     this.selection.select(row);
                   }
                 }
-              });
-            } else if (!this.conclusion) {
-              this.masterToggle();
-            }
-            this.changeDetectorRefs.detectChanges();
+              }
+            });
+          } else if (!this.conclusion) {
+            this.masterToggle();
           }
-        });
+          this.changeDetectorRefs.detectChanges();
+        }
+      });
   }
 
   getKindAttribute(key: string) {
@@ -183,8 +194,8 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
   compareDocs(doc1: ViolationModel, doc2: ViolationModel) {
     return (
       doc1.document.id === doc2.document.id &&
-      doc1.founding_document.id === doc2.founding_document.id &&
-      doc1.reference.id === doc2.reference.id
+      (doc1.founding_document && doc1.founding_document.id) ===
+        (doc2.founding_document && doc2.founding_document.id)
     );
   }
 
@@ -195,5 +206,59 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroyStream.next();
+  }
+
+  editViolation(row: any, index) {
+    if (row.userViolation) {
+      const violation = {
+        violation_type: row.violation_type,
+        violation_text: row.violation_text,
+        violation_reason: row.violation_reason,
+        violation_reason_text: row.violation_reason_text,
+        reference: row.reference,
+        id: row.id
+      };
+      const dialogRef = this.dialog.open(AddViolationComponent, {
+        width: '1000px',
+        data: {
+          new: false,
+          violation,
+          index,
+          document: {
+            auditId: this.idAudit
+          }
+        },
+        maxHeight: '90vh'
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.getViolations();
+        }
+      });
+    }
+  }
+
+  onMouseOver(index) {
+    this.mouseOverIndex = index;
+  }
+
+  deleteViolation(element: any, event: MouseEvent) {
+    event.stopPropagation();
+    if (element != null) {
+      if (
+        confirm(
+          `Вы действительно хотите удалить Нарушение "${this.translateService.instant(
+            element.violation_type
+          )}"?`
+        )
+      ) {
+        this.auditservice
+          .deleteViolation(this.idAudit, element.id)
+          .pipe(takeUntil(this.destroyStream))
+          .subscribe(() => {
+            this.getViolations();
+          });
+      }
+    }
   }
 }

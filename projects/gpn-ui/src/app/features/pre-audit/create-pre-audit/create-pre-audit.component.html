@@ -10,9 +10,22 @@
   <mat-error *ngIf="typeControl.value.length === 0">
     Вы не выбрали тип проверки!
   </mat-error>
-  <div style="width: 100%" color="accent">
-    <input [(ngModel)]="filesString"  type="file" multiple (change)="uploadFiles($event)">
+  <mat-label>
+    Выберите договор и его приложения
+  </mat-label>
+  <div style="width: 100%">
+    <input [(ngModel)]="filesString" type="file" multiple (change)="uploadFiles($event)">
   </div>
+  <ng-container *ngIf="typeControl.value.includes('InterestControl')">
+    <br>
+    <mat-label>
+      Выберите файл с цепочкой бенефециаров
+    </mat-label>
+    <div style="width: 100%">
+      <input [(ngModel)]="chainString" type="file" (change)="uploadChain($event)">
+    </div>
+  </ng-container>
+  <br>
   <div class="row">
     <div class="col">
       <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>

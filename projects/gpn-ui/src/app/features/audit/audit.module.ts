@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ListAuditComponent } from '@app/features/audit/list.audit/list.audit.component';
 import { SharedModule } from '@shared/shared.module';
 import { ListAuditRoutingModule } from '@app/features/audit/audit-routing.module';
-import { AuditFilterComponent } from './audit-filter/audit-filter.component';
 import { CreateAuditComponent } from './create-audit/create-audit.component';
 import { NgxMatSelectSearchModule } from '@root/node_modules/ngx-mat-select-search';
 import { ReactiveFormsModule } from '@root/node_modules/@angular/forms';
@@ -52,6 +51,8 @@ import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
 import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-detail/subsidiary-detail.component';
 import { LinksDocumentComponent } from './audit-analyse-result/links-document/links-document.component';
 import { DocumentTableDetailComponent } from './audit-analyse-result/document-table-detail/document-table-detail.component';
+import { FilterModule } from './../filter/filter.module';
+import { AddViolationComponent } from './audit-editor/add-violation/add-violation.component';
 
 @NgModule({
   declarations: [
@@ -76,10 +77,10 @@ import { DocumentTableDetailComponent } from './audit-analyse-result/document-ta
     ViolationsAuditComponent,
     MaskDateDirective,
     SortValuePipe,
-    AuditFilterComponent,
-    SubsidiaryDetailComponent,
     LinksDocumentComponent,
     DocumentTableDetailComponent
+    SubsidiaryDetailComponent,
+    AddViolationComponent
   ],
   imports: [
     CommonModule,
@@ -99,20 +100,21 @@ import { DocumentTableDetailComponent } from './audit-analyse-result/document-ta
     MatExpansionModule,
     AngularResizedEventModule,
     MatRippleModule,
-    TextMaskModule
+    TextMaskModule,
+    FilterModule
   ],
   entryComponents: [
     CreateAuditComponent,
     AuditResultComponent,
     EditAttributeComponent,
     SearchDocumentComponent,
-    SubsidiaryDetailComponent
+    SubsidiaryDetailComponent,
+    AddViolationComponent
   ],
   exports: [
     ViewDocumentComponent,
     DocStateComponent,
     MaskDateDirective,
-    AuditFilterComponent,
     DocumentDetailComponent,
     ViolationsAuditComponent,
     ChildDetailComponent

@@ -56,4 +56,8 @@ export class HandBookService {
   public updateLimitValue(limitValue: any): Observable<LimitValue> {
     return this.http.put<LimitValue>(`${api}/handbook/limitValues`, limitValue);
   }
+
+  public getViolationTypes(): Observable<any[]> {
+    return this.http.get<Array<any>>(`${api}/handbook/violationTypes`);
+  }
 }

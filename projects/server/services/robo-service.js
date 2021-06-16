@@ -29,9 +29,6 @@ function info(version) {
 exports.postFiles = async (checkTypes, documents, author) => {
   try {
     const options = getOptions(checkTypes, documents, author);
-    const fs = require('fs');
-    let data = JSON.stringify(options.body, null, 2);
-    fs.writeFileSync('test.json', data);
     await post(options);
   } catch (err) {
     logger.log(err);
@@ -40,10 +37,12 @@ exports.postFiles = async (checkTypes, documents, author) => {
 
 function getOptions(checkTypes, documents, author) {
   let body = {
-    checkTypes: checkTypes,
     documents: documents,
     author: author
   };
+  if (checkTypes.length !== 0) {
+    body.checkTypes = checkTypes;
+  }
   return {
     url: `${roboServiceUrl}/upload_docs`,
     headers: { 'content-type': 'application/json' },
