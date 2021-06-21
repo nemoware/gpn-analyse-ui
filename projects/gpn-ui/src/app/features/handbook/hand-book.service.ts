@@ -7,7 +7,7 @@ import {
 } from '@root/node_modules/@angular/common/http';
 import { Observable } from '@root/node_modules/rxjs';
 import { LimitValue } from '@app/models/limitValue.model';
-import { BookValue } from '@app/models/bookValues';
+import { BookValue } from '@app/models/bookValue';
 
 const api = '/api';
 

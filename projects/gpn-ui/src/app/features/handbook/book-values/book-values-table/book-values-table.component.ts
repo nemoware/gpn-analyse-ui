@@ -15,7 +15,7 @@ import { MatDialog } from '@root/node_modules/@angular/material';
 import { takeUntil } from '@root/node_modules/rxjs/operators';
 import { BookValuesTableDatasource } from '@app/features/handbook/book-values/book-values-table/book-values-table.datasource';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { BookValue } from '@app/models/bookValues';
+import { BookValue } from '@app/models/bookValue';
 import { BookValuesFormComponent } from '@app/features/handbook/book-values/book-values-form/book-values-form.component';
 import { DatePipe } from '@root/node_modules/@angular/common';
 

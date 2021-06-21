@@ -27,7 +27,7 @@ import {
 import * as _moment from 'moment';
 // @ts-ignore
 import { default as _rollupMoment, Moment } from 'moment';
-import { BookValue } from '@app/models/bookValues';
+import { BookValue } from '@app/models/bookValue';
 
 const moment = _rollupMoment || _moment;
 
