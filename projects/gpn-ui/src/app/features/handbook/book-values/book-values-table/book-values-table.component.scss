@@ -1,0 +1,49 @@
+mat-cell,
+.mat-cell {
+  min-height: auto; // overrides the 'inherit' that set the min height of the row
+  padding: 12px 16px 12px 0;
+}
+
+.search-container > * {
+  width: 50%;
+}
+
+.md-button.md-cornered {
+  border-radius: 0;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.link_tag {
+  cursor: pointer;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  background-color: aliceblue;
+}
+
+div.btn-group {
+  display: none;
+}
+.mat-row:hover .btn-group {
+  display: inline-block;
+}
+
+.inactive-color {
+  background-color: lightgrey;
+}
+
+h2 {
+  padding-top: 15px;
+  padding-bottom: 0;
+  line-height: 1.2em;
+  font-family: 'din';
+  text-align: center;
+}
+
+.table-row {
+  height: 75px !important;
+}

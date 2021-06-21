@@ -13,4 +13,8 @@ router.put('/limitValues', controller.updateLimitValue);
 
 router.get('/violationTypes', controller.getViolationTypes);
 
+router.get('/bookValues', controller.getBookValues);
+router.post('/bookValues', controller.postBookValue);
+router.delete('/bookValues', controller.deleteBookValue);
+router.put('/bookValues', controller.updateBookValue);
 module.exports = router;

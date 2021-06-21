@@ -78,6 +78,15 @@ const routes: Routes = [
     data: { appPage: 'audit' }
   },
   {
+    path: 'bookValues',
+    loadChildren: () =>
+      import('./features/handbook/book-values/book-values.module').then(
+        m => m.BookValuesModule
+      ),
+    canActivate: [AppPageGuard],
+    data: { appPage: 'audit' }
+  },
+  {
     path: '**',
     redirectTo: 'audit'
   }

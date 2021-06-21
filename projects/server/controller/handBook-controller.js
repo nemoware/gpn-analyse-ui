@@ -1,5 +1,4 @@
-const { LimitValue } = require('../models');
-const { Risk } = require('../models');
+const { LimitValue, Risk, BookValue } = require('../models');
 const logger = require('../core/logger');
 const catalog = require('../json/catalog.json');
 exports.getRisks = async (req, res) => {
@@ -120,6 +119,64 @@ exports.getViolationTypes = async (req, res) => {
   try {
     let violations = catalog.violationTypes;
     res.send(violations);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getBookValues = async (req, res) => {
+  try {
+    let bookValues = await BookValue.find().lean();
+    res.send(bookValues);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.postBookValue = async (req, res) => {
+  let bookValue = new BookValue(req.body);
+
+  try {
+    await bookValue.save();
+    await logger.log(req, res, 'Добавление Балансовой стоимости');
+    res.status(201).json(bookValue);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.deleteBookValue = async (req, res) => {
+  if (!req.query.id) {
+    let msg = 'Cannot delete bookValue because id is null';
+    logger.logError(req, res, msg, 400);
+    return;
+  }
+
+  let bookValueID = req.query.id;
+  try {
+    await BookValue.deleteOne({ _id: bookValueID });
+    res.status(200).send();
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.updateBookValue = async (req, res) => {
+  const id = req.body._id;
+  console.log(req.body);
+  try {
+    const bookValue = await BookValue.findById(id);
+    if (!bookValue) {
+      let err = `No bookValue found with id = ${id}`;
+      logger.logError(req, res, err, 404);
+    }
+
+    bookValue.date = req.body.date;
+    bookValue.value = req.body.value;
+
+    await bookValue.save();
+    await logger.log(req, res, 'Редактирование балансовой стоимости');
+    res.send(bookValue);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

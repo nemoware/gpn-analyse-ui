@@ -7,6 +7,7 @@ import {
 } from '@root/node_modules/@angular/common/http';
 import { Observable } from '@root/node_modules/rxjs';
 import { LimitValue } from '@app/models/limitValue.model';
+import { BookValue } from '@app/models/bookValues';
 
 const api = '/api';
 
@@ -59,5 +60,24 @@ export class HandBookService {
 
   public getViolationTypes(): Observable<any[]> {
     return this.http.get<Array<any>>(`${api}/handbook/violationTypes`);
+  }
+
+  public getBookValues(): Observable<BookValue[]> {
+    return this.http.get<Array<BookValue>>(`${api}/handbook/bookValues`);
+  }
+
+  public deleteBookValue(id: string) {
+    const urlParams = new HttpParams().set('id', id.toString());
+    return this.http.delete(`${api}/handbook/bookValues`, {
+      params: urlParams
+    });
+  }
+
+  public postBookValue(bookValue: any): Observable<BookValue> {
+    return this.http.post<BookValue>(`${api}/handbook/bookValues`, bookValue);
+  }
+
+  public updateBookValue(bookValue: any): Observable<BookValue> {
+    return this.http.put<BookValue>(`${api}/handbook/bookValues`, bookValue);
   }
 }

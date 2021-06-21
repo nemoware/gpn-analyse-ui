@@ -1,0 +1,34 @@
+<div class="container position-relative" xmlns="http://www.w3.org/1999/html">
+
+  <h4>{{data.new?'Новый балансовая стоимость':'Редактирование балансовой стоимости'}}</h4>
+
+  <form [formGroup]="controlForm">
+    <mat-form-field>
+      <mat-label>Выберите месяц и год</mat-label>
+      <input matInput [matDatepicker]="dp" [formControl]="date">
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp
+                      startView="multi-year"
+                      (yearSelected)="chosenYearHandler($event)"
+                      (monthSelected)="chosenMonthHandler($event, dp)"
+                      panelClass="example-month-picker">
+      </mat-datepicker>
+    </mat-form-field>
+
+
+    <mat-form-field color="accent">
+      <input mask="separator" matInput placeholder="Балансовая стоимость" formControlName="valueControl">
+    </mat-form-field>
+
+
+    <div class="row">
+      <div class="col">
+        <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
+      </div>
+      <div class="col">
+        <button mat-raised-button color="accent" [disabled]="controlForm.invalid" (click)="addBookValue()">{{data.new?'Добавить':'Сохранить'}}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
