@@ -17,13 +17,13 @@ import {
 import { AuditService } from '@app/features/audit/audit.service';
 import { ViolationModel } from '@app/models/violation-model';
 import { state, style, trigger } from '@root/node_modules/@angular/animations';
-import { Helper } from '@app/features/audit/helper';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { SelectionModel } from '@root/node_modules/@angular/cdk/collections';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from '@root/node_modules/rxjs';
 import { AddViolationComponent } from '@app/features/audit/audit-editor/add-violation/add-violation.component';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 
 @Component({
   selector: 'gpn-violations-audit',
@@ -62,7 +62,8 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
     private changeDetectorRefs: ChangeDetectorRef,
     private translate: TranslateService,
     public dialog: MatDialog,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private spinner: NgxSpinnerService
   ) {}
 
   emitSelected() {
@@ -131,6 +132,7 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
   }
 
   getViolations() {
+    this.spinner.show();
     this.auditservice
       .getViolations(this.idAudit)
       .pipe(takeUntil(this.destroyStream))
@@ -138,9 +140,7 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
         if (data) {
           this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
           this.dataSource.sort = this.sort;
-          this.dataSource.data = data.filter(x => {
-            return x.violation_type;
-          });
+          this.dataSource.data = data;
           if (this.selectedRows) {
             this.dataSource.data.forEach(row => {
               if (!row.userViolation) {
@@ -154,14 +154,10 @@ export class ViolationsAuditComponent implements OnInit, OnDestroy {
           } else if (!this.conclusion) {
             this.masterToggle();
           }
+          this.spinner.hide();
           this.changeDetectorRefs.detectChanges();
         }
       });
-  }
-
-  getKindAttribute(key: string) {
-    const atr = Helper.parseKind(key);
-    return atr.kind;
   }
 
   getViolation(row) {

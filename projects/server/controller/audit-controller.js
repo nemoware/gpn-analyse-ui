@@ -415,20 +415,7 @@ exports.getViolations = async (req, res) => {
         x => x.document.id.toString() === doc._id.toString()
       );
       if (v) v.document.warnings = doc.analysis.warnings;
-      else {
-        violations.push({
-          document: {
-            id: doc._id,
-            // number: doc.analysis.attributes.number
-            //   ? doc.analysis.attributes.number.value
-            //   : '',
-            type: doc.parse.documentType,
-            warnings: doc.analysis.warnings
-          }
-        });
-      }
     });
-
     res.send(violations);
   } catch (err) {
     logger.logError(req, res, err, 500);
