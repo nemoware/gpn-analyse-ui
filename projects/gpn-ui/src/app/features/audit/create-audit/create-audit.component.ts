@@ -70,7 +70,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   _auditStart: Date = null;
   _auditEnd: Date = null;
   _ftpUrl: string = null;
-  allSubs = { name: '* Все ДО' };
+  allSubs = { name: '* Все ДО', subsidiary_id: null };
   years = [];
   numberMask;
   robotState: boolean;
