@@ -9,7 +9,12 @@ const roboService = require('../services/robo-service');
 const mongoose = require('mongoose');
 
 exports.postAudit = async (req, res) => {
-  let audit = new Audit(req.body);
+  //Если нет subsidiary_id записываем в базу null
+  let body = req.body;
+  if (!body.subsidiary.subsidiary_id) {
+    body.subsidiary.subsidiary_id = null;
+  }
+  let audit = new Audit(body);
   audit.status = 'New';
   audit.author = res.locals.user;
   if (audit.ftpUrl !== null)
@@ -49,7 +54,7 @@ exports.postAudit = async (req, res) => {
 
 exports.getSubsidiaries = async (req, res) => {
   try {
-    const subsidiaries = await Subsidiary.find(null, '_id');
+    const subsidiaries = await Subsidiary.find(null, '_id subsidiary_id');
     res.send(subsidiaries);
   } catch (err) {
     logger.logError(req, res, err, 500);

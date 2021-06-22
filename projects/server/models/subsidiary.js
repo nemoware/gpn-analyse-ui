@@ -1,5 +1,4 @@
 module.exports = (mongoose, Schema) => {
-  const ObjectId = Schema.Types.ObjectId;
   let subsidiarySchema = new Schema(
     {
       _id: {
@@ -7,7 +6,8 @@ module.exports = (mongoose, Schema) => {
         alias: 'name'
       },
       legal_entity_type: String,
-      aliases: [String]
+      aliases: [String],
+      subsidiary_id: String
     },
     { toJSON: { virtuals: true } }
   );

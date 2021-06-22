@@ -3,7 +3,8 @@ module.exports = (mongoose, Schema) => {
   let auditSchema = new Schema(
     {
       subsidiary: {
-        name: String
+        name: String,
+        subsidiary_id: String
       },
       ftpUrl: String,
       auditStart: Date,
