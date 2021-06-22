@@ -51,7 +51,8 @@ export class AppComponent implements OnInit, OnDestroy {
   handbookMenu = [
     { link: 'riskMatrix', label: 'Матрица рисков' },
     { link: 'limitValues', label: 'Предельные значения' },
-    { link: 'bookValues', label: 'Балансовые стоимости' }
+    { link: 'bookValues', label: 'Балансовые стоимости' },
+    { link: 'affiliatesList', label: 'Список Аффилированных лиц' }
   ];
 
   isAuthenticated$: Observable<boolean>;

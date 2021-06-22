@@ -346,4 +346,25 @@ async function exportConclusion(
   return JSON.parse(response.body);
 }
 
+async function exportAffiliatesList(base64Content) {
+  const body = {
+    base64Content,
+    documentFileType: 'PDF'
+  };
+
+  const options = {
+    url: `${url}/document-parser/stakeholder-list`,
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body)
+  };
+  let response = {};
+  try {
+    response = await post(options);
+  } catch (err) {
+    return logger.logLocalError(err);
+  }
+  return JSON.parse(response.body);
+}
+
 exports.exportConclusion = exportConclusion;
+exports.exportAffiliatesList = exportAffiliatesList;

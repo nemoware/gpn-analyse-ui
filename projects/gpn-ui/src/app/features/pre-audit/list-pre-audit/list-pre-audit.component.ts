@@ -16,7 +16,7 @@ import { merge, Subject } from '@root/node_modules/rxjs';
 import { takeUntil, tap } from '@root/node_modules/rxjs/operators';
 import { PreAuditDataSource } from '@app/features/pre-audit/pre-audit-data-source';
 import { CreatePreAuditComponent } from '@app/features/pre-audit/create-pre-audit/create-pre-audit.component';
-import { AppPages } from '@app/models/app.pages';
+import { FilterPages } from '@app/models/filter.pages';
 
 @Component({
   selector: 'gpn-list-pre-audit',
@@ -49,7 +49,7 @@ export class ListPreAuditComponent implements OnInit {
   _filterValue: Object[] = [];
   mouseOverIndex = -1;
   private destroyStream = new Subject<void>();
-  eAppPage = AppPages;
+  filterPage = FilterPages;
 
   ngOnInit() {
     this.dataSource = new PreAuditDataSource(this.preAuditService);

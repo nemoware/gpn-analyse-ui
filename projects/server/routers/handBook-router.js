@@ -17,4 +17,8 @@ router.get('/bookValues', controller.getBookValues);
 router.post('/bookValues', controller.postBookValue);
 router.delete('/bookValues', controller.deleteBookValue);
 router.put('/bookValues', controller.updateBookValue);
+
+router.post('/affiliatesList', controller.saveAffiliatesList);
+router.get('/fetchAffiliates', controller.fetchAffiliates);
+
 module.exports = router;

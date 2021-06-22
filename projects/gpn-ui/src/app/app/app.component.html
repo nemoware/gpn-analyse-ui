@@ -34,7 +34,7 @@
               </button>
               <button mat-button *ngIf="item.link=== 'handbook'" class="nav-button"
                       routerLinkActive="mat-accent"
-                      gpnHide [appPage] = "item.link" [matMenuTriggerFor]="menu">
+                       [matMenuTriggerFor]="menu">
                 {{ item.label }}
                 <mat-menu #menu="matMenu">
                   <button mat-menu-item *ngFor="let item of handbookMenu" class="nav-button" (click)="openWindow(item)">{{ item.label }}

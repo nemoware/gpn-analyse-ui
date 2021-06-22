@@ -7,8 +7,8 @@ import {
   Output
 } from '@root/node_modules/@angular/core';
 import { DateAdapter } from '@root/node_modules/@angular/material';
-import { AppPages } from '@app/models/app.pages';
 import { CharterStates } from '@app/features/charter/list-charter/list.charter.component';
+import { FilterPages } from '@app/models/filter.pages';
 
 @Component({
   selector: 'gpn-filter',
@@ -20,7 +20,7 @@ export class FilterComponent implements OnInit {
   filter = new FormControl();
 
   // @Input() arrayStatuses: string[];
-  @Input() appPage: AppPages;
+  @Input() filterPage: FilterPages;
   @Input() states:
     | CharterStates[]
     | string[]
@@ -41,7 +41,7 @@ export class FilterComponent implements OnInit {
   _dateTo: Date = null;
   _createDate: Date = null;
   subsidiaryName = '';
-  pagesFromModel = AppPages;
+  pagesFromModel = FilterPages;
   selectedTypes = '';
   checkTypes = ['InsiderControl', 'InterestControl'];
   selectedUsers = '';
@@ -51,7 +51,8 @@ export class FilterComponent implements OnInit {
     preAudit: ['Пользователь', 'Вид проверки', 'Статус проверки'],
     audit: ['Наименование ДО', '', 'Статус проверки', 'Период проверки'],
     charter: ['Наименование ДО', '', 'Статус устава', 'Период действия устава'],
-    events: ['Поиск пользователя', '', 'Тип события', 'Диапазон дат событий']
+    events: ['Поиск пользователя', '', 'Тип события', 'Диапазон дат событий'],
+    affiliates: ['Полное фирменное наименование или ФИО']
   };
   placeHolderForHtml: string[];
 
@@ -61,9 +62,10 @@ export class FilterComponent implements OnInit {
     this.dateAdapter.getFirstDayOfWeek = () => {
       return 1;
     };
-    if (this.appPage == AppPages['pre-audit'])
+    if (this.filterPage === FilterPages['pre-audit'])
       this.placeHolderForHtml = this.placeholder['preAudit'];
-    else this.placeHolderForHtml = this.placeholder[AppPages[this.appPage]];
+    else
+      this.placeHolderForHtml = this.placeholder[FilterPages[this.filterPage]];
   }
 
   clearFilter() {
@@ -114,10 +116,10 @@ export class FilterComponent implements OnInit {
   }
 
   getNameParamForFilter() {
-    switch (this.appPage) {
-      case AppPages.audit:
-        return `${AppPages[this.appPage]}Statuses`;
-      case AppPages['pre-audit']:
+    switch (this.filterPage) {
+      case FilterPages.audit:
+        return `${FilterPages[this.filterPage]}Statuses`;
+      case FilterPages['pre-audit']:
         return 'auditStatuses';
       default:
         return 'eventType';
@@ -125,14 +127,16 @@ export class FilterComponent implements OnInit {
   }
 
   getNameParamForSubsidiaryName() {
-    switch (this.appPage) {
-      case AppPages.events:
+    switch (this.filterPage) {
+      case FilterPages.events:
         return 'login';
-      case AppPages.audit:
-      case AppPages.charter:
+      case FilterPages.audit:
+      case FilterPages.charter:
         return 'subsidiaryName';
-      case AppPages['pre-audit']:
+      case FilterPages['pre-audit']:
         return 'selectedUsers';
+      case FilterPages.affiliates:
+        return 'name';
     }
   }
 }
@@ -142,4 +146,5 @@ interface Placeholder {
   audit: string[];
   charter: string[];
   events: string[];
+  affiliates: string[];
 }

@@ -1,0 +1,45 @@
+.mat-column-name {
+  width: 45% !important;
+}
+
+.mat-column-reason {
+  width: 45% !important;
+}
+
+.mat-column-share {
+  width: 10% !important;
+}
+
+.left_group {
+  margin-left: 10px;
+  height: 80vh;
+  width: 20%;
+  float: left;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.right_group {
+  margin-right: 10px;
+  height: 80vh;
+  width: 78%;
+  float: right;
+}
+
+.mat-row:hover {
+  cursor: pointer;
+  background-color: aliceblue;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.buttons-group {
+  float: right;
+  margin-right: 20px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}

@@ -12,7 +12,7 @@ import { AuthorizationData } from '@core/authorization/authorization.data';
   selector: '[gpnHide]'
 })
 export class HideDirective implements OnInit, AfterViewInit {
-  @Input() appPage: AuthGroup;
+  @Input() appPage: string;
 
   constructor(
     private el: ElementRef,
@@ -22,7 +22,11 @@ export class HideDirective implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit(): void {
-    const res = this.authorizationService.hasAccess(this.appPage);
+    let page = this.appPage;
+    if (page === 'handbook' || page === 'charter') {
+      page = 'audit';
+    }
+    const res = this.authorizationService.hasAccess(page);
     if (!res) {
       this.el.nativeElement.style.display = 'none';
     }

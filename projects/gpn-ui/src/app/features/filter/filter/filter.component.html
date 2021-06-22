@@ -1,7 +1,7 @@
 <div class="mat-elevation-z10 container">
   <label style="margin-top: 5px; font-size:16px; font-weight: bold;">Панель фильтров</label>
   <hr>
-  <mat-form-field appearance="legacy" style="width: 100%"  *ngIf="appPage != pagesFromModel['pre-audit']; else Block">
+  <mat-form-field appearance="legacy" style="width: 100%"  *ngIf="filterPage !== pagesFromModel['pre-audit']; else Block">
     <input matInput placeholder={{placeHolderForHtml[0]}} [(ngModel)]="subsidiaryName">
   </mat-form-field>
 
@@ -12,13 +12,13 @@
     </mat-select>
   </mat-form-field></ng-template>
 
-  <mat-form-field style="width: 100%" *ngIf="appPage==pagesFromModel.audit || appPage==pagesFromModel['pre-audit']">
+  <mat-form-field style="width: 100%" *ngIf="filterPage === pagesFromModel.audit || filterPage === pagesFromModel['pre-audit']">
     <input matInput [matDatepicker]="createDate" placeholder="Дата создания" readonly [(ngModel)]="_createDate">
     <mat-datepicker-toggle matSuffix [for]="createDate"></mat-datepicker-toggle>
     <mat-datepicker #createDate></mat-datepicker>
   </mat-form-field>
 
-  <ng-container *ngIf="appPage==pagesFromModel['pre-audit']">
+  <ng-container *ngIf="filterPage === pagesFromModel['pre-audit']">
     <mat-form-field style="width: 100%" color="accent">
       <mat-label>{{placeHolderForHtml[1]}}</mat-label>
       <mat-select [(ngModel)]="selectedTypes" [formControl]="filter" multiple>
@@ -27,27 +27,28 @@
     </mat-form-field>
   </ng-container>
 
+  <ng-container *ngIf="filterPage !== pagesFromModel.affiliates">
   <mat-form-field style="width: 100%" color="accent">
     <mat-label>{{placeHolderForHtml[2]}}</mat-label>
     <mat-select [(ngModel)]="selectedStatuses" [formControl]="filter" multiple>
 
-      <ng-container *ngIf="appPage==pagesFromModel.audit || appPage==pagesFromModel['pre-audit']">
+      <ng-container *ngIf="filterPage === pagesFromModel.audit || filterPage === pagesFromModel['pre-audit']">
         <mat-option *ngFor="let status of states" [value]="status">{{status | translate}}</mat-option>
       </ng-container>
 
-      <ng-container *ngIf="appPage==pagesFromModel.charter">
+      <ng-container *ngIf="filterPage === pagesFromModel.charter">
         <mat-option *ngFor="let status of states" [value]="status.id">{{status.name}}</mat-option>
       </ng-container>
 
-      <ng-container *ngIf="appPage==pagesFromModel.events">
+      <ng-container *ngIf="filterPage === pagesFromModel.events">
         <mat-option *ngFor="let status of states" [value]="status._id">{{status.name}}</mat-option>
       </ng-container>
 
     </mat-select>
   </mat-form-field>
+  </ng-container>
 
-
-  <ng-container *ngIf="appPage!=pagesFromModel['pre-audit']">
+  <ng-container *ngIf="filterPage !== pagesFromModel['pre-audit'] && filterPage !== pagesFromModel.affiliates">
     <span>{{placeHolderForHtml[3]}}</span>
     <br>
     <mat-form-field style="width: 50%">

@@ -20,7 +20,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { CreateAuditComponent } from '@app/features/audit/create-audit/create-audit.component';
 import { Router } from '@root/node_modules/@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { AppPages } from '@app/models/app.pages';
+import { FilterPages } from '@app/models/filter.pages';
 
 @Component({
   selector: 'gpn-list.audit',
@@ -65,7 +65,7 @@ export class ListAuditComponent implements OnInit, OnDestroy {
   faTrashAlt = faTrashAlt;
   mouseOverIndex = -1;
   private destroyStream = new Subject<void>();
-  appPage = AppPages;
+  filterPage = FilterPages;
 
   ngOnInit() {
     this.dataSource = new AuditDataSource(this.auditService);

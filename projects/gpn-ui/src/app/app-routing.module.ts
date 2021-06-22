@@ -87,6 +87,15 @@ const routes: Routes = [
     data: { appPage: 'audit' }
   },
   {
+    path: 'affiliatesList',
+    loadChildren: () =>
+      import('./features/handbook/affiliates-list/affiliates-list.module').then(
+        m => m.AffiliatesListModule
+      ),
+    canActivate: [AppPageGuard],
+    data: { appPage: 'audit' }
+  },
+  {
     path: '**',
     redirectTo: 'audit'
   }

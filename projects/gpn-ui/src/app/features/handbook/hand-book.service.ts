@@ -8,6 +8,7 @@ import {
 import { Observable } from '@root/node_modules/rxjs';
 import { LimitValue } from '@app/models/limitValue.model';
 import { BookValue } from '@app/models/bookValue';
+import { DataSourceAffiliates } from '@app/models/affiliates.model';
 
 const api = '/api';
 
@@ -79,5 +80,39 @@ export class HandBookService {
 
   public updateBookValue(bookValue: any): Observable<BookValue> {
     return this.http.put<BookValue>(`${api}/handbook/bookValues`, bookValue);
+  }
+
+  public postAffiliatesList(document: Object): Observable<any> {
+    return this.http.post<Observable<any>>(
+      `${api}/handbook/affiliatesList`,
+      document
+    );
+  }
+
+  fetchAffiliates(
+    filterValue: Array<{ name: string; value: any }>,
+    take: number,
+    pageIndex: number,
+    column: string,
+    sort: string
+  ): Observable<DataSourceAffiliates> {
+    let httpParams = new HttpParams();
+    if (filterValue) {
+      for (const filter of filterValue) {
+        httpParams = httpParams.append(filter.name, filter.value);
+      }
+    }
+    if (take) httpParams = httpParams.append('take', take.toString());
+    if (pageIndex)
+      httpParams = httpParams.append('skip', (pageIndex * take).toString());
+    if (column) httpParams = httpParams.append('column', column.toString());
+    if (sort) httpParams = httpParams.append('sort', sort.toString());
+
+    return this.http.get<DataSourceAffiliates>(
+      `${api}/handbook/fetchAffiliates`,
+      {
+        params: httpParams
+      }
+    );
   }
 }

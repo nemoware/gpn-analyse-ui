@@ -1,6 +1,7 @@
-const { LimitValue, Risk, BookValue } = require('../models');
+const { LimitValue, Risk, BookValue, AffiliatesList } = require('../models');
 const logger = require('../core/logger');
 const catalog = require('../json/catalog.json');
+const parser = require('../services/parser-service');
 exports.getRisks = async (req, res) => {
   try {
     let riskMatrix = await Risk.find().lean();
@@ -177,6 +178,71 @@ exports.updateBookValue = async (req, res) => {
     await bookValue.save();
     await logger.log(req, res, 'Редактирование балансовой стоимости');
     res.send(bookValue);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.saveAffiliatesList = async (req, res) => {
+  const base64Content = req.body.base64Content;
+  try {
+    const response = await parser.exportAffiliatesList(base64Content);
+    const stakeholders = response.stakeholders.map(stakeholder => {
+      stakeholder.company = 'gp';
+      return stakeholder;
+    });
+    AffiliatesList.deleteMany().then(() => {
+      AffiliatesList.insertMany(stakeholders).then(() => {
+        //Ждем пока все запишется в базу, потом отправляем уведомление об успешной записи
+        res.status(201).json();
+      });
+    });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.fetchAffiliates = async (req, res) => {
+  try {
+    let sort;
+    const column = req.query.column;
+    if (req.query.column) {
+      sort = {
+        [column]: req.query.sort === 'asc' ? 1 : -1
+      };
+    }
+    let count;
+    let affiliates;
+    const where = [];
+    //Если нет фильтра по имени - ищем все
+    const name = req.query.name;
+    if (name) {
+      where.push({
+        name: {
+          $regex: `.*${name}.*`,
+          $options: 'i'
+        }
+      });
+      count = await AffiliatesList.countDocuments({ $and: where });
+      affiliates = await AffiliatesList.find({ $and: where })
+        .lean()
+        .setOptions({
+          skip: +req.query.skip,
+          limit: +req.query.take,
+          sort
+        });
+    } else {
+      count = await AffiliatesList.countDocuments();
+      affiliates = await AffiliatesList.find()
+        .lean()
+        .setOptions({
+          skip: +req.query.skip,
+          limit: +req.query.take,
+          sort
+        });
+    }
+    console.log(count);
+    res.send({ count, affiliates });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
