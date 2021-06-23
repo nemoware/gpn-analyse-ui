@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: BookValuesTableComponent,
-    data: { title: 'Балансовые стоимости' }
+    data: { title: 'Балансовая стоимость' }
   }
 ];
 @NgModule({
