@@ -1803,6 +1803,12 @@ setKeys = document => {
         }
       }
     }
+    //Фильтрация ошибок анализатора - атрибуты без места в тексте
+    attributes = attributes.filter(attribute => {
+      if (attribute.span[0] !== attribute.span[1]) {
+        return attribute;
+      }
+    });
     if (document.user) {
       document.user.attributes = attributes;
     } else {
@@ -1950,7 +1956,7 @@ setContractTree = (userAttributes, error) => {
       }
     }
   });
-  if (org1 || org2) {
+  if (!isEmpty(org1) || !isEmpty(org2)) {
     attributeTree.orgs = [org1, org2];
   }
 
@@ -2094,7 +2100,7 @@ setProtocolTree = (userAttributes, error) => {
 
   const data = { protocol: attributeTree };
 
-  console.log(attributeTree);
+  // console.log(attributeTree);
   validateSchema(data, schema, error);
 
   return attributeTree;
@@ -2132,3 +2138,5 @@ setValue = attribute => {
     attribute.value = '';
   }
 };
+
+const isEmpty = value => Object.keys(value).length === 0;
