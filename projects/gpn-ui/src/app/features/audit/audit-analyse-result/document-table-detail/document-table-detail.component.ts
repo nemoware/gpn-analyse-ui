@@ -5,8 +5,7 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef,
-  OnDestroy
+  ChangeDetectorRef
 } from '@angular/core';
 import { DatePipe } from '@root/node_modules/@angular/common';
 import { MatTableDataSource } from '@angular/material/table';

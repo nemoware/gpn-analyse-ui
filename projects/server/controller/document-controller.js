@@ -161,9 +161,6 @@ exports.getTreeFromDocuments = async (req, res) => {
       lean: true
     });
 
-    let arrOfFromId = audit.links.map(i => i.fromId.toString());
-    let arrOfToId = audit.links.map(i => i.toId.toString());
-
     const user = await User.findOne(
       {
         login: res.locals.user.sAMAccountName
@@ -172,6 +169,7 @@ exports.getTreeFromDocuments = async (req, res) => {
     ).lean();
 
     let arrayOfAllDocument;
+    let arrStars = user.stars.filter(i => i.auditId.toString() === auditId).map(i => i.documentId.toString())
 
     function Ids(documentId) {
       let ids = audit.links
@@ -182,8 +180,9 @@ exports.getTreeFromDocuments = async (req, res) => {
             .filter(l => l.toId.toString() === documentId)
             .map(l => l.fromId.toString())
         );
-        return ids;
+      return ids;
     }
+
     if (documentId) {
       let ids = Ids(documentId)
 
@@ -195,24 +194,52 @@ exports.getTreeFromDocuments = async (req, res) => {
         .sort(AllColumn2[column])
         .lean();
     } else {
-      arrayOfAllDocument = await Document.find({
-        $or: [
-          { _id: { $in: audit.charters } },
-          { auditId: auditId },
-          { _id: { $in: arrOfFromId } },
-          { _id: { $in: arrOfToId } }
-        ],
-        'parse.documentType': documentType
-      })
-        .select(select)
-        .sort(AllColumn2[column])
-        .limit(take)
-        .skip(skip)
-        .lean();
+      if (column === 'starred') {
+        const sortObj = {
+          '1': { $in: arrStars },
+          '-1': { $nin: arrStars },
+        }
+        arrayOfAllDocument = await Document.find({
+          auditId: auditId,
+          _id: sortObj[sort * -1],
+          'parse.documentType': documentType
+        })
+          .select(select)
+          .limit(take)
+          .skip(skip)
+          .lean();
+        if (arrayOfAllDocument.length < take) {
+          arrayOfAllDocument = arrayOfAllDocument.concat(
+            await Document.find({
+              _id: sortObj[sort],
+              auditId: auditId,
+              'parse.documentType': documentType
+            })
+              .select(select)
+              .limit(take - arrayOfAllDocument.length)
+              .lean()
+          )
+        }
+      } else {
+        arrayOfAllDocument = await Document.find({
+          $or: [
+            { _id: { $in: audit.charters } },
+            { auditId: auditId },
+            // { _id: { $in: arrOfFromId } },
+            // { _id: { $in: arrOfToId } }
+          ],
+          'parse.documentType': documentType
+        })
+          .select(select)
+          .sort(AllColumn2[column])
+          .limit(take)
+          .skip(skip)
+          .lean();
+      }
+
       let ids = [];
       await arrayOfAllDocument.forEach(i => {
         let buf = Ids(i._id.toString());
-          
         ids = ids.concat(buf)
       })
       const qwe = await Document.find()
@@ -225,12 +252,14 @@ exports.getTreeFromDocuments = async (req, res) => {
     }
 
     if (user) {
-      let arrStars = user.stars.map(i => i.documentId.toString());
       arrayOfAllDocument.map(i => {
         if (arrStars.includes(i._id.toString())) i.starred = true;
         else i.starred = false;
         return i;
       });
+      if (documentId && column === 'starred') {
+        arrayOfAllDocument.sort(compare)
+      }
     }
 
     arrayOfAllDocument.map(i => {
@@ -300,61 +329,11 @@ exports.getTreeFromDocuments = async (req, res) => {
       return i;
     });
 
-
-
-    // if (documentId) {
-    //   let ids = audit.links
-    //     .filter(l => l.fromId.toString() === documentId)
-    //     .map(l => l.toId.toString())
-    //     .concat(
-    //       audit.links
-    //         .filter(l => l.toId.toString() === documentId)
-    //         .map(l => l.fromId.toString())
-    //     );
-    //   arrOfRequiredContract = arrayOfAllDocument.filter(
-    //     i =>
-    //       i.parse.documentType === documentType &&
-    //       ids.includes(i._id.toString())
-    //   );
-    // } else {
-    //   arrOfRequiredContract = arrayOfAllDocument.filter(
-    //     i => i.parse.documentType === 'CONTRACT'
-    //   );
-    // }
-
     function compare(a, b) {
-      if (deepFind(a, column) < deepFind(b, column)) return sort;
-      if (deepFind(a, column) > deepFind(b, column)) return sort * -1;
+      if (a.starred < b.starred) return sort;
+      if (a.starred > b.starred) return sort * -1;
       return 0;
     }
-
-    function compareForCharterAndProtocol(a, b) {
-      let props = ['charterDate', 'protocolDate'];
-      let result = 0,
-        i = 0;
-      while (result === 0 && i < props.length) {
-        result = 0;
-        if (a[props[i]] < b[props[i]]) result = sort;
-        if (a[props[i]] > b[props[i]]) result = sort * -1;
-        i++;
-      }
-      return result;
-    }
-
-    function deepFind(obj, column) {
-      let paths = AllColumn[column].split('.');
-      let current = obj;
-
-      for (let i = 0; i < paths.length; ++i) {
-        if (current[paths[i]] == undefined) return '';
-        else current = current[paths[i]];
-      }
-      return typeof current === 'string' ? current.toLowerCase() : current;
-    }
-
-    // if (column == 'charterAndProtocol')
-    //   arrOfRequiredContract.sort(compareForCharterAndProtocol);
-    // else arrOfRequiredContract.sort(compare);
 
     const count = await Document.find({
       auditId: auditId,
