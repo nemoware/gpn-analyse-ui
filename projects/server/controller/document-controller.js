@@ -34,15 +34,7 @@ const AllColumn = {
   charterDate: 'charterDate',
   protocolDate: 'protocolDate'
 };
-const AllColumn2 = {
-  date: 'analysis.attributes_tree.contract.date.value',
-  number: 'analysis.attributes_tree.contract.number.value',
-  org1: 'analysis.attributes_tree.contract.orgs.0.name.value',
-  org2: 'analysis.attributes_tree.contract.orgs.1.name.value',
-  contract_subject: 'analysis.attributes_tree.contract.subject.value',
-  warnings: 'analysis.warnings',
-  state: 'state'
-};
+
 
 function getAttributeValue(document, attribute) {
   if (document.user && document.user.attributes) {
@@ -130,12 +122,34 @@ exports.getDocuments = async (req, res) => {
 exports.getTreeFromDocuments = async (req, res) => {
   const auditId = req.query.auditId;
   const documentId = req.query.documentId; //Если есть, то отправит связанные с ним доки, конкретного типа(См.ниже).
-  const documentType = req.query.documentType; //Какой тип документов будет отправлять.
+  const documentType = req.query.documentType === undefined ? 'CONTRACT' : req.query.documentType; //Какой тип документов будет отправлять.
   const take = parseInt(req.query.take);
   const column = req.query.column;
   const sort = req.query.sort === 'asc' ? 1 : -1;
   const skip = parseInt(req.query.skip);
 
+  const AllColumn2 = {
+    date: { 'analysis.attributes_tree.contract.date.value': sort },
+    number: { 'analysis.attributes_tree.contract.number.value': sort },
+    org1: { 'analysis.attributes_tree.contract.orgs.0.name.value': sort },
+    org2: { 'analysis.attributes_tree.contract.orgs.name.value': sort },
+    contract_subject: { 'analysis.attributes_tree.contract.subject.value': sort },
+    warnings: { 'analysis.warnings': sort },
+    state: { 'state': sort },
+    value: { 'row.analysis.attributes_tree.contract.price.amount_netto.value': sort },
+    amount_with_vat: { 'row.analysis.attributes_tree.contract.price.amount_brutto.value': sort }
+  };
+
+  const select = {
+    'analysis.attributes_tree.contract': 1,
+    'analysis.attributes_tree.charter.date.value': 1,
+    'analysis.attributes_tree.protocol.date.value': 1,
+    'user.attributes_tree': 1,
+    'analysis.analyze_timestamp': 1,
+    'parse.documentType': 1,
+    state: 1,
+    'user.author.name': 1
+  }
   if (!auditId) {
     let err = 'Can not find documents: auditId is null';
     logger.logError(req, res, err, 400);
@@ -159,32 +173,56 @@ exports.getTreeFromDocuments = async (req, res) => {
 
     let arrayOfAllDocument;
 
-    if (AllColumn2[column] != undefined) {
+    function Ids(documentId) {
+      let ids = audit.links
+        .filter(l => l.fromId.toString() === documentId)
+        .map(l => l.toId.toString())
+        .concat(
+          audit.links
+            .filter(l => l.toId.toString() === documentId)
+            .map(l => l.fromId.toString())
+        );
+        return ids;
+    }
+    if (documentId) {
+      let ids = Ids(documentId)
+
       arrayOfAllDocument = await Document.find({
-        auditId: auditId,
-        'parse.documentType': 'CONTRACT'
+        _id: { $in: ids },
+        'parse.documentType': documentType
       })
-        .select({
-          'analysis.attributes_tree.contract': 1,
-          'analysis.attributes_tree.charter.date.value': 1,
-          'analysis.attributes_tree.protocol.date.value': 1,
-          'user.attributes_tree': 1,
-          'analysis.analyze_timestamp': 1,
-          'parse.documentType': 1,
-          state: 1,
-          'user.author.name': 1
-        })
-        .sort({ [AllColumn2[column]]: sort })
-        .skip(skip)
-        .limit(take + skip)
+        .select(select)
+        .sort(AllColumn2[column])
         .lean();
     } else {
-    }
+      arrayOfAllDocument = await Document.find({
+        $or: [
+          { _id: { $in: audit.charters } },
+          { auditId: auditId },
+          { _id: { $in: arrOfFromId } },
+          { _id: { $in: arrOfToId } }
+        ],
+        'parse.documentType': documentType
+      })
+        .select(select)
+        .sort(AllColumn2[column])
+        .limit(take)
+        .skip(skip)
+        .lean();
+      let ids = [];
+      await arrayOfAllDocument.forEach(i => {
+        let buf = Ids(i._id.toString());
+          
+        ids = ids.concat(buf)
+      })
+      const qwe = await Document.find()
+        .where('_id')
+        .in(ids)
+        .select(select)
+        .lean()
 
-    const count = await Document.find({
-      auditId: auditId,
-      'parse.documentType': 'CONTRACT'
-    }).count();
+      arrayOfAllDocument = arrayOfAllDocument.concat(qwe)
+    }
 
     if (user) {
       let arrStars = user.stars.map(i => i.documentId.toString());
@@ -262,27 +300,27 @@ exports.getTreeFromDocuments = async (req, res) => {
       return i;
     });
 
-    let arrOfRequiredContract;
 
-    if (documentId) {
-      let ids = audit.links
-        .filter(l => l.fromId.toString() === documentId)
-        .map(l => l.toId.toString())
-        .concat(
-          audit.links
-            .filter(l => l.toId.toString() === documentId)
-            .map(l => l.fromId.toString())
-        );
-      arrOfRequiredContract = arrayOfAllDocument.filter(
-        i =>
-          i.parse.documentType === documentType &&
-          ids.includes(i._id.toString())
-      );
-    } else {
-      arrOfRequiredContract = arrayOfAllDocument.filter(
-        i => i.parse.documentType === 'CONTRACT'
-      );
-    }
+
+    // if (documentId) {
+    //   let ids = audit.links
+    //     .filter(l => l.fromId.toString() === documentId)
+    //     .map(l => l.toId.toString())
+    //     .concat(
+    //       audit.links
+    //         .filter(l => l.toId.toString() === documentId)
+    //         .map(l => l.fromId.toString())
+    //     );
+    //   arrOfRequiredContract = arrayOfAllDocument.filter(
+    //     i =>
+    //       i.parse.documentType === documentType &&
+    //       ids.includes(i._id.toString())
+    //   );
+    // } else {
+    //   arrOfRequiredContract = arrayOfAllDocument.filter(
+    //     i => i.parse.documentType === 'CONTRACT'
+    //   );
+    // }
 
     function compare(a, b) {
       if (deepFind(a, column) < deepFind(b, column)) return sort;
@@ -314,12 +352,18 @@ exports.getTreeFromDocuments = async (req, res) => {
       return typeof current === 'string' ? current.toLowerCase() : current;
     }
 
-    if (column == 'charterAndProtocol')
-      arrOfRequiredContract.sort(compareForCharterAndProtocol);
-    else arrOfRequiredContract.sort(compare);
+    // if (column == 'charterAndProtocol')
+    //   arrOfRequiredContract.sort(compareForCharterAndProtocol);
+    // else arrOfRequiredContract.sort(compare);
+
+    const count = await Document.find({
+      auditId: auditId,
+      'parse.documentType': 'CONTRACT'
+    }).count();
 
     res.send({
-      arrOfRequiredContract: arrOfRequiredContract.slice(skip, take + skip),
+      // arrOfRequiredContract: arrOfRequiredContract.slice(skip, take + skip),
+      arrOfRequiredContract: arrayOfAllDocument.filter(i => i.parse.documentType === documentType),
       count: count
     });
   } catch (err) {
@@ -427,7 +471,7 @@ exports.getNotUsedDocument = async (req, res) => {
       arrOfRequiredContract: arrayOfAllDocument.slice(skip, take + skip),
       count: count
     });
-  } catch (err) {}
+  } catch (err) { }
 };
 
 exports.getLinksNotUsedDocument = async (req, res) => {
@@ -457,6 +501,15 @@ exports.getLinksNotUsedDocument = async (req, res) => {
       { lean: true }
     );
 
+    const arrayOfAllContract = await Document.find(
+      {
+        $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+        'parse.documentType': 'CONTRACT'
+      },
+      'parse.documentType',
+      { lean: true }
+    );
+
     const arrOfSupplementaryAgreement = arrayOfAllDocument.filter(
       i => i.parse.documentType === 'SUPPLEMENTARY_AGREEMENT'
     );
@@ -469,11 +522,12 @@ exports.getLinksNotUsedDocument = async (req, res) => {
     const arrOfProtocol = arrayOfAllDocument.filter(
       i => i.parse.documentType === 'PROTOCOL'
     );
-    const arrOfContract = arrayOfAllDocument.filter(
-      i => i.parse.documentType === 'CONTRACT'
-    );
 
     res.send({
+      contract: {
+        count: arrayOfAllContract.length,
+        type: 'CONTRACT'
+      },
       charter: {
         count: arrOfCharter.length,
         type: 'CHARTER'
@@ -489,10 +543,6 @@ exports.getLinksNotUsedDocument = async (req, res) => {
       supplementary_agreement: {
         count: arrOfSupplementaryAgreement.length,
         type: 'SUPPLEMENTARY_AGREEMENT'
-      },
-      contract: {
-        count: arrOfContract.length,
-        type: 'CONTRACT'
       }
     });
   } catch (err) {
@@ -573,10 +623,9 @@ exports.getDocument = async (req, res) => {
           req,
           res,
           'Просмотр документа',
-          `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
-            getAttributeValue(document, 'date')
-              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
-              : 'н/д'
+          `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${getAttributeValue(document, 'date')
+            ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+            : 'н/д'
           }.`
         );
         document.documentType = document.parse.documentType;
@@ -597,12 +646,11 @@ exports.getDocument = async (req, res) => {
             res,
             'Просмотр документа',
             `${type && type.name} № ${getAttributeValue(document, 'number') ||
-              'н/д'} от ${
-              getAttributeValue(document, 'date')
-                ? moment(getAttributeValue(document, 'date')).format(
-                    'DD.MM.YYYY'
-                  )
-                : 'н/д'
+            'н/д'} от ${getAttributeValue(document, 'date')
+              ? moment(getAttributeValue(document, 'date')).format(
+                'DD.MM.YYYY'
+              )
+              : 'н/д'
             }. Предпроверка ДД от ${moment(audit.createDate).format(
               'DD.MM.YYYY'
             )}
@@ -614,12 +662,11 @@ exports.getDocument = async (req, res) => {
             res,
             'Просмотр документа',
             `Протокол ${getAttributeValue(document, 'org-1-name') ||
-              'н/д'} от ${
-              getAttributeValue(document, 'date')
-                ? moment(getAttributeValue(document, 'date')).format(
-                    'DD.MM.YYYY'
-                  )
-                : 'н/д'
+            'н/д'} от ${getAttributeValue(document, 'date')
+              ? moment(getAttributeValue(document, 'date')).format(
+                'DD.MM.YYYY'
+              )
+              : 'н/д'
             }. Проверка "${audit.subsidiary.name}" ${moment(
               audit.auditStart
             ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
@@ -632,12 +679,11 @@ exports.getDocument = async (req, res) => {
             res,
             'Просмотр документа',
             `${type && type.name} № ${getAttributeValue(document, 'number') ||
-              'н/д'} от ${
-              getAttributeValue(document, 'date')
-                ? moment(getAttributeValue(document, 'date')).format(
-                    'DD.MM.YYYY'
-                  )
-                : 'н/д'
+            'н/д'} от ${getAttributeValue(document, 'date')
+              ? moment(getAttributeValue(document, 'date')).format(
+                'DD.MM.YYYY'
+              )
+              : 'н/д'
             }. Проверка "${audit.subsidiary.name}" ${moment(
               audit.auditStart
             ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
@@ -815,10 +861,9 @@ exports.updateDocument = async (req, res) => {
         req,
         res,
         'Изменение документа',
-        `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
-          getAttributeValue(document, 'date')
-            ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
-            : 'н/д'
+        `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${getAttributeValue(document, 'date')
+          ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+          : 'н/д'
         }.`
       );
       document.documentType = document.parse.documentType;
@@ -835,10 +880,9 @@ exports.updateDocument = async (req, res) => {
           req,
           res,
           'Изменение документа',
-          `Протокол ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
-            getAttributeValue(document, 'date')
-              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
-              : 'н/д'
+          `Протокол ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${getAttributeValue(document, 'date')
+            ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+            : 'н/д'
           }. Проверка "${audit.subsidiary.name}" ${moment(
             audit.auditStart
           ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
@@ -851,10 +895,9 @@ exports.updateDocument = async (req, res) => {
           res,
           'Изменение документа',
           `${type && type.name} № ${getAttributeValue(document, 'number') ||
-            'н/д'} от ${
-            getAttributeValue(document, 'date')
-              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
-              : 'н/д'
+          'н/д'} от ${getAttributeValue(document, 'date')
+            ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+            : 'н/д'
           }. Проверка "${audit.subsidiary.name}" ${moment(
             audit.auditStart
           ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(

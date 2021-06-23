@@ -98,9 +98,6 @@ export class AuditService {
     if (take)
       httpParams = httpParams.append('skip', (pageIndex * take).toString());
 
-    if (pageIndex)
-      httpParams = httpParams.append('skip', (pageIndex * take).toString());
-
     if (column) httpParams = httpParams.append('column', column.toString());
 
     if (sort) httpParams = httpParams.append('sort', sort.toString());

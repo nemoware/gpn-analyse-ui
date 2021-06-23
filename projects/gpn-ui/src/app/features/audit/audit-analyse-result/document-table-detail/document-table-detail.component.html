@@ -4,10 +4,10 @@
 
     <!-- star -->
     <ng-container matColumnDef="starred">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Избр.</th>
+      <th mat-header-cell *matHeaderCellDef>Избр.</th>
       <td mat-cell *matCellDef="let row">
         <button mat-icon-button (click)="starDoc(row, $event)" class="star"
-          [ngStyle]="{'display': focusedId === row._id || row.starred ? 'inline-block' : 'none'}">
+          [ngStyle]="{'display': focusedId === row._id || row.starred ? 'inline' : 'none'}">
           <mat-icon *ngIf="row.starred">star</mat-icon>
           <mat-icon *ngIf="!row.starred">star_border</mat-icon>
         </button>
@@ -30,11 +30,11 @@
       <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора без ндс</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{
-          (row.analysis?.attributes_tree?.contract?.price?.amount_netto?.value |
+        (row.analysis?.attributes_tree?.contract?.price?.amount_netto?.value |
         currency:row.analysis?.attributes_tree?.contract?.price?.currency?.value)||
-        (row.analysis?.attributes_tree?.contract?.subject?.price?.amount_netto.value | 
+        (row.analysis?.attributes_tree?.contract?.subject?.price?.amount_netto.value |
         currency:row.analysis?.attributes_tree?.contract?.price?.currency?.value)
-      }}
+        }}
       </td>
     </ng-container>
 
@@ -47,7 +47,7 @@
         currency:row.analysis?.attributes_tree?.contract?.price?.currency?.value) ||
         (row.analysis?.attributes_tree?.contract?.subject?.price?.amount_brutto?.value |
         currency:row.analysis?.attributes_tree?.contract?.price?.currency?.value)
-      }}
+        }}
       </td>
     </ng-container>
 
@@ -71,8 +71,8 @@
     <ng-container matColumnDef="org">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>наименование</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.org?.type?.value || '⚠️ не обнаружен'}}</span>
-        <span class="org-name">{{ row.analysis?.attributes_tree?.contract?.org?.name?.value || '⚠️ не обнаружен'}}</span>
+        <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.org?.type?.value || '⚠️ необнаружен'}}</span>
+        <span class="org-name">{{ row.analysis?.attributes_tree?.contract?.org?.name?.value || '⚠️ необнаружен'}}</span>
       </td>
     </ng-container>
     <!-- structural_level -->
@@ -95,7 +95,7 @@
 
     <!-- контрагент 1 -->
     <ng-container matColumnDef="org1">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 1</th>
+      <th mat-header-cell *matHeaderCellDef>сторона 1</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.orgs[0]?.type?.value}}</span>
         <span class="org-name">{{
@@ -108,7 +108,7 @@
 
     <!-- контрагент 2 -->
     <ng-container matColumnDef="org2">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>сторона 2</th>
+      <th mat-header-cell *matHeaderCellDef>сторона 2</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.orgs[1]?.type?.value}}</span>
         <span class="org-name">{{
@@ -123,11 +123,24 @@
       <th mat-header-cell *matHeaderCellDef>cвязи</th>
       <td mat-cell *matCellDef="let row">
         <span class="org-alias">Устав от</span>
-        <a class="org-name" (click)="openCharterOrProtocol(row.charterDate)">{{(row.charterDate?.value | date:'dd MMM yyyy') ||
-          '⚠️ не обнаружен'}}</a>
+        <a class="org-name" target="_blank" href="/#/audit/edit/{{row.charterDate.id}}"
+          *ngIf="row.charterDate?.value; else elseBlock">
+          {{row.charterDate?.value | date:'dd MMM yyyy'}}
+        </a>
+
+        <ng-template #elseBlock>
+          <span class="org-name">⚠️ не обнаружен</span>
+        </ng-template>
         <span class="org-alias">Протокол от</span>
-        <a class="org-name" (click)="openCharterOrProtocol(row.protocolDate)">{{(row.protocolDate?.value | date:'dd MMM yyyy')
-          || '⚠️ не обнаружен'}}</a>
+
+        <a class="org-name" target="_blank" href="/#/audit/edit/{{row.protocolDate.id}}"
+          *ngIf="row.protocolDate?.value; else elseBlock">
+          {{row.protocolDate?.value | date:'dd MMM yyyy'}}
+        </a>
+
+        <ng-template #elseBlock>
+          <span class="org-name">⚠️ не обнаружен</span>
+        </ng-template>
       </td>
     </ng-container>
 
@@ -138,12 +151,6 @@
       </td>
     </ng-container>
 
-    <!-- <ng-container matColumnDef="spacer">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear></th>
-    <td mat-cell *matCellDef="let doc" >
-    </td>
-  </ng-container> -->
-
     <ng-container matColumnDef="warnings">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>!</th>
       <td mat-cell *matCellDef="let doc" (click)="openDocument(doc)">
@@ -152,8 +159,7 @@
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let row" [attr.colspan]="col.length" style="padding-left: 0px;padding-right: 0px; "
-        (click)="openDocument(row)">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="col.length" style="padding-left: 0px;padding-right: 0px; ">
         <div *ngIf="arrOfexpandedElementId.includes(row._id)" class="element-detail"
           [@detailExpand]="arrOfexpandedElementId.includes(row._id) ? 'expanded' : 'collapsed'">
           <gpn-links-document [auditId]=auditId [documentId]=row._id></gpn-links-document>
@@ -170,6 +176,6 @@
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" class="detail-row"></tr>
 
   </table>
-  <mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" [pageSize]="defPageSize" [length]="totalCount"
-    showFirstLastButtons></mat-paginator>
+  <mat-paginator [hidden]="documentId" [pageSizeOptions]="[5, 10, 15, 20]" [pageSize]="defPageSize"
+    [length]="totalCount"></mat-paginator>
 </div>

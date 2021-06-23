@@ -398,36 +398,36 @@ exports.getViolations = async (req, res) => {
     const audit = await Audit.findById(req.query.id, `violations`).lean();
     let violations = audit.violations;
 
-    let documents = await Document.find(
-      {
-        auditId: req.query.id,
-        'analysis.warnings': { $exists: true },
-        parserResponseCode: 200,
-        $where: 'this.analysis.warnings.length > 0'
-      },
-      'analysis.warnings analysis.attributes.number parse.documentType'
-    );
+    // let documents = await Document.find(
+    //   {
+    //     auditId: req.query.id,
+    //     'analysis.warnings': { $exists: true },
+    //     parserResponseCode: 200,
+    //     $where: 'this.analysis.warnings.length > 0'
+    //   },
+    //   'analysis.warnings analysis.attributes.number parse.documentType'
+    // );
 
     if (!violations) violations = [];
 
-    documents.forEach(doc => {
-      const v = violations.find(
-        x => x.document.id.toString() === doc._id.toString()
-      );
-      if (v) v.document.warnings = doc.analysis.warnings;
-      else {
-        violations.push({
-          document: {
-            id: doc._id,
-            // number: doc.analysis.attributes.number
-            //   ? doc.analysis.attributes.number.value
-            //   : '',
-            type: doc.parse.documentType,
-            warnings: doc.analysis.warnings
-          }
-        });
-      }
-    });
+    // documents.forEach(doc => {
+    //   const v = violations.find(
+    //     x => x.document.id.toString() === doc._id.toString()
+    //   );
+    //   if (v) v.document.warnings = doc.analysis.warnings;
+    //   else {
+    //     violations.push({
+    //       document: {
+    //         id: doc._id,
+    //         // number: doc.analysis.attributes.number
+    //         //   ? doc.analysis.attributes.number.value
+    //         //   : '',
+    //         type: doc.parse.documentType,
+    //         warnings: doc.analysis.warnings
+    //       }
+    //     });
+    //   }
+    // });
 
     res.send(violations);
   } catch (err) {
@@ -661,41 +661,31 @@ async function generateConclusion(audit) {
     audit.auditStart
   ).format('MMMM YYYY')} г. - ${moment(audit.auditEnd).format(
     'MMMM YYYY'
-  )} г. аудита практики корпоративного управления (далее – «Корпоративный аудит») в дочерних обществах (далее – «ДО») Компании, в частности ${entity_type} «${
-    audit.subsidiaryName
-  }» (далее – «Общество»).
-Цель Корпоративного аудита – выявление сильных и слабых сторон существующей в ${entity_type} «${
-    audit.subsidiaryName
-  }» практики корпоративного управления в сравнении со стратегическими целями Компании; подтверждение соблюдения ${entity_type} «${
-    audit.subsidiaryName
-  }» требований системы корпоративного управления; выявление задач, которые необходимо решить в области корпоративного управления; подготовка конкретных рекомендаций комплексного плана по совершенствованию системы корпоративного управления ${entity_type} «${
-    audit.subsidiaryName
-  }»; распространение лучших практик в группе Газпром нефть.
-В период с ${moment(audit.createDate).format('DD.MM.YYYY')} г. по ${
-    audit.status === 'Approved'
+  )} г. аудита практики корпоративного управления (далее – «Корпоративный аудит») в дочерних обществах (далее – «ДО») Компании, в частности ${entity_type} «${audit.subsidiaryName
+    }» (далее – «Общество»).
+Цель Корпоративного аудита – выявление сильных и слабых сторон существующей в ${entity_type} «${audit.subsidiaryName
+    }» практики корпоративного управления в сравнении со стратегическими целями Компании; подтверждение соблюдения ${entity_type} «${audit.subsidiaryName
+    }» требований системы корпоративного управления; выявление задач, которые необходимо решить в области корпоративного управления; подготовка конкретных рекомендаций комплексного плана по совершенствованию системы корпоративного управления ${entity_type} «${audit.subsidiaryName
+    }»; распространение лучших практик в группе Газпром нефть.
+В период с ${moment(audit.createDate).format('DD.MM.YYYY')} г. по ${audit.status === 'Approved'
       ? moment(audit.auditEnd).format('DD.MM.YYYY')
       : moment(Date.now()).format('DD.MM.YYYY')
-  } г. на основании обращения Заместителя генерального директора по правовым и корпоративным вопросам ПАО «Газпром нефть» Илюхиной Е.А. № НК-ХХ от ХХ.ХХ.ХХХХ г. (Приложение № 1) ДКиПС был проведен Корпоративный аудит ${entity_type} «${
-    audit.subsidiaryName
-  }».
+    } г. на основании обращения Заместителя генерального директора по правовым и корпоративным вопросам ПАО «Газпром нефть» Илюхиной Е.А. № НК-ХХ от ХХ.ХХ.ХХХХ г. (Приложение № 1) ДКиПС был проведен Корпоративный аудит ${entity_type} «${audit.subsidiaryName
+    }».
 Процедура Корпоративного аудита включала в себя:
 1. Получение информации об исходном состоянии корпоративного управления.
-2. Документальную проверку ${entity_type} «${
-    audit.subsidiaryName
-  }», в том числе:
+2. Документальную проверку ${entity_type} «${audit.subsidiaryName
+    }», в том числе:
 2.1. выборочную  проверку представленной документации на предмет полноты, достоверности, правильности оформления (соответствие объема представленной документации электронной базе ДКПС).
 2.2. выборочную проверку договорных документов Общества на предмет наличия/отсутствия корпоративных одобрений и их достоверности.
 2.3.	проверку соблюдения Обществом требований действующего законодательства РФ по размещению информации на федеральных ресурсах.
 2.4. 	проверку соблюдения Обществом требований действующего законодательства РФ по включению в ЕГРЮЛ актуальной/достоверной информации.
-3. Полную проверку, представленных документов ${entity_type} «${
-    audit.subsidiaryName
-  }» на предмет наличия/отсутствия корпоративных одобрений и их достоверности.
-4. Анализ внутренних документов ${entity_type} «${
-    audit.subsidiaryName
-  }», регулирующих все компоненты корпоративного управления.
-По результатам проведенного Корпоративного аудита подготовлен настоящий отчет, содержащий основные результаты Корпоративного аудита, а также рекомендации ДКиПС относительно усовершенствования практики корпоративного управления ${entity_type} «${
-    audit.subsidiaryName
-  }».\n`;
+3. Полную проверку, представленных документов ${entity_type} «${audit.subsidiaryName
+    }» на предмет наличия/отсутствия корпоративных одобрений и их достоверности.
+4. Анализ внутренних документов ${entity_type} «${audit.subsidiaryName
+    }», регулирующих все компоненты корпоративного управления.
+По результатам проведенного Корпоративного аудита подготовлен настоящий отчет, содержащий основные результаты Корпоративного аудита, а также рекомендации ДКиПС относительно усовершенствования практики корпоративного управления ${entity_type} «${audit.subsidiaryName
+    }».\n`;
   conclusion.shortSummary = `Ниже перечислены наиболее существенные сильные стороны и недостатки системы корпоративного управления ${entity_type} «${audit.subsidiaryName}» согласно результатам Корпоративного аудита, проведенного ДКиПС.\n`;
   conclusion.strengths = `Утверждено Положение об Общем собрании участников Общества
 Утверждено Положение о распределении прибыли Общества.

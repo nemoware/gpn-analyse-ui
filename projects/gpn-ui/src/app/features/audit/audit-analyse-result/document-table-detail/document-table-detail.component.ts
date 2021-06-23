@@ -183,11 +183,12 @@ export class DocumentTableDetailComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(tap(() => this.loadChartersPage()))
-      .subscribe();
+      this.paginator._intl.itemsPerPageLabel = 'Кол-во на страницу: ';
+      this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+      merge(this.sort.sortChange, this.paginator.page)
+        .pipe(tap(() => this.loadChartersPage()))
+        .subscribe();
+    
   }
 
   loadChartersPage() {

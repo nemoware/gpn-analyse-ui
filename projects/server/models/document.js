@@ -45,6 +45,22 @@ module.exports = (mongoose, Schema) => {
     }
   });
 
+  // documentSchema.index(  
+  //   { 'analysis.attributes_tree.contract.orgs.1.name.value': "text" },
+  // );
+  // documentSchema.index(  
+  //   { 'analysis.attributes_tree.contract.orgs.0.name.value': "text" },
+  // );
+  // // documentSchema.index({
+  // //   'auditId': 1,
+  // // })
+  // documentSchema.index({
+  //   'analysis.attributes_tree.contract.number.value': 1 
+  // })
+  // documentSchema.index({
+  //   'analysis.attributes_tree.contract.date.value': 1
+  // })
+
   documentSchema.methods.getAttributeValue = function getAttributeValue(
     attribute
   ) {
@@ -58,7 +74,7 @@ module.exports = (mongoose, Schema) => {
     }
   };
 
-  documentSchema.methods.getDocumentDate = function(documentType) {
+  documentSchema.methods.getDocumentDate = function (documentType) {
     if (!this.analysis || !this.analysis.attributes_tree) return;
 
     if (this.user && this.user.attributes_tree) {
@@ -66,7 +82,7 @@ module.exports = (mongoose, Schema) => {
     } else return this.user.attributes_tree[documentType].date.value;
   };
 
-  documentSchema.methods.getAttributeTreeValue = function(attribute) {
+  documentSchema.methods.getAttributeTreeValue = function (attribute) {
     const documentType = this.parse.documentType.toLowerCase();
     if (!this.analysis || !this.analysis.attributes_tree) return;
 

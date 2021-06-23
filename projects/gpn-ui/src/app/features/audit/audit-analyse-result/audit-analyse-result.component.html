@@ -104,34 +104,38 @@
     <ngx-spinner bdColor="rgba(250,250,250,0.2)" size="large" color="#0074D9" type="timer">
       <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
     </ngx-spinner>
-    <gpn-document-table-detail [auditId]="IdAudit" style="width: 100%">
-    </gpn-document-table-detail>
-    <div *ngIf="dataSource">
-      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-          <gpn-document-table-detail [auditId]=IdAudit [isNotUsedDoc]="true" [documentType]="node.docs[0].documentType"
-            style="width: 100%">
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <ng-container *ngIf="node.docs[0].documentType === 'CONTRACT'; else elseBlock">
+          <gpn-document-table-detail [auditId]="IdAudit" style="width: 100%">
           </gpn-document-table-detail>
-        </mat-tree-node>
+        </ng-container>
+        <ng-template #elseBlock>
+          <ng-container>
+            <gpn-document-table-detail [auditId]=IdAudit [isNotUsedDoc]="true"
+              [documentType]="node.docs[0].documentType" style="width: 100%">
+            </gpn-document-table-detail>
+          </ng-container>
+        </ng-template>
+      </mat-tree-node>
 
-        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-          <div style="width: 100%">
-            <div class="row">
-              <div class="col">
-                <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
-                  <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
-                  <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
-                </button>
-                {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
-              </div>
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <div style="width: 100%">
+          <div class="row">
+            <div class="col">
+              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
+                <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
+              </button>
+              {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
             </div>
-            <mat-divider></mat-divider>
           </div>
-        </mat-tree-node>
+          <mat-divider></mat-divider>
+        </div>
+      </mat-tree-node>
 
-      </mat-tree>
-    </div>
+    </mat-tree>
   </div>
 
   <div *ngIf="selectedPage === 3">
