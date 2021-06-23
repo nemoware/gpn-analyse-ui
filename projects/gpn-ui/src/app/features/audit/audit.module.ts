@@ -52,6 +52,7 @@ import { AddViolationComponent } from './audit-editor/add-violation/add-violatio
 import { LinksDocumentComponent } from './audit-analyse-result/links-document/links-document.component';
 import { DocumentTableDetailComponent } from './audit-analyse-result/document-table-detail/document-table-detail.component';
 import { NgxMaskModule } from '@root/node_modules/ngx-mask';
+import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { NgxMaskModule } from '@root/node_modules/ngx-mask';
     AngularResizedEventModule,
     MatRippleModule,
     FilterModule,
-    NgxMaskModule
+    NgxMaskModule,
+    TextMaskModule
   ],
   entryComponents: [
     CreateAuditComponent,
