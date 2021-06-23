@@ -36,14 +36,17 @@
     <form [formGroup]="auditForm">
       <div *ngIf="bookValues.controls" formArrayName="bookValues">
         <mat-form-field *ngFor="let bookValue of bookValues.controls; let i=index">
-            <input [textMask]="{mask: numberMask}" [errorStateMatcher]="errorMatcher" matInput [formControlName]="i" [placeholder]="'Балансовая стоимость за ' + years[i] + ' год'">
+            <input mask="separator" thousandSeparator=" " matInput [formControlName]="i" [placeholder]="'Балансовая стоимость за ' + years[i] + ' год'">
+          <mat-error *ngIf="auditForm.controls.bookValues.controls[i].invalid">
+            Введите положительное число
+          </mat-error>
         </mat-form-field>
       </div>
       <label class='field-label'>Диапазон дат документов</label>
       <mat-form-field>
         <input id="_auditStart"
                matInput [matDatepicker]="auditStart" placeholder="Начало диапазона" [(ngModel)]="_auditStart"
-               formControlName='auditStart' [errorStateMatcher]="errorMatcher" gpnMaskDate  (dateChange)="matDateChange($event)"
+               formControlName='auditStart'  gpnMaskDate  (dateChange)="matDateChange($event)"
         >
         <mat-datepicker-toggle matSuffix [for]="auditStart"></mat-datepicker-toggle>
         <mat-datepicker #auditStart></mat-datepicker>
@@ -52,7 +55,7 @@
 
       <mat-form-field>
         <input id="_auditEnd" matInput [matDatepicker]="auditEnd" placeholder="Конец диапазона" [(ngModel)]="_auditEnd"
-               formControlName='auditEnd' [errorStateMatcher]="errorMatcher" gpnMaskDate (dateChange)="matDateChange($event)"
+               formControlName='auditEnd' gpnMaskDate (dateChange)="matDateChange($event)"
         >
         <mat-datepicker-toggle matSuffix [for]="auditEnd"></mat-datepicker-toggle>
         <mat-datepicker #auditEnd></mat-datepicker>

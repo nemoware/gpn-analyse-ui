@@ -31,16 +31,6 @@ import { take, takeUntil } from 'rxjs/operators';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { Audit } from '@app/models/audit.model';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import createNumberMask from '@root/node_modules/text-mask-addons/dist/createNumberMask';
-
-class CrossFieldErrorMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    return control.dirty && form.invalid;
-  }
-}
 
 @Component({
   selector: 'gpn-create-audit',
@@ -64,7 +54,6 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   charters = [];
   subscriptions: SubscriptionLike[] = [];
   auditForm: FormGroup;
-  errorMatcher = new CrossFieldErrorMatcher();
   private subsidiaries: Subsidiary[];
   private _onDestroy = new Subject<void>();
   _auditStart: Date = null;
@@ -72,7 +61,6 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   _ftpUrl: string = null;
   allSubs = { name: '* Все ДО', subsidiary_id: null };
   years = [];
-  numberMask;
   robotState: boolean;
   constructor(
     private dateAdapter: DateAdapter<Date>,
@@ -102,7 +90,9 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addBookValue() {
-    this.bookValues.push(this.fb.control('', [Validators.required]));
+    this.bookValues.push(
+      this.fb.control('', [Validators.required, Validators.min(1)])
+    );
   }
 
   dateValidator(form: FormGroup) {
@@ -117,11 +107,6 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dateAdapter.getFirstDayOfWeek = () => {
       return 1;
     };
-    this.numberMask = createNumberMask({
-      prefix: '',
-      thousandsSeparatorSymbol: ' ',
-      allowDecimal: true
-    });
     this.robotState = env.robotState;
   }
 
@@ -216,7 +201,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     // console.log(this.bookValues);
     let bookValueValidator = true;
     this.bookValues.controls.forEach(control => {
-      if (!control.value) bookValueValidator = false;
+      if (control.invalid) bookValueValidator = false;
     });
     if (this.robotState) {
       return (

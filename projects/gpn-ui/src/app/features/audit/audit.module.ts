@@ -36,7 +36,6 @@ import { CompetencechartsComponent } from './audit-editor/competencecharts/compe
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { DocumentDetailComponent } from './audit-analyse-result/detail/document-detail.component';
 import { ChildDetailComponent } from './audit-analyse-result/child-detail/child-detail.component';
-// import { BrowserAnimationsModule } from '@root/node_modules/@angular/platform-browser/animations';
 import { DocStateComponent } from '@app/features/audit/audit-editor/doc-state/doc-state.component';
 import {
   FileNamePipe,
@@ -47,12 +46,12 @@ import {
 import { ViolationsAuditComponent } from './audit-analyse-result/violations-audit/violations-audit.component';
 import { MaskDateDirective } from './create-audit/mask-date.directive';
 import { SortValuePipe } from './audit-editor/competencecharts/sort-value.pipe';
-import { TextMaskModule } from '@root/node_modules/angular2-text-mask';
 import { SubsidiaryDetailComponent } from './audit-analyse-result/subsidiary-detail/subsidiary-detail.component';
 import { FilterModule } from './../filter/filter.module';
 import { AddViolationComponent } from './audit-editor/add-violation/add-violation.component';
 import { LinksDocumentComponent } from './audit-analyse-result/links-document/links-document.component';
 import { DocumentTableDetailComponent } from './audit-analyse-result/document-table-detail/document-table-detail.component';
+import { NgxMaskModule } from '@root/node_modules/ngx-mask';
 
 @NgModule({
   declarations: [
@@ -101,8 +100,8 @@ import { DocumentTableDetailComponent } from './audit-analyse-result/document-ta
     MatExpansionModule,
     AngularResizedEventModule,
     MatRippleModule,
-    TextMaskModule,
-    FilterModule
+    FilterModule,
+    NgxMaskModule
   ],
   entryComponents: [
     CreateAuditComponent,

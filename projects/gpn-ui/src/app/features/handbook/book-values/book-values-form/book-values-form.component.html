@@ -17,9 +17,11 @@
 
 
     <mat-form-field color="accent">
-      <input mask="separator" matInput placeholder="Балансовая стоимость" formControlName="valueControl">
+      <input mask="separator" thousandSeparator=" " matInput placeholder="Балансовая стоимость" formControlName="valueControl">
+      <mat-error *ngIf="controlForm.controls.valueControl.invalid">
+        Введите положительное число
+      </mat-error>
     </mat-form-field>
-
 
     <div class="row">
       <div class="col">

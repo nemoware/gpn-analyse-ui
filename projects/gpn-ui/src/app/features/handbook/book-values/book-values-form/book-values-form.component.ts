@@ -77,7 +77,10 @@ export class BookValuesFormComponent implements OnInit {
   ) {
     if (data.new) {
       this.controlForm = new FormGroup({
-        valueControl: new FormControl('', [Validators.required])
+        valueControl: new FormControl('', [
+          Validators.required,
+          Validators.min(1)
+        ])
       });
       this.date = new FormControl(moment(), [Validators.required]);
     } else {
