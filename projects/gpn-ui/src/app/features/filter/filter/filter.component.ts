@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@root/node_modules/@angular/forms';
 import {
   EventEmitter,
@@ -117,7 +117,7 @@ export class FilterComponent implements OnInit {
 
   getNameParamForFilter() {
     switch (this.filterPage) {
-      case FilterPages.audit:
+      case FilterPages.audit || FilterPages.charter:
         return `${FilterPages[this.filterPage]}Statuses`;
       case FilterPages['pre-audit']:
         return 'auditStatuses';

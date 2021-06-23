@@ -6,13 +6,13 @@ import {
   MatPaginator,
   MatSort
 } from '@root/node_modules/@angular/material';
-import { Router } from '@root/node_modules/@angular/router';
 import { ViewChild } from '@root/node_modules/@angular/core';
 import { merge, Subject } from '@root/node_modules/rxjs';
 import { takeUntil, tap } from '@root/node_modules/rxjs/operators';
 import { CharterDataSource } from '@app/features/charter/charter-data-source';
 import { CharterService } from '@app/features/charter/charter.service';
 import { FilterPages } from '@app/models/filter.pages';
+import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 
 export interface CharterStates {
   id: number;
@@ -30,9 +30,8 @@ export class ListCharterComponent implements OnInit {
   constructor(
     private spinner: NgxSpinnerService,
     private charterService: CharterService,
-    public datepipe: DatePipe,
     public dialog: MatDialog,
-    private router: Router
+    private translate: TranslateService
   ) {}
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -48,7 +47,7 @@ export class ListCharterComponent implements OnInit {
     'lastEditUser',
     'analyze_state'
   ];
-  documents: Object[];
+  documents: Object[] = [];
 
   charterStates: CharterStates[] = [
     { id: 5, name: 'Загружен, ожидает анализа' },
@@ -160,10 +159,15 @@ export class ListCharterComponent implements OnInit {
 
   submitFiles() {
     if (this.documents.length !== 0) {
-      this.charterService.postCharter(this.documents).subscribe(() => {
-        this.filesString = '';
-        this.loadChartersPage();
-      });
+      this.charterService.postCharter(this.documents).subscribe(
+        () => {
+          this.filesString = '';
+          this.loadChartersPage();
+        },
+        error => {
+          window.alert(this.translate.instant(error));
+        }
+      );
     } else {
       window.alert('Вы не выбрали файл!');
     }

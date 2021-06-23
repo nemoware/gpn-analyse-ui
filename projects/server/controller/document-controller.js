@@ -1353,24 +1353,26 @@ exports.fetchCharters = async (req, res) => {
   };
 
   const where = {
-    'parse.documentType': 'CHARTER',
+    documentType: 'CHARTER',
     parserResponseCode: 200,
     $or: [
       // если существует user
       {
         // фильтр по наименованию ДО
-        'user.attributes.org-1-name.value': mongoRegexp
+        'user.attributes_tree.charter.org.name.value': mongoRegexp
       },
       // если существует только analysis
       {
         user: null,
         // фильтр по наименованию ДО
-        'analysis.attributes.org-1-name.value': mongoRegexp
+        'analysis.attributes_tree.charter.org.name.value': mongoRegexp
       },
       {
         // Те уставы, в которых нет этих полей
-        'analysis.attributes.org-1-name.value': undefined,
-        'user.attributes.org-1-name.value': undefined
+        $and: [
+          { 'analysis.attributes_tree.charter.org.name.value': undefined },
+          { 'user.attributes_tree.charter.org.name.value': undefined }
+        ]
       }
     ]
   };
@@ -1378,30 +1380,26 @@ exports.fetchCharters = async (req, res) => {
     const docs = await Document.find(
       where,
       `
+    analysis.attributes_tree
+    user.attributes_tree
     createDate
     state
     user.author.name
     analysis.analyze_timestamp
     isActive
-    subsidiary.name
-    analysis.attributes.date.value
-    user.attributes.date.value
-    analysis.attributes.org-1-name
-    user.attributes.org-1-name`
+    documentType`
     );
     const result = docs.map(c => {
       return {
         _id: c._id,
-        fromDate: c.getAttributeValue('date') || null,
-        subsidiary:
-          c.getAttributeValue('org-1-name') ||
-          (!c.analysis.attributes && c.subsidiary.name) ||
-          null,
+        fromDate: c.getAttributeTreeValue('date') || null,
+        subsidiary: c.getCharterSubsidiary() || null,
         analyze_timestamp: c.analysis.analyze_timestamp || c.createDate,
         user: c.user.author && c.user.author.name,
         isActive: c.isActive !== false,
         toDate: null,
-        state: c.state || null
+        //Уставы без статуса получают статус "Загружен, ожидает анализа"
+        state: c.state || 5
       };
     });
 
@@ -1448,9 +1446,11 @@ exports.fetchCharters = async (req, res) => {
     }
 
     if (charterStatuses) {
-      charters = charters.filter(x =>
-        charterStatuses.split(',').includes(x.state.toString())
-      );
+      charters = charters.filter(x => {
+        if (x.state) {
+          return charterStatuses.split(',').includes(x.state.toString());
+        }
+      });
     }
 
     if (dateTo) {
@@ -1496,7 +1496,19 @@ exports.fetchCharters = async (req, res) => {
 exports.uploadFiles = async (req, res) => {
   try {
     const author = res.locals.user;
-    await roboService.postFiles([], req.body, author);
+    const response = await roboService.postFiles([], req.body, author);
+    switch (response.code) {
+      case 'ECONNREFUSED':
+        logger.logError(req, res, 'RoboService is not available', 400);
+        return;
+      case 500:
+        logger.logError(req, res, 'DocumentParser is not available', 400);
+        return;
+      case 400:
+        logger.logError(req, res, 'Bad document type', 406);
+        return;
+    }
+
     res.status(201).json();
   } catch (err) {
     logger.logError(req, res, err, 500);

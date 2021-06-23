@@ -42,7 +42,8 @@ module.exports = (mongoose, Schema) => {
       author: Object,
       updateDate: Date,
       attributes_tree: Object
-    }
+    },
+    documentType: String
   });
 
   documentSchema.methods.getAttributeValue = function getAttributeValue(
@@ -58,21 +59,21 @@ module.exports = (mongoose, Schema) => {
     }
   };
 
-  documentSchema.methods.getDocumentDate = function(documentType) {
+  documentSchema.methods.getCharterSubsidiary = function() {
     if (!this.analysis || !this.analysis.attributes_tree) return;
 
     if (this.user && this.user.attributes_tree) {
-      return this.user.attributes_tree[documentType].date.value;
-    } else return this.user.attributes_tree[documentType].date.value;
+      return this.user.attributes_tree.charter?.org?.name?.value;
+    } else return this.analysis.attributes_tree.charter?.org?.name?.value;
   };
 
   documentSchema.methods.getAttributeTreeValue = function(attribute) {
-    const documentType = this.parse.documentType.toLowerCase();
+    const documentType = this.documentType.toLowerCase();
     if (!this.analysis || !this.analysis.attributes_tree) return;
-
     if (this.user && this.user.attributes_tree) {
-      return this.user.attributes_tree[documentType][attribute].value;
-    } else return this.analysis.attributes_tree[documentType][attribute].value;
+      return this.user.attributes_tree?.[documentType]?.[attribute]?.value;
+    } else
+      return this.analysis.attributes_tree?.[documentType]?.[attribute]?.value;
   };
 
   return mongoose.model('Document', documentSchema);

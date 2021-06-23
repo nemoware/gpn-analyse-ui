@@ -29,9 +29,9 @@ function info(version) {
 exports.postFiles = async (checkTypes, documents, author) => {
   try {
     const options = getOptions(checkTypes, documents, author);
-    await post(options);
+    return await post(options);
   } catch (err) {
-    logger.log(err);
+    return err;
   }
 };
 

@@ -4,7 +4,7 @@
 <div class="col">
   <button class = "buttons-group" mat-raised-button color="accent"  (click)="showCharters()"> {{showInactive ? 'Показать только активные уставы':'Показать все уставы'}} </button>
   <button class = "buttons-group" mat-raised-button color="accent"  (click)="submitFiles()">Загрузить файлы</button>
-  <input class = "buttons-group" [(ngModel)]="filesString" type="file" (change)="uploadFiles($event)" >
+  <input class = "buttons-group" [(ngModel)]="filesString" type="file" accept=".doc, .docx" (change)="uploadFiles($event)" >
 </div>
 <div class="right_group">
   <ngx-spinner
