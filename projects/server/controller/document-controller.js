@@ -133,7 +133,6 @@ exports.getDocuments = async (req, res) => {
     }).lean();
     if (user) {
       const stars = user.stars
-        .filter(s => s.auditId.toString() === auditId)
         .map(s => s.documentId.toString());
 
       for (let document of documents.filter(d =>
