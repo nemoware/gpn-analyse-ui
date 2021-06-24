@@ -11,6 +11,8 @@ export class AuditDataSource implements DataSource<any> {
   private auditsSubject = new BehaviorSubject<any[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
   private loading$ = this.loadingSubject.asObservable();
+  private countStar = 0;
+  private bufSort: string
   totalCount = 0;
   documentType: string;
   constructor(private service: AuditService) {}
@@ -66,7 +68,8 @@ export class AuditDataSource implements DataSource<any> {
         pageSize,
         pageIndex,
         column,
-        sort
+        sort,
+        this.countStar
       )
       .pipe(
         catchError(() => of([])),
@@ -75,9 +78,6 @@ export class AuditDataSource implements DataSource<any> {
       .subscribe(data => {
         // @ts-ignore
         this.totalCount = data.count;
-
-        console.log(data);
-
         // @ts-ignore
         data.arrOfRequiredContract.map(i => {
           if (
@@ -92,6 +92,22 @@ export class AuditDataSource implements DataSource<any> {
         if (data.arrOfRequiredContract) {
           // @ts-ignore
           this.documentType = data.arrOfRequiredContract[0].parse.documentType;
+        }
+
+        if (
+          column === 'starred' &&
+          // @ts-ignore
+          data.arrOfRequiredContract.filter(i => i.starred).length != 0 &&
+          sort === 'desc'
+        ) {
+          // @ts-ignore
+          this.countStar = data.arrOfRequiredContract.filter(
+            i => i.starred
+          ).length;
+        }
+
+        if (column !== 'starred' || sort === 'asc') {
+          this.countStar = 0;
         }
         // @ts-ignore
         this.auditsSubject.next(data.arrOfRequiredContract);
@@ -114,7 +130,8 @@ export class AuditDataSource implements DataSource<any> {
         pageSize,
         pageIndex,
         column,
-        sort
+        sort,
+        this.countStar
       )
       .pipe(
         catchError(() => of([])),
@@ -135,6 +152,20 @@ export class AuditDataSource implements DataSource<any> {
         });
         // @ts-ignore
         this.documentType = data.arrOfRequiredContract[0].parse.documentType;
+        if (
+          column === 'starred' &&
+          // @ts-ignore
+          data.arrOfRequiredContract.filter(i => i.starred).length != 0 &&
+          sort === 'desc'
+        ) {
+          // @ts-ignore
+          this.countStar = data.arrOfRequiredContract.filter(
+            i => i.starred
+          ).length;
+        }
+        if (column !== 'starred' || sort === 'asc') {
+          this.countStar = 0;
+        }
         // @ts-ignore
         this.auditsSubject.next(data.arrOfRequiredContract);
       });

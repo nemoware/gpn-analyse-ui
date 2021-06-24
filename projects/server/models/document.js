@@ -64,6 +64,14 @@ module.exports = (mongoose, Schema) => {
     'analysis.warnings': 1,
     'user.warnings': 1,
   })
+  documentSchema.index({
+    'analysis.attributes_tree.charter.org.name.value': 1,
+    'user.attributes_tree.charter.org.name.value': 1
+  })
+  documentSchema.index({
+    'analysis.attributes_tree.protocol.structural_level.value': 1,
+    'user.attributes_tree.protocol.structural_level.value': 1
+  })
   documentSchema.index({ // Сторона 1
     'analysis.attributes_tree.contract.orgs.0.name.value': 1,
     'user.attributes_tree.contract.orgs.0.name.value': 1

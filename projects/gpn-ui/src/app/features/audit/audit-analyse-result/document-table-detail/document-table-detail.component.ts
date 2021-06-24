@@ -78,17 +78,6 @@ const cols_by_type = {
   ]
 };
 
-const column_to_sorting_mapping = {
-  date: 'date',
-  contract_subject: 'subject',
-  number: 'number',
-  value: 'contract_price_amount',
-  org1: 'org-1-name',
-  org2: 'org-2-name',
-  org: 'org-1-name',
-  org_level: 'org_structural_level'
-};
-
 @Component({
   selector: 'gpn-document-table-detail',
   templateUrl: './document-table-detail.component.html',
