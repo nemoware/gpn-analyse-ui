@@ -12,7 +12,6 @@ export class AuditDataSource implements DataSource<any> {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   private loading$ = this.loadingSubject.asObservable();
   private countStar = 0;
-  private bufSort: string
   totalCount = 0;
   documentType: string;
   constructor(private service: AuditService) {}

@@ -18,15 +18,11 @@ const limitValues = require('../json/limit-values.json');
 
 // подключение
 mongoose
-  .connect(
-    `mongodb://${host}:${port}/${name}`,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-
-    }
-  )
+  .connect(`mongodb://${host}:${port}/${name}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+  })
   .then(async () => {
     const count = await db.Group.countDocuments();
     if (!count) {

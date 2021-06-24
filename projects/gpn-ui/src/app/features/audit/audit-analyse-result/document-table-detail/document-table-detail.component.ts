@@ -5,7 +5,8 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import { DatePipe } from '@root/node_modules/@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,7 +23,6 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { AuditService } from '@app/features/audit/audit.service';
 import { Subject, merge } from '@root/node_modules/rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { Document } from '@app/models/document.model';
 import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 
 const cols_by_type = {
@@ -176,7 +176,6 @@ export class DocumentTableDetailComponent implements OnInit {
       merge(this.sort.sortChange, this.paginator.page)
         .pipe(tap(() => this.loadChartersPage()))
         .subscribe();
-    
   }
 
   loadChartersPage() {

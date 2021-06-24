@@ -56,7 +56,7 @@ function SetSortForColumn(sort) {
       'analysis.warnings': sort,
       'user.warnings': sort
     },
-    state: { 'state': sort }, // Да, так надо
+    state: { state: sort }, // Да, так надо
     value: {
       'analysis.attributes_tree.contract.price.amount_netto.value': sort,
       'user.attributes_tree.contract.price.amount_netto.value': sort
@@ -67,7 +67,6 @@ function SetSortForColumn(sort) {
     }
   };
 }
-
 
 function getAttributeValue(document, attribute) {
   if (document.user && document.user.attributes) {
@@ -155,13 +154,14 @@ exports.getDocuments = async (req, res) => {
 exports.getTreeFromDocuments = async (req, res) => {
   const auditId = req.query.auditId;
   const documentId = req.query.documentId; //Если есть, то отправит связанные с ним доки, конкретного типа(См.ниже).
-  const documentType = req.query.documentType === undefined ? 'CONTRACT' : req.query.documentType; //Какой тип документов будет отправлять.
+  const documentType =
+    req.query.documentType === undefined ? 'CONTRACT' : req.query.documentType; //Какой тип документов будет отправлять.
   const take = parseInt(req.query.take);
   const column = req.query.column;
   const sort = req.query.sort === 'asc' ? 1 : -1;
   const skip = parseInt(req.query.skip);
   const skipStar = parseInt(req.query.skipStar);
-console.log(skipStar);
+
   const AllColumn2 = SetSortForColumn(sort);
 
   const select = {
@@ -173,7 +173,7 @@ console.log(skipStar);
     'parse.documentType': 1,
     state: 1,
     'user.author.name': 1
-  }
+  };
   if (!auditId) {
     let err = 'Can not find documents: auditId is null';
     logger.logError(req, res, err, 400);
@@ -193,7 +193,7 @@ console.log(skipStar);
     ).lean();
 
     let arrayOfAllDocument;
-    const arrStars = user.stars.map(i => i.documentId.toString())
+    const arrStars = user.stars.map(i => i.documentId.toString());
 
     function Ids(documentId) {
       let ids = audit.links
@@ -208,7 +208,7 @@ console.log(skipStar);
     }
 
     if (documentId) {
-      let ids = Ids(documentId)
+      let ids = Ids(documentId);
 
       arrayOfAllDocument = await Document.find({
         _id: { $in: ids },
@@ -221,8 +221,8 @@ console.log(skipStar);
       if (column === 'starred') {
         const sortObj = {
           '1': { $in: arrStars },
-          '-1': { $nin: arrStars },
-        }
+          '-1': { $nin: arrStars }
+        };
         arrayOfAllDocument = await Document.find({
           auditId: auditId,
           _id: sortObj[sort * -1],
@@ -243,14 +243,11 @@ console.log(skipStar);
               .skip(skip - skipStar)
               .limit(take - arrayOfAllDocument.length)
               .lean()
-          )
+          );
         }
       } else {
         arrayOfAllDocument = await Document.find({
-          $or: [
-            { _id: { $in: audit.charters } },
-            { auditId: auditId }
-          ],
+          $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
           'parse.documentType': documentType
         })
           .select(select)
@@ -263,25 +260,25 @@ console.log(skipStar);
       let ids = [];
       await arrayOfAllDocument.forEach(i => {
         let buf = Ids(i._id.toString());
-        ids = ids.concat(buf)
-      })
+        ids = ids.concat(buf);
+      });
       const qwe = await Document.find()
         .where('_id')
         .in(ids)
         .select(select)
-        .lean()
+        .lean();
 
-      arrayOfAllDocument = arrayOfAllDocument.concat(qwe)
+      arrayOfAllDocument = arrayOfAllDocument.concat(qwe);
     }
 
     if (user) {
       arrayOfAllDocument.map(i => {
         if (arrStars.includes(i._id.toString())) i.starred = true;
         else i.starred = false;
-        return i;ы
+        return i;
       });
       if (documentId && column === 'starred') {
-        arrayOfAllDocument.sort(compare)
+        arrayOfAllDocument.sort(compare);
       }
     }
 
@@ -308,7 +305,7 @@ console.log(skipStar);
       .map(i => i._id.toString());
 
     arrayOfAllDocument.map(i => {
-      let ids = Ids(i._id.toString())
+      let ids = Ids(i._id.toString());
 
       i.protocolDate = arrPROTOCOL
         .filter(i => ids.includes(i._id.toString()))
@@ -357,7 +354,9 @@ console.log(skipStar);
     }).count();
 
     res.send({
-      arrOfRequiredContract: arrayOfAllDocument.filter(i => i.parse.documentType === documentType),
+      arrOfRequiredContract: arrayOfAllDocument.filter(
+        i => i.parse.documentType === documentType
+      ),
       count: count
     });
   } catch (err) {
@@ -399,7 +398,7 @@ exports.getNotUsedDocument = async (req, res) => {
       'stars'
     ).lean();
 
-    const arrStars = user.stars.map(i => i.documentId.toString())
+    const arrStars = user.stars.map(i => i.documentId.toString());
 
     const arrLinksFromId = audit.links.map(i => i.fromId.toString());
     const arrLinksToId = audit.links.map(i => i.toId.toString());
@@ -411,8 +410,8 @@ exports.getNotUsedDocument = async (req, res) => {
     if (column === 'starred') {
       const sortObj = {
         '1': { $in: arrStars },
-        '-1': { $nin: arrStars },
-      }
+        '-1': { $nin: arrStars }
+      };
 
       arrayOfAllDocument = await Document.find({
         $and: [
@@ -437,9 +436,6 @@ exports.getNotUsedDocument = async (req, res) => {
         .limit(take)
         .skip(skip)
         .lean();
-
-      console.log(skip);
-      console.log(skip - skipStar);
 
       if (arrayOfAllDocument.length < take) {
         arrayOfAllDocument = arrayOfAllDocument.concat(
@@ -466,9 +462,7 @@ exports.getNotUsedDocument = async (req, res) => {
             .skip(skip - skipStar)
             .limit(take - arrayOfAllDocument.length)
             .lean()
-        )
-
-        console.log(arrayOfAllDocument.length);
+        );
       }
     } else {
       arrayOfAllDocument = await Document.find(
@@ -503,7 +497,7 @@ exports.getNotUsedDocument = async (req, res) => {
         return i;
       });
       if (column === 'starred') {
-        arrayOfAllDocument.sort(compare)
+        arrayOfAllDocument.sort(compare);
       }
     }
 
@@ -533,7 +527,7 @@ exports.getNotUsedDocument = async (req, res) => {
       arrOfRequiredContract: arrayOfAllDocument,
       count: count
     });
-  } catch (err) { }
+  } catch (err) {}
 };
 
 exports.getLinksNotUsedDocument = async (req, res) => {
@@ -685,9 +679,10 @@ exports.getDocument = async (req, res) => {
           req,
           res,
           'Просмотр документа',
-          `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${getAttributeValue(document, 'date')
-            ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
-            : 'н/д'
+          `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
+            getAttributeValue(document, 'date')
+              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+              : 'н/д'
           }.`
         );
         document.documentType = document.parse.documentType;
@@ -708,11 +703,12 @@ exports.getDocument = async (req, res) => {
             res,
             'Просмотр документа',
             `${type && type.name} № ${getAttributeValue(document, 'number') ||
-            'н/д'} от ${getAttributeValue(document, 'date')
-              ? moment(getAttributeValue(document, 'date')).format(
-                'DD.MM.YYYY'
-              )
-              : 'н/д'
+              'н/д'} от ${
+              getAttributeValue(document, 'date')
+                ? moment(getAttributeValue(document, 'date')).format(
+                    'DD.MM.YYYY'
+                  )
+                : 'н/д'
             }. Предпроверка ДД от ${moment(audit.createDate).format(
               'DD.MM.YYYY'
             )}
@@ -724,11 +720,12 @@ exports.getDocument = async (req, res) => {
             res,
             'Просмотр документа',
             `Протокол ${getAttributeValue(document, 'org-1-name') ||
-            'н/д'} от ${getAttributeValue(document, 'date')
-              ? moment(getAttributeValue(document, 'date')).format(
-                'DD.MM.YYYY'
-              )
-              : 'н/д'
+              'н/д'} от ${
+              getAttributeValue(document, 'date')
+                ? moment(getAttributeValue(document, 'date')).format(
+                    'DD.MM.YYYY'
+                  )
+                : 'н/д'
             }. Проверка "${audit.subsidiary.name}" ${moment(
               audit.auditStart
             ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
@@ -741,11 +738,12 @@ exports.getDocument = async (req, res) => {
             res,
             'Просмотр документа',
             `${type && type.name} № ${getAttributeValue(document, 'number') ||
-            'н/д'} от ${getAttributeValue(document, 'date')
-              ? moment(getAttributeValue(document, 'date')).format(
-                'DD.MM.YYYY'
-              )
-              : 'н/д'
+              'н/д'} от ${
+              getAttributeValue(document, 'date')
+                ? moment(getAttributeValue(document, 'date')).format(
+                    'DD.MM.YYYY'
+                  )
+                : 'н/д'
             }. Проверка "${audit.subsidiary.name}" ${moment(
               audit.auditStart
             ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
@@ -923,9 +921,10 @@ exports.updateDocument = async (req, res) => {
         req,
         res,
         'Изменение документа',
-        `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${getAttributeValue(document, 'date')
-          ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
-          : 'н/д'
+        `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
+          getAttributeValue(document, 'date')
+            ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+            : 'н/д'
         }.`
       );
       document.documentType = document.parse.documentType;
@@ -942,9 +941,10 @@ exports.updateDocument = async (req, res) => {
           req,
           res,
           'Изменение документа',
-          `Протокол ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${getAttributeValue(document, 'date')
-            ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
-            : 'н/д'
+          `Протокол ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
+            getAttributeValue(document, 'date')
+              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+              : 'н/д'
           }. Проверка "${audit.subsidiary.name}" ${moment(
             audit.auditStart
           ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
@@ -957,9 +957,10 @@ exports.updateDocument = async (req, res) => {
           res,
           'Изменение документа',
           `${type && type.name} № ${getAttributeValue(document, 'number') ||
-          'н/д'} от ${getAttributeValue(document, 'date')
-            ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
-            : 'н/д'
+            'н/д'} от ${
+            getAttributeValue(document, 'date')
+              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
+              : 'н/д'
           }. Проверка "${audit.subsidiary.name}" ${moment(
             audit.auditStart
           ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
