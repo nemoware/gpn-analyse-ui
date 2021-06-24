@@ -153,7 +153,7 @@ export class DocumentTableDetailComponent implements OnInit {
         15,
         0,
         'date',
-        'asc'
+        'desc'
       );
     } else {
       this.dataSource.loadContract(
@@ -163,7 +163,7 @@ export class DocumentTableDetailComponent implements OnInit {
         15,
         0,
         'date',
-        'asc'
+        'desc'
       );
     }
 

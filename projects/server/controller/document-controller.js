@@ -129,15 +129,39 @@ exports.getTreeFromDocuments = async (req, res) => {
   const skip = parseInt(req.query.skip);
 
   const AllColumn2 = {
-    date: { 'analysis.attributes_tree.contract.date.value': sort },
-    number: { 'analysis.attributes_tree.contract.number.value': sort },
-    org1: { 'analysis.attributes_tree.contract.orgs.0.name.value': sort },
-    org2: { 'analysis.attributes_tree.contract.orgs.name.value': sort },
-    contract_subject: { 'analysis.attributes_tree.contract.subject.value': sort },
-    warnings: { 'analysis.warnings': sort },
+    date: {
+      'analysis.attributes_tree.contract.date.value': sort,
+      'user.attributes_tree.contract.date.value': sort
+    },
+    number: {
+      'analysis.attributes_tree.contract.number.value': sort,
+      'user.attributes_tree.contract.number.value': sort
+    },
+    org1: {
+      'analysis.attributes_tree.contract.orgs.0.name.value': sort,
+      'user.attributes_tree.contract.orgs.0.name.value': sort
+    },
+    org2: {
+      'analysis.attributes_tree.contract.orgs.name.value': sort,
+      'user.attributes_tree.contract.orgs.name.value': sort
+    },
+    contract_subject: {
+      'analysis.attributes_tree.contract.subject.value': sort,
+      'user.attributes_tree.contract.subject.value': sort
+    },
+    warnings: {
+      'analysis.warnings': sort,
+      'user.warnings': sort
+    },
     state: { 'state': sort },
-    value: { 'row.analysis.attributes_tree.contract.price.amount_netto.value': sort },
-    amount_with_vat: { 'row.analysis.attributes_tree.contract.price.amount_brutto.value': sort }
+    value: {
+      'analysis.attributes_tree.contract.price.amount_netto.value': sort,
+      'user.attributes_tree.contract.price.amount_netto.value': sort
+    },
+    amount_with_vat: {
+      'analysis.attributes_tree.contract.price.amount_brutto.value': sort,
+      'user.attributes_tree.contract.price.amount_brutto.value': sort
+    }
   };
 
   const select = {
@@ -224,9 +248,7 @@ exports.getTreeFromDocuments = async (req, res) => {
         arrayOfAllDocument = await Document.find({
           $or: [
             { _id: { $in: audit.charters } },
-            { auditId: auditId },
-            // { _id: { $in: arrOfFromId } },
-            // { _id: { $in: arrOfToId } }
+            { auditId: auditId }
           ],
           'parse.documentType': documentType
         })
@@ -285,14 +307,7 @@ exports.getTreeFromDocuments = async (req, res) => {
       .map(i => i._id.toString());
 
     arrayOfAllDocument.map(i => {
-      let ids = audit.links
-        .filter(l => l.fromId.toString() === i._id.toString())
-        .map(l => l.toId.toString())
-        .concat(
-          audit.links
-            .filter(l => l.toId.toString() === i._id.toString())
-            .map(l => l.fromId.toString())
-        );
+      let ids = Ids(i._id.toString())
 
       i.protocolDate = arrPROTOCOL
         .filter(i => ids.includes(i._id.toString()))
@@ -341,7 +356,6 @@ exports.getTreeFromDocuments = async (req, res) => {
     }).count();
 
     res.send({
-      // arrOfRequiredContract: arrOfRequiredContract.slice(skip, take + skip),
       arrOfRequiredContract: arrayOfAllDocument.filter(i => i.parse.documentType === documentType),
       count: count
     });
