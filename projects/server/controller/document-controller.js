@@ -191,10 +191,10 @@ exports.getTreeFromDocuments = async (req, res) => {
     ).lean();
 
     let arrayOfAllDocument;
-    const arrStars = user.stars.map(i => i.documentId.toString());
+    const arrStars = user?.stars.map(i => i.documentId.toString());
 
     function Ids(documentId) {
-      let ids = audit.links
+      return audit.links
         .filter(l => l.fromId.toString() === documentId)
         .map(l => l.toId.toString())
         .concat(
@@ -202,7 +202,6 @@ exports.getTreeFromDocuments = async (req, res) => {
             .filter(l => l.toId.toString() === documentId)
             .map(l => l.fromId.toString())
         );
-      return ids;
     }
 
     if (documentId) {
@@ -271,8 +270,7 @@ exports.getTreeFromDocuments = async (req, res) => {
 
     if (user) {
       arrayOfAllDocument.map(i => {
-        if (arrStars.includes(i._id.toString())) i.starred = true;
-        else i.starred = false;
+        i.starred = arrStars.includes(i._id.toString());
         return i;
       });
       if (documentId && column === 'starred') {
@@ -314,7 +312,7 @@ exports.getTreeFromDocuments = async (req, res) => {
           };
         })[0];
 
-      if (i.protocolDate == undefined) i.protocolDate = '';
+      if (i.protocolDate === undefined) i.protocolDate = '';
 
       i.charterDate = arrCHARTER
         .filter(i => ids.includes(i._id.toString()))
@@ -325,18 +323,16 @@ exports.getTreeFromDocuments = async (req, res) => {
           };
         })[0];
 
-      if (i.charterDate == undefined) i.charterDate = '';
+      if (i.charterDate === undefined) i.charterDate = '';
 
       ids = ids.filter(i => {
         for (let simpleDoc of arrPROTOCOL.concat(arrCHARTER)) {
-          if (simpleDoc._id.toString() == i.toString()) return false;
+          if (simpleDoc._id.toString() === i.toString()) return false;
         }
-        if (bufferContract.includes(i)) return false;
-        return true;
+        return !bufferContract.includes(i);
       });
 
-      if (ids && ids.length > 0) i.links = true;
-      else i.links = false;
+      i.links = !!(ids && ids.length > 0);
       return i;
     });
 
@@ -490,8 +486,7 @@ exports.getNotUsedDocument = async (req, res) => {
 
     if (user) {
       arrayOfAllDocument.map(i => {
-        if (arrStars.includes(i._id.toString())) i.starred = true;
-        else i.starred = false;
+        i.starred = arrStars.includes(i._id.toString());
         return i;
       });
       if (column === 'starred') {
