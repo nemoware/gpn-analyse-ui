@@ -23,7 +23,6 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { AuditService } from '@app/features/audit/audit.service';
 import { Subject, merge } from '@root/node_modules/rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { Document } from '@app/models/document.model';
 import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 
 const cols_by_type = {
@@ -77,17 +76,6 @@ const cols_by_type = {
     'state',
     'charterAndProtocol'
   ]
-};
-
-const column_to_sorting_mapping = {
-  date: 'date',
-  contract_subject: 'subject',
-  number: 'number',
-  value: 'contract_price_amount',
-  org1: 'org-1-name',
-  org2: 'org-2-name',
-  org: 'org-1-name',
-  org_level: 'org_structural_level'
 };
 
 @Component({
@@ -153,8 +141,8 @@ export class DocumentTableDetailComponent implements OnInit {
         this.documentType,
         15,
         0,
-        'charterAndProtocol',
-        'asc'
+        'date',
+        'desc'
       );
     } else {
       this.dataSource.loadContract(
@@ -163,8 +151,8 @@ export class DocumentTableDetailComponent implements OnInit {
         this.documentType,
         15,
         0,
-        'charterAndProtocol',
-        'asc'
+        'date',
+        'desc'
       );
     }
 

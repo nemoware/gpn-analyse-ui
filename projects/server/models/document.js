@@ -46,6 +46,61 @@ module.exports = (mongoose, Schema) => {
     documentType: String
   });
 
+  documentSchema.index(
+    //Дата
+    {
+      'analysis.attributes_tree.contract.date.value': 1,
+      'user.attributes_tree.contract.date.value': 1
+    }
+  );
+  documentSchema.index(
+    // Номер
+    {
+      'analysis.attributes_tree.contract.number.value': 1,
+      'user.attributes_tree.contract.number.value': 1
+    }
+  );
+  documentSchema.index({
+    // Состояние
+    state: 1
+  });
+  documentSchema.index({
+    // Предупреждения
+    'analysis.warnings': 1,
+    'user.warnings': 1
+  });
+  documentSchema.index({
+    'analysis.attributes_tree.charter.org.name.value': 1,
+    'user.attributes_tree.charter.org.name.value': 1
+  });
+  documentSchema.index({
+    'analysis.attributes_tree.protocol.structural_level.value': 1,
+    'user.attributes_tree.protocol.structural_level.value': 1
+  });
+  documentSchema.index({
+    // Сторона 1
+    'analysis.attributes_tree.contract.orgs.0.name.value': 1,
+    'user.attributes_tree.contract.orgs.0.name.value': 1
+  });
+  documentSchema.index({
+    // Строна 2
+    'analysis.attributes_tree.contract.orgs.name.value': 1,
+    'user.attributes_tree.contract.orgs.name.value': 1
+  });
+  documentSchema.index({
+    //
+    'analysis.attributes_tree.contract.subject.value': 1,
+    'user.attributes_tree.contract.subject.value': 1
+  });
+  documentSchema.index({
+    'analysis.attributes_tree.contract.price.amount_netto.value': 1,
+    'user.attributes_tree.contract.price.amount_netto.value': 1
+  });
+  documentSchema.index({
+    'analysis.attributes_tree.contract.price.amount_brutto.value': 1,
+    'user.attributes_tree.contract.price.amount_brutto.value': 1
+  });
+
   documentSchema.methods.getAttributeValue = function getAttributeValue(
     attribute
   ) {

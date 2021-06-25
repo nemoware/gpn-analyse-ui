@@ -87,7 +87,8 @@ export class AuditService {
     take: number,
     pageIndex: number,
     column: string,
-    sort: string
+    sort: string,
+    skipStar: number
   ): Observable<{ arrOfRequiredContract: Document[]; count: number }> {
     let httpParams = new HttpParams();
 
@@ -96,9 +97,6 @@ export class AuditService {
     if (take) httpParams = httpParams.append('take', take.toString());
 
     if (take)
-      httpParams = httpParams.append('skip', (pageIndex * take).toString());
-
-    if (pageIndex)
       httpParams = httpParams.append('skip', (pageIndex * take).toString());
 
     if (column) httpParams = httpParams.append('column', column.toString());
@@ -108,12 +106,15 @@ export class AuditService {
     if (documentType)
       httpParams = httpParams.append('documentType', documentType.toString());
 
-    return this.http.get<{ arrOfRequiredContract: Document[]; count: number }>(
-      `${api}/document/notused`,
-      {
-        params: httpParams
-      }
-    );
+    if (skipStar && pageIndex * take != 0)
+      httpParams = httpParams.append('skipStar', skipStar.toString());
+
+    return this.http.get<{
+      arrOfRequiredContract: Document[];
+      count: number;
+    }>(`${api}/document/notused`, {
+      params: httpParams
+    });
   }
 
   public getTreeDocument(
@@ -123,7 +124,8 @@ export class AuditService {
     take: number,
     pageIndex: number,
     column: string,
-    sort: string
+    sort: string,
+    skipStar: number
   ): Observable<{ arrOfRequiredContract: Document[]; count: number }> {
     let httpParams = new HttpParams();
 
@@ -132,9 +134,6 @@ export class AuditService {
     if (take) httpParams = httpParams.append('take', take.toString());
 
     if (take)
-      httpParams = httpParams.append('skip', (pageIndex * take).toString());
-
-    if (pageIndex)
       httpParams = httpParams.append('skip', (pageIndex * take).toString());
 
     if (column) httpParams = httpParams.append('column', column.toString());
@@ -145,6 +144,9 @@ export class AuditService {
       httpParams = httpParams.append('documentId', documentId.toString());
       httpParams = httpParams.append('documentType', documentType.toString());
     }
+
+    if (skipStar && pageIndex * take != 0)
+      httpParams = httpParams.append('skipStar', skipStar.toString());
 
     return this.http.get<{ arrOfRequiredContract: Document[]; count: number }>(
       `${api}/document/treelist`,

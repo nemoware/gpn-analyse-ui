@@ -45,8 +45,14 @@ tr.detail-row {
 }
 
 .org-name {
+  & a {
+    color: $gpn-links-color;
+  }
   display: flex;
   flex-direction: row;
+}
+.org-name a {
+  color: $gpn-links-color !important;
 }
 
 .mat-column-shevron {
@@ -59,10 +65,9 @@ tr.detail-row {
   text-align: center;
 }
 
-.mat-column-star {
+.star {
   width: $icon-column-width;
   padding-left: 0 !important;
-  padding-right: 0;
 }
 
 .mat-column-date {
@@ -82,11 +87,6 @@ tr.detail-row {
 }
 
 .mat-cell.mat-column-value {
-  // width: 150px;
-
-  // font-family: 'din';
-  // font-weight: 400;
-  // font-size: 12pt;
   padding-right: $gpn-padding;
 }
 
@@ -95,8 +95,9 @@ tr.detail-row {
   //   width: 10% !important;
   // }
   &-starred {
-    // width: 10% !important;
-    padding-left: 10px;
+    width: 2% !important;
+    margin-right: 15px;
+    // padding-left: 10px;
   }
   // &-value {
   //   width: 10% !important;

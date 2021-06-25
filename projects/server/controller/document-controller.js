@@ -22,18 +22,51 @@ isActive
 hasInside
 `;
 
-const AllColumn = {
-  starred: 'starred',
-  date: 'analysis.attributes_tree.contract.date.value',
-  number: 'analysis.attributes_tree.contract.number.value',
-  org1: 'analysis.attributes_tree.contract.orgs.0.name.value',
-  org2: 'analysis.attributes_tree.contract.orgs.1.name.value',
-  contract_subject: 'analysis.attributes_tree.contract.subject.value',
-  warnings: 'analysis.warnings',
-  state: 'state',
-  charterDate: 'charterDate',
-  protocolDate: 'protocolDate'
-};
+function SetSortForColumn(sort) {
+  return {
+    date: {
+      'analysis.attributes_tree.contract.date.value': sort,
+      'user.attributes_tree.contract.date.value': sort
+    },
+    number: {
+      'analysis.attributes_tree.contract.number.value': sort,
+      'user.attributes_tree.contract.number.value': sort
+    },
+    org: {
+      'analysis.attributes_tree.charter.org.name.value': sort,
+      'user.attributes_tree.charter.org.name.value': sort
+    },
+    org_level: {
+      'analysis.attributes_tree.protocol.structural_level.value': sort,
+      'user.attributes_tree.protocol.structural_level.value': sort
+    },
+    org1: {
+      'analysis.attributes_tree.contract.orgs.0.name.value': sort,
+      'user.attributes_tree.contract.orgs.0.name.value': sort
+    },
+    org2: {
+      'analysis.attributes_tree.contract.orgs.name.value': sort,
+      'user.attributes_tree.contract.orgs.name.value': sort
+    },
+    contract_subject: {
+      'analysis.attributes_tree.contract.subject.value': sort,
+      'user.attributes_tree.contract.subject.value': sort
+    },
+    warnings: {
+      'analysis.warnings': sort,
+      'user.warnings': sort
+    },
+    state: { state: sort }, // Да, так надо
+    value: {
+      'analysis.attributes_tree.contract.price.amount_netto.value': sort,
+      'user.attributes_tree.contract.price.amount_netto.value': sort
+    },
+    amount_with_vat: {
+      'analysis.attributes_tree.contract.price.amount_brutto.value': sort,
+      'user.attributes_tree.contract.price.amount_brutto.value': sort
+    }
+  };
+}
 
 function getAttributeValue(document, attribute) {
   if (document.user && document.user.attributes) {
@@ -99,9 +132,7 @@ exports.getDocuments = async (req, res) => {
       login: res.locals.user.sAMAccountName
     }).lean();
     if (user) {
-      const stars = user.stars
-        .filter(s => s.auditId.toString() === auditId)
-        .map(s => s.documentId.toString());
+      const stars = user.stars.map(s => s.documentId.toString());
 
       for (let document of documents.filter(d =>
         stars.includes(d._id.toString())
@@ -121,12 +152,26 @@ exports.getDocuments = async (req, res) => {
 exports.getTreeFromDocuments = async (req, res) => {
   const auditId = req.query.auditId;
   const documentId = req.query.documentId; //Если есть, то отправит связанные с ним доки, конкретного типа(См.ниже).
-  const documentType = req.query.documentType; //Какой тип документов будет отправлять.
+  const documentType =
+    req.query.documentType === undefined ? 'CONTRACT' : req.query.documentType; //Какой тип документов будет отправлять.
   const take = parseInt(req.query.take);
   const column = req.query.column;
   const sort = req.query.sort === 'asc' ? 1 : -1;
   const skip = parseInt(req.query.skip);
+  const skipStar = parseInt(req.query.skipStar);
 
+  const AllColumn2 = SetSortForColumn(sort);
+
+  const select = {
+    'analysis.attributes_tree.contract': 1,
+    'analysis.attributes_tree.charter.date.value': 1,
+    'analysis.attributes_tree.protocol.date.value': 1,
+    'user.attributes_tree': 1,
+    'analysis.analyze_timestamp': 1,
+    'parse.documentType': 1,
+    state: 1,
+    'user.author.name': 1
+  };
   if (!auditId) {
     let err = 'Can not find documents: auditId is null';
     logger.logError(req, res, err, 400);
@@ -138,28 +183,6 @@ exports.getTreeFromDocuments = async (req, res) => {
       lean: true
     });
 
-    arrOfFromId = audit.links.map(i => i.fromId.toString());
-    arrOfToId = audit.links.map(i => i.toId.toString());
-    const arrayOfAllDocument = await Document.find({
-      $or: [
-        { _id: { $in: audit.charters } },
-        { auditId: auditId },
-        { _id: { $in: arrOfFromId } },
-        { _id: { $in: arrOfToId } }
-      ]
-    })
-      .select({
-        'analysis.attributes_tree.contract': 1,
-        'analysis.attributes_tree.charter.date.value': 1,
-        'analysis.attributes_tree.protocol.date.value': 1,
-        'user.attributes_tree': 1,
-        'analysis.analyze_timestamp': 1,
-        'parse.documentType': 1,
-        state: 1,
-        'user.author.name': 1
-      })
-      .lean();
-
     const user = await User.findOne(
       {
         login: res.locals.user.sAMAccountName
@@ -167,13 +190,94 @@ exports.getTreeFromDocuments = async (req, res) => {
       'stars'
     ).lean();
 
+    let arrayOfAllDocument;
+    const arrStars = user.stars.map(i => i.documentId.toString());
+
+    function Ids(documentId) {
+      let ids = audit.links
+        .filter(l => l.fromId.toString() === documentId)
+        .map(l => l.toId.toString())
+        .concat(
+          audit.links
+            .filter(l => l.toId.toString() === documentId)
+            .map(l => l.fromId.toString())
+        );
+      return ids;
+    }
+
+    if (documentId) {
+      let ids = Ids(documentId);
+
+      arrayOfAllDocument = await Document.find({
+        _id: { $in: ids },
+        'parse.documentType': documentType
+      })
+        .select(select)
+        .sort(AllColumn2[column])
+        .lean();
+    } else {
+      if (column === 'starred') {
+        const sortObj = {
+          '1': { $in: arrStars },
+          '-1': { $nin: arrStars }
+        };
+        arrayOfAllDocument = await Document.find({
+          auditId: auditId,
+          _id: sortObj[sort * -1],
+          'parse.documentType': documentType
+        })
+          .select(select)
+          .skip(skip)
+          .limit(take)
+          .lean();
+        if (arrayOfAllDocument.length < take) {
+          arrayOfAllDocument = arrayOfAllDocument.concat(
+            await Document.find({
+              _id: sortObj[sort],
+              auditId: auditId,
+              'parse.documentType': documentType
+            })
+              .select(select)
+              .skip(skip - skipStar)
+              .limit(take - arrayOfAllDocument.length)
+              .lean()
+          );
+        }
+      } else {
+        arrayOfAllDocument = await Document.find({
+          $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+          'parse.documentType': documentType
+        })
+          .select(select)
+          .sort(AllColumn2[column])
+          .limit(take)
+          .skip(skip)
+          .lean();
+      }
+
+      let ids = [];
+      await arrayOfAllDocument.forEach(i => {
+        let buf = Ids(i._id.toString());
+        ids = ids.concat(buf);
+      });
+      const qwe = await Document.find()
+        .where('_id')
+        .in(ids)
+        .select(select)
+        .lean();
+
+      arrayOfAllDocument = arrayOfAllDocument.concat(qwe);
+    }
+
     if (user) {
-      let arrStars = user.stars.map(i => i.documentId.toString());
       arrayOfAllDocument.map(i => {
         if (arrStars.includes(i._id.toString())) i.starred = true;
         else i.starred = false;
         return i;
       });
+      if (documentId && column === 'starred') {
+        arrayOfAllDocument.sort(compare);
+      }
     }
 
     arrayOfAllDocument.map(i => {
@@ -199,14 +303,7 @@ exports.getTreeFromDocuments = async (req, res) => {
       .map(i => i._id.toString());
 
     arrayOfAllDocument.map(i => {
-      let ids = audit.links
-        .filter(l => l.fromId.toString() === i._id.toString())
-        .map(l => l.toId.toString())
-        .concat(
-          audit.links
-            .filter(l => l.toId.toString() === i._id.toString())
-            .map(l => l.fromId.toString())
-        );
+      let ids = Ids(i._id.toString());
 
       i.protocolDate = arrPROTOCOL
         .filter(i => ids.includes(i._id.toString()))
@@ -243,66 +340,21 @@ exports.getTreeFromDocuments = async (req, res) => {
       return i;
     });
 
-    let arrOfRequiredContract;
-
-    if (documentId) {
-      let ids = audit.links
-        .filter(l => l.fromId.toString() === documentId)
-        .map(l => l.toId.toString())
-        .concat(
-          audit.links
-            .filter(l => l.toId.toString() === documentId)
-            .map(l => l.fromId.toString())
-        );
-      arrOfRequiredContract = arrayOfAllDocument.filter(
-        i =>
-          i.parse.documentType === documentType &&
-          ids.includes(i._id.toString())
-      );
-    } else {
-      arrOfRequiredContract = arrayOfAllDocument.filter(
-        i => i.parse.documentType === 'CONTRACT'
-      );
-    }
-
-    const count = arrOfRequiredContract.length;
-
     function compare(a, b) {
-      if (deepFind(a, column) < deepFind(b, column)) return sort;
-      if (deepFind(a, column) > deepFind(b, column)) return sort * -1;
+      if (a.starred < b.starred) return sort;
+      if (a.starred > b.starred) return sort * -1;
       return 0;
     }
 
-    function compareForCharterAndProtocol(a, b) {
-      let props = ['charterDate', 'protocolDate'];
-      let result = 0,
-        i = 0;
-      while (result === 0 && i < props.length) {
-        result = 0;
-        if (a[props[i]] < b[props[i]]) result = sort;
-        if (a[props[i]] > b[props[i]]) result = sort * -1;
-        i++;
-      }
-      return result;
-    }
-
-    function deepFind(obj, column) {
-      let paths = AllColumn[column].split('.');
-      let current = obj;
-
-      for (let i = 0; i < paths.length; ++i) {
-        if (current[paths[i]] == undefined) return '';
-        else current = current[paths[i]];
-      }
-      return typeof current === 'string' ? current.toLowerCase() : current;
-    }
-
-    if (column == 'charterAndProtocol')
-      arrOfRequiredContract.sort(compareForCharterAndProtocol);
-    else arrOfRequiredContract.sort(compare);
+    const count = await Document.find({
+      auditId: auditId,
+      'parse.documentType': 'CONTRACT'
+    }).count();
 
     res.send({
-      arrOfRequiredContract: arrOfRequiredContract.slice(skip, take + skip),
+      arrOfRequiredContract: arrayOfAllDocument.filter(
+        i => i.parse.documentType === documentType
+      ),
       count: count
     });
   } catch (err) {
@@ -317,6 +369,9 @@ exports.getNotUsedDocument = async (req, res) => {
   const column = req.query.column;
   const sort = req.query.sort === 'asc' ? 1 : -1;
   const skip = parseInt(req.query.skip);
+  const skipStar = parseInt(req.query.skipStar);
+
+  const AllColumn2 = SetSortForColumn(sort);
 
   if (!auditId) {
     let err = 'Can not find documents: auditId is null';
@@ -334,32 +389,6 @@ exports.getNotUsedDocument = async (req, res) => {
       lean: true
     });
 
-    const arrLinksFromId = audit.links.map(i => i.fromId.toString());
-    const arrLinksToId = audit.links.map(i => i.toId.toString());
-
-    const arrLinks = [...new Set([...arrLinksFromId, ...arrLinksToId])];
-
-    const arrayOfAllDocument = await Document.find(
-      {
-        $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
-        _id: { $nin: arrLinks },
-        'parse.documentType': documentType
-      },
-      {
-        'analysis.attributes_tree.contract': 1,
-        'analysis.attributes_tree.charter': 1,
-        'analysis.attributes_tree.protocol': 1,
-        'user.attributes_tree.contract': 1,
-        'user.attributes_tree.charter': 1,
-        'user.attributes_tree.protocol': 1,
-        'analysis.analyze_timestamp': 1,
-        'parse.documentType': 1,
-        state: 1,
-        'user.author.name': 1
-      },
-      { lean: true }
-    );
-
     const user = await User.findOne(
       {
         login: res.locals.user.sAMAccountName
@@ -367,13 +396,107 @@ exports.getNotUsedDocument = async (req, res) => {
       'stars'
     ).lean();
 
+    const arrStars = user.stars.map(i => i.documentId.toString());
+
+    const arrLinksFromId = audit.links.map(i => i.fromId.toString());
+    const arrLinksToId = audit.links.map(i => i.toId.toString());
+
+    const arrLinks = [...new Set([...arrLinksFromId, ...arrLinksToId])];
+
+    let arrayOfAllDocument;
+
+    if (column === 'starred') {
+      const sortObj = {
+        '1': { $in: arrStars },
+        '-1': { $nin: arrStars }
+      };
+
+      arrayOfAllDocument = await Document.find({
+        $and: [
+          { _id: { $nin: arrLinks } },
+          { _id: sortObj[sort * -1] },
+          { $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }] }
+        ],
+        'parse.documentType': documentType
+      })
+        .select({
+          'analysis.attributes_tree.contract': 1,
+          'analysis.attributes_tree.charter': 1,
+          'analysis.attributes_tree.protocol': 1,
+          'user.attributes_tree.contract': 1,
+          'user.attributes_tree.charter': 1,
+          'user.attributes_tree.protocol': 1,
+          'analysis.analyze_timestamp': 1,
+          'parse.documentType': 1,
+          state: 1,
+          'user.author.name': 1
+        })
+        .limit(take)
+        .skip(skip)
+        .lean();
+
+      if (arrayOfAllDocument.length < take) {
+        arrayOfAllDocument = arrayOfAllDocument.concat(
+          await Document.find({
+            $and: [
+              { _id: { $nin: arrLinks } },
+              { _id: sortObj[sort] },
+              { $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }] }
+            ],
+            'parse.documentType': documentType
+          })
+            .select({
+              'analysis.attributes_tree.contract': 1,
+              'analysis.attributes_tree.charter': 1,
+              'analysis.attributes_tree.protocol': 1,
+              'user.attributes_tree.contract': 1,
+              'user.attributes_tree.charter': 1,
+              'user.attributes_tree.protocol': 1,
+              'analysis.analyze_timestamp': 1,
+              'parse.documentType': 1,
+              state: 1,
+              'user.author.name': 1
+            })
+            .skip(skip - skipStar)
+            .limit(take - arrayOfAllDocument.length)
+            .lean()
+        );
+      }
+    } else {
+      arrayOfAllDocument = await Document.find(
+        {
+          $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+          _id: { $nin: arrLinks },
+          'parse.documentType': documentType
+        },
+        {
+          'analysis.attributes_tree.contract': 1,
+          'analysis.attributes_tree.charter': 1,
+          'analysis.attributes_tree.protocol': 1,
+          'user.attributes_tree.contract': 1,
+          'user.attributes_tree.charter': 1,
+          'user.attributes_tree.protocol': 1,
+          'analysis.analyze_timestamp': 1,
+          'parse.documentType': 1,
+          state: 1,
+          'user.author.name': 1
+        }
+      )
+        .sort(AllColumn2[column])
+        .limit(take)
+        .skip(skip)
+        .lean();
+    }
+
     if (user) {
-      let arrStars = user.stars.map(i => i.documentId.toString());
       arrayOfAllDocument.map(i => {
         if (arrStars.includes(i._id.toString())) i.starred = true;
         else i.starred = false;
         return i;
       });
+      if (column === 'starred') {
+        arrayOfAllDocument.sort(compare);
+      }
     }
 
     arrayOfAllDocument.map(i => {
@@ -387,29 +510,24 @@ exports.getNotUsedDocument = async (req, res) => {
     });
 
     function compare(a, b) {
-      if (deepFind(a, column) < deepFind(b, column)) return sort;
-      if (deepFind(a, column) > deepFind(b, column)) return sort * -1;
+      if (a.starred < b.starred) return sort * -1;
+      if (a.starred > b.starred) return sort;
       return 0;
     }
 
-    function deepFind(obj, column) {
-      let paths = AllColumn[column].split('.');
-      let current = obj;
-
-      for (let i = 0; i < paths.length; ++i) {
-        if (current[paths[i]] == undefined) return '';
-        else current = current[paths[i]];
-      }
-      return typeof current === 'string' ? current.toLowerCase() : current;
-    }
-
-    if (column != 'charterAndProtocol') arrayOfAllDocument.sort(compare);
+    const count = await Document.find({
+      _id: { $nin: arrLinks },
+      $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+      'parse.documentType': documentType
+    }).count();
 
     res.send({
-      arrOfRequiredContract: arrayOfAllDocument.slice(skip, take + skip)
+      arrOfRequiredContract: arrayOfAllDocument,
+      count: count
     });
   } catch (err) {}
 };
+
 exports.getLinksNotUsedDocument = async (req, res) => {
   const auditId = req.query.auditId;
 
@@ -437,6 +555,15 @@ exports.getLinksNotUsedDocument = async (req, res) => {
       { lean: true }
     );
 
+    const arrayOfAllContract = await Document.find(
+      {
+        $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+        'parse.documentType': 'CONTRACT'
+      },
+      'parse.documentType',
+      { lean: true }
+    );
+
     const arrOfSupplementaryAgreement = arrayOfAllDocument.filter(
       i => i.parse.documentType === 'SUPPLEMENTARY_AGREEMENT'
     );
@@ -449,11 +576,12 @@ exports.getLinksNotUsedDocument = async (req, res) => {
     const arrOfProtocol = arrayOfAllDocument.filter(
       i => i.parse.documentType === 'PROTOCOL'
     );
-    const arrOfContract = arrayOfAllDocument.filter(
-      i => i.parse.documentType === 'CONTRACT'
-    );
 
     res.send({
+      contract: {
+        count: arrayOfAllContract.length,
+        type: 'CONTRACT'
+      },
       charter: {
         count: arrOfCharter.length,
         type: 'CHARTER'
@@ -469,10 +597,6 @@ exports.getLinksNotUsedDocument = async (req, res) => {
       supplementary_agreement: {
         count: arrOfSupplementaryAgreement.length,
         type: 'SUPPLEMENTARY_AGREEMENT'
-      },
-      contract: {
-        count: arrOfContract.length,
-        type: 'CONTRACT'
       }
     });
   } catch (err) {
