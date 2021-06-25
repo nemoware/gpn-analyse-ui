@@ -199,6 +199,8 @@ export class AuditAnalyseResultComponent
           this.refreshTree();
         });
     } else if (this.selectedPage <= 1) {
+      this.changeDetectorRefs.detectChanges();
+      this.spinner.show();
       this.auditservice
         .getDouments(this.IdAudit, false)
         .pipe(takeUntil(this.destroyStream))
@@ -259,6 +261,7 @@ export class AuditAnalyseResultComponent
               this.TREE_DATA.push(node);
           }
           this.refreshTree();
+          this.spinner.hide();
         });
     } else if (this.selectedPage === 2) {
       this.spinner.show();
