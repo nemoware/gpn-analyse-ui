@@ -1,5 +1,5 @@
 const logger = require('../core/logger');
-const { Audit, Document } = require('../models');
+const { Audit, Document, BookValue } = require('../models');
 const roboService = require('../services/robo-service');
 exports.fetchPreAudits = async (req, res) => {
   try {
@@ -129,6 +129,27 @@ exports.getPreAudits = async (req, res) => {
     audits.sort((a, b) => b.sortDate - a.sortDate);
 
     res.send(audits);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+//Получение информации об актуальности балансовой стоимости
+exports.getBookValueRelevance = async (req, res) => {
+  try {
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth();
+    let bookValues = await BookValue.find().lean();
+    bookValues = bookValues.filter(
+      bookValue =>
+        bookValue.date.getMonth() === month &&
+        bookValue.date.getFullYear() === year
+    );
+    let bookValueRelevant = false;
+    if (bookValues.length) {
+      bookValueRelevant = true;
+    }
+    res.send({ bookValueRelevant, name: 'Ivan' });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

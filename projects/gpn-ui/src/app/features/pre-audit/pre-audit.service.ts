@@ -5,6 +5,7 @@ import {
 } from '@root/node_modules/@angular/common/http';
 import { Observable } from '@root/node_modules/rxjs';
 import { Audit } from '@app/models/audit.model';
+import { BookValueRelevanceModel } from '@app/models/bookValueRelevance.model';
 
 const api = '/api';
 
@@ -57,5 +58,12 @@ export class PreAuditService {
     return this.http.get<Array<Audit>>(`${api}/preAudit/list`, {
       params: httpParams
     });
+  }
+
+  getBookValueReference(): Observable<BookValueRelevanceModel> {
+    return this.http.get<BookValueRelevanceModel>(
+      `${api}/preAudit/getBookValueReference`,
+      {}
+    );
   }
 }

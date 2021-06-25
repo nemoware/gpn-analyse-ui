@@ -241,7 +241,6 @@ exports.fetchAffiliates = async (req, res) => {
           sort
         });
     }
-    console.log(count);
     res.send({ count, affiliates });
   } catch (err) {
     logger.logError(req, res, err, 500);

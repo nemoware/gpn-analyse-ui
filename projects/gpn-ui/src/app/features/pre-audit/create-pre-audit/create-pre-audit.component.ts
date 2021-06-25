@@ -1,11 +1,11 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Inject, OnDestroy } from '@root/node_modules/@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup
 } from '@root/node_modules/@angular/forms';
-import { Subject } from '@root/node_modules/rxjs';
+import { Observable, Subject } from '@root/node_modules/rxjs';
 import {
   DateAdapter,
   MAT_DIALOG_DATA,
@@ -13,7 +13,7 @@ import {
 } from '@root/node_modules/@angular/material';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { PreAuditService } from '@app/features/pre-audit/pre-audit.service';
-import { takeUntil } from '@root/node_modules/rxjs/operators';
+import { map, takeUntil } from '@root/node_modules/rxjs/operators';
 
 @Component({
   selector: 'gpn-create-pre-audit',
@@ -22,7 +22,7 @@ import { takeUntil } from '@root/node_modules/rxjs/operators';
   providers: [PreAuditService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreatePreAuditComponent implements OnDestroy {
+export class CreatePreAuditComponent implements OnInit, OnDestroy {
   faTimes = faTimes;
   auditForm: FormGroup;
   private destroyStream = new Subject<void>();
@@ -35,6 +35,7 @@ export class CreatePreAuditComponent implements OnDestroy {
   filesString = '';
   //Файл цепочки бенефециаров
   chainString = '';
+  bookValueRelevance$: Observable<Boolean>;
 
   public typeControl: FormControl = new FormControl(this.checkTypes);
 
@@ -128,5 +129,11 @@ export class CreatePreAuditComponent implements OnDestroy {
       .subscribe(() => {
         this.CloseForm();
       });
+  }
+
+  ngOnInit(): void {
+    this.bookValueRelevance$ = this.preAuditService
+      .getBookValueReference()
+      .pipe(map(data => data.bookValueRelevant));
   }
 }

@@ -143,6 +143,7 @@ export class BookValuesTableComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(BookValuesFormComponent, {
       width: '50%',
       data: {
+        dataSource: this.data,
         new: false,
         bookValue
       },

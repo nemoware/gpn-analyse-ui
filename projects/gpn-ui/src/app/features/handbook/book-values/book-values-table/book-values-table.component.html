@@ -9,7 +9,7 @@
   </div>
 </div>
 <div class="mat-elevation-z8">
-  <table mat-table class="mat-table" matSort aria-label="`Elements`"  (mouseleave) = "mouseOverIndex=-1">
+  <table mat-table class="mat-table" matSort aria-label="`Elements`"  (mouseleave) = "mouseOverIndex=-1" matSortActive="date" matSortDirection="desc">
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата</th>
       <td mat-cell *matCellDef="let row">{{row.date | date: 'MM.yyyy'}}</td>

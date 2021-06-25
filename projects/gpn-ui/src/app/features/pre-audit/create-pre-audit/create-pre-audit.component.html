@@ -14,7 +14,7 @@
     Выберите договор и его приложения
   </mat-label>
   <div style="width: 100%">
-    <input [(ngModel)]="filesString" type="file" multiple (change)="uploadFiles($event)">
+    <input [(ngModel)]="filesString" type="file" accept=".doc, .docx" multiple (change)="uploadFiles($event)">
   </div>
   <ng-container *ngIf="typeControl.value.includes('InterestControl')">
     <br>
@@ -22,7 +22,7 @@
       Выберите файл с цепочкой бенефециаров
     </mat-label>
     <div style="width: 100%">
-      <input [(ngModel)]="chainString" type="file" (change)="uploadChain($event)">
+      <input [(ngModel)]="chainString" type="file" accept=".xls, .xlsx" (change)="uploadChain($event)">
     </div>
   </ng-container>
   <br>
@@ -35,4 +35,7 @@
       </button>
     </div>
   </div>
+  <br>
+  <mat-error> {{!(bookValueRelevance$ | async)?'Необходимо добавить актуальную балансовую стоимость для ПАО "Газпром нефть".\n' +
+    '    Для текущей проверки проекта договора использована балансовая стоимость за предыдущий период.' : ''}}</mat-error>
 </div>

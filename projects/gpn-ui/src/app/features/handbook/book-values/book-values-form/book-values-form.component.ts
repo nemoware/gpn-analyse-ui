@@ -5,6 +5,8 @@ import { Subscription } from '@root/node_modules/rxjs';
 import {
   FormControl,
   FormGroup,
+  ValidationErrors,
+  ValidatorFn,
   Validators
 } from '@root/node_modules/@angular/forms';
 import {
@@ -82,14 +84,21 @@ export class BookValuesFormComponent implements OnInit {
           Validators.min(1)
         ])
       });
-      this.date = new FormControl(moment(), [Validators.required]);
+      //По умолчанию выбран следующий месяц
+      this.date = new FormControl(moment().add('month', 1), [
+        Validators.required,
+        this.ValidateDate()
+      ]);
     } else {
       this.controlForm = new FormGroup({
         valueControl: new FormControl(data.bookValue.value, [
           Validators.required
         ])
       });
-      this.date = new FormControl(data.bookValue.date, [Validators.required]);
+      this.date = new FormControl(data.bookValue.date, [
+        Validators.required,
+        this.ValidateDate()
+      ]);
     }
   }
 
@@ -134,5 +143,35 @@ export class BookValuesFormComponent implements OnInit {
     ctrlValue.month(normalizedMonth.month());
     this.date.setValue(ctrlValue);
     datepicker.close();
+  }
+
+  //Проверяем, есть ли такая дата в базе
+  ValidateDate(): ValidatorFn {
+    return (control: FormControl): ValidationErrors => {
+      if (control.value === '') {
+        return;
+      }
+      let flag = true;
+      const date = new Date(control.value._d);
+      for (const array of this.data.dataSource) {
+        if (
+          date.getFullYear() === new Date(array.date).getFullYear() &&
+          date.getMonth() === new Date(array.date).getMonth() &&
+          date.getFullYear() !==
+            new Date(
+              this.data.bookValue && this.data.bookValue.date
+            ).getFullYear() &&
+          date.getMonth() !==
+            new Date(this.data.bookValue && this.data.bookValue.date).getMonth()
+        ) {
+          flag = false;
+          break;
+        }
+      }
+      if (!flag) {
+        return { RepeatedDate: true };
+      }
+      return;
+    };
   }
 }

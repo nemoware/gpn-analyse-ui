@@ -13,9 +13,10 @@
                       (monthSelected)="chosenMonthHandler($event, dp)"
                       panelClass="example-month-picker">
       </mat-datepicker>
+      <mat-error *ngIf="date.hasError('RepeatedDate')">
+        Стоимость за этот период уже есть в системе
+      </mat-error>
     </mat-form-field>
-
-
     <mat-form-field color="accent">
       <input mask="separator" thousandSeparator=" " matInput placeholder="Балансовая стоимость" formControlName="valueControl">
       <mat-error *ngIf="controlForm.controls.valueControl.invalid">
@@ -28,7 +29,7 @@
         <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>
       </div>
       <div class="col">
-        <button mat-raised-button color="accent" [disabled]="controlForm.invalid" (click)="addBookValue()">{{data.new?'Добавить':'Сохранить'}}
+        <button mat-raised-button color="accent" [disabled]="controlForm.invalid || date.invalid" (click)="addBookValue()">{{data.new?'Добавить':'Сохранить'}}
         </button>
       </div>
     </div>
