@@ -176,6 +176,18 @@ export class AuditService {
     });
   }
 
+  public getResultState(
+    auditId: string
+  ): Observable<[{ state: string; percent: number; count: number }]> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('auditId', auditId);
+    return this.http.get<[{ state: string; percent: number; count: number }]>(
+      `${api}/document/resultState`,
+      {
+        params: httpParams
+      }
+    );
+  }
   public getFiles(auditId: string = null): Observable<FileModel[]> {
     let httpParams = new HttpParams();
     if (auditId) {

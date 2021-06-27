@@ -6,6 +6,12 @@
 
 .fill-remaining-space {
   flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.toolTip {
+
 }
 
 .mat-toolbar {

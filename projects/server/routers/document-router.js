@@ -5,6 +5,7 @@ router.get('/treeList', controller.getTreeFromDocuments);
 router.get('/treeLinks', controller.getTreeLinks);
 router.get('/notusedlinks', controller.getLinksNotUsedDocument);
 router.get('/notused', controller.getNotUsedDocument);
+router.get('/resultState', controller.getResultStateByAudit);
 router.get('/list', controller.getDocuments);
 router.get('/list-by-type', controller.getDocumentsByType);
 router

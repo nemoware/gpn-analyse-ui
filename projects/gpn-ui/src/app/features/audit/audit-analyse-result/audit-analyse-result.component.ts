@@ -70,6 +70,16 @@ const orderTypes = [
   'ANNEX'
 ];
 
+const state = {
+  15: 'Анализ завершен',
+  12: 'Документ не попадает под параметры Проверки',
+  11: 'Ошибка при анализе',
+  10: 'Анализируется',
+  undefined: 'Загружен, ожидает анализа',
+  0: 'Загружен, ожидает анализа',
+  5: 'Загружен, ожидает анализа',
+}
+
 @Component({
   selector: 'gpn-audit-analyse-result',
   templateUrl: './audit-analyse-result.component.html',
@@ -87,6 +97,7 @@ export class AuditAnalyseResultComponent
   faFolderOpen = faFolderOpen;
   faFile = faFile;
   IdAudit;
+  resultState: any[];
   docs: Document[];
   TREE_DATA: Node[] = [];
   audit: Audit;
@@ -105,7 +116,18 @@ export class AuditAnalyseResultComponent
   changed = false;
   selectedRows: ViolationModel[];
   private destroyStream = new Subject<void>();
+  bufferColor: string[] = [];
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+  
+  state = {
+    15: 'Анализ завершен',
+    12: 'Документ не попадает под параметры Проверки',
+    11: 'Ошибка при анализе',
+    10: 'Анализируется',
+    undefined: 'Загружен, ожидает анализа',
+    0: 'Загружен, ожидает анализа',
+    5: 'Загружен, ожидает анализа',
+  }
 
   private _transformer = (node: Node, level: number) => {
     return {
@@ -141,7 +163,9 @@ export class AuditAnalyseResultComponent
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
-  ngOnInit() {}
+  ngOnInit() {
+    this.randomColorNotReapeat();
+  }
 
   ngAfterViewInit(): void {
     this.auditservice
@@ -156,6 +180,12 @@ export class AuditAnalyseResultComponent
         } else {
           this.selectedPage = this.audit.typeViewResult;
         }
+      });
+    this.auditservice
+      .getResultState(this.IdAudit)
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(data => {
+        this.resultState = data;
       });
   }
 
@@ -446,7 +476,14 @@ export class AuditAnalyseResultComponent
         audit: this.audit
       }
     });
-
     dialogRef.afterClosed().subscribe(() => {});
+  }
+
+  randomColorNotReapeat() {
+    while (true) {
+      let color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+      if (!this.bufferColor.includes(color)) this.bufferColor.push(color);
+      if (this.bufferColor.length === 32) break;
+    }
   }
 }

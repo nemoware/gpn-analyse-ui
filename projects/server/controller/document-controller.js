@@ -56,7 +56,7 @@ function SetSortForColumn(sort) {
       'analysis.warnings': sort,
       'user.warnings': sort
     },
-    state: { state: sort }, // Да, так надо
+    state: { state: sort },
     value: {
       'analysis.attributes_tree.contract.price.amount_netto.value': sort,
       'user.attributes_tree.contract.price.amount_netto.value': sort
@@ -594,6 +594,46 @@ exports.getLinksNotUsedDocument = async (req, res) => {
         type: 'SUPPLEMENTARY_AGREEMENT'
       }
     });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getResultStateByAudit = async (req, res) => {
+  const auditId = req.query.auditId;
+  if (!auditId) {
+    let err = 'Can not find documents: auditId is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+  try {
+    const audit = await Audit.findById(auditId)
+      .select({ charters: 1 })
+      .lean();
+    const document = await Document.find({
+      $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }]
+    })
+      .sort(SetSortForColumn(1)['state'])
+      .select({ state: 1 })
+      .lean();
+
+    const counts = {};
+    document.forEach(value => {
+      counts[value.state] = (counts[value.state] || 0) + 1;
+    });
+
+    let totalState = 0;
+    for (val in counts) totalState += counts[val];
+    let result = [];
+    for (val in counts) {
+      result.push({
+        state: val,
+        percent: Math.round((counts[val] / totalState) * 10000) / 100,
+        count: counts[val]
+      });
+    }
+
+    res.send(result);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
