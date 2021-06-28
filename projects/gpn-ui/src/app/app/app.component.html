@@ -33,7 +33,7 @@
                 {{ item.label }}
               </button>
               <button mat-button *ngIf="item.link=== 'handbook'" class="nav-button"
-                      routerLinkActive="mat-accent"
+                      routerLinkActive="mat-accent" [ngClass]="isActive? 'mat-accent':''"
                        [matMenuTriggerFor]="menu">
                 {{ item.label }}
                 <mat-menu #menu="matMenu">

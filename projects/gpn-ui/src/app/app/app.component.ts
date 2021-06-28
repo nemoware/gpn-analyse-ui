@@ -25,28 +25,21 @@ import {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  isProd = env.production;
-  envName = env.envName;
   version = env.versions.app;
   loadedUser = false;
   year = new Date().getFullYear();
-  currentRoute;
+  isActive = false;
   logo = require('@assets/new_logo_text_ru.svg');
   navigation = [
     { link: 'pre-audit', label: 'Предпроверка ДД' },
     { link: 'audit', label: 'Проверка ДО' },
     { link: 'charter', label: 'Уставы' },
     { link: 'handbook', label: 'Справочники' },
-    // { link: 'dash', label: 'Дэшборд' },
-    // { link: 'analyse', label: 'Анализ' },
     { link: 'admin', label: 'Администрирование' },
     { link: 'events', label: 'Журнал событий' }
   ];
 
-  navigationSideMenu = [
-    ...this.navigation /*,
-    { link: 'settings', label: 'Настройки' }*/
-  ];
+  navigationSideMenu = [...this.navigation];
 
   handbookMenu = [
     { link: 'riskMatrix', label: 'Матрица рисков' },
@@ -67,23 +60,20 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {
     translate.addLangs(['en', 'ru']);
     translate.setDefaultLang('ru');
-    //const browserLang = translate.getBrowserLang();
-    //translate.use(browserLang.match(/en|ru/) ? browserLang : 'en');
     translate.use('ru');
   }
 
-  private static isIEorEdgeOrSafari() {
-    return ['ie', 'edge', 'safari'].includes(browser().name);
-  }
-
   ngOnInit(): void {
-    //TODO: Доделать подстветку активной вкладки для справочников
-    //Получаем текущую ссылку
-    this.router.events.subscribe((event: NavigationEvent) => {
-      if (event instanceof NavigationStart) {
-        this.currentRoute = event.url;
-      }
-    });
+    //Получаем текущую ссылку и подсвечиваем вкладку, если открыто меню справочников
+    this.router.events
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe((event: NavigationEvent) => {
+        if (event instanceof NavigationStart) {
+          this.isActive = !!this.handbookMenu.find(
+            item => item.link === event.url.split('/')[1]
+          );
+        }
+      });
     this.storageService.testLocalStorage();
     this.isAuthenticated$ = this.store.pipe(select(selectIsAuthenticated));
     this.stickyHeader$ = this.store.pipe(select(selectSettingsStickyHeader));
@@ -93,6 +83,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(value => {
         if (value) this.loadedUser = true;
       });
+    //Запуск приложения с роботами?
     this.authorizationData.getRobotState().subscribe(data => {
       env.robotState = data.state;
     });
