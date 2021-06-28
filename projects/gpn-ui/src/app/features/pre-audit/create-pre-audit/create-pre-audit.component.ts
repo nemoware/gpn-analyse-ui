@@ -36,6 +36,7 @@ export class CreatePreAuditComponent implements OnInit, OnDestroy {
   //Файл цепочки бенефециаров
   chainString = '';
   bookValueRelevance$: Observable<Boolean>;
+  affiliatesListReference$: Observable<Boolean>;
 
   public typeControl: FormControl = new FormControl(this.checkTypes);
 
@@ -134,6 +135,9 @@ export class CreatePreAuditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.bookValueRelevance$ = this.preAuditService
       .getBookValueReference()
-      .pipe(map(data => data.bookValueRelevant));
+      .pipe(map(data => data.relevant));
+    this.bookValueRelevance$ = this.preAuditService
+      .getAffiliatesListReference()
+      .pipe(map(data => data.relevant));
   }
 }

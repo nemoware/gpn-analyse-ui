@@ -1,4 +1,10 @@
-const { LimitValue, Risk, BookValue, AffiliatesList } = require('../models');
+const {
+  LimitValue,
+  Risk,
+  BookValue,
+  AffiliatesList,
+  Catalog
+} = require('../models');
 const logger = require('../core/logger');
 const catalog = require('../json/catalog.json');
 const parser = require('../services/parser-service');
@@ -196,6 +202,25 @@ exports.saveAffiliatesList = async (req, res) => {
         //Ждем пока все запишется в базу, потом отправляем уведомление об успешной записи
         res.status(201).json();
       });
+    });
+
+    let date = response.date;
+    if (!date) {
+      date = new Date();
+    }
+    //Вычисляем текущий квартал
+    const currentMonth = date.getMonth() + 1;
+    const currentQuarter = Math.floor((currentMonth + 2) / 3);
+
+    Catalog.countDocuments((err, count) => {
+      if (count === 0) {
+        const catalog = new Catalog({
+          affiliatesListQuarter: currentQuarter
+        });
+        catalog.save();
+      } else {
+        Catalog.findOneAndUpdate({}, { affiliatesListQuarter: currentQuarter });
+      }
     });
   } catch (err) {
     logger.logError(req, res, err, 500);

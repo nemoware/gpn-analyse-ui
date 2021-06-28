@@ -1,5 +1,5 @@
 const logger = require('../core/logger');
-const { Audit, Document, BookValue } = require('../models');
+const { Audit, Document, BookValue, Catalog } = require('../models');
 const roboService = require('../services/robo-service');
 exports.fetchPreAudits = async (req, res) => {
   try {
@@ -145,11 +145,25 @@ exports.getBookValueRelevance = async (req, res) => {
         bookValue.date.getMonth() === month &&
         bookValue.date.getFullYear() === year
     );
-    let bookValueRelevant = false;
-    if (bookValues.length) {
-      bookValueRelevant = true;
-    }
-    res.send({ bookValueRelevant, name: 'Ivan' });
+    const relevant = bookValues.length === 1;
+    res.send({ relevant });
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+//Получение информации об актуальности списка аффилированных лиц
+exports.getAffiliatesListRelevance = async (req, res) => {
+  try {
+    let catalog = await Catalog.findOne().lean();
+
+    //Вычисляем текущий квартал
+    const currentMonth = new Date().getMonth() + 1;
+    const currentQuarter = Math.floor((currentMonth + 2) / 3);
+
+    const relevant = catalog.affiliatesListQuarter === currentQuarter;
+
+    res.send({ relevant });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
