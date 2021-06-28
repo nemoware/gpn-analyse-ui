@@ -77,8 +77,8 @@ const state = {
   10: 'Анализируется',
   undefined: 'Загружен, ожидает анализа',
   0: 'Загружен, ожидает анализа',
-  5: 'Загружен, ожидает анализа',
-}
+  5: 'Загружен, ожидает анализа'
+};
 
 @Component({
   selector: 'gpn-audit-analyse-result',
@@ -118,16 +118,19 @@ export class AuditAnalyseResultComponent
   private destroyStream = new Subject<void>();
   bufferColor: string[] = [];
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
-  
+
   state = {
-    15: 'Анализ завершен',
-    12: 'Документ не попадает под параметры Проверки',
-    11: 'Ошибка при анализе',
-    10: 'Анализируется',
-    undefined: 'Загружен, ожидает анализа',
-    0: 'Загружен, ожидает анализа',
-    5: 'Загружен, ожидает анализа',
-  }
+    15: { value: 'Анализ завершен', color: '#00cc00' },
+    12: {
+      value: 'Документ не попадает под параметры Проверки',
+      color: '#ff9933'
+    },
+    11: { value: 'Ошибка при анализе', color: '#cc3300' },
+    10: { value: 'Анализируется', color: '#ffff00' },
+    undefined: { value: 'Загружен, ожидает анализа', color: '#808080' },
+    0: { value: 'Загружен, ожидает анализа', color: '#808080' },
+    5: { value: 'Загружен, ожидает анализа', color: '#808080' }
+  };
 
   private _transformer = (node: Node, level: number) => {
     return {
@@ -185,6 +188,17 @@ export class AuditAnalyseResultComponent
       .getResultState(this.IdAudit)
       .pipe(takeUntil(this.destroyStream))
       .subscribe(data => {
+        data.sort((a, b) => {
+          {
+            if (a.percent < b.percent) {
+              return -1;
+            }
+            if (a.percent > b.percent) {
+              return 1;
+            }
+            return 0;
+          }
+        });
         this.resultState = data;
       });
   }

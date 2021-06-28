@@ -164,6 +164,7 @@ exports.getTreeFromDocuments = async (req, res) => {
 
   const select = {
     'analysis.attributes_tree.contract': 1,
+    'analysis.warnings': 1,
     'analysis.attributes_tree.charter.date.value': 1,
     'analysis.attributes_tree.protocol.date.value': 1,
     'user.attributes_tree': 1,
@@ -417,6 +418,7 @@ exports.getNotUsedDocument = async (req, res) => {
       })
         .select({
           'analysis.attributes_tree.contract': 1,
+          'analysis.warnings': 1,
           'analysis.attributes_tree.charter': 1,
           'analysis.attributes_tree.protocol': 1,
           'user.attributes_tree.contract': 1,
@@ -443,6 +445,7 @@ exports.getNotUsedDocument = async (req, res) => {
           })
             .select({
               'analysis.attributes_tree.contract': 1,
+              'analysis.warnings': 1,
               'analysis.attributes_tree.charter': 1,
               'analysis.attributes_tree.protocol': 1,
               'user.attributes_tree.contract': 1,
@@ -467,6 +470,7 @@ exports.getNotUsedDocument = async (req, res) => {
         },
         {
           'analysis.attributes_tree.contract': 1,
+          'analysis.warnings': 1,
           'analysis.attributes_tree.charter': 1,
           'analysis.attributes_tree.protocol': 1,
           'user.attributes_tree.contract': 1,

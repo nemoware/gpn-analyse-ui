@@ -11,11 +11,11 @@
     <div class="fill-remaining-space">
       <div *ngFor="let item of resultState let i = index" [style.flex-basis]="item.percent.toString()+'%'">
         <div 
-        [matTooltip]="state[item.state] + ': ' + item.percent + '%'" 
+        [matTooltip]="state[item.state].value + ': ' + item.percent + '%'" 
         matTooltipClass="toolTip"
         matTooltipPosition="above"
         style="height: 15px; width: 100%;" 
-        [style.background-color]="bufferColor[i]"
+        [style.background-color]="state[item.state].color"
         ></div>
       </div>
     </div>
