@@ -116,7 +116,6 @@ export class AuditAnalyseResultComponent
   changed = false;
   selectedRows: ViolationModel[];
   private destroyStream = new Subject<void>();
-  bufferColor: string[] = [];
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   state = {
@@ -166,9 +165,7 @@ export class AuditAnalyseResultComponent
   ) {
     this.IdAudit = this.activatedRoute.snapshot.paramMap.get('id');
   }
-  ngOnInit() {
-    this.randomColorNotReapeat();
-  }
+  ngOnInit() {}
 
   ngAfterViewInit(): void {
     this.auditservice
@@ -491,13 +488,5 @@ export class AuditAnalyseResultComponent
       }
     });
     dialogRef.afterClosed().subscribe(() => {});
-  }
-
-  randomColorNotReapeat() {
-    while (true) {
-      let color = '#' + Math.floor(Math.random() * 16777215).toString(16);
-      if (!this.bufferColor.includes(color)) this.bufferColor.push(color);
-      if (this.bufferColor.length === 32) break;
-    }
   }
 }
