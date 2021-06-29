@@ -5,8 +5,6 @@ import {
   ViewChild,
   Input,
   ChangeDetectorRef,
-  Output,
-  EventEmitter,
   OnDestroy
 } from '@angular/core';
 import {
@@ -16,9 +14,7 @@ import {
 import { AuditService } from '@app/features/audit/audit.service';
 import { ViolationModel } from '@app/models/violation-model';
 import { state, style, trigger } from '@root/node_modules/@angular/animations';
-import { Helper } from '@app/features/audit/helper';
 import { TranslateService } from '@root/node_modules/@ngx-translate/core';
-import { SelectionModel } from '@root/node_modules/@angular/cdk/collections';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from '@root/node_modules/rxjs';
 @Component({
@@ -31,54 +27,17 @@ import { Subject } from '@root/node_modules/rxjs';
   ]
 })
 export class ViolationsPreAuditComponent implements OnInit, OnDestroy {
-  col: string[] = [
-    'document',
-    'org2',
-    'reference',
-    'insider_violation_type',
-    'interest_violation_type',
-    'violation_reason',
-    'addition'
-  ];
+  col: string[] = ['filename', 'org2', 'violation', 'violation_reason', 'note'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
   violations: ViolationModel[];
-  selection = new SelectionModel<ViolationModel>(true, []);
   private destroyStream = new Subject<void>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input() idAudit: string;
-  @Input() conclusion: boolean;
-  @Input() selectedRows: ViolationModel[];
-  @Output() selectedRowsEvent = new EventEmitter<ViolationModel[]>();
 
   constructor(
     private auditservice: AuditService,
-    private changeDetectorRefs: ChangeDetectorRef,
-    private translate: TranslateService
+    private changeDetectorRefs: ChangeDetectorRef
   ) {}
-
-  emitSelected() {
-    this.auditservice
-      .postSelectedViolations(this.idAudit, this.selection.selected)
-      .pipe(takeUntil(this.destroyStream))
-      .subscribe();
-    this.selectedRowsEvent.emit(this.selection.selected);
-    return true;
-  }
-
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach(row => this.selection.select(row));
-    this.emitSelected();
-  }
 
   _sortingDataAccessor: (data, sortHeaderId: string) => string | number = (
     data,
@@ -105,63 +64,19 @@ export class ViolationsPreAuditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.conclusion) {
-      this.col.shift();
-      this.col.pop();
-    }
-    if (this.conclusion && this.selectedRows) {
-      this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
-      this.dataSource.sort = this.sort;
-      this.dataSource.data = this.selectedRows.filter(x => {
-        return x.violation_type;
+    this.auditservice
+      .getViolations(this.idAudit)
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe(data => {
+        if (data) {
+          this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
+          this.dataSource.sort = this.sort;
+          this.dataSource.data = data.filter(x => {
+            return x.violation_type;
+          });
+          this.changeDetectorRefs.detectChanges();
+        }
       });
-    } else
-      this.auditservice
-        .getViolations(this.idAudit)
-        .pipe(takeUntil(this.destroyStream))
-        .subscribe(data => {
-          if (data) {
-            this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
-            this.dataSource.sort = this.sort;
-            this.dataSource.data = data.filter(x => {
-              return x.violation_type;
-            });
-            if (this.selectedRows) {
-              this.dataSource.data.forEach(row => {
-                for (let i = 0; i < this.selectedRows.length; i++) {
-                  if (this.compareDocs(row, this.selectedRows[i])) {
-                    this.selection.select(row);
-                  }
-                }
-              });
-            } else if (!this.conclusion) {
-              this.masterToggle();
-            }
-            this.changeDetectorRefs.detectChanges();
-          }
-        });
-  }
-
-  getKindAttribute(key: string) {
-    const atr = Helper.parseKind(key);
-    return atr.kind;
-  }
-
-  getViolation(row) {
-    if (
-      Object.prototype.toString.call(row.violation_type) === '[object String]'
-    )
-      return this.translate.instant(row.violation_type);
-    else {
-      return this.translate.instant(row.violation_type.type);
-      const type = this.translate.instant(row.violation_type.type);
-      const org_structural_level = row.violation_type.org_structural_level
-        ? this.translate.instant(row.violation_type.org_structural_level)
-        : '';
-      const subject = row.violation_type.subject
-        ? this.translate.instant(row.violation_type.subject)
-        : '';
-    }
   }
 
   openDocument(id, attribute?) {
@@ -172,19 +87,6 @@ export class ViolationsPreAuditComponent implements OnInit, OnDestroy {
         (attribute ? '?attribute=' + attribute : ''),
       '_blank'
     );
-  }
-
-  compareDocs(doc1: ViolationModel, doc2: ViolationModel) {
-    return (
-      doc1.document.id === doc2.document.id &&
-      doc1.founding_document.id === doc2.founding_document.id &&
-      doc1.reference.id === doc2.reference.id
-    );
-  }
-
-  toggleSelection(row) {
-    this.selection.toggle(row);
-    this.emitSelected();
   }
 
   ngOnDestroy(): void {
