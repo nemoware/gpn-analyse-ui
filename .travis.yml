@@ -1,15 +1,14 @@
 language: node_js
 node_js:
-  - '10'
+  - '14'
 sudo: required
 dist: xenial
 
-addons:  
+addons:
   apt:
-    packages:
-      dpkg
+    packages: dpkg
       google-chrome-stable
-    
+
 services:
   - xvfb
 cache:
