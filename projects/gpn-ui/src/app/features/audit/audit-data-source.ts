@@ -96,7 +96,7 @@ export class AuditDataSource implements DataSource<any> {
         if (
           column === 'starred' &&
           // @ts-ignore
-          data.arrOfRequiredContract.filter(i => i.starred).length != 0 &&
+          data.arrOfRequiredContract.filter(i => i.starred).length !== 0 &&
           sort === 'desc'
         ) {
           // @ts-ignore
@@ -154,7 +154,7 @@ export class AuditDataSource implements DataSource<any> {
         if (
           column === 'starred' &&
           // @ts-ignore
-          data.arrOfRequiredContract.filter(i => i.starred).length != 0 &&
+          data.arrOfRequiredContract.filter(i => i.starred).length !== 0 &&
           sort === 'desc'
         ) {
           // @ts-ignore

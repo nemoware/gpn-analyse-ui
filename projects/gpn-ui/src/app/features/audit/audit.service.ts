@@ -106,7 +106,7 @@ export class AuditService {
     if (documentType)
       httpParams = httpParams.append('documentType', documentType.toString());
 
-    if (skipStar && pageIndex * take != 0)
+    if (skipStar && pageIndex * take !== 0)
       httpParams = httpParams.append('skipStar', skipStar.toString());
 
     return this.http.get<{
@@ -145,7 +145,7 @@ export class AuditService {
       httpParams = httpParams.append('documentType', documentType.toString());
     }
 
-    if (skipStar && pageIndex * take != 0)
+    if (skipStar && pageIndex * take !== 0)
       httpParams = httpParams.append('skipStar', skipStar.toString());
 
     return this.http.get<{ arrOfRequiredContract: Document[]; count: number }>(

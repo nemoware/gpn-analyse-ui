@@ -24,7 +24,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 import { Document } from '@app/models/document.model';
-import { Helper } from '@app/features/audit/helper';
 import { Audit } from '@app/models/audit.model';
 
 import { FileModel } from '@app/models/file-model';
@@ -310,7 +309,7 @@ export class AuditAnalyseResultComponent
         .getListNotUsedDocuments(this.IdAudit)
         .pipe(takeUntil(this.destroyStream))
         .subscribe(data => {
-          for (let val in data) {
+          for (const val in data) {
             if (data[val].count === 0) continue;
             this.TREE_DATA.push({
               name: data[val].type,

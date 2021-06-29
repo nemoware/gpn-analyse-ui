@@ -95,11 +95,11 @@ const cols_by_type = {
     ])
   ]
 })
-export class DocumentTableDetailComponent implements OnInit {
+export class DocumentTableDetailComponent implements OnInit, OnDestroy {
   @Input() auditId: string;
   @Input() documentId: string;
   @Input() documentType: string;
-  @Input() isNotUsedDoc: boolean = false;
+  @Input() isNotUsedDoc: false;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   defPageSize = 15;
