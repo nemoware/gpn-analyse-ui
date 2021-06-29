@@ -15,6 +15,7 @@ const roles = require('../json/role');
 
 const riskMatrix = require('../json/riskMatrix.json');
 const limitValues = require('../json/limit-values.json');
+const defaultCatalogValues = require('../json/defaulCatalogValues.json');
 
 // подключение
 mongoose
@@ -61,6 +62,12 @@ mongoose
     db.LimitValue.countDocuments((err, count) => {
       if (count === 0) {
         db.LimitValue.insertMany(limitValues);
+      }
+    });
+
+    db.Catalog.countDocuments((err, count) => {
+      if (count === 0) {
+        db.Catalog.create(defaultCatalogValues);
       }
     });
 

@@ -1,7 +1,8 @@
 module.exports = (mongoose, Schema) => {
   let catalogSchema = new Schema(
     {
-      affiliatesListQuarter: Number
+      affiliatesListQuarter: Number,
+      last_csgk_sync_date: Date
     },
     { collection: 'catalog' }
   );

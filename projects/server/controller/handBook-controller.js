@@ -211,17 +211,7 @@ exports.saveAffiliatesList = async (req, res) => {
     //Вычисляем текущий квартал
     const currentMonth = date.getMonth() + 1;
     const currentQuarter = Math.floor((currentMonth + 2) / 3);
-
-    Catalog.countDocuments((err, count) => {
-      if (count === 0) {
-        const catalog = new Catalog({
-          affiliatesListQuarter: currentQuarter
-        });
-        catalog.save();
-      } else {
-        Catalog.findOneAndUpdate({}, { affiliatesListQuarter: currentQuarter });
-      }
-    });
+    Catalog.findOneAndUpdate({}, { affiliatesListQuarter: currentQuarter });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
