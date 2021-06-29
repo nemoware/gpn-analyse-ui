@@ -349,25 +349,6 @@ export class PreAuditAnalyseResultComponent
       .subscribe(() => this.autosize.resizeToFitContent(true));
   }
 
-  setChanged() {
-    this.changed = true;
-  }
-
-  public goToAttribute(id) {
-    const element = document.getElementById(id);
-    if (element != null)
-      element.scrollIntoView({
-        block: 'center',
-        behavior: 'smooth'
-      });
-    return false;
-  }
-
-  onUpdateViolations(selectedRows) {
-    this.changed = true;
-    this.selectedRows = selectedRows;
-  }
-
   ngOnDestroy(): void {
     this.destroyStream.next();
   }
