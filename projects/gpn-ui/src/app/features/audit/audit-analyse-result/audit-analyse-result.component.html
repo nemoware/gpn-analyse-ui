@@ -7,9 +7,18 @@
         </span><br>
         <button mat-button (click)="openDialog()">{{audit.subsidiary && audit.subsidiary.name }}</button>
       </h2>
-
     </span>
-    <span class="fill-remaining-space"></span>
+    <div class="fill-remaining-space">
+      <div *ngFor="let item of resultState let i = index" [style.flex-basis]="item.percent.toString()+'%'">
+        <div 
+        [matTooltip]="state[item.state].value + ': ' + item.percent + '%'" 
+        matTooltipClass="toolTip"
+        matTooltipPosition="above"
+        style="height: 15px; width: 100%;" 
+        [style.background-color]="state[item.state].color"
+        ></div>
+      </div>
+    </div>
     <span class="headline-status"><span [class]="audit.status">{{ audit.status | translate}}</span></span>
     <button [disabled]="audit.status !== 'Done'" mat-raised-button color="accent" class="approve"
       (click)="approveAudit()"> Подтвердить </button>

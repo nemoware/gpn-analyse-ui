@@ -6,6 +6,14 @@
 
 .fill-remaining-space {
   flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  padding-left: 1%;
+  padding-right: 1%;
+}
+
+::ng-deep .toolTip {
+  font-size: large;
 }
 
 .mat-toolbar {
