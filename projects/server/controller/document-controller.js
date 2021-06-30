@@ -636,7 +636,22 @@ exports.getResultStateByAudit = async (req, res) => {
         count: counts[val]
       });
     }
-
+    result.forEach(i => {
+      if(i.percent < 1){
+        i.percent += 0.5;
+      }
+    });
+    result.sort((a, b) => {
+      {
+        if (a.percent < b.percent) {
+          return -1;
+        }
+        if (a.percent > b.percent) {
+          return 1;
+        }
+        return 0;
+      }
+    });
     res.send(result);
   } catch (err) {
     logger.logError(req, res, err, 500);

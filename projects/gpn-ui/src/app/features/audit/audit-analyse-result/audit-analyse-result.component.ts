@@ -97,6 +97,7 @@ export class AuditAnalyseResultComponent
   faFile = faFile;
   IdAudit;
   resultState: any[];
+  totalCountDoc: number = 0;
   docs: Document[];
   TREE_DATA: Node[] = [];
   audit: Audit;
@@ -184,17 +185,9 @@ export class AuditAnalyseResultComponent
       .getResultState(this.IdAudit)
       .pipe(takeUntil(this.destroyStream))
       .subscribe(data => {
-        data.sort((a, b) => {
-          {
-            if (a.percent < b.percent) {
-              return -1;
-            }
-            if (a.percent > b.percent) {
-              return 1;
-            }
-            return 0;
-          }
-        });
+        data.forEach(i => {
+          this.totalCountDoc += i.count;
+        })
         this.resultState = data;
       });
   }
@@ -230,6 +223,7 @@ export class AuditAnalyseResultComponent
     this.TREE_DATA = [];
 
     if (this.selectedPage === 0) {
+      this.spinner.show();
       this.auditservice
         .getFiles(this.IdAudit)
         .pipe(takeUntil(this.destroyStream))
@@ -237,6 +231,7 @@ export class AuditAnalyseResultComponent
           this.files = data;
           for (const n of this.files) this.fillNodes(n);
           this.refreshTree();
+          this.spinner.hide();
         });
     } else if (this.selectedPage <= 1) {
       this.changeDetectorRefs.detectChanges();
@@ -280,22 +275,10 @@ export class AuditAnalyseResultComponent
               };
 
               const nodeChild = Object.assign({}, d, addon);
-
-              if (this.selectedPage === 2) {
-                nodeChild.attributes =
-                  d.user != null
-                    ? d.user.attributes
-                    : d.analysis && d.analysis.attributes
-                    ? d.analysis.attributes
-                    : [];
-                docs.docs.push(nodeChild);
-              } else node.children.push(nodeChild);
+              node.children.push(nodeChild);
             }
-
-            if (this.selectedPage === 2) {
-              node.children.push(docs);
-              node.childCount = docs.docs.length;
-            } else node.childCount = node.children.length;
+            
+            node.childCount = node.children.length;
 
             if (this.selectedPage !== 2 || docs.docs.length > 0)
               this.TREE_DATA.push(node);
@@ -335,8 +318,8 @@ export class AuditAnalyseResultComponent
           }
 
           this.changeDetectorRefs.detectChanges();
-          this.spinner.hide();
           this.refreshTree();
+          this.spinner.hide();
         });
     } else if (this.selectedPage === 4) {
       this.spinner.show();
