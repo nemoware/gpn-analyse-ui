@@ -105,7 +105,11 @@ exports.getAudits = async (req, res) => {
       audits[0] &&
       ['Finalizing', 'Done', 'Approved'].includes(audits[0].status)
     ) {
-      audits[0].typeViewResult = 4;
+      if (audits[0].subsidiary.name === '* Все ДО') {
+        audits[0].typeViewResult = 3;
+      } else {
+        audits[0].typeViewResult = 4;
+      }
     } else {
       for (let audit of audits) {
         audit.typeViewResult = checks.length;
@@ -468,7 +472,6 @@ exports.getConclusion = async (req, res) => {
     if (!audit.charters[0]) {
       return res.status(400).send('В проверке нет уставов!');
     }
-
     let conclusion;
     if (audit.conclusion.intro) {
       conclusion = audit.conclusion;
