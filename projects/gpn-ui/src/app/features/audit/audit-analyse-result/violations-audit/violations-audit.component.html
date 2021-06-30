@@ -1,6 +1,7 @@
 <ngx-spinner bdColor="rgba(250,250,250,0.2)" size="large" color="#0074D9" type="timer">
   <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
 </ngx-spinner>
+<div class = "table-container">
 <table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows matSortActive="document" matSortDirection="desc" (mouseleave) = "mouseOverIndex=-1">
 
 
@@ -131,6 +132,7 @@
   </ng-container>
 
 
-  <tr mat-header-row *matHeaderRowDef="col"></tr>
+  <tr mat-header-row *matHeaderRowDef="col; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: col; let index = dataIndex;" class="element-row" (click)="editViolation(row, index)" (mouseover)="onMouseOver(index)" ></tr>
 </table>
+</div>

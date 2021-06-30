@@ -74,3 +74,10 @@ div.btn-group {
 .mat-column-events {
   width: 1% !important;
 }
+
+.table-container {
+  padding-top: 5px;
+  position: relative;
+  max-height: 80vh;
+  overflow: auto;
+}
