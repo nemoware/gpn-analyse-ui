@@ -10,13 +10,9 @@
     </span>
     <div class="fill-remaining-space">
       <div *ngFor="let item of resultState let i = index" [style.flex-basis]="item.percent.toString()+'%'">
-        <div 
-        [matTooltip]="state[item.state].value + ': ' + item.percent + '%'" 
-        matTooltipClass="toolTip"
-        matTooltipPosition="above"
-        style="height: 15px; width: 100%;" 
-        [style.background-color]="state[item.state].color"
-        ></div>
+        <div [matTooltip]="state[item.state].value + ': ' +item.count + ' из ' + totalCountDoc"
+          matTooltipClass="toolTip" matTooltipPosition="above" style="height: 15px; width: 100%;"
+          [style.background-color]="state[item.state].color"></div>
       </div>
     </div>
     <span class="headline-status"><span [class]="audit.status">{{ audit.status | translate}}</span></span>
@@ -38,6 +34,9 @@
 <div style="margin-top: 110px">
 
   <div *ngIf="selectedPage == 0">
+    <ngx-spinner bdColor="rgba(250,250,250,0.2)" size="large" color="#0074D9" type="timer">
+      <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
+    </ngx-spinner>
     <div style="margin-left: 10px">
       <span> Количество: <b>{{ checkCount }} / {{ documentCount }}</b></span>
     </div>
@@ -119,12 +118,12 @@
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-        <ng-container *ngIf="node.docs[0].documentType === 'CONTRACT'; else elseBlock">
+        <ng-container *ngIf="node.docs && node.docs[0].documentType === 'CONTRACT'; else elseBlock">
           <gpn-document-table-detail [auditId]="IdAudit" style="width: 100%">
           </gpn-document-table-detail>
         </ng-container>
         <ng-template #elseBlock>
-          <ng-container>
+          <ng-container *ngIf="node.docs">
             <gpn-document-table-detail [auditId]=IdAudit [isNotUsedDoc]="true"
               [documentType]="node.docs[0].documentType" style="width: 100%">
             </gpn-document-table-detail>
