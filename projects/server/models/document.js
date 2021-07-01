@@ -61,23 +61,6 @@ module.exports = (mongoose, Schema) => {
     }
   );
   documentSchema.index({
-    // Состояние
-    state: 1
-  });
-  documentSchema.index({
-    // Предупреждения
-    'analysis.warnings': 1,
-    'user.warnings': 1
-  });
-  documentSchema.index({
-    'analysis.attributes_tree.charter.org.name.value': 1,
-    'user.attributes_tree.charter.org.name.value': 1
-  });
-  documentSchema.index({
-    'analysis.attributes_tree.protocol.structural_level.value': 1,
-    'user.attributes_tree.protocol.structural_level.value': 1
-  });
-  documentSchema.index({
     // Сторона 1
     'analysis.attributes_tree.contract.orgs.0.name.value': 1,
     'user.attributes_tree.contract.orgs.0.name.value': 1
@@ -99,6 +82,46 @@ module.exports = (mongoose, Schema) => {
   documentSchema.index({
     'analysis.attributes_tree.contract.price.amount_brutto.value': 1,
     'user.attributes_tree.contract.price.amount_brutto.value': 1
+  });
+
+  //Протоколы
+  documentSchema.index(
+    //Дата
+    {
+      'analysis.attributes_tree.protocol.date.value': 1,
+      'user.attributes_tree.protocol.date.value': 1
+    }
+  );
+  documentSchema.index({
+    'analysis.attributes_tree.protocol.org.name.value': 1,
+    'user.attributes_tree.protocol.org.name.value': 1
+  });
+  documentSchema.index({
+    'analysis.attributes_tree.protocol.structural_level.value': 1,
+    'user.attributes_tree.protocol.structural_level.value': 1
+  });
+
+  //УСТАВЫ
+  documentSchema.index(
+    //Дата
+    {
+      'analysis.attributes_tree.charter.date.value': 1,
+      'user.attributes_tree.charter.date.value': 1
+    }
+  );
+  documentSchema.index({
+    'analysis.attributes_tree.charter.org.name.value': 1,
+    'user.attributes_tree.charter.org.name.value': 1
+  });
+
+  documentSchema.index({
+    // Состояние
+    state: 1
+  });
+  documentSchema.index({
+    // Предупреждения
+    'analysis.warnings': 1,
+    'user.warnings': 1
   });
 
   documentSchema.methods.getAttributeValue = function getAttributeValue(

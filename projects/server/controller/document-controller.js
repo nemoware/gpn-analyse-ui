@@ -22,50 +22,66 @@ isActive
 hasInside
 `;
 
-function SetSortForColumn(sort) {
-  return {
-    date: {
-      'analysis.attributes_tree.contract.date.value': sort,
-      'user.attributes_tree.contract.date.value': sort
-    },
-    number: {
-      'analysis.attributes_tree.contract.number.value': sort,
-      'user.attributes_tree.contract.number.value': sort
-    },
-    org: {
-      'analysis.attributes_tree.charter.org.name.value': sort,
-      'user.attributes_tree.charter.org.name.value': sort
-    },
-    org_level: {
-      'analysis.attributes_tree.protocol.structural_level.value': sort,
-      'user.attributes_tree.protocol.structural_level.value': sort
-    },
-    org1: {
-      'analysis.attributes_tree.contract.orgs.0.name.value': sort,
-      'user.attributes_tree.contract.orgs.0.name.value': sort
-    },
-    org2: {
-      'analysis.attributes_tree.contract.orgs.name.value': sort,
-      'user.attributes_tree.contract.orgs.name.value': sort
-    },
-    contract_subject: {
-      'analysis.attributes_tree.contract.subject.value': sort,
-      'user.attributes_tree.contract.subject.value': sort
-    },
+function SetSortForColumn(sort, typeDoc) {
+  if (!typeDoc || typeDoc == 'SUPPLEMENTARY_AGREEMENT' || typeDoc == 'ANNEX') {
+    typeDoc = 'CONTRACT';
+  }
+  typeDoc = typeDoc.toLowerCase();
+  const obj = {
+    date: {},
+    number: {},
+    org: {},
+    org_level: {},
+    org1: {},
+    org2: {},
+    contract_subject: {},
+    value: {},
+    amount_with_vat: {},
     warnings: {
       'analysis.warnings': sort,
       'user.warnings': sort
     },
-    state: { state: sort },
-    value: {
-      'analysis.attributes_tree.contract.price.amount_netto.value': sort,
-      'user.attributes_tree.contract.price.amount_netto.value': sort
-    },
-    amount_with_vat: {
-      'analysis.attributes_tree.contract.price.amount_brutto.value': sort,
-      'user.attributes_tree.contract.price.amount_brutto.value': sort
-    }
+    state: { state: sort }
   };
+  obj.date[`analysis.attributes_tree.${typeDoc}.date.value`] = sort;
+  obj.date[`user.attributes_tree.${typeDoc}.date.value`] = sort;
+
+  obj.number[`analysis.attributes_tree.${typeDoc}.number.value`] = sort;
+  obj.number[`user.attributes_tree.${typeDoc}.number.value`] = sort;
+
+  obj.org[`analysis.attributes_tree.${typeDoc}.org.name.value`] = sort;
+  obj.org[`user.attributes_tree.${typeDoc}.org.name.value`] = sort;
+
+  obj.org_level[
+    `analysis.attributes_tree.${typeDoc}.structural_level.value`
+  ] = sort;
+  obj.org_level[
+    `user.attributes_tree.${typeDoc}.structural_level.value`
+  ] = sort;
+
+  obj.org1[`analysis.attributes_tree.${typeDoc}.orgs.0.name.value`] = sort;
+  obj.org1[`user.attributes_tree.${typeDoc}.orgs.0.name.value`] = sort;
+
+  obj.org2[`analysis.attributes_tree.${typeDoc}.orgs.name.value`] = sort;
+  obj.org2[`user.attributes_tree.${typeDoc}.orgs.name.value`] = sort;
+
+  obj.contract_subject[
+    `analysis.attributes_tree.${typeDoc}.subject.value`
+  ] = sort;
+  obj.contract_subject[`user.attributes_tree.${typeDoc}.subject.value`] = sort;
+
+  obj.value[
+    `analysis.attributes_tree.${typeDoc}.price.amount_netto.value`
+  ] = sort;
+  obj.value[`user.attributes_tree.${typeDoc}.price.amount_netto.value`] = sort;
+
+  obj.amount_with_vat[
+    `analysis.attributes_tree.${typeDoc}.amount_brutto.value`
+  ] = sort;
+  obj.amount_with_vat[
+    `user.attributes_tree.${typeDoc}.amount_brutto.value`
+  ] = sort;
+  return obj;
 }
 
 function getAttributeValue(document, attribute) {
@@ -160,7 +176,7 @@ exports.getTreeFromDocuments = async (req, res) => {
   const skip = parseInt(req.query.skip);
   const skipStar = parseInt(req.query.skipStar);
 
-  const AllColumn2 = SetSortForColumn(sort);
+  const AllColumn2 = SetSortForColumn(sort, documentType);
 
   const select = {
     'analysis.attributes_tree.contract': 1,
@@ -368,7 +384,7 @@ exports.getNotUsedDocument = async (req, res) => {
   const skip = parseInt(req.query.skip);
   const skipStar = parseInt(req.query.skipStar);
 
-  const AllColumn2 = SetSortForColumn(sort);
+  const AllColumn2 = SetSortForColumn(sort, documentType);
 
   if (!auditId) {
     let err = 'Can not find documents: auditId is null';
@@ -616,7 +632,16 @@ exports.getResultStateByAudit = async (req, res) => {
       .select({ charters: 1 })
       .lean();
     const document = await Document.find({
-      $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }]
+      $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+      documentType: {
+        $in: [
+          'CHARTER',
+          'PROTOCOL',
+          'ANNEX',
+          'SUPPLEMENTARY_AGREEMENT',
+          'CONTRACT'
+        ]
+      }
     })
       .sort(SetSortForColumn(1)['state'])
       .select({ state: 1 })

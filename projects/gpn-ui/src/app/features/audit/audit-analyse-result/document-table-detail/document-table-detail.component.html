@@ -4,7 +4,7 @@
 
     <!-- star -->
     <ng-container matColumnDef="starred">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Избр.</th>
       <td mat-cell *matCellDef="let row">
         <button mat-icon-button (click)="starDoc(row, $event)" class="star"
           [ngStyle]="{'display': focusedId === row._id || row.starred ? 'inline' : 'none'}">
@@ -80,8 +80,7 @@
     <ng-container matColumnDef="contract_subject">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Предмет договора</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        {{ row.analysis?.attributes_tree?.contract?.subject?.value | translate}}<br>
-        <!-- <div class="small"> {{row.primary_subject | translate}}</div> -->
+        {{( row.analysis?.attributes_tree?.contract?.subject?.value | translate ) || '⚠️ не обнаружено'}}<br>
       </td>
     </ng-container>
 
