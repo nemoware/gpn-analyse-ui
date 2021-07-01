@@ -2,9 +2,27 @@
   <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows matSortActive="date" matSortDirection="desc"
     matSortDisableClear>
 
+
+    <!-- charter_date -->
+    <ng-container matColumnDef="charter_date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        {{(row.analysis?.attributes_tree?.contract?.date?.value | date) || '⚠️ не обнаружена' }}
+      </td>
+    </ng-container>
+
+    <!-- charter_org -->
+    <ng-container matColumnDef="charter_org">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Наименование ДО</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.org?.type?.value}}</span>
+        <span class="org-name">{{ row.analysis?.attributes_tree?.contract?.org?.name?.value || '⚠️ не обнаружено'}}</span>
+      </td>
+    </ng-container>
+
     <!-- star -->
     <ng-container matColumnDef="starred">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Избр.</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
       <td mat-cell *matCellDef="let row">
         <button mat-icon-button (click)="starDoc(row, $event)" class="star"
           [ngStyle]="{'display': focusedId === row._id || row.starred ? 'inline' : 'none'}">
@@ -27,7 +45,7 @@
 
     <!-- value -->
     <ng-container matColumnDef="value">
-      <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора без ндс</th>
+      <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>Cумма договора без ндс</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{
         (row.analysis?.attributes_tree?.contract?.price?.amount_netto?.value |
@@ -40,7 +58,7 @@
 
     <!-- value -->
     <ng-container matColumnDef="amount_with_vat">
-      <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>сумма договора c ндс</th>
+      <th nowrap mat-header-cell *matHeaderCellDef mat-sort-header>Cумма договора c ндс</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{
         (row.analysis?.attributes_tree?.contract?.price?.amount_brutto?.value |
@@ -53,7 +71,7 @@
 
     <!-- НОМЕР -->
     <ng-container matColumnDef="number">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>номер</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Номер</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{row.analysis?.attributes_tree?.contract?.number?.value || '⚠️ не обнаружен'}}
       </td>
@@ -61,7 +79,7 @@
 
     <!-- ДАТА -->
     <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>дата</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{(row.analysis?.attributes_tree?.contract?.date?.value | date) || '⚠️ не обнаружен' }}
       </td>
@@ -69,16 +87,16 @@
 
     <!-- ОРГ -->
     <ng-container matColumnDef="org">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>наименование</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Наименование</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.org?.type?.value || '⚠️ необнаружен'}}</span>
-        <span class="org-name">{{ row.analysis?.attributes_tree?.contract?.org?.name?.value || '⚠️ необнаружен'}}</span>
+        <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.org?.type?.value}}</span>
+        <span class="org-name">{{ row.analysis?.attributes_tree?.contract?.org?.name?.value || '⚠️ не обнаружено'}}</span>
       </td>
     </ng-container>
-    <!-- structural_level -->
+
     <!-- ПРЕДМЕТ -->
     <ng-container matColumnDef="contract_subject">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>предмет договора</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Предмет договора</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{ row.analysis?.attributes_tree?.contract?.subject?.value | translate}}<br>
         <!-- <div class="small"> {{row.primary_subject | translate}}</div> -->
@@ -87,7 +105,7 @@
 
     <!-- org_structural_level -->
     <ng-container matColumnDef="org_level">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>орган управления</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Орган управления</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         {{ (row.analysis?.attributes_tree?.contract?.structural_level?.value | translate)|| '⚠️ не обнаружен' }}
       </td>
@@ -95,7 +113,7 @@
 
     <!-- контрагент 1 -->
     <ng-container matColumnDef="org1">
-      <th mat-header-cell *matHeaderCellDef>сторона 1</th>
+      <th mat-header-cell *matHeaderCellDef>Cторона 1</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.orgs[0]?.type?.value}}</span>
         <span class="org-name">{{
@@ -108,7 +126,7 @@
 
     <!-- контрагент 2 -->
     <ng-container matColumnDef="org2">
-      <th mat-header-cell *matHeaderCellDef>сторона 2</th>
+      <th mat-header-cell *matHeaderCellDef>Cторона 2</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
         <span class="org-type">{{ row.analysis?.attributes_tree?.contract?.orgs[1]?.type?.value}}</span>
         <span class="org-name">{{
@@ -145,7 +163,7 @@
     </ng-container>
 
     <ng-container matColumnDef="state">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>статус</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Cтатус</th>
       <td mat-cell *matCellDef="let doc" (click)="openDocument(doc)">
         <gpn-doc-state [document]='doc'></gpn-doc-state>
       </td>

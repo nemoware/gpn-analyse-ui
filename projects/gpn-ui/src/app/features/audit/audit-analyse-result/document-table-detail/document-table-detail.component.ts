@@ -27,7 +27,6 @@ import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
 
 const cols_by_type = {
   CONTRACT: [
-    'shevron',
     'starred',
     'date',
     'number',
@@ -40,18 +39,9 @@ const cols_by_type = {
     'state',
     'charterAndProtocol'
   ],
-  CHARTER: ['shevron', 'starred', 'date', 'org', 'warnings', 'state'],
-  PROTOCOL: [
-    'shevron',
-    'starred',
-    'date',
-    'org',
-    'org_level',
-    'warnings',
-    'state'
-  ],
+  CHARTER: ['starred', 'charter_date', 'charter_org', 'warnings', 'state'],
+  PROTOCOL: ['starred', 'date', 'org', 'org_level', 'warnings', 'state'],
   ANNEX: [
-    'shevron',
     'starred',
     'date',
     'number',
@@ -64,7 +54,6 @@ const cols_by_type = {
     'charterAndProtocol'
   ],
   SUPPLEMENTARY_AGREEMENT: [
-    'shevron',
     'starred',
     'date',
     'number',

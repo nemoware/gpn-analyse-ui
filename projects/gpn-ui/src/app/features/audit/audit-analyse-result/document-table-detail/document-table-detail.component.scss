@@ -71,7 +71,7 @@ tr.detail-row {
 }
 
 .mat-column-date {
-  width: 150px;
+  width: 10% !important;
 }
 
 .mat-column-subject {
@@ -90,49 +90,85 @@ tr.detail-row {
   padding-right: $gpn-padding;
 }
 
-.mat-column {
-  // &-shevron {
-  //   width: 10% !important;
-  // }
-  &-starred {
-    width: 2% !important;
-    margin-right: 15px;
-    // padding-left: 10px;
-  }
-  // &-value {
-  //   width: 10% !important;
-  // }
-  // &-amount_with_vat {
-  //   width: 10% !important;
-  // }
-  &-number {
-    width: 10% !important;
-  }
-  &-date {
-    width: 10% !important;
-  }
-  &-org {
-    width: 10% !important;
-  }
-  &-contract_subject {
-    width: 10% !important;
-  }
-  &-org_level {
-    width: 10% !important;
-  }
-  &-org1 {
-    width: 20% !important;
-  }
-  &-org2 {
-    width: 20% !important;
-  }
-  &-state {
-    width: 12% !important;
-  }
-  &-charterAndProtocol {
-    width: 10% !important;
-  }
-  &-warnings {
-    width: 1.8% !important;
-  }
+//.mat-column {
+//  // &-shevron {
+//  //   width: 10% !important;
+//  // }
+//  &-starred {
+//    width: 2% !important;
+//    margin-right: 15px;
+//    // padding-left: 10px;
+//  }
+//  // &-value {
+//  //   width: 10% !important;
+//  // }
+//  // &-amount_with_vat {
+//  //   width: 10% !important;
+//  // }
+//  &-number {
+//    width: 10% !important;
+//  }
+//  &-date {
+//    width: 10% !important;
+//  }
+//  &-org {
+//    width: 10% !important;
+//  }
+//  &-contract_subject {
+//    width: 10% !important;
+//  }
+//  &-org_level {
+//    width: 10% !important;
+//  }
+//  &-org1 {
+//    width: 20% !important;
+//  }
+//  &-org2 {
+//    width: 20% !important;
+//  }
+//  &-state {
+//    width: 12% !important;
+//  }
+//  &-charterAndProtocol {
+//    width: 10% !important;
+//  }
+//  &-warnings {
+//    width: 1.8% !important;
+//  }
+//}
+
+.mat-column-starred {
+  width: 5% !important;
+}
+
+.mat-column-charter_date {
+  width: 45% !important;
+}
+
+.mat-column-charter_org {
+  width: 35% !important;
+}
+
+.mat-column-state {
+  width: 15% !important;
+}
+
+.mat-column-org_level {
+  width: 35% !important;
+}
+
+.mat-column-date {
+  width: 15% !important;
+}
+
+.mat-column-org {
+  width: 30% !important;
+}
+
+.mat-column-warnings {
+  width: 5% !important;
+}
+
+.mat-column-charterAndProtocol {
+  width: 10% !important;
 }
