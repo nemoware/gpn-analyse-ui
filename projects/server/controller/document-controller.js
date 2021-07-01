@@ -393,7 +393,7 @@ exports.getNotUsedDocument = async (req, res) => {
       'stars'
     ).lean();
 
-    const arrStars = user.stars.map(i => i.documentId.toString());
+    const arrStars = user?.stars.map(i => i.documentId.toString());
 
     const arrLinksFromId = audit.links.map(i => i.fromId.toString());
     const arrLinksToId = audit.links.map(i => i.toId.toString());
@@ -519,12 +519,13 @@ exports.getNotUsedDocument = async (req, res) => {
       $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
       'parse.documentType': documentType
     }).count();
-
     res.send({
       arrOfRequiredContract: arrayOfAllDocument,
       count: count
     });
-  } catch (err) {}
+  } catch (err) {
+    logger.logError(req, req, err, 500);
+  }
 };
 
 exports.getLinksNotUsedDocument = async (req, res) => {
