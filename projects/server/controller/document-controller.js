@@ -2154,7 +2154,7 @@ setContractTree = (userAttributes, error) => {
     attributeTree.orgs = [org1, org2];
   }
   //Заполняем пустые ячейки для валидации
-  for (let i = 0; i < attributeTree.people.length; i++) {
+  for (let i = 0; i < attributeTree?.people?.length; i++) {
     if (!attributeTree.people[i]) {
       attributeTree.people[i] = { span: [0, 0] };
       attributeTree.people[i].lastName = { span: [0, 0], value: '' };
