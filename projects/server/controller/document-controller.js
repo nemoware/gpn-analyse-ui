@@ -874,9 +874,10 @@ exports.updateDocument = async (req, res) => {
         documentType === 'ANNEX' ||
         documentType === 'SUPPLEMENTARY_AGREEMENT'
       ) {
-        document.user.attributes_tree[
-          documentType.toLowerCase()
-        ] = setContractTree(attributesUI, error);
+        document.user.attributes_tree.contract = setContractTree(
+          attributesUI,
+          error
+        );
         if (error.message) {
           res
             .status(400)
