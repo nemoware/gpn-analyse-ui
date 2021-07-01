@@ -158,8 +158,8 @@ $org_2_base_alt: $mat-pink;
 .insideInformation {
   background: mat-color($mat-cyan, 300);
 }
-
-.person {
+.person-1-name,
+.person-2-name {
   background: mat-color($mat-brown, 100);
 
   .firstName {

@@ -204,7 +204,8 @@
   "Courts": "Суды",
   "IssuedSecurities": "ЭЦБ",
 
-  "person": "Подписант",
+  "person-1-name": "Подписант ГПН или ДО",
+  "person-2-name": "Подписант контрагента",
   "people": "Подписант",
   "lastName": "Фамилия",
 

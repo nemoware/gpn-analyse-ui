@@ -637,7 +637,7 @@ exports.getResultStateByAudit = async (req, res) => {
       });
     }
     result.forEach(i => {
-      if(i.percent < 1){
+      if (i.percent < 1) {
         i.percent += 0.5;
       }
     });
@@ -1753,7 +1753,7 @@ setKeys = document => {
             priceAttributes.includes(x) &&
             price[x].span[0] !== price[x].span[1]
           ) {
-            //Баг анализатора, после фикса удалить
+            //TODO: Баг анализатора, после фикса удалить
             price[x].kind = x;
             price[x].key = price.key + '/' + price[x].kind;
             price[x].parent = price.key;
@@ -1770,8 +1770,8 @@ setKeys = document => {
       if (people) {
         for (let i = 0; i < people.length; i++) {
           const person = people[i];
-          person.kind = 'person';
-          person.key = person.kind + '-' + i;
+          person.kind = 'person-' + (i + 1) + '-name';
+          person.key = person.kind;
           attributes.push(person);
           Object.keys(person).forEach(x => {
             if (x === 'lastName') {
@@ -2117,7 +2117,7 @@ setContractTree = (userAttributes, error) => {
         if (!attributeTree.people) {
           attributeTree.people = [];
         }
-        attributeTree.people.push(y);
+        attributeTree.people[arr[1] - 1] = y;
       } else {
         attributeTree[arr[0]] = y;
       }
@@ -2134,9 +2134,12 @@ setContractTree = (userAttributes, error) => {
         }
         attributeTree[atr[0]][atr[1]] = y;
       } else if (atr[0].startsWith('person')) {
-        for (const person of attributeTree.people) {
-          if (person.key === y.parent) {
-            person[atr[1].split('-')[0]] = y;
+        for (let i = 0; i < attributeTree.people.length; i++) {
+          if (
+            attributeTree.people[i] &&
+            attributeTree.people[i].key === y.parent
+          ) {
+            attributeTree.people[i][atr[1].split('-')[0]] = y;
           }
         }
       }
@@ -2148,6 +2151,13 @@ setContractTree = (userAttributes, error) => {
   });
   if (!isEmpty(org1) || !isEmpty(org2)) {
     attributeTree.orgs = [org1, org2];
+  }
+  //Заполняем пустые ячейки для валидации
+  for (let i = 0; i < attributeTree.people.length; i++) {
+    if (!attributeTree.people[i]) {
+      attributeTree.people[i] = { span: [0, 0] };
+      attributeTree.people[i].lastName = { span: [0, 0], value: '' };
+    }
   }
 
   const data = { contract: attributeTree };

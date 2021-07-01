@@ -461,7 +461,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/person"
-          }
+          },
+          "maxItems": 2
         },
         "orgs": {
           "type": "array",

@@ -63,7 +63,22 @@
       {
         "parents": [
           {
-            "kind": "person"
+            "kind": "person-1-name",
+            "once": true
+          }
+        ],
+        "children": [
+          {
+            "kind": "lastName",
+            "once": true
+          }
+        ]
+      },
+      {
+        "parents": [
+          {
+            "kind": "person-2-name",
+            "once": true
           }
         ],
         "children": [
