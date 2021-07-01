@@ -7,7 +7,6 @@
   </mat-toolbar>
 
   <mat-tab-group color="accent" (selectedTabChange)="changePage($event)" [(selectedIndex)]="selectedPage">
-    <mat-tab label="Файлы"></mat-tab>
     <mat-tab label="Документы" [disabled]="maxPageIndex < 1"></mat-tab>
     <mat-tab label="Анализ" [disabled]="maxPageIndex < 2"></mat-tab>
     <mat-tab label="Нарушения" [disabled]="maxPageIndex < 3"></mat-tab>
@@ -18,7 +17,7 @@
 
 <div style="margin-top: 110px">
 
-  <div *ngIf="selectedPage == 1">
+  <div *ngIf="selectedPage == 0">
     <mat-tree *ngIf="!loading" [dataSource]="dataSource" [treeControl]="treeControl">
 
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
@@ -57,7 +56,7 @@
     </mat-tree>
   </div>
 
-  <div *ngIf="selectedPage === 2">
+  <div *ngIf="selectedPage === 1">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
@@ -85,7 +84,7 @@
     </mat-tree>
   </div>
 
-  <div *ngIf="selectedPage === 3">
+  <div *ngIf="selectedPage === 2">
     <gpn-violations-pre-audit [idAudit]="IdAudit"></gpn-violations-pre-audit>
   </div>
 </div>

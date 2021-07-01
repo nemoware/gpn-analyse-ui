@@ -35,6 +35,7 @@ export interface Document {
     attributes: [AttributeModel];
     author: { _id: string; login: String; name: string };
     updateDate: Date;
+    attributes_tree: AttributeTreeModel;
   };
   parseError: string;
   audit: {

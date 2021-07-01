@@ -134,6 +134,44 @@ exports.getPreAudits = async (req, res) => {
   }
 };
 
+exports.getPreAudit = async (req, res) => {
+  let where = {};
+
+  if (req.query.id) {
+    where['_id'] = req.query.id;
+  }
+
+  try {
+    let audit = await Audit.findOne(where, null, { lean: true });
+
+    const checks = [
+      { 'analysis.attributes_tree': { $exists: true } },
+      { parserResponseCode: 200 }
+    ];
+
+    if (
+      req.query.id &&
+      audit &&
+      ['Finalizing', 'Done', 'Approved'].includes(audit.status)
+    ) {
+      audit.typeViewResult = 3;
+    } else {
+      audit.typeViewResult = checks.length;
+      for (let check of checks) {
+        check.auditId = audit._id;
+        if (await Document.findOne(check)) {
+          break;
+        }
+        audit.typeViewResult--;
+      }
+    }
+
+    res.send(audit);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
 //Получение информации об актуальности балансовой стоимости
 exports.getBookValueRelevance = async (req, res) => {
   try {

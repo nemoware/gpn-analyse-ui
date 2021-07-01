@@ -151,38 +151,10 @@ export class PreAuditAnalyseResultComponent
       .getAudits([{ name: 'id', value: this.IdAudit }])
       .pipe(takeUntil(this.destroyStream))
       .subscribe(data => {
-        this.audit = data[0];
+        this.audit = data;
         this.maxPageIndex = this.audit.typeViewResult;
-        if (this.maxPageIndex === 4) {
-          this.selectedPage = 3;
-          this.selectedRows = this.audit.selectedRows;
-        } else {
-          this.selectedPage = this.audit.typeViewResult;
-        }
+        this.selectedPage = this.audit.typeViewResult;
       });
-  }
-
-  fillNodes(files: FileModel, parentNode: Node = null) {
-    const node = {
-      name: files.name,
-      children: [],
-      childCount: 0,
-      error: files.error
-    };
-
-    if (files.error != null && files.files == null) this.errorCount++;
-    if (files.files == null) this.documentCount++;
-
-    if (parentNode != null) parentNode.children.push(node);
-    else {
-      this.TREE_DATA.push(node);
-    }
-    if (files.files) {
-      node.childCount = files.files.length;
-      for (const n of files.files) {
-        this.fillNodes(n, node);
-      }
-    }
   }
 
   refreshData() {
@@ -192,29 +164,20 @@ export class PreAuditAnalyseResultComponent
     this.checkCount = 0;
     this.TREE_DATA = [];
 
-    if (this.selectedPage === 0) {
-      this.auditservice
-        .getFiles(this.IdAudit)
-        .pipe(takeUntil(this.destroyStream))
-        .subscribe(data => {
-          this.files = data;
-          for (const n of this.files) this.fillNodes(n);
-          this.refreshTree();
-        });
-    } else if (this.selectedPage <= 2) {
+    if (this.selectedPage <= 1) {
       this.auditservice
         .getDouments(this.IdAudit, false)
         .pipe(takeUntil(this.destroyStream))
         .subscribe(data => {
           this.docs = data;
 
-          if (this.audit.typeViewResult === 2) {
+          if (this.audit.typeViewResult === 1) {
             this.docs = this.docs.filter(
               x => x.analysis != null || x.user != null
             );
           }
           const uniqueType =
-            this.selectedPage === 2
+            this.selectedPage === 1
               ? orderTypes
               : this.docs.reduce(function(a, d) {
                   if (a.indexOf(d.documentType) === -1) {
@@ -243,43 +206,27 @@ export class PreAuditAnalyseResultComponent
 
               const nodeChild = Object.assign({}, d, addon);
 
-              if (this.selectedPage === 2) {
+              if (this.selectedPage === 1) {
                 nodeChild.attributes =
                   d.user != null
-                    ? d.user.attributes
-                    : d.analysis && d.analysis.attributes
-                    ? d.analysis.attributes
+                    ? d.user.attributes_tree
+                    : d.analysis && d.analysis.attributes_tree
+                    ? d.analysis.attributes_tree
                     : [];
                 docs.docs.push(nodeChild);
               } else node.children.push(nodeChild);
             }
 
-            if (this.selectedPage === 2) {
+            if (this.selectedPage === 1) {
               node.children.push(docs);
               node.childCount = docs.docs.length;
             } else node.childCount = node.children.length;
 
-            if (this.selectedPage !== 2 || docs.docs.length > 0)
+            if (this.selectedPage !== 1 || docs.docs.length > 0)
               this.TREE_DATA.push(node);
           }
           this.refreshTree();
         });
-    } else if (this.selectedPage === 4) {
-      this.spinner.show();
-      this.auditservice
-        .getConclusion(this.IdAudit)
-        .pipe(takeUntil(this.destroyStream))
-        .subscribe(
-          data => {
-            this.conclusion = data;
-            this.loadingConclusion = false;
-            this.spinner.hide();
-          },
-          error => {
-            this.spinner.hide();
-            window.alert(error);
-          }
-        );
     }
     this.loading = false;
   }

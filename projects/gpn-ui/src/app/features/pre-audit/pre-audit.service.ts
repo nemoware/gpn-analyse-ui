@@ -47,15 +47,15 @@ export class PreAuditService {
   }
 
   public getAudits(
-    filterVlaue: Array<{ name: string; value: any }> = null
-  ): Observable<Audit[]> {
+    filterValue: Array<{ name: string; value: any }> = null
+  ): Observable<Audit> {
     let httpParams = new HttpParams();
-    if (filterVlaue) {
-      for (const filter of filterVlaue) {
+    if (filterValue) {
+      for (const filter of filterValue) {
         httpParams = httpParams.append(filter.name, filter.value);
       }
     }
-    return this.http.get<Array<Audit>>(`${api}/preAudit/list`, {
+    return this.http.get<Audit>(`${api}/preAudit/list`, {
       params: httpParams
     });
   }
