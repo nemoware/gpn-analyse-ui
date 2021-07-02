@@ -41,7 +41,7 @@ async function getUser(login, principalName) {
       principalName ? 'userPrincipalName' : 'sAMAccountName'
     }=${login}))`,
     options.baseDN,
-    ['name', 'memberOf', 'sAMAccountName', 'distinguishedName'],
+    ['name', 'memberOf', 'sAMAccountName', 'distinguishedName', 'mail'],
     client
   );
   await unbind(client);
