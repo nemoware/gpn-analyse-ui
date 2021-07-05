@@ -4,6 +4,7 @@
     "sAMAccountName": "admin",
     "name": "Иванов Иван",
     "userPrincipalName": "admin@company.loc",
+    "mail": "admin@company.loc",
     "memberOf": [
       "CN=Admin,OU=department2,OU=department1,OU=Company,DC=company,DC=loc",
       "CN=Group1,OU=Company,DC=company,DC=loc",
@@ -18,6 +19,7 @@
     "sAMAccountName": "user1",
     "name": "Михайлов Михаил",
     "userPrincipalName": "user1@company.loc",
+    "mail": "user1@company.loc",
     "memberOf": [
       "CN=Group1,OU=Company,DC=company,DC=loc",
       "CN=Group2,OU=Company,DC=company,DC=loc"
@@ -28,6 +30,7 @@
     "sAMAccountName": "user2",
     "name": "Петров Петр",
     "userPrincipalName": "user2@company.loc",
+    "mail": "user2@company.loc",
     "memberOf": ["CN=Group2,OU=Company,DC=company,DC=loc"]
   },
   {
@@ -35,6 +38,7 @@
     "sAMAccountName": "user3",
     "name": "Сидоров Василий",
     "userPrincipalName": "user3@company.loc",
+    "mail": "user3@company.loc",
     "memberOf": [
       "CN=Group3,OU=Company,DC=company,DC=loc",
       "CN=Group4,OU=Company,DC=company,DC=loc",
