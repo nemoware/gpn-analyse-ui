@@ -20,6 +20,7 @@ analysis.version
 analysis.warnings
 isActive
 hasInside
+documentType
 `;
 
 function SetSortForColumn(sort) {
@@ -727,18 +728,35 @@ exports.getDocument = async (req, res) => {
     ).lean();
 
     if (document) {
-      if (document.parse.documentType === 'CHARTER') {
+      let documentType = document.documentType.toLowerCase();
+      //В дереве атрибутов доп соглашение и приложения записаны как договоры
+      if (
+        documentType === 'supplementary_agreement' ||
+        documentType === 'annex'
+      ) {
+        documentType = 'contract';
+      }
+      let date =
+        document?.user?.attributes_tree?.[documentType]?.date?.value ||
+        document?.analysis?.attributes_tree?.[documentType]?.date?.value;
+
+      if (date) {
+        date = moment(date).format('DD.MM.YYYY');
+      } else {
+        date = 'н/д';
+      }
+
+      if (documentType === 'charter') {
+        const org_name =
+          document?.user?.attributes_tree?.charter?.org?.name?.value ||
+          document?.analysis?.attributes_tree?.charter?.org?.name?.value ||
+          'н/д';
         await logger.log(
           req,
           res,
           'Просмотр документа',
-          `Устав ${getAttributeValue(document, 'org-1-name') || 'н/д'} от ${
-            getAttributeValue(document, 'date')
-              ? moment(getAttributeValue(document, 'date')).format('DD.MM.YYYY')
-              : 'н/д'
-          }.`
+          `Устав «${org_name}» от ${date}`
         );
-        document.documentType = document.parse.documentType;
         document.isActive = document.isActive !== false;
         delete document.parse;
         setKeys(document);
@@ -748,60 +766,45 @@ exports.getDocument = async (req, res) => {
           { _id: document.auditId },
           `subsidiary.name auditStart auditEnd status -_id pre-check`
         ).lean();
-
-        const type = types.find(t => t._id === document.parse.documentType);
+        const type = types.find(t => t._id.toLowerCase() === documentType);
+        const number =
+          document?.user?.attributes_tree?.[documentType]?.number?.value ||
+          document?.analysis?.attributes_tree?.[documentType]?.number?.value ||
+          'н/д';
         if (audit['pre-check']) {
           await logger.log(
             req,
             res,
             'Просмотр документа',
-            `${type && type.name} № ${getAttributeValue(document, 'number') ||
-              'н/д'} от ${
-              getAttributeValue(document, 'date')
-                ? moment(getAttributeValue(document, 'date')).format(
-                    'DD.MM.YYYY'
-                  )
-                : 'н/д'
-            }. Предпроверка ДД от ${moment(audit.createDate).format(
-              'DD.MM.YYYY'
-            )}
-            )}`
+            `${type?.name} № ${number} от ${date}. Предпроверка ДД от ${moment(
+              audit.createDate
+            ).format('DD.MM.YYYY')}`
           );
-        } else if (document.parse.documentType === 'PROTOCOL')
+        } else if (documentType === 'protocol') {
+          const org_name =
+            document?.user?.attributes_tree?.protocol?.org?.name?.value ||
+            document?.analysis?.attributes_tree?.protocol?.org?.name?.value ||
+            'н/д';
           await logger.log(
             req,
             res,
             'Просмотр документа',
-            `Протокол ${getAttributeValue(document, 'org-1-name') ||
-              'н/д'} от ${
-              getAttributeValue(document, 'date')
-                ? moment(getAttributeValue(document, 'date')).format(
-                    'DD.MM.YYYY'
-                  )
-                : 'н/д'
-            }. Проверка "${audit.subsidiary.name}" ${moment(
-              audit.auditStart
-            ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
-              'DD.MM.YYYY'
-            )}`
+            `Протокол ${org_name} от ${date}. Проверка "${
+              audit.subsidiary.name
+            }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
+              audit.auditEnd
+            ).format('DD.MM.YYYY')}`
           );
-        else
+        } else
           await logger.log(
             req,
             res,
             'Просмотр документа',
-            `${type && type.name} № ${getAttributeValue(document, 'number') ||
-              'н/д'} от ${
-              getAttributeValue(document, 'date')
-                ? moment(getAttributeValue(document, 'date')).format(
-                    'DD.MM.YYYY'
-                  )
-                : 'н/д'
-            }. Проверка "${audit.subsidiary.name}" ${moment(
-              audit.auditStart
-            ).format('DD.MM.YYYY')} - ${moment(audit.auditEnd).format(
-              'DD.MM.YYYY'
-            )}`
+            `${type?.name} № ${number} от ${date}. Проверка "${
+              audit.subsidiary.name
+            }" ${moment(audit.auditStart).format('DD.MM.YYYY')} - ${moment(
+              audit.auditEnd
+            ).format('DD.MM.YYYY')}`
           );
 
         if (audit) {

@@ -39,6 +39,7 @@ exports.deleteRisk = async (req, res) => {
   let riskId = req.query.id;
   try {
     await Risk.deleteOne({ _id: riskId });
+    await logger.log(req, res, 'Удаление риска');
     res.status(200).send();
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -97,6 +98,7 @@ exports.deleteLimitValue = async (req, res) => {
   let limitValueId = req.query.id;
   try {
     await LimitValue.deleteOne({ _id: limitValueId });
+    await logger.log(req, res, 'Удаление предельного значения');
     res.status(200).send();
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -145,7 +147,7 @@ exports.postBookValue = async (req, res) => {
 
   try {
     await bookValue.save();
-    await logger.log(req, res, 'Добавление Балансовой стоимости');
+    await logger.log(req, res, 'Добавление балансовой стоимости');
     res.status(201).json(bookValue);
   } catch (err) {
     logger.logError(req, res, err, 500);
@@ -162,6 +164,7 @@ exports.deleteBookValue = async (req, res) => {
   let bookValueID = req.query.id;
   try {
     await BookValue.deleteOne({ _id: bookValueID });
+    await logger.log(req, res, 'Удаление балансовой стоимости');
     res.status(200).send();
   } catch (err) {
     logger.logError(req, res, err, 500);
