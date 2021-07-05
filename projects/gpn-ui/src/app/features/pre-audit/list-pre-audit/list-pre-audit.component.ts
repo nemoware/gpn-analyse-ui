@@ -50,6 +50,8 @@ export class ListPreAuditComponent implements OnInit {
   mouseOverIndex = -1;
   private destroyStream = new Subject<void>();
   filterPage = FilterPages;
+  bookValueRelevance: boolean;
+  affiliatesListReference: boolean;
 
   ngOnInit() {
     this.dataSource = new PreAuditDataSource(this.preAuditService);
@@ -64,6 +66,10 @@ export class ListPreAuditComponent implements OnInit {
           this.spinner.hide();
         }
       });
+    this.preAuditService.getPreAuditRelevance().subscribe(data => {
+      this.bookValueRelevance = data.bookValueRelevance;
+      this.affiliatesListReference = data.affiliatesListReference;
+    });
   }
 
   ngAfterViewInit() {
@@ -108,7 +114,10 @@ export class ListPreAuditComponent implements OnInit {
   createAudit() {
     const dialogRef = this.dialog.open(CreatePreAuditComponent, {
       width: '40%',
-      data: {}
+      data: {
+        bookValueRelevance: this.bookValueRelevance,
+        affiliatesListReference: this.affiliatesListReference
+      }
     });
     dialogRef.afterClosed().subscribe(() => {
       this.loadAuditsPage();

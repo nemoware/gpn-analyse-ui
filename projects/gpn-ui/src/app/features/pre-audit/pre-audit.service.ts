@@ -60,17 +60,7 @@ export class PreAuditService {
     });
   }
 
-  getBookValueReference(): Observable<RelevanceModel> {
-    return this.http.get<RelevanceModel>(
-      `${api}/preAudit/bookValueReference`,
-      {}
-    );
-  }
-
-  getAffiliatesListReference(): Observable<RelevanceModel> {
-    return this.http.get<RelevanceModel>(
-      `${api}/preAudit/affiliatesListRelevance`,
-      {}
-    );
+  getPreAuditRelevance(): Observable<RelevanceModel> {
+    return this.http.get<RelevanceModel>(`${api}/preAudit/relevance`, {});
   }
 }

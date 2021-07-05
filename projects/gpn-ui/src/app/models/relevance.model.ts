@@ -1,3 +1,4 @@
 export interface RelevanceModel {
-  relevant: boolean;
+  bookValueRelevance: boolean;
+  affiliatesListReference: boolean;
 }

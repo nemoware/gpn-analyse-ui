@@ -27,15 +27,16 @@
   </ng-container>
   <br>
   <ng-container *ngIf="typeControl.value.includes('InsiderControl')">
-  <mat-error *ngIf="!(bookValueRelevance$ | async)"> Необходимо добавить актуальную балансовую стоимость для ПАО "Газпром нефть".
-    Для текущей проверки проекта договора будет использована балансовая стоимость за предыдущий период.</mat-error>
+  <mat-error *ngIf="!data.bookValueRelevance"> Необходимо добавить актуальную балансовую стоимость для ПАО "Газпром нефть".
+    Для текущей проверки проекта договора будет использована балансовая стоимость за предыдущий период.<br>
+  </mat-error>
   </ng-container>
   <br>
   <ng-container *ngIf="typeControl.value.includes('InterestControl')">
-  <mat-error *ngIf="!(affiliatesListReference$ | async)">Необходимо загрузить актуальный список аффилированных лиц ПАО "Газпром".
-    Для текущей проверки проекта договора будет использован список за предыдущий период.</mat-error>
+  <mat-error *ngIf="!data.affiliatesListReference">Необходимо загрузить актуальный список аффилированных лиц ПАО "Газпром".
+    Для текущей проверки проекта договора будет использован список за предыдущий период.<br>
+  </mat-error>
     </ng-container>
-  <br>
   <div class="row">
     <div class="col">
       <button mat-raised-button (click)="CloseForm()" style="float: right">Отменить</button>

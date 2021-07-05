@@ -173,35 +173,38 @@ exports.getPreAudit = async (req, res) => {
 };
 
 //Получение информации об актуальности балансовой стоимости
-exports.getBookValueRelevance = async (req, res) => {
-  try {
-    const year = new Date().getFullYear();
-    const month = new Date().getMonth();
-    let bookValues = await BookValue.find().lean();
-    bookValues = bookValues.filter(
-      bookValue =>
-        bookValue.date.getMonth() === month &&
-        bookValue.date.getFullYear() === year
-    );
-    const relevant = bookValues.length === 1;
-    res.send({ relevant });
-  } catch (err) {
-    logger.logError(req, res, err, 500);
-  }
+getBookValueRelevance = async () => {
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth();
+  let bookValues = await BookValue.find().lean();
+  bookValues = bookValues.filter(
+    bookValue =>
+      bookValue.date.getMonth() === month &&
+      bookValue.date.getFullYear() === year
+  );
+  return bookValues.length === 1;
 };
 
 //Получение информации об актуальности списка аффилированных лиц
-exports.getAffiliatesListRelevance = async (req, res) => {
+getAffiliatesListRelevance = async () => {
+  let catalog = await Catalog.findOne().lean();
+
+  //Вычисляем текущий квартал
+  const currentMonth = new Date().getMonth() + 1;
+  const currentQuarter = Math.floor((currentMonth + 2) / 3);
+
+  return catalog.affiliatesListQuarter === currentQuarter;
+};
+
+//Получение информации об актуальности справочников для аудита
+exports.getPreAuditRelevance = async (req, res) => {
   try {
-    let catalog = await Catalog.findOne().lean();
-
-    //Вычисляем текущий квартал
-    const currentMonth = new Date().getMonth() + 1;
-    const currentQuarter = Math.floor((currentMonth + 2) / 3);
-
-    const relevant = catalog.affiliatesListQuarter === currentQuarter;
-
-    res.send({ relevant });
+    const bookValueRelevance = await getBookValueRelevance();
+    const affiliatesListReference = await getAffiliatesListRelevance();
+    res.send({
+      bookValueRelevance,
+      affiliatesListReference
+    });
   } catch (err) {
     logger.logError(req, res, err, 500);
   }

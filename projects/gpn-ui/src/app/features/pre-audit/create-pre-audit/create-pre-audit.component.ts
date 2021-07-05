@@ -5,7 +5,7 @@ import {
   FormControl,
   FormGroup
 } from '@root/node_modules/@angular/forms';
-import { Observable, Subject } from '@root/node_modules/rxjs';
+import { Subject } from '@root/node_modules/rxjs';
 import {
   DateAdapter,
   MAT_DIALOG_DATA,
@@ -13,7 +13,7 @@ import {
 } from '@root/node_modules/@angular/material';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { PreAuditService } from '@app/features/pre-audit/pre-audit.service';
-import { map, takeUntil } from '@root/node_modules/rxjs/operators';
+import { takeUntil } from '@root/node_modules/rxjs/operators';
 
 @Component({
   selector: 'gpn-create-pre-audit',
@@ -35,8 +35,6 @@ export class CreatePreAuditComponent implements OnInit, OnDestroy {
   filesString = '';
   //Файл цепочки бенефециаров
   chainString = '';
-  bookValueRelevance$: Observable<Boolean>;
-  affiliatesListReference$: Observable<Boolean>;
 
   public typeControl: FormControl = new FormControl(this.checkTypes);
 
@@ -44,7 +42,7 @@ export class CreatePreAuditComponent implements OnInit, OnDestroy {
     private dateAdapter: DateAdapter<Date>,
     private preAuditService: PreAuditService,
     public dialogRef: MatDialogRef<CreatePreAuditComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {},
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder
   ) {
     this.initForm();
@@ -132,12 +130,5 @@ export class CreatePreAuditComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnInit(): void {
-    this.bookValueRelevance$ = this.preAuditService
-      .getBookValueReference()
-      .pipe(map(data => data.relevant));
-    this.bookValueRelevance$ = this.preAuditService
-      .getAffiliatesListReference()
-      .pipe(map(data => data.relevant));
-  }
+  ngOnInit(): void {}
 }
