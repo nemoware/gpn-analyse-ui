@@ -10,10 +10,7 @@ import { Tag } from '@app/models/legal-document';
 import {
   faChevronDown,
   faChevronUp,
-  faEye,
-  faFile,
-  faFolder,
-  faFolderOpen
+  faEye
 } from '@fortawesome/free-solid-svg-icons';
 import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
 import { Document } from '@app/models/document.model';
@@ -21,13 +18,11 @@ import { Audit } from '@app/models/audit.model';
 
 import { FileModel } from '@app/models/file-model';
 import { DatePipe } from '@root/node_modules/@angular/common';
-import { ConclusionModel } from '@app/models/conclusion-model';
 // tslint:disable-next-line:import-blacklist
 import { take, takeUntil } from '@root/node_modules/rxjs/internal/operators';
 import { NgZone, ViewChild } from '@root/node_modules/@angular/core';
 import { CdkTextareaAutosize } from '@root/node_modules/@angular/cdk/text-field';
 import { NgxSpinnerService } from '@root/node_modules/ngx-spinner';
-import { ViolationModel } from '@app/models/violation-model';
 import { Subject } from '@root/node_modules/rxjs';
 
 interface Node {
@@ -77,9 +72,6 @@ export class PreAuditAnalyseResultComponent
   faChevronDown = faChevronDown;
   faChevronUp = faChevronUp;
   faEye = faEye;
-  faFolder = faFolder;
-  faFolderOpen = faFolderOpen;
-  faFile = faFile;
   IdAudit;
   docs: Document[];
   TREE_DATA: Node[] = [];
@@ -95,10 +87,6 @@ export class PreAuditAnalyseResultComponent
   files: FileModel[];
   loading = false;
   mouseOverID = '';
-  conclusion: ConclusionModel;
-  loadingConclusion = true;
-  changed = false;
-  selectedRows: ViolationModel[];
   private destroyStream = new Subject<void>();
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
@@ -165,8 +153,8 @@ export class PreAuditAnalyseResultComponent
     this.TREE_DATA = [];
 
     if (this.selectedPage <= 1) {
-      this.auditservice
-        .getDouments(this.IdAudit, false)
+      this.preAuditService
+        .getDocuments(this.IdAudit)
         .pipe(takeUntil(this.destroyStream))
         .subscribe(data => {
           this.docs = data;
@@ -200,19 +188,12 @@ export class PreAuditAnalyseResultComponent
                 childCount: 0,
                 parseError: d.parseError,
                 documentType: t,
-                attributes: null,
-                starred: d.starred
+                attributes: null
               };
 
               const nodeChild = Object.assign({}, d, addon);
 
               if (this.selectedPage === 1) {
-                nodeChild.attributes =
-                  d.user != null
-                    ? d.user.attributes_tree
-                    : d.analysis && d.analysis.attributes_tree
-                    ? d.analysis.attributes_tree
-                    : [];
                 docs.docs.push(nodeChild);
               } else node.children.push(nodeChild);
             }

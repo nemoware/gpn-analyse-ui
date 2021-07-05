@@ -6,6 +6,7 @@ import {
 import { Observable } from '@root/node_modules/rxjs';
 import { Audit } from '@app/models/audit.model';
 import { RelevanceModel } from '@app/models/relevance.model';
+import { Document } from '@app/models/document.model';
 
 const api = '/api';
 
@@ -62,5 +63,15 @@ export class PreAuditService {
 
   getPreAuditRelevance(): Observable<RelevanceModel> {
     return this.http.get<RelevanceModel>(`${api}/preAudit/relevance`, {});
+  }
+
+  public getDocuments(auditId: string = null): Observable<Document[]> {
+    let httpParams = new HttpParams();
+    if (auditId) {
+      httpParams = httpParams.append('auditId', auditId);
+    }
+    return this.http.get<Array<Document>>(`${api}/preAudit/documentList`, {
+      params: httpParams
+    });
   }
 }

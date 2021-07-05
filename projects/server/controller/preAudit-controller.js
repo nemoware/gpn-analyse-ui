@@ -209,3 +209,37 @@ exports.getPreAuditRelevance = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+exports.getDocuments = async (req, res) => {
+  const auditId = req.query.auditId;
+  if (!auditId) {
+    let err = 'Can not find documents: auditId is null';
+    logger.logError(req, res, err, 400);
+    return;
+  }
+
+  try {
+    let documents = await Document.find(
+      {
+        auditId,
+        parserResponseCode: 200
+      },
+      `analysis.attributes_tree user.attributes_tree filename state documentType`,
+      { lean: true }
+    );
+
+    documents = documents.map(d => {
+      if (d.user?.attributes_tree) {
+        d.attributes_tree = d.user.attributes_tree;
+      } else {
+        d.attributes_tree = d.analysis.attributes_tree;
+        delete d.analysis;
+      }
+      return d;
+    });
+
+    res.send(documents);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};

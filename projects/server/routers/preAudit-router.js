@@ -5,5 +5,6 @@ router.get('/fetchPreAudits', controller.fetchPreAudits);
 router.post('/uploadFiles', controller.uploadFiles);
 router.get('/list', controller.getPreAudit);
 router.get('/relevance', controller.getPreAuditRelevance);
+router.get('/documentList', controller.getDocuments);
 
 module.exports = router;

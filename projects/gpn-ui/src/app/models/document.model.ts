@@ -37,6 +37,7 @@ export interface Document {
     updateDate: Date;
     attributes_tree: AttributeTreeModel;
   };
+  attributes_tree?: AttributeTreeModel;
   parseError: string;
   audit: {
     subsidiaryName: string;
