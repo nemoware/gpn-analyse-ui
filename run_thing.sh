@@ -11,7 +11,7 @@ export GPN_ADMIN_GROUP=CN=Admin,OU=department2,OU=department1,OU=Company,DC=comp
 export GPN_AUDIT_GROUP=CN=Group1,OU=Company,DC=company,DC=loc
 export GPN_EVENT_GROUP=CN=Group2,OU=Company,DC=company,DC=loc
 export GPN_JWT_SECRET='gpn-dev'
-
+export GPN_LOG='events.log'
 
 node ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc --robot false
 #nodemon ./projects/server/server.js --kerberos false --ad false --ssl false --login admin@company.loc --robot false
