@@ -88,7 +88,7 @@ export class AuditService {
     pageIndex: number,
     column: string,
     sort: string,
-    skipStar: number
+    starred: boolean
   ): Observable<{ arrOfRequiredContract: Document[]; count: number }> {
     let httpParams = new HttpParams();
 
@@ -106,8 +106,7 @@ export class AuditService {
     if (documentType)
       httpParams = httpParams.append('documentType', documentType.toString());
 
-    if (skipStar && pageIndex * take !== 0)
-      httpParams = httpParams.append('skipStar', skipStar.toString());
+    httpParams = httpParams.append('starred', starred.toString());
 
     return this.http.get<{
       arrOfRequiredContract: Document[];
@@ -125,7 +124,7 @@ export class AuditService {
     pageIndex: number,
     column: string,
     sort: string,
-    skipStar: number
+    starred: boolean
   ): Observable<{ arrOfRequiredContract: Document[]; count: number }> {
     let httpParams = new HttpParams();
 
@@ -145,8 +144,7 @@ export class AuditService {
       httpParams = httpParams.append('documentType', documentType.toString());
     }
 
-    if (skipStar && pageIndex * take !== 0)
-      httpParams = httpParams.append('skipStar', skipStar.toString());
+    httpParams = httpParams.append('starred', starred.toString());
 
     return this.http.get<{ arrOfRequiredContract: Document[]; count: number }>(
       `${api}/document/treelist`,

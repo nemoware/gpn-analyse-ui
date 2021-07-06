@@ -174,7 +174,7 @@ exports.getTreeFromDocuments = async (req, res) => {
   const column = req.query.column;
   const sort = req.query.sort === 'asc' ? 1 : -1;
   const skip = parseInt(req.query.skip);
-  const skipStar = parseInt(req.query.skipStar);
+  const starred = req.query.starred === 'true';
 
   const AllColumn2 = SetSortForColumn(sort, documentType);
 
@@ -221,9 +221,14 @@ exports.getTreeFromDocuments = async (req, res) => {
         );
     }
 
+    let count = 0;
+
     if (documentId) {
       let ids = Ids(documentId);
 
+      if (starred) {
+        ids = ids.filter(i => arrStars.indexOf(i) !== -1);
+      }
       arrayOfAllDocument = await Document.find({
         _id: { $in: ids },
         'parse.documentType': documentType
@@ -232,33 +237,23 @@ exports.getTreeFromDocuments = async (req, res) => {
         .sort(AllColumn2[column])
         .lean();
     } else {
-      if (column === 'starred') {
-        const sortObj = {
-          '1': { $in: arrStars },
-          '-1': { $nin: arrStars }
-        };
+      if (starred) {
         arrayOfAllDocument = await Document.find({
           auditId: auditId,
-          _id: sortObj[sort * -1],
+          _id: { $in: arrStars },
           'parse.documentType': documentType
         })
           .select(select)
+          .sort(AllColumn2[column])
           .skip(skip)
           .limit(take)
           .lean();
-        if (arrayOfAllDocument.length < take) {
-          arrayOfAllDocument = arrayOfAllDocument.concat(
-            await Document.find({
-              _id: sortObj[sort],
-              auditId: auditId,
-              'parse.documentType': documentType
-            })
-              .select(select)
-              .skip(skip - skipStar)
-              .limit(take - arrayOfAllDocument.length)
-              .lean()
-          );
-        }
+
+        count = await Document.countDocuments({
+          auditId: auditId,
+          _id: { $in: arrStars },
+          'parse.documentType': documentType
+        });
       } else {
         arrayOfAllDocument = await Document.find({
           $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
@@ -269,6 +264,11 @@ exports.getTreeFromDocuments = async (req, res) => {
           .limit(take)
           .skip(skip)
           .lean();
+
+        count = await Document.countDocuments({
+          $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+          'parse.documentType': documentType
+        });
       }
 
       let ids = [];
@@ -290,9 +290,6 @@ exports.getTreeFromDocuments = async (req, res) => {
         i.starred = arrStars.includes(i._id.toString());
         return i;
       });
-      if (documentId && column === 'starred') {
-        arrayOfAllDocument.sort(compare);
-      }
     }
 
     arrayOfAllDocument.map(i => {
@@ -359,11 +356,6 @@ exports.getTreeFromDocuments = async (req, res) => {
       return 0;
     }
 
-    const count = await Document.find({
-      auditId: auditId,
-      'parse.documentType': 'CONTRACT'
-    }).count();
-
     res.send({
       arrOfRequiredContract: arrayOfAllDocument.filter(
         i => i.parse.documentType === documentType
@@ -382,7 +374,7 @@ exports.getNotUsedDocument = async (req, res) => {
   const column = req.query.column;
   const sort = req.query.sort === 'asc' ? 1 : -1;
   const skip = parseInt(req.query.skip);
-  const skipStar = parseInt(req.query.skipStar);
+  const starred = req.query.starred === 'true';
 
   const AllColumn2 = SetSortForColumn(sort, documentType);
 
@@ -414,104 +406,42 @@ exports.getNotUsedDocument = async (req, res) => {
     const arrLinksFromId = audit.links.map(i => i.fromId.toString());
     const arrLinksToId = audit.links.map(i => i.toId.toString());
 
-    const arrLinks = [...new Set([...arrLinksFromId, ...arrLinksToId])];
+    let arrLinks = [...new Set([...arrLinksFromId, ...arrLinksToId])];
+
+    let query = {
+      $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
+      $and: [{ _id: { $nin: arrLinks } }],
+      'parse.documentType': documentType
+    };
+
+    if (starred) {
+      query.$and.push({ _id: { $in: arrStars } });
+    }
 
     let arrayOfAllDocument;
-
-    if (column === 'starred') {
-      const sortObj = {
-        '1': { $in: arrStars },
-        '-1': { $nin: arrStars }
-      };
-
-      arrayOfAllDocument = await Document.find({
-        $and: [
-          { _id: { $nin: arrLinks } },
-          { _id: sortObj[sort * -1] },
-          { $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }] }
-        ],
-        'parse.documentType': documentType
-      })
-        .select({
-          'analysis.attributes_tree.contract': 1,
-          'analysis.warnings': 1,
-          'analysis.attributes_tree.charter': 1,
-          'analysis.attributes_tree.protocol': 1,
-          'user.attributes_tree.contract': 1,
-          'user.attributes_tree.charter': 1,
-          'user.attributes_tree.protocol': 1,
-          'analysis.analyze_timestamp': 1,
-          'parse.documentType': 1,
-          state: 1,
-          'user.author.name': 1
-        })
-        .limit(take)
-        .skip(skip)
-        .lean();
-
-      if (arrayOfAllDocument.length < take) {
-        arrayOfAllDocument = arrayOfAllDocument.concat(
-          await Document.find({
-            $and: [
-              { _id: { $nin: arrLinks } },
-              { _id: sortObj[sort] },
-              { $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }] }
-            ],
-            'parse.documentType': documentType
-          })
-            .select({
-              'analysis.attributes_tree.contract': 1,
-              'analysis.warnings': 1,
-              'analysis.attributes_tree.charter': 1,
-              'analysis.attributes_tree.protocol': 1,
-              'user.attributes_tree.contract': 1,
-              'user.attributes_tree.charter': 1,
-              'user.attributes_tree.protocol': 1,
-              'analysis.analyze_timestamp': 1,
-              'parse.documentType': 1,
-              state: 1,
-              'user.author.name': 1
-            })
-            .skip(skip - skipStar)
-            .limit(take - arrayOfAllDocument.length)
-            .lean()
-        );
-      }
-    } else {
-      arrayOfAllDocument = await Document.find(
-        {
-          $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
-          _id: { $nin: arrLinks },
-          'parse.documentType': documentType
-        },
-        {
-          'analysis.attributes_tree.contract': 1,
-          'analysis.warnings': 1,
-          'analysis.attributes_tree.charter': 1,
-          'analysis.attributes_tree.protocol': 1,
-          'user.attributes_tree.contract': 1,
-          'user.attributes_tree.charter': 1,
-          'user.attributes_tree.protocol': 1,
-          'analysis.analyze_timestamp': 1,
-          'parse.documentType': 1,
-          state: 1,
-          'user.author.name': 1
-        }
-      )
-        .sort(AllColumn2[column])
-        .limit(take)
-        .skip(skip)
-        .lean();
-    }
+    arrayOfAllDocument = await Document.find(query, {
+      'analysis.attributes_tree.contract': 1,
+      'analysis.warnings': 1,
+      'analysis.attributes_tree.charter': 1,
+      'analysis.attributes_tree.protocol': 1,
+      'user.attributes_tree.contract': 1,
+      'user.attributes_tree.charter': 1,
+      'user.attributes_tree.protocol': 1,
+      'analysis.analyze_timestamp': 1,
+      'parse.documentType': 1,
+      state: 1,
+      'user.author.name': 1
+    })
+      .sort(AllColumn2[column])
+      .limit(take)
+      .skip(skip)
+      .lean();
 
     if (user) {
       arrayOfAllDocument.map(i => {
         i.starred = arrStars.includes(i._id.toString());
         return i;
       });
-      if (column === 'starred') {
-        arrayOfAllDocument.sort(compare);
-      }
     }
 
     arrayOfAllDocument.map(i => {
@@ -524,17 +454,8 @@ exports.getNotUsedDocument = async (req, res) => {
       return i;
     });
 
-    function compare(a, b) {
-      if (a.starred < b.starred) return sort * -1;
-      if (a.starred > b.starred) return sort;
-      return 0;
-    }
+    const count = await Document.countDocuments(query);
 
-    const count = await Document.find({
-      _id: { $nin: arrLinks },
-      $or: [{ _id: { $in: audit.charters } }, { auditId: auditId }],
-      'parse.documentType': documentType
-    }).count();
     res.send({
       arrOfRequiredContract: arrayOfAllDocument,
       count: count
@@ -667,6 +588,24 @@ exports.getResultStateByAudit = async (req, res) => {
         i.percent += 0.5;
       }
     });
+
+    const arr = ['undefined', '5'];
+    const indexOf = result.findIndex(i => i.state == '0');
+    if (indexOf == -1) {
+      result.push({
+        state: '0',
+        percent: 0,
+        count: 0
+      });
+    }
+    result.forEach((i, index) => {
+      if (arr.includes(i.state)) {
+        result[result.length - 1].count += result[index].count;
+        result[result.length - 1].percent += result[index].percent;
+        result.splice(index, 1);
+      }
+    });
+
     result.sort((a, b) => {
       {
         if (a.percent < b.percent) {
@@ -678,6 +617,8 @@ exports.getResultStateByAudit = async (req, res) => {
         return 0;
       }
     });
+
+    result.filter(i => i.count != 0);
     res.send(result);
   } catch (err) {
     logger.logError(req, res, err, 500);

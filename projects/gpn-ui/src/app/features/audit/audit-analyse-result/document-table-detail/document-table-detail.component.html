@@ -14,7 +14,13 @@
 
     <!-- star -->
     <ng-container matColumnDef="starred">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Избр.</th>
+      <th mat-header-cell *matHeaderCellDef>
+        <button mat-icon-button class="star" (click)="selectStarred()" style="color: rgba(0, 0, 0, 0.87) !important"
+          #elem>
+          <mat-icon *ngIf="isStarred">star</mat-icon>
+          <mat-icon *ngIf="!isStarred">star_border</mat-icon>
+        </button>
+      </th>
       <td mat-cell *matCellDef="let row">
         <button mat-icon-button (click)="starDoc(row, $event)" class="star"
           [ngStyle]="{'display': focusedId === row._id || row.starred ? 'inline' : 'none'}">
@@ -174,6 +180,9 @@
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" class="detail-row"></tr>
 
   </table>
-  <mat-paginator [hidden]="documentId" [pageSizeOptions]="[5, 10, 15, 20]" [pageSize]="defPageSize"
+  <mat-paginator [hidden]="documentId || dataSource.length === 0" [pageSizeOptions]="[5, 10, 15, 20]" [pageSize]="defPageSize"
     [length]="totalCount"></mat-paginator>
+  <div *ngIf="dataSource.length === 0">
+    <h1 style="padding-left: 2%;">Документов с такими параметрами не имеется</h1>
+  </div>
 </div>
