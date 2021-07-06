@@ -1020,3 +1020,7 @@ getContractCurrencyValue = document => {
     document.user?.attributes_tree?.contract?.subject?.price?.currency?.value
   );
 };
+
+exports.getRobotState = (req, res) => {
+  res.send({ state: global.robot });
+};

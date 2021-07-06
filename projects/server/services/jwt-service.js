@@ -4,7 +4,6 @@ const passport = require('passport');
 const passportJwt = require('passport-jwt');
 const jwt = require('jsonwebtoken');
 const JwtStrategy = passportJwt.Strategy;
-const logger = require('../core/logger');
 
 const config = require('../config').jwt;
 const options = config.options;
@@ -39,7 +38,6 @@ exports.authenticate = function jwtAuthentication(req, res, next) {
 };
 
 exports.getAccessToken = payload => {
-  logger.log(req, res, 'Вход в приложение');
   return jwt.sign(payload, options.secretOrKey, {
     expiresIn: config.expiresIn
   });

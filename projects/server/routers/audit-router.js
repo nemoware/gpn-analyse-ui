@@ -20,4 +20,5 @@ router.put('/selectedViolations', controller.postSelectedViolations);
 router.post('/violation', controller.postViolation);
 router.put('/violation', controller.updateViolation);
 router.delete('/violation', controller.deleteViolation);
+router.get('/robot', controller.getRobotState);
 module.exports = router;

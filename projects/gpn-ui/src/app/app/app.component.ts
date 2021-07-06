@@ -1,4 +1,3 @@
-import browser from 'browser-detect';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
@@ -83,10 +82,6 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(value => {
         if (value) this.loadedUser = true;
       });
-    //Запуск приложения с роботами?
-    this.authorizationData.getRobotState().subscribe(data => {
-      env.robotState = data.state;
-    });
   }
 
   getNameUser() {

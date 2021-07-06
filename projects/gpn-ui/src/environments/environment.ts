@@ -10,8 +10,6 @@ export const environment = {
   envName: 'DEV',
   production: false,
   test: false,
-  robotState: false,
-
   versions: {
     app: packageJson.version,
     angular: packageJson.dependencies['@angular/core'],

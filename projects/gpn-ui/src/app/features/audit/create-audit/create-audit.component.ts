@@ -10,7 +10,6 @@ import {
 import { AuditService } from '@app/features/audit/audit.service';
 import {
   DateAdapter,
-  ErrorStateMatcher,
   MAT_DIALOG_DATA,
   MatDatepickerInputEvent,
   MatDialogRef,
@@ -21,12 +20,9 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormGroupDirective,
-  NgForm,
   Validators
 } from '@root/node_modules/@angular/forms';
 import { ReplaySubject, Subject, SubscriptionLike } from 'rxjs';
-import { environment as env } from '@environments/environment';
 import { take, takeUntil } from 'rxjs/operators';
 import { Subsidiary } from '@app/models/subsidiary.model';
 import { Audit } from '@app/models/audit.model';
@@ -107,7 +103,9 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dateAdapter.getFirstDayOfWeek = () => {
       return 1;
     };
-    this.robotState = env.robotState;
+    this.auditservice.getRobotState().subscribe(data => {
+      this.robotState = data.state;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -192,7 +190,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy, AfterViewInit {
         data => {
           this.dialogRef.close(data);
         },
-        error => {}
+        () => {}
       )
     );
   }

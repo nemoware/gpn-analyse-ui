@@ -407,4 +407,8 @@ export class AuditService {
       params: urlParams
     });
   }
+
+  public getRobotState(): Observable<{ state: boolean }> {
+    return this.http.get<{ state: boolean }>(`${api}/audit/robot`);
+  }
 }

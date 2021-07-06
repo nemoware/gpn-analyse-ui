@@ -39,8 +39,4 @@ export class AuthorizationData {
       })
     );
   }
-
-  public getRobotState(): Observable<{ state: boolean }> {
-    return this.http.get<{ state: boolean }>(`${api}/account/robot`);
-  }
 }

@@ -3,6 +3,7 @@ const kerberos = require('kerberos');
 const adService = require('../services/ad-service');
 const jwtService = require('../services/jwt-service');
 const principal = require('../config').ad.principal;
+const logger = require('../core/logger');
 
 async function kerberosAuthentication(req, res, next) {
   if (res.locals.user) return next();
@@ -15,6 +16,7 @@ async function kerberosAuthentication(req, res, next) {
     const accessToken = jwtService.getAccessToken(user);
     res.cookie('jwt', accessToken, { httpOnly: true });
     res.locals.user = user;
+    logger.log(req, res, 'Вход в приложение');
     next();
   } catch (err) {
     res.status(401).sendFile('401.html', {
