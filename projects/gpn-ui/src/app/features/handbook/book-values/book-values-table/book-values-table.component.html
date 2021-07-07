@@ -17,7 +17,7 @@
 
     <ng-container matColumnDef="value">
       <th mat-header-cell *matHeaderCellDef mat-sort-header >Балансовая стоимость активов</th>
-      <td mat-cell *matCellDef="let row" class="table-row">{{row.value | currency:'RUB' }}</td>
+      <td mat-cell *matCellDef="let row" class="table-row">{{row.value/1000 | currency: 'RUB': 'тыс. руб': '1.0-1' }} </td>
     </ng-container>
 
     <ng-container matColumnDef="events">

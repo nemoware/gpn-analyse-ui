@@ -5,7 +5,7 @@
   <form [formGroup]="controlForm">
     <mat-form-field>
       <mat-label>Выберите месяц и год</mat-label>
-      <input matInput [matDatepicker]="dp" [formControl]="date">
+      <input matInput [matDatepicker]="dp" [formControl]="date" readonly>
       <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
       <mat-datepicker #dp
                       startView="multi-year"
@@ -18,7 +18,7 @@
       </mat-error>
     </mat-form-field>
     <mat-form-field color="accent">
-      <input mask="separator" thousandSeparator=" " matInput placeholder="Балансовая стоимость" formControlName="valueControl">
+      <input mask="separator" thousandSeparator=" " matInput placeholder="Балансовая стоимость (тыс. руб)" formControlName="valueControl">
       <mat-error *ngIf="controlForm.controls.valueControl.invalid">
         Введите положительное число
       </mat-error>

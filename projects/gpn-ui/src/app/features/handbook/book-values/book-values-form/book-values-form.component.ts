@@ -111,7 +111,7 @@ export class BookValuesFormComponent implements OnInit {
   addBookValue() {
     const newBookValue: BookValue = {
       date: this.date.value,
-      value: this.controlForm.controls.valueControl.value
+      value: this.controlForm.controls.valueControl.value * 1000
     };
     if (this.data.new) {
       this.subscriptions.push(
@@ -120,7 +120,7 @@ export class BookValuesFormComponent implements OnInit {
         })
       );
     } else {
-      newBookValue._id = this.data.bookValue._id;
+      newBookValue._id = this.data.bookValue && this.data.bookValue._id;
       this.subscriptions.push(
         this.handBookService.updateBookValue(newBookValue).subscribe(data => {
           this.dialogRef.close(data);
