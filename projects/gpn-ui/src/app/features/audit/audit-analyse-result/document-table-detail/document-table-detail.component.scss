@@ -90,7 +90,7 @@ tr.detail-row {
   padding-right: $gpn-padding;
 }
 
-//.mat-column {
+.mat-column {
 //  // &-shevron {
 //  //   width: 10% !important;
 //  // }
@@ -114,28 +114,28 @@ tr.detail-row {
 //  &-org {
 //    width: 10% !important;
 //  }
-//  &-contract_subject {
-//    width: 10% !important;
-//  }
+ &-contract_subject {
+   width: 10% !important;
+ }
 //  &-org_level {
 //    width: 10% !important;
 //  }
-//  &-org1 {
-//    width: 20% !important;
-//  }
-//  &-org2 {
-//    width: 20% !important;
-//  }
+ &-org1 {
+   width: 20% !important;
+ }
+ &-org2 {
+   width: 20% !important;
+ }
 //  &-state {
-//    width: 12% !important;
+//    width: 5% !important;
 //  }
 //  &-charterAndProtocol {
 //    width: 10% !important;
 //  }
-//  &-warnings {
-//    width: 1.8% !important;
-//  }
-//}
+ &-warnings {
+   width: 1.8% !important;
+ }
+}
 
 .mat-column-starred {
   width: 5% !important;
@@ -157,9 +157,9 @@ tr.detail-row {
   width: 30% !important;
 }
 
-.mat-column-warnings {
-  width: 5% !important;
-}
+// .mat-column-warnings {
+//   width: 5% !important;
+// }
 
 .mat-column-charterAndProtocol {
   width: 10% !important;

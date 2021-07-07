@@ -14,6 +14,7 @@ export class AuditDataSource implements DataSource<any> {
   private countStar = 0;
   totalCount = 0;
   documentType: string;
+  length: number;
   constructor(private service: AuditService) {}
 
   connect(
@@ -56,7 +57,8 @@ export class AuditDataSource implements DataSource<any> {
     pageSize = 15,
     pageIndex = 0,
     column = 'subsidiaryName',
-    sort = 'asc'
+    sort = 'asc',
+    starred = false
   ) {
     this.loadingSubject.next(true);
     this.service
@@ -68,7 +70,7 @@ export class AuditDataSource implements DataSource<any> {
         pageIndex,
         column,
         sort,
-        this.countStar
+        starred
       )
       .pipe(
         catchError(() => of([])),
@@ -88,25 +90,11 @@ export class AuditDataSource implements DataSource<any> {
           }
         });
         // @ts-ignore
-        if (data.arrOfRequiredContract) {
+        this.length = data.arrOfRequiredContract.length;
+        // @ts-ignore
+        if (data.arrOfRequiredContract.length !== 0) {
           // @ts-ignore
           this.documentType = data.arrOfRequiredContract[0].parse.documentType;
-        }
-
-        if (
-          column === 'starred' &&
-          // @ts-ignore
-          data.arrOfRequiredContract.filter(i => i.starred).length !== 0 &&
-          sort === 'desc'
-        ) {
-          // @ts-ignore
-          this.countStar = data.arrOfRequiredContract.filter(
-            i => i.starred
-          ).length;
-        }
-
-        if (column !== 'starred' || sort === 'asc') {
-          this.countStar = 0;
         }
         // @ts-ignore
         this.auditsSubject.next(data.arrOfRequiredContract);
@@ -119,7 +107,8 @@ export class AuditDataSource implements DataSource<any> {
     pageSize = 15,
     pageIndex = 0,
     column = 'subsidiaryName',
-    sort = 'asc'
+    sort = 'asc',
+    starred = false
   ) {
     this.loadingSubject.next(true);
     this.service
@@ -130,7 +119,7 @@ export class AuditDataSource implements DataSource<any> {
         pageIndex,
         column,
         sort,
-        this.countStar
+        starred
       )
       .pipe(
         catchError(() => of([])),
@@ -150,20 +139,11 @@ export class AuditDataSource implements DataSource<any> {
           }
         });
         // @ts-ignore
-        this.documentType = data.arrOfRequiredContract[0].parse.documentType;
-        if (
-          column === 'starred' &&
+        this.length = data.arrOfRequiredContract.length;
+        // @ts-ignore
+        if (data.arrOfRequiredContract.length !== 0) {
           // @ts-ignore
-          data.arrOfRequiredContract.filter(i => i.starred).length !== 0 &&
-          sort === 'desc'
-        ) {
-          // @ts-ignore
-          this.countStar = data.arrOfRequiredContract.filter(
-            i => i.starred
-          ).length;
-        }
-        if (column !== 'starred' || sort === 'asc') {
-          this.countStar = 0;
+          this.documentType = data.arrOfRequiredContract[0].parse.documentType;
         }
         // @ts-ignore
         this.auditsSubject.next(data.arrOfRequiredContract);

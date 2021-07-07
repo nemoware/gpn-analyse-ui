@@ -1,10 +1,26 @@
 <div>
   <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows matSortActive="date" matSortDirection="desc"
     matSortDisableClear>
+    <!-- шэврон -->
+    <ng-container matColumnDef="shevron">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button (click)="selectedRow(row, $event)" *ngIf="row.links && !documentId">
+          <fa-icon [icon]="faChevronDown" *ngIf="!arrOfexpandedElementId.includes(row._id)"></fa-icon>
+          <fa-icon [icon]="faChevronUp" *ngIf="arrOfexpandedElementId.includes(row._id)"></fa-icon>
+        </button>
+      </td>
+    </ng-container>
 
     <!-- star -->
     <ng-container matColumnDef="starred">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <th mat-header-cell *matHeaderCellDef>
+        <button mat-icon-button class="star" (click)="selectStarred()" style="color: rgba(0, 0, 0, 0.87) !important"
+          #elem>
+          <mat-icon *ngIf="isStarred">star</mat-icon>
+          <mat-icon *ngIf="!isStarred">star_border</mat-icon>
+        </button>
+      </th>
       <td mat-cell *matCellDef="let row">
         <button mat-icon-button (click)="starDoc(row, $event)" class="star"
           [ngStyle]="{'display': focusedId === row._id || row.starred ? 'inline' : 'none'}">
@@ -14,14 +30,19 @@
       </td>
     </ng-container>
 
-    <!-- шэврон -->
-    <ng-container matColumnDef="shevron">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let row">
-        <button mat-icon-button (click)="selectedRow(row, $event)" *ngIf="row.links && !documentId">
-          <fa-icon [icon]="faChevronDown" *ngIf="!arrOfexpandedElementId.includes(row._id)"></fa-icon>
-          <fa-icon [icon]="faChevronUp" *ngIf="arrOfexpandedElementId.includes(row._id)"></fa-icon>
-        </button>
+    <!-- ДАТА -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        {{(row.analysis?.attributes_tree?.contract?.date?.value | date) || '⚠️ не обнаружен' }}
+      </td>
+    </ng-container>
+
+    <!-- НОМЕР -->
+    <ng-container matColumnDef="number">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Номер</th>
+      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
+        {{row.analysis?.attributes_tree?.contract?.number?.value || '⚠️ не обнаружен'}}
       </td>
     </ng-container>
 
@@ -51,22 +72,6 @@
       </td>
     </ng-container>
 
-    <!-- НОМЕР -->
-    <ng-container matColumnDef="number">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Номер</th>
-      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        {{row.analysis?.attributes_tree?.contract?.number?.value || '⚠️ не обнаружен'}}
-      </td>
-    </ng-container>
-
-    <!-- ДАТА -->
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Дата</th>
-      <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        {{(row.analysis?.attributes_tree?.contract?.date?.value | date) || '⚠️ не обнаружен' }}
-      </td>
-    </ng-container>
-
     <!-- ОРГ -->
     <ng-container matColumnDef="org">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Наименование</th>
@@ -80,8 +85,7 @@
     <ng-container matColumnDef="contract_subject">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Предмет договора</th>
       <td mat-cell *matCellDef="let row" (click)="openDocument(row)">
-        {{ row.analysis?.attributes_tree?.contract?.subject?.value | translate}}<br>
-        <!-- <div class="small"> {{row.primary_subject | translate}}</div> -->
+        {{( row.analysis?.attributes_tree?.contract?.subject?.value | translate ) || '⚠️ не обнаружено'}}<br>
       </td>
     </ng-container>
 
@@ -176,6 +180,9 @@
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" class="detail-row"></tr>
 
   </table>
-  <mat-paginator [hidden]="documentId" [pageSizeOptions]="[5, 10, 15, 20]" [pageSize]="defPageSize"
+  <mat-paginator [hidden]="documentId || dataSource.length === 0" [pageSizeOptions]="[5, 10, 15, 20]" [pageSize]="defPageSize"
     [length]="totalCount"></mat-paginator>
+  <div *ngIf="dataSource.length === 0">
+    <h1 style="padding-left: 2%;">Документов с такими параметрами не имеется</h1>
+  </div>
 </div>
