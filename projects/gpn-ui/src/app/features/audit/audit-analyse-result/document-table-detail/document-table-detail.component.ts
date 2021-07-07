@@ -105,6 +105,7 @@ export class DocumentTableDetailComponent implements OnInit, OnDestroy {
   focusedId: string;
   _filterValue: [];
   totalCount: number;
+  isStarred: boolean = false;
   private destroyStream = new Subject<void>();
 
   constructor(
@@ -155,7 +156,11 @@ export class DocumentTableDetailComponent implements OnInit, OnDestroy {
         } else {
           this.spinner.hide();
           this.totalCount = this.dataSource.totalCount;
-          this.col = cols_by_type[this.dataSource.documentType].map(x => x);
+
+          if (this.dataSource) {
+            this.col = cols_by_type[this.dataSource.documentType].map(x => x);
+          }
+          this.changeDetectorRefs.detectChanges();
         }
       });
   }
@@ -176,7 +181,8 @@ export class DocumentTableDetailComponent implements OnInit, OnDestroy {
         this.paginator.pageSize,
         this.paginator.pageIndex,
         this.sort.active,
-        this.sort.direction
+        this.sort.direction,
+        this.isStarred
       );
     } else {
       this.dataSource.loadContract(
@@ -186,9 +192,15 @@ export class DocumentTableDetailComponent implements OnInit, OnDestroy {
         this.paginator.pageSize,
         this.paginator.pageIndex,
         this.sort.active,
-        this.sort.direction
+        this.sort.direction,
+        this.isStarred
       );
     }
+  }
+
+  selectStarred() {
+    this.isStarred = !this.isStarred;
+    this.loadChartersPage();
   }
 
   getAttrValue(attrName: string, doc, default_value = null) {
