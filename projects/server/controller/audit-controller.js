@@ -96,7 +96,7 @@ exports.getAudits = async (req, res) => {
     });
 
     const checks = [
-      { 'analysis.attributes': { $exists: true } },
+      { 'analysis.attributes_tree': { $exists: true } },
       { parserResponseCode: 200 }
     ];
 
