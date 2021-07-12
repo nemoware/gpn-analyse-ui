@@ -1,4 +1,4 @@
-<div style="position: fixed; z-index: 10; width: 100%">
+<div class="top-bar">
   <mat-toolbar *ngIf="this.audit">
     <span>
       <h2>
@@ -31,7 +31,7 @@
 
 </div>
 
-<div style="margin-top: 107px">
+<div style="overflow-y: auto; height: 87%;">
 
   <div *ngIf="selectedPage == 0">
     <ngx-spinner bdColor="rgba(250,250,250,0.2)" size="large" color="#0074D9" type="timer">

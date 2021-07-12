@@ -180,6 +180,7 @@ export class AuditAnalyseResultComponent
         } else {
           this.selectedPage = this.audit.typeViewResult;
         }
+        this.changeDetectorRefs.detectChanges();
       });
     this.auditservice
       .getResultState(this.IdAudit)
