@@ -17,16 +17,7 @@ import { Document } from '@app/models/document.model';
 import { AuditService } from '@app/features/audit/audit.service';
 import { LinksDocumentModel } from '@app/models/links-document-model';
 import { Tag } from '@app/models/legal-document';
-import {
-  faClock,
-  faFlagCheckered,
-  faChevronDown,
-  faChevronUp,
-  faSearch,
-  faEye,
-  faTimes,
-  faPlus
-} from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { SearchDocumentComponent } from '@app/features/audit/audit-editor/search-document/search-document.component';
 import { LinksDoc } from '@app/models/links-doc';
 import { takeUntil } from 'rxjs/operators';
@@ -205,7 +196,7 @@ export class DocumentDetailsComponent
       if (result) {
         this.auditservice
           .postLinks({ fromId: this.document._id, toId: result._id })
-          .subscribe(data => {
+          .subscribe(() => {
             this.refreshData();
           });
       }
@@ -221,7 +212,7 @@ export class DocumentDetailsComponent
       this.auditservice
         .deleteLinks(this.document._id, node._id)
         .pipe(takeUntil(this.destroyStream))
-        .subscribe(data => {
+        .subscribe(() => {
           this.refreshData();
         });
     }

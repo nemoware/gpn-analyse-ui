@@ -1,15 +1,18 @@
+<ngx-spinner bdColor="rgba(250,250,250,0.2)" size="large" color="#0074D9" type="timer">
+  <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
+</ngx-spinner>
+
 <div style="position: fixed; z-index: 10; width: 100%" >
   <mat-toolbar *ngIf="this.audit">
 
     <span class="fill-remaining-space"></span>
     <span class="headline-status"><span [class]="audit.status">{{ audit.status | translate}}</span></span>
-    <button [disabled] = "audit.status !== 'Done'" mat-raised-button color="accent" class="approve" (click)="approveAudit()"> Подтвердить </button>
   </mat-toolbar>
 
   <mat-tab-group color="accent" (selectedTabChange)="changePage($event)" [(selectedIndex)]="selectedPage">
-    <mat-tab label="Документы" [disabled]="maxPageIndex < 1"></mat-tab>
-    <mat-tab label="Анализ" [disabled]="maxPageIndex < 2"></mat-tab>
-    <mat-tab label="Нарушения" [disabled]="maxPageIndex < 3"></mat-tab>
+    <mat-tab label="Документы" [disabled]="maxPageIndex < 0"></mat-tab>
+    <mat-tab label="Анализ" [disabled]="maxPageIndex < 1"></mat-tab>
+    <mat-tab label="Нарушения" [disabled]="maxPageIndex < 2"></mat-tab>
 
   </mat-tab-group>
 
@@ -52,7 +55,6 @@
           <mat-divider></mat-divider>
         </div>
       </mat-tree-node>
-
     </mat-tree>
   </div>
 

@@ -14,9 +14,15 @@
 <mat-divider></mat-divider>
 <ng-container *ngIf="document.documentType!=='CHARTER'">
   <section>
-    <label class='field-label'>входит в проверку</label>
-    <span><a target="_blank" href="/#/audit/result/{{document.auditId}}">{{ document.audit.subsidiaryName }}<br>
+    <ng-container *ngIf="document.audit['pre-check']; else audit">
+      <label class='field-label'>входит в предпроверку от</label>
+      <span><a target="_blank" href="/#/pre-audit/result/{{document.auditId}}">{{ document.audit.createDate | date :'dd.MM.yyyy'}}</a></span>
+    </ng-container>
+    <ng-template #audit>
+      <label class='field-label'>входит в проверку</label>
+      <span><a target="_blank" href="/#/audit/result/{{document.auditId}}">{{ document.audit.subsidiaryName }}<br>
         {{ document.audit.auditStart | date :'dd.MM.yyyy'}} - {{document.audit.auditEnd | date : 'dd.MM.yyyy'}}</a></span>
+    </ng-template>
   </section>
 
   <section>

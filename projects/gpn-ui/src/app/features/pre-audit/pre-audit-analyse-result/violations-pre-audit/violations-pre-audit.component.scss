@@ -8,29 +8,16 @@
   background-color: aliceblue;
 }
 
-.doc_type {
-  display: block;
-}
-
-.number,
-.attribute {
+.org-type,
+.small {
   font-size: 85%;
   color: $gpn-labels;
-  background: none;
 }
 
-.reference {
-  color: $gpn-links-color;
-  cursor: pointer;
-  &:hover {
-    color: $gpn-links-color-hover;
-  }
+.org-alias {
+  color: $gpn-labels;
 }
 
-.mat-column-violation_reason {
-  width: 30%;
-}
-.mat-column-violation_type {
-  width: 30%;
-  padding: 0 $gpn-padding-half;
+.org-name {
+  display: block;
 }

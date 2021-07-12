@@ -9,14 +9,36 @@ import {
 } from '@angular/core';
 import {
   MatSort,
-  MatTableDataSource
+  MatTableDataSource,
+  MatTreeFlatDataSource,
+  MatTreeFlattener
 } from '@root/node_modules/@angular/material';
-import { AuditService } from '@app/features/audit/audit.service';
 import { ViolationModel } from '@app/models/violation-model';
 import { state, style, trigger } from '@root/node_modules/@angular/animations';
-import { TranslateService } from '@root/node_modules/@ngx-translate/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from '@root/node_modules/rxjs';
+import { PreAuditService } from '@app/features/pre-audit/pre-audit.service';
+import { FlatTreeControl } from '@root/node_modules/@angular/cdk/tree';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { Tag } from '@app/models/legal-document';
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
+
+interface Node {
+  _id?: string;
+  name: string;
+  children?: any[];
+  details?: Tag;
+  childCount?: number;
+  index?: number;
+  type?: string;
+  docs?: [];
+}
+
+const checkTypes = ['InsiderControl', 'InterestControl'];
 @Component({
   selector: 'gpn-violations-pre-audit',
   templateUrl: './violations-pre-audit.component.html',
@@ -27,53 +49,69 @@ import { Subject } from '@root/node_modules/rxjs';
   ]
 })
 export class ViolationsPreAuditComponent implements OnInit, OnDestroy {
-  col: string[] = ['filename', 'org2', 'violation', 'violation_reason', 'note'];
+  col: string[] = ['filename', 'org2'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
   violations: ViolationModel[];
+  treeControl;
+  treeFlattener;
+  faChevronDown = faChevronDown;
+  faChevronUp = faChevronUp;
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+  TREE_DATA: Node[] = [];
+  treeDataSource;
+  docs;
+  private _transformer = (node: Node, level: number) => {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      name: node.name,
+      childCount: node.childCount,
+      level: level,
+      index: node.index,
+      docs: node.docs
+    };
+  };
   private destroyStream = new Subject<void>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input() idAudit: string;
 
   constructor(
-    private auditservice: AuditService,
+    private preAuditService: PreAuditService,
     private changeDetectorRefs: ChangeDetectorRef
   ) {}
 
-  _sortingDataAccessor: (data, sortHeaderId: string) => string | number = (
-    data,
-    sortHeaderId: string
-  ): string | number => {
-    return this.getAttrValue(sortHeaderId, data);
-  };
-
-  getAttrValue(attr, data) {
-    switch (attr) {
-      case 'violation_type': {
-        return data.violation_type;
-      }
-      case 'document': {
-        return data.document.type;
-      }
-      case 'founding_document': {
-        return data.founding_document ? data.founding_document.type : 'null';
-      }
-      case 'violation_reason': {
-        return data.reference ? data.reference.type : 'null';
-      }
-    }
-  }
-
   ngOnInit() {
-    this.auditservice
+    this.treeFlattener = new MatTreeFlattener(
+      this._transformer,
+      node => node.level,
+      node => node.expandable,
+      node => node.children
+    );
+    this.treeControl = new FlatTreeControl<ExampleFlatNode>(
+      node => node.level,
+      node => node.expandable
+    );
+    this.preAuditService
       .getViolations(this.idAudit)
       .pipe(takeUntil(this.destroyStream))
       .subscribe(data => {
-        if (data) {
-          this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
+        if (data.length) {
+          this.docs = data[0].violations;
           this.dataSource.sort = this.sort;
-          this.dataSource.data = data.filter(x => {
-            return x.violation_type;
-          });
+          this.dataSource.data = data;
+          for (const t of checkTypes) {
+            let i = 0;
+            const node = { name: t, children: [], childCount: 0 };
+            const docs = { docs: [] };
+            for (const d of this.docs.filter(x => x.type === t)) {
+              d.index = i;
+              i++;
+              docs.docs.push(d);
+              node.childCount = docs.docs.length;
+            }
+            node.children.push(docs);
+            if (docs.docs.length > 0) this.TREE_DATA.push(node);
+          }
+          this.refreshTree();
           this.changeDetectorRefs.detectChanges();
         }
       });
@@ -91,5 +129,15 @@ export class ViolationsPreAuditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroyStream.next();
+  }
+
+  refreshTree() {
+    this.treeDataSource = new MatTreeFlatDataSource(
+      this.treeControl,
+      this.treeFlattener
+    );
+    this.treeDataSource.data = this.TREE_DATA;
+    this.treeControl.expandAll();
+    this.changeDetectorRefs.detectChanges();
   }
 }

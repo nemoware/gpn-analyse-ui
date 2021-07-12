@@ -13,6 +13,7 @@ import { AuditModule } from '@app/features/audit/audit.module';
 import { ViolationsPreAuditComponent } from './pre-audit-analyse-result/violations-pre-audit/violations-pre-audit.component';
 import { PreAuditDetailComponent } from './pre-audit-analyse-result/pre-audit-detail/pre-audit-detail.component';
 import { FilterModule } from '../filter/filter.module';
+import { ViolationDetailComponent } from './pre-audit-analyse-result/violation-detail/violation-detail.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FilterModule } from '../filter/filter.module';
     CreatePreAuditComponent,
     PreAuditAnalyseResultComponent,
     ViolationsPreAuditComponent,
-    PreAuditDetailComponent
+    PreAuditDetailComponent,
+    ViolationDetailComponent
   ],
   entryComponents: [CreatePreAuditComponent],
   imports: [

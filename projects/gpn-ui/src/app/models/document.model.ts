@@ -45,6 +45,7 @@ export interface Document {
     auditEnd: Date;
     status: string;
     ftpUrl: string;
+    createDate: string;
   };
   statusAudit: string;
   starred: boolean;

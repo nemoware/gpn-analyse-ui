@@ -24,7 +24,11 @@ documentType
 `;
 
 function SetSortForColumn(sort, typeDoc) {
-  if (!typeDoc || typeDoc == 'SUPPLEMENTARY_AGREEMENT' || typeDoc == 'ANNEX') {
+  if (
+    !typeDoc ||
+    typeDoc === 'SUPPLEMENTARY_AGREEMENT' ||
+    typeDoc === 'ANNEX'
+  ) {
     typeDoc = 'CONTRACT';
   }
   typeDoc = typeDoc.toLowerCase();
@@ -351,12 +355,6 @@ exports.getTreeFromDocuments = async (req, res) => {
       return i;
     });
 
-    function compare(a, b) {
-      if (a.starred < b.starred) return sort;
-      if (a.starred > b.starred) return sort * -1;
-      return 0;
-    }
-
     res.send({
       arrOfRequiredContract: arrayOfAllDocument.filter(
         i => i.parse.documentType === documentType
@@ -592,7 +590,7 @@ exports.getResultStateByAudit = async (req, res) => {
 
     const arr = ['undefined', '5'];
     const indexOf = result.findIndex(i => i.state == '0');
-    if (indexOf == -1) {
+    if (indexOf === -1) {
       result.push({
         state: '0',
         percent: 0,
@@ -730,7 +728,7 @@ exports.getDocument = async (req, res) => {
       } else {
         let audit = await Audit.findOne(
           { _id: document.auditId },
-          `subsidiary.name auditStart auditEnd status -_id pre-check`
+          `subsidiary.name auditStart auditEnd status -_id pre-check createDate`
         ).lean();
         const type = types.find(t => t._id.toLowerCase() === documentType);
         const number =

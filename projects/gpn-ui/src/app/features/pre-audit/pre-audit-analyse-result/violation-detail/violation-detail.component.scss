@@ -1,0 +1,21 @@
+@import '../../../../../styles-variables.scss';
+
+.mat-table {
+  width: 100%;
+}
+
+.mat-row:hover {
+  background-color: aliceblue;
+}
+
+.mat-column-violation {
+  width: 60% !important;
+}
+
+.mat-column-violation_reason {
+  width: 20% !important;
+}
+
+.mat-column-notes {
+  width: 20% !important;
+}

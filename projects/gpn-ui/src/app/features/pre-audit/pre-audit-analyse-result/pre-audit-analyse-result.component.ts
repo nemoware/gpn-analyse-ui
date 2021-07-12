@@ -113,7 +113,6 @@ export class PreAuditAnalyseResultComponent
     private auditservice: AuditService,
     private changeDetectorRefs: ChangeDetectorRef,
     private router: Router,
-    public datepipe: DatePipe,
     private _ngZone: NgZone,
     private spinner: NgxSpinnerService,
     public dialog: MatDialog,
@@ -142,6 +141,7 @@ export class PreAuditAnalyseResultComponent
         this.audit = data;
         this.maxPageIndex = this.audit.typeViewResult;
         this.selectedPage = this.audit.typeViewResult;
+        if (this.selectedPage === 0) this.refreshData();
       });
   }
 
@@ -151,14 +151,13 @@ export class PreAuditAnalyseResultComponent
     this.documentCount = 0;
     this.checkCount = 0;
     this.TREE_DATA = [];
-
     if (this.selectedPage <= 1) {
+      this.spinner.show();
       this.preAuditService
         .getDocuments(this.IdAudit)
         .pipe(takeUntil(this.destroyStream))
         .subscribe(data => {
           this.docs = data;
-
           if (this.audit.typeViewResult === 1) {
             this.docs = this.docs.filter(
               x => x.analysis != null || x.user != null
@@ -207,6 +206,7 @@ export class PreAuditAnalyseResultComponent
               this.TREE_DATA.push(node);
           }
           this.refreshTree();
+          this.spinner.hide();
         });
     }
     this.loading = false;
@@ -218,11 +218,6 @@ export class PreAuditAnalyseResultComponent
       this.treeFlattener
     );
     this.dataSource.data = this.TREE_DATA;
-    /*if (this.selectedPage === 0) this.treeControl.expandAll();
-    else
-      for (const n of this.treeControl.dataNodes) {
-        if (n.level === 0) this.treeControl.expand(n);
-      }*/
     this.checkCount = this.documentCount - this.errorCount;
     this.changeDetectorRefs.detectChanges();
   }
@@ -242,22 +237,6 @@ export class PreAuditAnalyseResultComponent
 
   mouseOver(node) {
     this.mouseOverID = node._id;
-  }
-
-  approveAudit() {
-    if (
-      confirm(
-        'Вы действительно хотите подтвердить проверку? После подтверждения режим обучения и корректировки атрибутов будет недоступен!'
-      )
-    ) {
-      const approve = this.auditservice
-        .postApprove(this.IdAudit)
-        .subscribe(() => {
-          this.audit.status = 'Approved';
-          approve.unsubscribe();
-          this.changeDetectorRefs.detectChanges();
-        });
-    }
   }
 
   getAttrValue(attrName: string, doc, default_value = null) {

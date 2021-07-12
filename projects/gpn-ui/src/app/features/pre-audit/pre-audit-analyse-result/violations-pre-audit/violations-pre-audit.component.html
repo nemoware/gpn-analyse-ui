@@ -3,45 +3,41 @@
   <!-- filename -->
   <ng-container matColumnDef="filename">
     <th mat-header-cell *matHeaderCellDef>Имя файла</th>
-    <td mat-cell *matCellDef="let row">{{row.filename}}</td>
+    <td mat-cell *matCellDef="let row">{{row.document_filename}}</td>
   </ng-container>
 
   <!-- Контрагент -->
   <ng-container matColumnDef="org2">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Контрагент</th>
     <td mat-cell *matCellDef="let row">
-      <span >{{ row.org_name}}</span>
-    </td>
+      <span class="org-type">{{ row?.orgs[0]?.type?.value}}</span>
+      <span class="org-name">{{ row?.orgs[0]?.name?.value || '⚠️ не обнаружен'}}</span>
+      <span class="org-alias">{{row?.orgs[0]?.alias?.value }}</span>    </td>
   </ng-container>
-
-  <!-- Нарушение -->
-  <ng-container matColumnDef="violation">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Нарушение</th>
-    <td mat-cell *matCellDef="let row">
-      <span >{{ row.org_name}}</span>
-    </td>
-  </ng-container>
-
-  <!-- Основание нарушения -->
-  <ng-container matColumnDef="violation_reason">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Основание нарушения</th>
-    <td mat-cell *matCellDef="let row">
-      <span >{{ row.violation_reason}}</span>
-    </td>
-  </ng-container>
-
-
-  <!-- Примечание -->
-  <ng-container matColumnDef="note">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Примечание</th>
-    <td mat-cell *matCellDef="let row">
-      <span >{{ row.note}}</span>
-    </td>
-  </ng-container>
-
-
   <tr mat-header-row *matHeaderRowDef="col"></tr>
   <tr mat-row *matRowDef="let row; columns: col;" class="element-row"></tr>
-
-
 </table>
+
+
+<mat-tree [dataSource]="treeDataSource" [treeControl]="treeControl">
+
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <gpn-violation-detail [documents]="node" style="width: 100%"></gpn-violation-detail>
+  </mat-tree-node>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <div style="width: 100%">
+      <div class="row">
+        <div class="col">
+          <ng-container>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+              <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
+              <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
+            </button>
+            {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
+          </ng-container>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+  </mat-tree-node>
+</mat-tree>

@@ -103,7 +103,7 @@ exports.getPreAudits = async (req, res) => {
     let audits = await Audit.find(where, null, { lean: true });
 
     const checks = [
-      { 'analysis.attributes': { $exists: true } },
+      { 'analysis.attributes_tree': { $exists: true } },
       { parserResponseCode: 200 }
     ];
 
@@ -125,7 +125,6 @@ exports.getPreAudits = async (req, res) => {
         }
       }
     }
-
     audits.sort((a, b) => b.sortDate - a.sortDate);
 
     res.send(audits);
@@ -154,9 +153,9 @@ exports.getPreAudit = async (req, res) => {
       audit &&
       ['Finalizing', 'Done', 'Approved'].includes(audit.status)
     ) {
-      audit.typeViewResult = 3;
+      audit.typeViewResult = 2;
     } else {
-      audit.typeViewResult = checks.length;
+      audit.typeViewResult = 1;
       for (let check of checks) {
         check.auditId = audit._id;
         if (await Document.findOne(check)) {
@@ -224,21 +223,34 @@ exports.getDocuments = async (req, res) => {
         auditId,
         parserResponseCode: 200
       },
-      `analysis.attributes_tree user.attributes_tree filename state documentType`,
+      `analysis.attributes_tree analysis.analyze_timestamp user.attributes_tree filename state documentType`,
       { lean: true }
     );
 
     documents = documents.map(d => {
       if (d.user?.attributes_tree) {
-        d.attributes_tree = d.user.attributes_tree;
+        d.attributes_tree = d.user?.attributes_tree;
       } else {
-        d.attributes_tree = d.analysis.attributes_tree;
-        delete d.analysis;
+        d.attributes_tree = d.analysis?.attributes_tree;
       }
       return d;
     });
 
     res.send(documents);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};
+
+exports.getViolations = async (req, res) => {
+  if (!req.query.id) {
+    return res.status(400).send('Required parameter `id` is not passed');
+  }
+
+  try {
+    const audit = await Audit.findById(req.query.id, `violations`).lean();
+    let violations = audit.violations;
+    res.send(violations);
   } catch (err) {
     logger.logError(req, res, err, 500);
   }
