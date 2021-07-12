@@ -199,6 +199,7 @@ export class PreAuditAnalyseResultComponent
             }
 
             if (this.selectedPage === 1) {
+              console.log('1234');
               node.children.push(docs);
               node.childCount = docs.docs.length;
             } else node.childCount = node.children.length;
@@ -242,22 +243,6 @@ export class PreAuditAnalyseResultComponent
 
   mouseOver(node) {
     this.mouseOverID = node._id;
-  }
-
-  approveAudit() {
-    if (
-      confirm(
-        'Вы действительно хотите подтвердить проверку? После подтверждения режим обучения и корректировки атрибутов будет недоступен!'
-      )
-    ) {
-      const approve = this.auditservice
-        .postApprove(this.IdAudit)
-        .subscribe(() => {
-          this.audit.status = 'Approved';
-          approve.unsubscribe();
-          this.changeDetectorRefs.detectChanges();
-        });
-    }
   }
 
   getAttrValue(attrName: string, doc, default_value = null) {

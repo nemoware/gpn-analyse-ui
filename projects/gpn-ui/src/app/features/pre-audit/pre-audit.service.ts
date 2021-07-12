@@ -7,6 +7,7 @@ import { Observable } from '@root/node_modules/rxjs';
 import { Audit } from '@app/models/audit.model';
 import { RelevanceModel } from '@app/models/relevance.model';
 import { Document } from '@app/models/document.model';
+import { PreAuditViolationModel } from '@app/models/pre-audit-violation-model';
 
 const api = '/api';
 
@@ -72,6 +73,13 @@ export class PreAuditService {
     }
     return this.http.get<Array<Document>>(`${api}/preAudit/documentList`, {
       params: httpParams
+    });
+  }
+
+  public getViolations(id: string): Observable<PreAuditViolationModel> {
+    const urlParams = new HttpParams().set('id', id.toString());
+    return this.http.get<PreAuditViolationModel>(`${api}/preAudit/violations`, {
+      params: urlParams
     });
   }
 }

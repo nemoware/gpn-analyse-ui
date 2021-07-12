@@ -34,3 +34,17 @@
   width: 30%;
   padding: 0 $gpn-padding-half;
 }
+
+.org-type,
+.small {
+  font-size: 85%;
+  color: $gpn-labels;
+}
+
+.org-alias {
+  color: $gpn-labels;
+}
+
+.org-name {
+  display: block;
+}

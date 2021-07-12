@@ -3,22 +3,25 @@
   <!-- filename -->
   <ng-container matColumnDef="filename">
     <th mat-header-cell *matHeaderCellDef>Имя файла</th>
-    <td mat-cell *matCellDef="let row">{{row.filename}}</td>
+    <td mat-cell *matCellDef="let row">{{row.document_filename}}</td>
   </ng-container>
 
   <!-- Контрагент -->
   <ng-container matColumnDef="org2">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Контрагент</th>
     <td mat-cell *matCellDef="let row">
-      <span >{{ row.org_name}}</span>
-    </td>
+      <span class="org-type">{{ row?.orgs[0]?.type?.value}}</span>
+      <span class="org-name">{{ row?.orgs[0]?.name?.value || '⚠️ не обнаружен'}}</span>
+      <span class="org-alias">{{row?.orgs[0]?.alias?.value }}</span>    </td>
   </ng-container>
 
   <!-- Нарушение -->
   <ng-container matColumnDef="violation">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Нарушение</th>
     <td mat-cell *matCellDef="let row">
-      <span >{{ row.org_name}}</span>
+      <mat-list-item *ngFor='let item of row.violations'>
+        {{item.type | translate}}
+      </mat-list-item>
     </td>
   </ng-container>
 
@@ -26,7 +29,9 @@
   <ng-container matColumnDef="violation_reason">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Основание нарушения</th>
     <td mat-cell *matCellDef="let row">
-      <span >{{ row.violation_reason}}</span>
+      <mat-list-item *ngFor='let item of row.violations'>
+        {{item.reason}}
+      </mat-list-item>
     </td>
   </ng-container>
 
@@ -35,13 +40,37 @@
   <ng-container matColumnDef="note">
     <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Примечание</th>
     <td mat-cell *matCellDef="let row">
-      <span >{{ row.note}}</span>
+      <mat-list-item *ngFor='let violation of row.violations'>
+        <mat-list-item *ngFor='let note of violation.notes'>
+          {{note}}
+        </mat-list-item>
+      </mat-list-item>
     </td>
   </ng-container>
-
-
   <tr mat-header-row *matHeaderRowDef="col"></tr>
   <tr mat-row *matRowDef="let row; columns: col;" class="element-row"></tr>
-
-
 </table>
+
+<mat-tree [dataSource]="treeDataSource" [treeControl]="treeControl">
+
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <div style="width: 100%">
+      <div class="row">
+        <div class="col">
+          <ng-container *ngIf="node.name; else loading">
+          <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+            <fa-icon [icon]="faChevronDown" *ngIf="!treeControl.isExpanded(node)"></fa-icon>
+            <fa-icon [icon]="faChevronUp" *ngIf="treeControl.isExpanded(node)"></fa-icon>
+          </button>
+            {{ node.name | translate }} {{ '(' + node.childCount + ')' }}
+          </ng-container>
+          <ng-template #loading>
+            {{node.type}}
+          </ng-template>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+  </mat-tree-node>
+</mat-tree>
+

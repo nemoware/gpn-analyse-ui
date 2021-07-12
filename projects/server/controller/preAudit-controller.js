@@ -243,3 +243,17 @@ exports.getDocuments = async (req, res) => {
     logger.logError(req, res, err, 500);
   }
 };
+
+exports.getViolations = async (req, res) => {
+  if (!req.query.id) {
+    return res.status(400).send('Required parameter `id` is not passed');
+  }
+
+  try {
+    const audit = await Audit.findById(req.query.id, `violations`).lean();
+    let violations = audit.violations;
+    res.send(violations);
+  } catch (err) {
+    logger.logError(req, res, err, 500);
+  }
+};

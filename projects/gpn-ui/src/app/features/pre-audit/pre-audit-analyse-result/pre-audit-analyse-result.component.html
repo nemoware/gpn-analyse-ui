@@ -3,7 +3,6 @@
 
     <span class="fill-remaining-space"></span>
     <span class="headline-status"><span [class]="audit.status">{{ audit.status | translate}}</span></span>
-    <button [disabled] = "audit.status !== 'Done'" mat-raised-button color="accent" class="approve" (click)="approveAudit()"> Подтвердить </button>
   </mat-toolbar>
 
   <mat-tab-group color="accent" (selectedTabChange)="changePage($event)" [(selectedIndex)]="selectedPage">
@@ -52,7 +51,6 @@
           <mat-divider></mat-divider>
         </div>
       </mat-tree-node>
-
     </mat-tree>
   </div>
 
