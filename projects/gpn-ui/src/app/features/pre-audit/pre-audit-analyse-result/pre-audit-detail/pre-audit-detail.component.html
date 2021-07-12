@@ -50,7 +50,9 @@
   <ng-container matColumnDef="insider_information">
     <th mat-header-cell *matHeaderCellDef >Инсайд</th>
     <td mat-cell *matCellDef="let row">
-      {{(row?.attributes_tree.contract?.insideInformation?.value | translate) || 'Нет'}}
+      {{(row?.attributes_tree.contract?.insideInformation?.value | translate)
+    || (row?.attributes_tree.contract?.subject?.insideInformation?.value | translate)
+    || 'Нет'}}
     </td>
   </ng-container>
 
