@@ -5,7 +5,6 @@ import {
   Input,
   OnInit
 } from '@angular/core';
-import { AuthGroup } from '@app/models/auth.group';
 import { AuthorizationData } from '@core/authorization/authorization.data';
 
 @Directive({
@@ -22,11 +21,7 @@ export class HideDirective implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit(): void {
-    let page = this.appPage;
-    if (page === 'handbook' || page === 'charter') {
-      page = 'audit';
-    }
-    const res = this.authorizationService.hasAccess(page);
+    const res = this.authorizationService.hasAccess(this.appPage);
     if (!res) {
       this.el.nativeElement.style.display = 'none';
     }

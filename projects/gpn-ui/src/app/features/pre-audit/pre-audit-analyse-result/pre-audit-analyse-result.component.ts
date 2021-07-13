@@ -223,7 +223,7 @@ export class PreAuditAnalyseResultComponent
   }
 
   openEditor(node) {
-    this.router.navigate(['audit/view/', node._id]);
+    this.router.navigate(['pre-audit/view/', node._id]);
   }
 
   openError(node) {

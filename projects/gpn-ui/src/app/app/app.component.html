@@ -28,11 +28,11 @@
 
           <span class="d-none d-md-inline" *ngIf="loadedUser">
             <ng-container *ngFor="let item of navigation">
-              <button mat-button *ngIf="item.link!== 'handbook'" class="nav-button"  [routerLink]="[item.link]"
+              <button mat-button *ngIf="item.link !== 'handbook'" class="nav-button"  [routerLink]="[item.link]"
                       routerLinkActive="mat-accent" gpnHide [appPage] = "item.link">
                 {{ item.label }}
               </button>
-              <button mat-button *ngIf="item.link=== 'handbook'" class="nav-button"
+              <button mat-button *ngIf="item.link === 'handbook'" class="nav-button" gpnHide [appPage] = "item.link"
                       routerLinkActive="mat-accent" [ngClass]="isActive? 'mat-accent':''"
                        [matMenuTriggerFor]="menu">
                 {{ item.label }}

@@ -66,7 +66,7 @@ const routes: Routes = [
         m => m.RiskMatrixModule
       ),
     canActivate: [AppPageGuard],
-    data: { appPage: 'audit' }
+    data: { appPage: 'handbook' }
   },
   {
     path: 'limitValues',
@@ -75,7 +75,7 @@ const routes: Routes = [
         m => m.LimitValuesModule
       ),
     canActivate: [AppPageGuard],
-    data: { appPage: 'audit' }
+    data: { appPage: 'handbook' }
   },
   {
     path: 'bookValues',
@@ -84,7 +84,7 @@ const routes: Routes = [
         m => m.BookValuesModule
       ),
     canActivate: [AppPageGuard],
-    data: { appPage: 'audit' }
+    data: { appPage: 'handbook' }
   },
   {
     path: 'affiliatesList',
@@ -93,7 +93,7 @@ const routes: Routes = [
         m => m.AffiliatesListModule
       ),
     canActivate: [AppPageGuard],
-    data: { appPage: 'audit' }
+    data: { appPage: 'handbook' }
   },
   {
     path: '**',

@@ -2,5 +2,7 @@ export enum AppPages {
   'audit',
   'admin',
   'events',
-  'pre-audit'
+  'pre-audit',
+  'charter',
+  'handbook'
 }

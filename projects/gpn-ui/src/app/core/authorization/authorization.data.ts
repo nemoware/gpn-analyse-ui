@@ -22,7 +22,8 @@ export class AuthorizationData {
         return (
           role.appPage === authPage ||
           (role.appPage === 'audit' &&
-            (authPage === 'charter' || authPage === 'handbook'))
+            (authPage === 'charter' || authPage === 'handbook')) ||
+          (role.appPage === 'pre-audit' && authPage === 'handbook')
         );
       })
     ) {

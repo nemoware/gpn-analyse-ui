@@ -78,7 +78,7 @@ export class PreAuditDetailComponent implements OnInit, OnDestroy {
 
   openDocument(element) {
     window.open(
-      window.location.origin + '/#/audit/edit/' + element._id,
+      window.location.origin + '/#/pre-audit/edit/' + element._id,
       '_blank'
     );
   }
