@@ -85,4 +85,9 @@ export class PreAuditService {
       }
     );
   }
+
+  deleteAudit(id: string) {
+    const urlParams = new HttpParams().set('id', id.toString());
+    return this.http.delete(`${api}/audit`, { params: urlParams });
+  }
 }

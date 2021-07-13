@@ -17,12 +17,15 @@ import { takeUntil, tap } from '@root/node_modules/rxjs/operators';
 import { PreAuditDataSource } from '@app/features/pre-audit/pre-audit-data-source';
 import { CreatePreAuditComponent } from '@app/features/pre-audit/create-pre-audit/create-pre-audit.component';
 import { FilterPages } from '@app/models/filter.pages';
+import { DatePipe } from '@root/node_modules/@angular/common';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'gpn-list-pre-audit',
   templateUrl: './list-pre-audit.component.html',
   styleUrls: ['./list-pre-audit.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DatePipe]
 })
 export class ListPreAuditComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -32,12 +35,20 @@ export class ListPreAuditComponent implements OnInit {
     private preAuditService: PreAuditService,
     private spinner: NgxSpinnerService,
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    public datePipe: DatePipe
   ) {}
 
   defPageSize = 15;
   dataSource: PreAuditDataSource;
-  columns: string[] = ['user', 'checkType', 'files', 'createDate', 'status'];
+  columns: string[] = [
+    'user',
+    'checkType',
+    'files',
+    'createDate',
+    'status',
+    'events'
+  ];
   auditStatuses: string[] = [
     'InWork',
     'Loading',
@@ -52,6 +63,7 @@ export class ListPreAuditComponent implements OnInit {
   filterPage = FilterPages;
   bookValueRelevance: boolean;
   affiliatesListReference: boolean;
+  faTrashAlt = faTrashAlt;
 
   ngOnInit() {
     this.dataSource = new PreAuditDataSource(this.preAuditService);
@@ -122,5 +134,29 @@ export class ListPreAuditComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {
       this.loadAuditsPage();
     });
+  }
+
+  deleteAudit(element, event) {
+    event.stopPropagation();
+    if (element != null) {
+      if (
+        confirm(
+          `Вы действительно хотите удалить предпроверку от ${this.datePipe.transform(
+            element.createDate,
+            'dd.MM.yyyy'
+          )}?`
+        )
+      ) {
+        this.preAuditService
+          .deleteAudit(element._id)
+          .pipe(takeUntil(this.destroyStream))
+          .subscribe(
+            () => this.loadAuditsPage(),
+            error => {
+              alert(error.message());
+            }
+          );
+      }
+    }
   }
 }

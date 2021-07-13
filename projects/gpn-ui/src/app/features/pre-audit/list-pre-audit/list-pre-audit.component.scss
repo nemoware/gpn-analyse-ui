@@ -16,19 +16,23 @@ table {
   width: 10% !important;
 }
 
-.mat-column-auditStart {
-  width: 10% !important;
+.mat-column-checkType {
+  width: 35% !important;
 }
 
-.mat-column-auditEnd {
-  width: 10% !important;
-}
-
-.mat-column-checkedDocumentCount {
-  width: 5% !important;
+.mat-column-files {
+  width: 30% !important;
 }
 
 .mat-column-createDate {
+  width: 10% !important;
+}
+
+.mat-column-status {
+  width: 10% !important;
+}
+
+.mat-column-events {
   width: 10% !important;
 }
 

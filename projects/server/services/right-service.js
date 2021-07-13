@@ -31,6 +31,8 @@ module.exports = async (req, res, next) => {
       check = !!roles.find(r => r.appPage === 'admin');
       break;
     case 'audit':
+      check = !!roles.find(r => r.appPage === 'audit');
+      break;
     case 'document':
       check = !!roles.find(
         r => r.appPage === 'audit' || r.appPage === 'pre-audit'
@@ -43,7 +45,6 @@ module.exports = async (req, res, next) => {
       check = !!roles.find(r => r.appPage === 'pre-audit');
       break;
   }
-
   if (!check) return res.sendStatus(403);
 
   res.locals.user.roles = roles;
