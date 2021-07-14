@@ -872,9 +872,12 @@ exports.updateDocument = async (req, res) => {
           (warning.code === 'date_not_found' && user.date) ||
           (warning.code === 'number_not_found' && user.number) ||
           (warning.code === 'contract_value_not_found' &&
-            user['sign_value_currency/value']) ||
-          (warning.code === 'contract_value_not_found' &&
-            user['subject/sign_value_currency/currency']) ||
+            (user['price/amount'] ||
+              user['price/amount_brutto'] ||
+              user['price/amount_netto'] ||
+              user['subject/price/amount'] ||
+              user['subject/price/amount_brutto'] ||
+              user['subject/price/amount_netto'])) ||
           (warning.code === 'protocol_agenda_not_found' &&
             user['agenda_item']) ||
           (warning.code === 'org_name_not_found' &&
@@ -884,7 +887,7 @@ exports.updateDocument = async (req, res) => {
           (warning.code === 'org_struct_level_not_found' &&
             user['org_structural_level']) ||
           (warning.code === 'value_section_not_found' &&
-            user['sign_value_currency']) ||
+            (user['price'] || user['subject/price'])) ||
           ((warning.code === 'subject_section_not_found' ||
             warning.code === 'contract_subject_not_found' ||
             warning.code === 'contract_subject_section_not_found') &&
