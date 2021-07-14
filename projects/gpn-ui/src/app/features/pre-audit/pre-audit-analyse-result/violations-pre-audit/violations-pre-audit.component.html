@@ -15,7 +15,7 @@
       <span class="org-alias">{{row?.orgs[0]?.alias?.value }}</span>    </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="col"></tr>
-  <tr mat-row *matRowDef="let row; columns: col;" class="element-row"></tr>
+  <tr mat-row *matRowDef="let row; columns: col;" class="element-row" (click)="openDocument(row)"></tr>
 </table>
 
 

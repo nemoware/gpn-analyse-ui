@@ -117,12 +117,9 @@ export class ViolationsPreAuditComponent implements OnInit, OnDestroy {
       });
   }
 
-  openDocument(id, attribute?) {
+  openDocument(element) {
     window.open(
-      window.location.origin +
-        '/#/audit/edit/' +
-        id +
-        (attribute ? '?attribute=' + attribute : ''),
+      window.location.origin + '/#/pre-audit/edit/' + element.document_id,
       '_blank'
     );
   }
