@@ -52,7 +52,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     'ANNEX'
   ];
   subjects = [];
-
+  priceAtr;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -62,6 +62,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.getPrice();
     this.IdDocument = this.activatedRoute.snapshot.paramMap.get('id');
     this.editmode = this.activatedRoute.snapshot.data['editmode'];
     this.selectedAttribute = this.activatedRoute.snapshot.queryParams.attribute;
@@ -106,6 +107,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.getAttrValue('subject')) {
           this.subjects.push(this.getAttrValue('subject'));
         }
+        this.getPrice();
         this.changeDetectorRefs.detectChanges();
       });
   }
@@ -176,6 +178,22 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     return default_value;
   }
 
+  getPrice() {
+    if (this.attributes) {
+      const atr = this.attributes.find(
+        x =>
+          x.key === 'subject/price/amount' ||
+          x.key === 'price/amount' ||
+          x.key === 'subject/price/amount_brutto' ||
+          x.key === 'price/amount_brutto' ||
+          x.key === 'price/amount_netto' ||
+          x.key === 'price/amount_netto'
+      );
+      if (atr) {
+        this.priceAtr = atr;
+      }
+    }
+  }
   onClick() {
     this.document.isActive = !this.document.isActive;
     this.auditservice

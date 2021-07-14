@@ -1,9 +1,6 @@
 <mat-sidenav-container class="fixed-layout" *ngIf="document" autosize>
-
   <mat-sidenav mode="side" opened class="left_group">
-
     <mat-tab-group color="accent" animationDuration="0ms" dynamicHeight='true'>
-
       <mat-tab label="Детали">
         <div class="container">
           <gpn-document-details [document]="document" [editable]="editmode">
@@ -19,7 +16,6 @@
           </ng-container>
         </div>
       </mat-tab>
-
       <mat-tab label="Оглавление">
         <div class="container">
           <gpn-tree-attributes
@@ -32,15 +28,9 @@
           ></gpn-tree-attributes>
         </div>
       </mat-tab>
-
     </mat-tab-group>
-
   </mat-sidenav>
   <mat-sidenav-content>
-
-
-
-
     <div class="actions-container">
       <button (click)="addViolation()" color="primary" class='floating-button' mat-mini-fab
               matTooltip="Добавить нарушение">
@@ -69,7 +59,6 @@
 
 -->
     </div>
-
     <!-- HEADER -->
     <div class="chart-container">
       <mat-form-field style="width: 25%" color="accent" *ngIf="document.statusAudit!=='Approved'">
@@ -99,12 +88,15 @@
           </h3>
         </div>
           <div class="col-4">
-            <label>Стоимость договора</label>
+            <label>Стоимость договора
+              <ng-container *ngIf="priceAtr && priceAtr.kind === 'amount_brutto'">с налогом</ng-container>
+              <ng-container *ngIf="priceAtr && priceAtr.kind === 'amount_netto'">без налога</ng-container>
+            </label>
             <h3>
-              <ng-container *ngIf="!getAttrValue('contract_price_amount')">
+              <ng-container *ngIf="!priceAtr">
                 Не обнаружена
               </ng-container>
-              <div>{{ getAttrValue('contract_price_amount') | currency:getAttrValue('contract_price_currency')}}</div>
+              <div>{{ priceAtr && priceAtr.value | currency:getAttrValue('contract_price_currency')}}</div>
             </h3>
           </div>
         </ng-container>
@@ -123,38 +115,27 @@
         </div>
       </div>
     </div>
-
     <div *ngIf="document.documentType!=='ANNEX' && hasWarnings()" class="balloon warnings">
       <div *ngFor="let warning of document.analysis.warnings" class='warning'>
         {{ warning.code | translate }} <span class="warning-comment">{{ warning.comment }}</span>
       </div>
     </div>
-
     <mat-divider></mat-divider>
-
     <ng-container *ngIf="document.documentType == 'CHARTER' && attributes">
       <div class="chart-container">
         <label>компетенции органов управления и пороговые суммы</label>
         <gpn-competencecharts #competencecharts *ngIf="document.documentType == 'CHARTER' && attributes"
           (goToAttribute)="goToAttribute($event)" [attributes]="attributes"></gpn-competencecharts>
       </div>
-
       <mat-divider></mat-divider>
     </ng-container>
-
-
     <div class="text-container">
       <label>текст документа</label>
       <div id="container_view_document">
-
         <gpn-view-document [document]="document" [kinds]="documentType" [editmode]="editmode" [attributes]="attributes"
                            [selectedAttribute] = "selectedAttribute"
           (changeAttribute)="changeAttribute($event)" (refresh)="refresh()"></gpn-view-document>
       </div>
     </div>
-
-
-
-
   </mat-sidenav-content>
 </mat-sidenav-container>
