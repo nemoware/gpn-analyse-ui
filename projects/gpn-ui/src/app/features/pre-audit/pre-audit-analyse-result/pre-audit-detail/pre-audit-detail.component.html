@@ -38,9 +38,9 @@
     <td mat-cell *matCellDef="let row">
       {{
       (row.attributes_tree?.contract?.price?.amount_netto?.value |
-        currency:row.attributes_tree?.contract?.price?.currency?.value) ||
+        currency:row.attributes_tree?.contract?.price?.currency?.value || ' ') ||
       (row.attributes_tree?.contract?.subject?.price?.amount_netto?.value |
-        currency:row.attributes_tree?.contract?.subject?.price?.currency?.value)
+        currency:row.attributes_tree?.contract?.subject?.price?.currency?.value || ' ')
       || '⚠️ не обнаружена'
       }}
     </td>
