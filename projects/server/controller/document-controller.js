@@ -2306,7 +2306,7 @@ translate = message => {
 
 //Если у атрибута нет значения, то записываем туда пустую строку для валидации по схеме
 setValue = attribute => {
-  if (!attribute.value) {
+  if (attribute.value === null) {
     attribute.value = '';
   }
 };
