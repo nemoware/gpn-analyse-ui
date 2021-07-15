@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   AfterViewInit,
   ViewChild,
   OnDestroy
@@ -29,7 +28,7 @@ export class EventViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  defPageSize = 20;
+  defPageSize = 15;
   dataSource: EventDataSource;
   displayedColumns: string[] = ['time', 'login', 'name', 'details'];
   eventsType = [];
