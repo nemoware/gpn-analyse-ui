@@ -170,6 +170,7 @@ export class AuditEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           x => x.key === 'subject/price/currency' || x.key === 'price/currency'
         );
         if (atr) return atr.value;
+        else return ' ';
       } else {
         const atr = this.attributes.find(x => x.key === attrName);
         if (atr) return atr.value;
