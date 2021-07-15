@@ -173,7 +173,7 @@ exports.deleteBookValue = async (req, res) => {
 
 exports.updateBookValue = async (req, res) => {
   const id = req.body._id;
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const bookValue = await BookValue.findById(id);
     if (!bookValue) {

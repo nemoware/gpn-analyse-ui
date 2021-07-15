@@ -40,7 +40,7 @@ export class AffiliatesListDataSource implements DataSource<any> {
         finalize(() => this.loadingSubject.next(false))
       )
       .subscribe(data => {
-        console.log(data);
+        // console.log(data);
         // @ts-ignore
         this.totalCount = data.count;
         // @ts-ignore
