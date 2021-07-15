@@ -1,70 +1,79 @@
-<div class="mat-elevation-z10 container">
-  <label style="margin-top: 5px; font-size:16px; font-weight: bold;">Панель фильтров</label>
-  <hr>
-  <mat-form-field appearance="legacy" style="width: 100%"  *ngIf="filterPage !== pagesFromModel['pre-audit']; else Block">
-    <input matInput placeholder={{placeHolderForHtml[0]}} [(ngModel)]="subsidiaryName">
-  </mat-form-field>
-
-  <ng-template #Block><mat-form-field style="width: 100%" color="accent">
-    <mat-label>Пользователь</mat-label>
-    <mat-select [(ngModel)]="subsidiaryName" [formControl]="filter" multiple>
-      <mat-option *ngFor="let user of users" [value]="user">{{user}}</mat-option>
-    </mat-select>
-  </mat-form-field></ng-template>
-
-  <mat-form-field style="width: 100%" *ngIf="filterPage === pagesFromModel.audit || filterPage === pagesFromModel['pre-audit']">
-    <input matInput [matDatepicker]="createDate" placeholder="Дата создания" readonly [(ngModel)]="_createDate">
-    <mat-datepicker-toggle matSuffix [for]="createDate"></mat-datepicker-toggle>
-    <mat-datepicker #createDate></mat-datepicker>
-  </mat-form-field>
-
-  <ng-container *ngIf="filterPage === pagesFromModel['pre-audit']">
-    <mat-form-field style="width: 100%" color="accent">
-      <mat-label>{{placeHolderForHtml[1]}}</mat-label>
-      <mat-select [(ngModel)]="selectedTypes" [formControl]="filter" multiple>
-        <mat-option *ngFor="let type of checkTypes" [value]="type">{{type | translate}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </ng-container>
-
-  <ng-container *ngIf="filterPage !== pagesFromModel.affiliates">
-  <mat-form-field style="width: 100%" color="accent">
-    <mat-label>{{placeHolderForHtml[2]}}</mat-label>
-    <mat-select [(ngModel)]="selectedStatuses" [formControl]="filter" multiple>
-
-      <ng-container *ngIf="filterPage === pagesFromModel.audit || filterPage === pagesFromModel['pre-audit']">
-        <mat-option *ngFor="let status of states" [value]="status">{{status | translate}}</mat-option>
-      </ng-container>
-
-      <ng-container *ngIf="filterPage === pagesFromModel.charter">
-        <mat-option *ngFor="let status of states" [value]="status.id">{{status.name}}</mat-option>
-      </ng-container>
-
-      <ng-container *ngIf="filterPage === pagesFromModel.events">
-        <mat-option *ngFor="let status of states" [value]="status._id">{{status.name}}</mat-option>
-      </ng-container>
-
-    </mat-select>
-  </mat-form-field>
-  </ng-container>
-
-  <ng-container *ngIf="filterPage !== pagesFromModel['pre-audit'] && filterPage !== pagesFromModel.affiliates">
-    <span>{{placeHolderForHtml[3]}}</span>
-    <br>
-    <mat-form-field style="width: 50%">
-      <input matInput [matDatepicker]="dateFrom" placeholder="Начало" readonly [(ngModel)]="_dateFrom">
-      <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
-      <mat-datepicker #dateFrom></mat-datepicker>
+<div class="mat-elevation-z10" style="height: 100%; width: 100%;">
+  <div class="container">
+    <div class="container_item" style="width: 100%;">
+      <label style="margin-top: 5px; font-size:16px; font-weight: bold;">Панель фильтров</label>
+      <hr>
+    </div>
+    <mat-form-field appearance="legacy" class="container_item"
+      *ngIf="filterPage !== pagesFromModel['pre-audit']; else Block">
+      <input matInput placeholder={{placeHolderForHtml[0]}} [(ngModel)]="subsidiaryName">
     </mat-form-field>
 
-    <mat-form-field style="width: 50%">
-      <input matInput [matDatepicker]="dateTo" placeholder="Окончание" readonly [(ngModel)]="_dateTo">
-      <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
-      <mat-datepicker #dateTo></mat-datepicker>
+    <ng-template #Block>
+      <mat-form-field style="flex: auto;" color="accent" class="container_item">
+        <mat-label>Пользователь</mat-label>
+        <mat-select [(ngModel)]="subsidiaryName" [formControl]="filter" multiple>
+          <mat-option *ngFor="let user of users" [value]="user">{{user}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-template>
+
+    <mat-form-field class="container_item"
+      *ngIf="filterPage === pagesFromModel.audit || filterPage === pagesFromModel['pre-audit']">
+      <input matInput [matDatepicker]="createDate" placeholder="Дата создания" readonly [(ngModel)]="_createDate">
+      <mat-datepicker-toggle matSuffix [for]="createDate"></mat-datepicker-toggle>
+      <mat-datepicker #createDate></mat-datepicker>
     </mat-form-field>
-  </ng-container>
-  <div class="btnContainer">
-    <button mat-raised-button (click)="applyFilter()" class="btn">Применить</button>
-    <button mat-raised-button (click)="clearFilter()" class="btn">Очистить</button>
+
+    <ng-container  *ngIf="filterPage === pagesFromModel['pre-audit']">
+      <mat-form-field color="accent" class="container_item">
+        <mat-label>{{placeHolderForHtml[1]}}</mat-label>
+        <mat-select [(ngModel)]="selectedTypes" [formControl]="filter" multiple>
+          <mat-option *ngFor="let type of checkTypes" [value]="type">{{type | translate}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngIf="filterPage !== pagesFromModel.affiliates">
+      <mat-form-field class="container_item" color="accent">
+        <mat-label>{{placeHolderForHtml[2]}}</mat-label>
+        <mat-select [(ngModel)]="selectedStatuses" [formControl]="filter" multiple>
+
+          <ng-container *ngIf="filterPage === pagesFromModel.audit || filterPage === pagesFromModel['pre-audit']">
+            <mat-option *ngFor="let status of states" [value]="status">{{status | translate}}</mat-option>
+          </ng-container>
+
+          <ng-container *ngIf="filterPage === pagesFromModel.charter">
+            <mat-option *ngFor="let status of states" [value]="status.id">{{status.name}}</mat-option>
+          </ng-container>
+
+          <ng-container *ngIf="filterPage === pagesFromModel.events">
+            <mat-option *ngFor="let status of states" [value]="status._id">{{status.name}}</mat-option>
+          </ng-container>
+
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <div
+      *ngIf="filterPage !== pagesFromModel['pre-audit'] && filterPage !== pagesFromModel.affiliates">
+      <span>{{placeHolderForHtml[3]}}</span>
+      <br>
+      <mat-form-field style="width: 50%" class="container_item">
+        <input matInput [matDatepicker]="dateFrom" placeholder="Начало" readonly [(ngModel)]="_dateFrom">
+        <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
+        <mat-datepicker #dateFrom></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field style="width: 50%" class="container_item">
+        <input matInput [matDatepicker]="dateTo" placeholder="Окончание" readonly [(ngModel)]="_dateTo">
+        <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+        <mat-datepicker #dateTo></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="btnContainer">
+      <button mat-raised-button (click)="applyFilter()" class="btn">Применить</button>
+      <button mat-raised-button (click)="clearFilter()" class="btn">Очистить</button>
+    </div>
   </div>
 </div>

@@ -1,34 +1,31 @@
 .container {
-  height: 90vh;
+  display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 960px;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
   padding-top: 15px;
-}
-
-.inputText {
-  width: 100%;
-  font-size: 13px;
-  padding: 5px 5px 5px 5px;
-  border: 1px solid #dddddd;
-}
-
-.form-popup {
-  display: none;
-  position: fixed;
-  top: 120px;
-  left: 30px;
-  width: 300px;
-  background-color: white;
+  &_item {
+    flex: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 }
 
 .btn {
   flex: auto;
   margin: 5px;
+  height: 36px;
 }
 
 .btnContainer {
+  flex: auto;
   display: flex;
   flex-flow: wrap;
+  align-content: center;
 }

@@ -180,6 +180,7 @@ export class AuditAnalyseResultComponent
         } else {
           this.selectedPage = this.audit.typeViewResult;
         }
+        this.changeDetectorRefs.detectChanges();
       });
     this.auditservice
       .getResultState(this.IdAudit)
@@ -187,7 +188,7 @@ export class AuditAnalyseResultComponent
       .subscribe(data => {
         data.forEach(i => {
           this.totalCountDoc += i.count;
-        })
+        });
         this.resultState = data;
       });
   }
@@ -277,7 +278,7 @@ export class AuditAnalyseResultComponent
               const nodeChild = Object.assign({}, d, addon);
               node.children.push(nodeChild);
             }
-            
+
             node.childCount = node.children.length;
 
             if (this.selectedPage !== 2 || docs.docs.length > 0)

@@ -1,68 +1,72 @@
-<div class="left_group">
-  <gpn-filter [states]="auditStatuses" [filterPage]="filterPage['pre-audit']" (ApplyFilter)="onApplyFilter($event)"></gpn-filter>
-</div>
-<div style="text-align: right; margin-top: 15px; margin-bottom: 15px; margin-right: 20px">
-  <div class="col">
-    <button mat-raised-button color="accent" style="float: right; margin-bottom: 15px" (click)="createAudit()"> Добавить </button>
-  </div>
-</div>
-<div class="right_group">
-  <ngx-spinner
-    bdColor="rgba(250,250,250,0.2)"
-    size="large"
-    color="#0074D9"
-    type="timer"
-  >
-    <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
-  </ngx-spinner>
-  <div class="table-container ">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" (mouseleave) = "mouseOverIndex=-1"
-           matSort matSortActive="createDate" matSortDisableClear multiTemplateDataRows matSortDirection="desc">
-
-      <ng-container matColumnDef="user">
-        <th mat-header-cell *matHeaderCellDef style="padding-right: 5px;"> Пользователь </th>
-        <td mat-cell *matCellDef="let audit"> {{audit.authorName}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="checkType">
-        <th mat-header-cell *matHeaderCellDef > Вид проверки </th>
-fix        <td mat-cell *matCellDef="let audit"> <ng-container *ngFor="let checkType of audit.checkTypes; let isLast=last">
-          {{checkType | translate}}{{isLast ? '' : ', '}}
-        </ng-container> </td>
-      </ng-container>
-
-      <ng-container matColumnDef="files">
-        <th mat-header-cell *matHeaderCellDef> Файлы </th>
-        <td mat-cell *matCellDef="let audit"> {{audit.fileNames}}  </td>
-      </ng-container>
-
-      <ng-container matColumnDef="createDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header style="padding-right: 1%;"> Дата создания</th>
-        <td mat-cell *matCellDef="let audit"> {{audit.createDate | date:'dd.MM.yyyy  HH:mm'}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef> Статус </th>
-        <td mat-cell *matCellDef="let audit"> {{audit.status | translate}}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="events">
-        <th mat-header-cell *matHeaderCellDef> </th>
-        <td mat-cell *matCellDef="let element; let index = index;">
-          <div class="btn-group">
-            <fa-icon id="td_events" [icon]="faTrashAlt" matTooltip="Удалить" style="float: right" (click)="deleteAudit(element, $event)"></fa-icon>
-          </div>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; let index = index; columns: columns;" (click)="openAuditResult(row)"
-          (mouseover)="onMouseOver(index)"></tr>
-
-    </table>
+<div class="main_group">
+  <div class="left_group">
+    <gpn-filter [states]="auditStatuses" [filterPage]="filterPage['pre-audit']" (ApplyFilter)="onApplyFilter($event)">
+    </gpn-filter>
   </div>
 
-  <mat-paginator [length]="dataSource.totalCount" [pageSize]="defPageSize"
-                 [pageSizeOptions]="[15, 20, 25]"></mat-paginator>
+  <div class="right_group">
+    <div>
+      <button mat-raised-button color="accent"
+        style="float: right; margin-right: 20px; margin-top: 15px; margin-bottom: 15px" (click)="createAudit()">
+        Добавить </button>
+    </div>
+
+    <ngx-spinner bdColor="rgba(250,250,250,0.2)" size="large" color="#0074D9" type="timer">
+      <p style="font-size: 30px; color: #0074D9">Загрузка...</p>
+    </ngx-spinner>
+    <div class="mat-elevation-z10" >
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" (mouseleave)="mouseOverIndex=-1" matSort
+          matSortActive="createDate" matSortDisableClear multiTemplateDataRows matSortDirection="desc">
+
+          <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef style="padding-right: 5px;"> Пользователь </th>
+            <td mat-cell *matCellDef="let audit"> {{audit.authorName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="checkType">
+            <th mat-header-cell *matHeaderCellDef> Вид проверки </th>
+            fix <td mat-cell *matCellDef="let audit">
+              <ng-container *ngFor="let checkType of audit.checkTypes; let isLast=last">
+                {{checkType | translate}}{{isLast ? '' : ', '}}
+              </ng-container>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="files">
+            <th mat-header-cell *matHeaderCellDef> Файлы </th>
+            <td mat-cell *matCellDef="let audit"> {{audit.fileNames}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="padding-right: 1%;"> Дата создания</th>
+            <td mat-cell *matCellDef="let audit"> {{audit.createDate | date:'dd.MM.yyyy HH:mm'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Статус </th>
+            <td mat-cell *matCellDef="let audit"> {{audit.status | translate}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="events">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element; let index = index;">
+              <div class="btn-group">
+                <fa-icon id="td_events" [icon]="faTrashAlt" matTooltip="Удалить" style="float: right" (click)="deleteAudit(element, $event)"></fa-icon>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; let index = index; columns: columns;" (click)="openAuditResult(row)"
+            (mouseover)="onMouseOver(index)"></tr>
+
+        </table>
+      </div>
+
+      <mat-paginator [length]="dataSource.totalCount" [pageSize]="defPageSize" [pageSizeOptions]="[15, 20, 25]">
+      </mat-paginator>
+    </div>
+  </div>
 </div>

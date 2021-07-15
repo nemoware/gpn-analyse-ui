@@ -1,45 +1,47 @@
-<div class="left_group">
-  <gpn-filter [states]="eventsType" [filterPage] = filterPage.events (ApplyFilter)="onApplyFilter($event)"></gpn-filter>
-</div>
-
-<div class="right_group">
-  <div class="table-container ">
-
-    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
-      <mat-spinner></mat-spinner>
-    </div>
-
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
-           matSort matSortActive="time" matSortDisableClear multiTemplateDataRows matSortDirection="desc">
-
-      <ng-container matColumnDef="time">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата </th>
-        <td mat-cell *matCellDef="let event"> {{event.time | date:'dd.MM.yyyy HH:mm'}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="login">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Логин </th>
-        <td mat-cell *matCellDef="let event"> {{event.login}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Событие </th>
-        <td mat-cell *matCellDef="let event"> {{event.eventTypeName}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="details">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Детали </th>
-        <td mat-cell *matCellDef="let event"> {{event.details}} </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-    </table>
+<div class="main_group">
+  <div class="left_group">
+    <gpn-filter [states]="eventsType" [filterPage]=filterPage.events (ApplyFilter)="onApplyFilter($event)"></gpn-filter>
   </div>
 
-  <mat-paginator [length]="dataSource.totalCount" [pageSize]="defPageSize"
-                 [pageSizeOptions]="[15, 20, 25]"></mat-paginator>
+  <div class="right_group">
+    <div class="mat-elevation-z10" style="margin-top: 15px;">
+      <div class="table-container ">
+
+        <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+          <mat-spinner></mat-spinner>
+        </div>
+
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matSortActive="time"
+          matSortDisableClear multiTemplateDataRows matSortDirection="desc">
+
+          <ng-container matColumnDef="time">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Дата </th>
+            <td mat-cell *matCellDef="let event"> {{event.time | date:'dd.MM.yyyy HH:mm'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="login">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Логин </th>
+            <td mat-cell *matCellDef="let event"> {{event.login}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Событие </th>
+            <td mat-cell *matCellDef="let event"> {{event.eventTypeName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Детали </th>
+            <td mat-cell *matCellDef="let event"> {{event.details}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+      </div>
+
+      <mat-paginator [length]="dataSource.totalCount" [pageSize]="defPageSize" [pageSizeOptions]="[15, 20, 25]">
+      </mat-paginator>
+    </div>
+  </div>
 </div>
-
-
