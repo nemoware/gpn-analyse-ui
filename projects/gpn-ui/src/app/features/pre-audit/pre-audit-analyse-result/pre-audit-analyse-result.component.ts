@@ -142,6 +142,7 @@ export class PreAuditAnalyseResultComponent
         this.maxPageIndex = this.audit.typeViewResult;
         this.selectedPage = this.audit.typeViewResult;
         if (this.selectedPage === 0) this.refreshData();
+        this.changeDetectorRefs.detectChanges();
       });
   }
 
